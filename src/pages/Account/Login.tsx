@@ -79,7 +79,7 @@ const Login = () => {
                       />
                     </div>
                     <div className="text-right">
-                      <p className="hover:cursor-pointer text-primary-100 text-sm inline-block" onClick={() => navigate(Routing.ForgotPassword)}>
+                      <p className="hover:cursor-pointer text-secondary-700 text-sm inline-block" onClick={() => navigate(Routing.ForgotPassword)}>
                         Forgot password?
                       </p>
                     </div>

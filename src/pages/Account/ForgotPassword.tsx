@@ -24,9 +24,9 @@ const ForgotPassword = () => {
 
   const [actionType, setActionType] = React.useState<ActionType>(ActionType.Email);
 
-  const emailState: IForgotPasswordEmailModel = { email: "" };
+  const emailState: IForgotPasswordEmailModel = { email: "admin@gmail.com" };
 
-  const otpState: IForgotPasswordOTPModel = { otp: '' };
+  const otpState: IForgotPasswordOTPModel = { otp: '123456' };
 
   const passwordState: IForgotPasswordPasswordModel = {
     password: '',
@@ -34,41 +34,41 @@ const ForgotPassword = () => {
   };
 
   const handleEmailSubmit = async (values: IForgotPasswordEmailModel) => {
-    await accountService
-      .forgotPassword(values)
-      .then((response) => {
-        const responseData: ILoginResponseModel = response?.data?.data;
-        if (response?.data?.status) {
-          dispatch(adminLogin(responseData));
+    // await accountService
+    //   .forgotPassword(values)
+    //   .then((response) => {
+    //     const responseData: ILoginResponseModel = response?.data?.data;
+    //     if (response?.data?.status) {
+          // dispatch(adminLogin(responseData));
           setActionType(ActionType.Otp);
-        }
-      })
-      .catch((error: Error) => console.log(error?.message));
+      //   }
+      // })
+      // .catch((error: Error) => console.log(error?.message));
   };
 
   const handleOtpSubmit = async (values: IForgotPasswordOTPModel) => {
-    await accountService
-      .varifyOTP(values)
-      .then((response) => {
-        const responseData: ILoginResponseModel = response?.data?.data;
-        if (response?.data?.status) {
-          dispatch(adminLogin(responseData));
+    // await accountService
+    //   .varifyOTP(values)
+    //   .then((response) => {
+    //     const responseData: ILoginResponseModel = response?.data?.data;
+    //     if (response?.data?.status) {
+          // dispatch(adminLogin(responseData));
           setActionType(ActionType.Password);
-        }
-      })
-      .catch((error: Error) => console.log(error?.message));
+      //   }
+      // })
+      // .catch((error: Error) => console.log(error?.message));
   };
 
   const ResendOTP = async () => {
-    await accountService
-      .resendOTP()
-      .then((response) => {
-        const responseData: ILoginResponseModel = response?.data?.data;
-        if (response?.data?.status) {
-          dispatch(adminLogin(responseData));
-        }
-      })
-      .catch((error: Error) => console.log(error?.message));
+    // await accountService
+    //   .resendOTP()
+    //   .then((response) => {
+    //     const responseData: ILoginResponseModel = response?.data?.data;
+    //     if (response?.data?.status) {
+          // dispatch(adminLogin(responseData));
+      //   }
+      // })
+      // .catch((error: Error) => console.log(error?.message));
   };
 
   const handlePasswordSubmit = async (values: IForgotPasswordPasswordModel) => {
@@ -102,7 +102,7 @@ const ForgotPassword = () => {
             {actionType === ActionType.Email && (
               <>
                 <p className='mb-2 text-center text-xl font-semibold'>Forgot password</p>
-                <p className="text-muted text-base text-center text-primary-100">
+                <p className="text-muted text-base text-center text-secondary-700">
                   Enter your register E-mail id to reset your password
                 </p>
                 <Formik
@@ -140,7 +140,7 @@ const ForgotPassword = () => {
             {actionType === ActionType.Otp && (
               <>
                 <p className='mb-2 text-center text-xl font-semibold'>Forgot password</p>
-                <p className="text-muted text-base text-center text-primary-100">
+                <p className="text-muted text-base text-center text-secondary-700">
                   Enter 6 digit code that you received in your mail
                 </p>
                 <Formik
@@ -160,15 +160,16 @@ const ForgotPassword = () => {
                             numInputs={6}
                             value={values?.otp}
                             label="OTP"
+                            placeholder="Enter OTP"
                             onChange={(value: string) => setFieldValue('otp', value)}
                             component={CustomInput}
                           />
                           <div className="text-right mt-5">
-                            <p className="hover:cursor-pointer text-primary-100 text-sm inline-block" onClick={ResendOTP}>
+                            <p className="hover:cursor-pointer text-secondary-700 text-sm inline-block" onClick={ResendOTP}>
                               Resend Otp
                             </p>
                           </div>
-                          <CustomButton fullWidth className="mt-[50px] bg-primary hover:bg-primary/90 h-[50px] !rounded-[15px] text-lg text-white border-transparent shadow-none" type="submit">
+                          <CustomButton fullWidth type="submit" className="mt-5 justify-center">
                             Submit
                           </CustomButton>
                         </div>
@@ -182,7 +183,7 @@ const ForgotPassword = () => {
             {actionType === ActionType.Password && (
               <>
                 <p className='mb-2 text-center text-xl font-semibold'>Reset password</p>
-                <p className="text-muted text-base text-center text-primary-100">
+                <p className="text-muted text-base text-center text-secondary-700">
                   Reset your password for re-login in your account
                 </p>
                 <Formik
@@ -202,6 +203,7 @@ const ForgotPassword = () => {
                             name="password"
                             value={values?.password}
                             label="Password"
+                            placeholder="Enter new password"
                             onChange={(value: string) => setFieldValue('password', value)}
                             component={CustomInput}
                           />
@@ -212,11 +214,12 @@ const ForgotPassword = () => {
                             name="confirmPassword"
                             value={values?.confirmPassword}
                             label="Confirm Password"
+                            placeholder="Confirm new password"
                             onChange={(value: string) => setFieldValue('confirmPassword', value)}
                             component={CustomInput}
                           />
                         </div>
-                        <CustomButton fullWidth className="mt-[50px] bg-primary hover:bg-primary/90 h-[50px] !rounded-[15px] text-lg text-white border-transparent shadow-none" type="submit">
+                        <CustomButton fullWidth type="submit" className="mt-5 justify-center">
                           Submit
                         </CustomButton>
                       </Form>

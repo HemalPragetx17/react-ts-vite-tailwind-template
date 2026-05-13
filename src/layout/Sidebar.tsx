@@ -5,7 +5,6 @@ import { sidebarRoutes } from '../shared/constants/sidebar-data';
 
 const Sidebar = () => {
   const { pathname } = useLocation();
-
   const [activeMenu, setActiveMenu] = React.useState<string | null>(null);
 
   const handleMenuOpen = (menu: string) => {
@@ -26,8 +25,7 @@ const Sidebar = () => {
   const filterHoverChild = "group-hover/child:[filter:brightness(0)_saturate(100%)_invert(100%)_sepia(60%)_saturate(83%)_hue-rotate(183deg)_brightness(114%)_contrast(100%)]";
 
   return (
-    <div className='w-[250px] !important h-screen fixed top-0 left-0 overflow-auto overflow-x-hidden transition-all duration-300 ease-linear [&::-webkit-scrollbar]:w-0 [.hide-sidebar_&]:w-[75px] bg-white border-r-2 border-primary'>
-
+    <div className='w-[250px] !important h-screen fixed top-0 left-0 overflow-auto overflow-x-hidden transition-all duration-300 ease-linear [&::-webkit-scrollbar]:w-0 [.hide-sidebar_&]:w-[70px] bg-white border-r-2 border-primary'>
       <div className="h-[70px] flex justify-start items-center gap-[15px] border-b border-[#7979798a] bg-white transition-all duration-300 ease-linear [.hide-sidebar_&]:px-[5px] [.hide-sidebar_&]:w-full">
         <img className="w-[55px] h-[55px]" src="/favicon.svg" alt='img not found' />
         <p className='text-2xl'>Admin Portal</p>
@@ -41,7 +39,7 @@ const Sidebar = () => {
             return (
             <li
               key={index}
-              className={`mt-2 block p-0 w-full overflow-hidden transition-all duration-500 ease-in-out aria-[label=true]:bg-primary aria-[label=true]:rounded-[10px] aria-[label=true]:max-h-[400px] aria-[label=false]:rounded-[10px] aria-[label=false]:max-h-[51px]`}
+              className={`mt-2 block p-0 w-full overflow-hidden transition-all duration-500 ease-in-out rounded-[10px] aria-[label=true]:max-h-[400px] aria-[label=false]:max-h-[51px]`}
               aria-label={isActive ? 'true' : 'false'}
               tabIndex={-1}
               onFocus={(e) => e.preventDefault()}
@@ -51,7 +49,7 @@ const Sidebar = () => {
               }}
             >
               <Link
-                className={`group w-full relative flex items-center box-border text-[15px] leading-[19px] p-[12px] text-black gap-[10px] no-underline hover:text-black ${pathname?.includes(menu?.route) ? 'active bg-secondary-200 text-primary' : ''} hover:bg-secondary-200 hover:text-primary transition-colors duration-100 ease-linear`}
+                className={`w-full relative flex items-center box-border text-[15px] leading-[19px] py-4 px-[14px] text-black gap-[10px] no-underline ${pathname?.includes(menu?.route) ? 'active bg-secondary-200 text-primary' : ''} hover:bg-secondary-200 hover:text-primary transition-colors duration-100 ease-linear`}
                 to={menu?.route ? menu?.route : '/'}
                 onClick={(e) => {
                   if ((menu?.childs?.length ?? 0) > 0) e.preventDefault();
@@ -61,7 +59,7 @@ const Sidebar = () => {
                 aria-label={isActive ? 'true' : 'false'}
               >
                 <img
-                  className={`w-[20px] h-[20px] mr-[15px] transition-all duration-200 ${isActive || pathname?.includes(menu?.route) ? filterActive : `${filterInactive} ${filterHover}`}`}
+                  className={`w-[20px] h-[20px] mr-[5px] transition-all duration-200 ${isActive || pathname?.includes(menu?.route) ? filterActive : `${filterInactive} ${filterHover}`}`}
                   src={menu?.image}
                   alt=''
                 />
@@ -86,7 +84,7 @@ const Sidebar = () => {
                           key={index}
                         >
                           <Link
-                            className={`group/child w-full relative flex items-center box-border text-[15px] leading-[19px] p-[12px] rounded-[10px] text-black gap-[10px] no-underline hover:bg-primary-50 ${pathname?.includes(childMenu?.route) ? 'active bg-[#FFF8E7]' : ''}`}
+                            className={`w-full relative flex items-center box-border text-[15px] leading-[19px] p-[12px] rounded-[10px] text-black gap-[10px] no-underline ${pathname?.includes(childMenu?.route) ? 'active bg-secondary-200 text-primary' : ''} hover:bg-secondary-200 hover:text-primary transition-colors duration-100 ease-linear`}
                             to={childMenu?.route ? childMenu?.route : '/'}
                             onClick={(e) => {
                               if ((childMenu?.childs?.length ?? 0) > 0) e.preventDefault();
@@ -99,7 +97,7 @@ const Sidebar = () => {
                               src={childMenu?.image}
                               alt=''
                             />
-                            <span className="text-[16px]">{childMenu?.name}</span>
+                            <span className="text-[16px] inline-block mr-[8px]">{childMenu?.name}</span>
                           </Link>
                         </li>
                       ))

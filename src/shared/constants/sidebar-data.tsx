@@ -34,11 +34,13 @@ export const sidebarRoutes: ISidebarData[] = [
         module: Modules.Dashboard,
         route: Routing.Dashboard,
         name: "Child Menu 1",
+        image: Dashboard,
       },
       {
         module: Modules.Users,
         route: Routing.Users,
         name: "Child Menu 2",
+        image: Dashboard,
       },
     ],
   }
