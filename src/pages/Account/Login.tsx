@@ -12,8 +12,8 @@ const Login = () => {
   const dispatch = useDispatch()
 
   const initialValues: ILoginRequestModel = {
-    email: "admin@gmail.com",
-    password: "admin@1234",
+    email: "",
+    password: "",
   };
 
   const handleSubmit = async (_values: ILoginRequestModel) => {
@@ -62,6 +62,7 @@ const Login = () => {
                         type="email"
                         value={values?.email}
                         label="Email"
+                        placeholder="Enter your email"
                         onChange={(value: string) => setFieldValue('email', value)}
                         component={CustomInput}
                       />
@@ -72,6 +73,7 @@ const Login = () => {
                         type="password"
                         value={values?.password}
                         label="Password"
+                        placeholder="Enter your password"
                         onChange={(value: string) => setFieldValue('password', value)}
                         component={CustomInput}
                       />

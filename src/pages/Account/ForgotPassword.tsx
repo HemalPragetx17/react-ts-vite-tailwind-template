@@ -91,10 +91,10 @@ const ForgotPassword = () => {
           {/* <IoIosArrowBack className='text-[22px] cursor-pointer' onClick={() => navigate(Routing.Login)} /> */}
           <div className="text-center">
             <div className="max-w-[100px] w-full mx-auto flex justify-center">
-              <img src="/vite.svg" alt='' />
+              <img src="/favicon.svg" alt='' />
             </div>
             <div className="mt-[5px]">
-              <p className="text-2xl font-bold">React Vite</p>
+              <p className="text-2xl font-bold">Admin Portal</p>
             </div>
           </div>
 
@@ -103,7 +103,7 @@ const ForgotPassword = () => {
               <>
                 <p className='mb-2 text-center text-xl font-semibold'>Forgot password</p>
                 <p className="text-muted text-base text-center text-primary-100">
-                  Enter your register mail id to reset your password
+                  Enter your register E-mail id to reset your password
                 </p>
                 <Formik
                   initialValues={emailState}
@@ -122,11 +122,12 @@ const ForgotPassword = () => {
                             type="email"
                             value={values?.email}
                             label="Email"
+                            placeholder="Enter your email"
                             onChange={(value: string) => setFieldValue('email', value)}
                             component={CustomInput}
                           />
                         </div>
-                        <CustomButton fullWidth className="mt-[50px] bg-primary hover:bg-primary/90 h-[50px] !rounded-[15px] text-lg text-white border-transparent shadow-none" type="submit">
+                        <CustomButton fullWidth type="submit" className="mt-5 justify-center">
                           Submit
                         </CustomButton>
                       </Form>
