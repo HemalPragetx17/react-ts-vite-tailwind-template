@@ -1,15 +1,4 @@
 export const Modules = {
   Dashboard: "Dashboard",
-  Dehypnosis: "Dehypnosis",
-  Emotion: "Emotion",
-  Breath: "Breath",
-  Eyes: "Eyes",
-  Ears: "Ears",
-  Tongue: "Tongue",
-  SexEnergy: "SexEnergy",
-  Exhaution: "Exhaution",
-  Centering: "Centering",
-  Stop: "Stop",
-  Pleasure: "Pleasure",
-  Visualize: "Visualize",
+  Users: "Users",
 }

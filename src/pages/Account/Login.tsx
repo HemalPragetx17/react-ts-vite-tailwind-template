@@ -12,8 +12,8 @@ const Login = () => {
   const dispatch = useDispatch()
 
   const initialValues: ILoginRequestModel = {
-    email: "",
-    password: "",
+    email: "admin@gmail.com",
+    password: "password",
   };
 
   const handleSubmit = async (_values: ILoginRequestModel) => {

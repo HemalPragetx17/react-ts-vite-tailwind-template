@@ -11,6 +11,7 @@ const Login = lazy(() => import("../pages/Account/Login"));
 const ForgotPassword = lazy(() => import("../pages/Account/ForgotPassword"));
 
 const Dashboard = lazy(() => import("../pages/Dashboard/Dashboard"));
+const Users = lazy(() => import("../pages/Users/Users"));
 
 const ErrorPage = lazy(() => import("../pages/Account/ErrorPage"));
 const NotFound = lazy(() => import("../pages/Account/NotFound"));
@@ -36,6 +37,10 @@ const routes = createBrowserRouter([
   {
     path: Routing.Dashboard,
     element: <MainLayout>{privateRoute(Dashboard)}</MainLayout>,
+  },
+  {
+    path: Routing.Users,
+    element: <MainLayout>{privateRoute(Users)}</MainLayout>,
   },
   {
     path: Routing.ErrorPage,
