@@ -6,6 +6,7 @@ export const Routing = {
 
   Dashboard: `${PATH_PREFIX}/dashboard`,
   Users: `${PATH_PREFIX}/users`,
+  Master: `${PATH_PREFIX}/master`,
 
   ErrorPage: `${PATH_PREFIX}/error`,
   NotFound: `${PATH_PREFIX}/not-found`,
