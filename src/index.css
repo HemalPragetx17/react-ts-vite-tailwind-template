@@ -1,0 +1,35 @@
+/* Theme variables: light (default) and dark (.dark) */
+:root {
+	--color-background: #cde2fd;
+	--color-default-50: #f6f6f6;
+	--color-default: #f6f6f6;
+	--color-primary: #1b74e4;
+	--color-primary-50: transparent;
+	--color-primary-100: #767676;
+	--color-primary-200: #FFE5C3;
+	--color-primary-foreground: #000000;
+	--color-secondary: #FE8F00;
+	--color-secondary-50: #FF6F00;
+	--color-danger: #fc0303;
+	--color-danger-50: #ffd4d4;
+	--color-focus: #F182F6;
+}
+
+.dark {
+	--color-background: #0b1220;
+	--color-default-50: #111827;
+	--color-default: #0f172a;
+	--color-primary: #60a5fa;
+	--color-primary-50: transparent;
+	--color-primary-100: #9ca3af;
+	--color-primary-200: #1f2937;
+	--color-primary-foreground: #ffffff;
+	--color-secondary: #f97316;
+	--color-secondary-50: #fb923c;
+	--color-danger: #fca5a5;
+	--color-danger-50: #7f1d1d;
+	--color-focus: #c084fc;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
