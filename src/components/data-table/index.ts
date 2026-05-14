@@ -1,1 +1,1 @@
-export { CustomTable, IndeterminateCheckbox } from './CustomTable';
+export { CustomTable } from './CustomTable';

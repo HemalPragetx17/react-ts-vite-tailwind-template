@@ -9,6 +9,7 @@ interface CustomCheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputEl
   containerClassName?: string;
   labelClassName?: string;
   errorClassName?: string;
+  indeterminate?: boolean;
   onChange?: ((value: any) => void) | any;
   // Formik integration
   field?: FieldInputProps<any>;
@@ -28,6 +29,7 @@ const CustomCheckbox = forwardRef<HTMLDivElement, CustomCheckboxProps>((props, r
     containerClassName = "",
     labelClassName = "",
     errorClassName = "",
+    indeterminate,
     field,
     form,
     value,
@@ -122,6 +124,11 @@ const CustomCheckbox = forwardRef<HTMLDivElement, CustomCheckboxProps>((props, r
             checked={restProps.checked !== undefined ? restProps.checked : !!currentValue}
             onChange={handleSingleChange}
             onBlur={field?.onBlur || props.onBlur}
+            ref={(el) => {
+              if (el && typeof indeterminate === "boolean") {
+                el.indeterminate = !restProps.checked && indeterminate;
+              }
+            }}
             className="w-4 h-4 text-indigo-600 rounded border-gray-300 outline-none focus:outline-none focus:ring-0 cursor-pointer"
           />
           <span className="select-none">{restProps.placeholder || label}</span>

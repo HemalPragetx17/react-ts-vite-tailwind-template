@@ -1,7 +1,6 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import type { HTMLProps } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -11,10 +10,15 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import type { ColumnDef, ExpandedState, SortingState } from "@tanstack/react-table";
+import type {
+  ColumnDef,
+  ExpandedState,
+  SortingState,
+} from "@tanstack/react-table";
 import clsx from "clsx";
 import "./index.css";
 import AnimatedExpand from "./AnimatedExpand";
+import CustomCheckbox from "../input/CustomCheckbox";
 
 interface CustomTableProps<T = any> {
   data: T[];
@@ -29,34 +33,10 @@ interface CustomTableProps<T = any> {
   enableCheckbox?: boolean;
   enableSorting?: boolean;
   defaultSortKey?: string;
-  defaultSortOrder?: 'asc' | 'desc';
+  defaultSortOrder?: "asc" | "desc";
   onRowClick?: (row: T) => void;
   hideHeader?: boolean;
   loading?: boolean;
-}
-
-function IndeterminateCheckbox({
-  indeterminate,
-  className = "",
-  ...rest
-}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
-  const ref = React.useRef<HTMLInputElement>(null!);
-
-  React.useEffect(() => {
-    if (typeof indeterminate === "boolean") {
-      ref.current.indeterminate = !rest.checked && indeterminate;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ref, indeterminate]);
-
-  return (
-    <input
-      type="checkbox"
-      ref={ref}
-      className={className + " cursor-pointer"}
-      {...rest}
-    />
-  );
 }
 
 function Filter({ column, table }: { column: any; table: any }) {
@@ -107,7 +87,7 @@ function Filter({ column, table }: { column: any; table: any }) {
   );
 }
 
-export function CustomTable<T = any>({
+function CustomTable<T = any>({
   data,
   columns,
   getSubRows,
@@ -120,7 +100,7 @@ export function CustomTable<T = any>({
   enableCheckbox = false,
   enableSorting = false,
   defaultSortKey,
-  defaultSortOrder = 'desc',
+  defaultSortOrder = "desc",
   onRowClick,
   hideHeader = false,
   loading = false,
@@ -128,7 +108,9 @@ export function CustomTable<T = any>({
   const [expanded, setExpanded] = useState<ExpandedState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [sorting, setSorting] = useState<SortingState>(
-    defaultSortKey ? [{ id: defaultSortKey, desc: defaultSortOrder === 'desc' }] : []
+    defaultSortKey
+      ? [{ id: defaultSortKey, desc: defaultSortOrder === "desc" }]
+      : [],
   );
 
   const tableColumns = React.useMemo(() => {
@@ -136,7 +118,7 @@ export function CustomTable<T = any>({
 
     // Enable sorting on columns that have it explicitly enabled and global sorting is on
     if (enableSorting) {
-      processedColumns = processedColumns.map(col => ({
+      processedColumns = processedColumns.map((col) => ({
         ...col,
         enableSorting: col.enableSorting === true, // Only enable if explicitly set to true
       }));
@@ -148,25 +130,20 @@ export function CustomTable<T = any>({
       id: "select",
       header: ({ table }) => (
         <div className="flex items-center justify-center px-1">
-          <IndeterminateCheckbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler(),
-            }}
+          <CustomCheckbox
+            indeterminate={table.getIsSomeRowsSelected()}
+            checked={table.getIsAllRowsSelected()}
+            onChange={table.getToggleAllRowsSelectedHandler()}
             className="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded focus:ring-indigo-500"
           />
         </div>
       ),
       cell: ({ row }) => (
         <div className="flex items-center justify-center px-1">
-          <IndeterminateCheckbox
-            {...{
-              checked: row.getIsSelected(),
-              disabled: !row.getCanSelect(),
-              indeterminate: row.getIsSomeSelected(),
-              onChange: row.getToggleSelectedHandler(),
-            }}
+          <CustomCheckbox
+            checked={row.getIsSelected()}
+            indeterminate={row.getIsSomeSelected()}
+            onChange={row.getToggleSelectedHandler()}
             className="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded focus:ring-indigo-500"
           />
         </div>
@@ -275,9 +252,15 @@ export function CustomTable<T = any>({
                         <div
                           className={clsx(
                             "flex items-center gap-2",
-                            enableSorting && header.column.getCanSort() && "cursor-pointer select-none"
+                            enableSorting &&
+                              header.column.getCanSort() &&
+                              "cursor-pointer select-none",
                           )}
-                          onClick={enableSorting && header.column.getCanSort() ? header.column.getToggleSortingHandler() : undefined}
+                          onClick={
+                            enableSorting && header.column.getCanSort()
+                              ? header.column.getToggleSortingHandler()
+                              : undefined
+                          }
                         >
                           {flexRender(
                             header.column.columnDef.header,
@@ -287,22 +270,54 @@ export function CustomTable<T = any>({
                             <div className="flex flex-col">
                               {{
                                 asc: (
-                                  <svg className="w-3 h-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+                                  <svg
+                                    className="w-3 h-3 text-gray-400"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+                                      clipRule="evenodd"
+                                    />
                                   </svg>
                                 ),
                                 desc: (
-                                  <svg className="w-3 h-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                                  <svg
+                                    className="w-3 h-3 text-gray-400"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                      clipRule="evenodd"
+                                    />
                                   </svg>
                                 ),
                               }[header.column.getIsSorted() as string] ?? (
                                 <div className="flex flex-col opacity-30">
-                                  <svg className="w-3 h-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+                                  <svg
+                                    className="w-3 h-3 text-gray-400"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+                                      clipRule="evenodd"
+                                    />
                                   </svg>
-                                  <svg className="w-3 h-3 text-gray-400 -mt-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                                  <svg
+                                    className="w-3 h-3 text-gray-400 -mt-1"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                      clipRule="evenodd"
+                                    />
                                   </svg>
                                 </div>
                               )}
@@ -350,7 +365,7 @@ export function CustomTable<T = any>({
                 </td>
               </tr>
             ) : table.getRowModel().rows.length > 0 ? (
-              table.getRowModel().rows.map((row, rowIndex, rowsArray) => {
+              table.getRowModel().rows.map((row) => {
                 return (
                   <React.Fragment key={row.id}>
                     <tr
@@ -423,19 +438,51 @@ export function CustomTable<T = any>({
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 {/* <span className="text-sm text-gray-700">Rows per page:</span> */}
-                <select
-                  className="mt-1 border border-gray-300 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none sm:text-sm rounded-md"
-                  value={table.getState().pagination.pageSize}
-                  onChange={(e) => {
-                    table.setPageSize(Number(e.target.value));
-                  }}
-                >
-                  {[10, 20, 30, 40, 50].map((pageSize) => (
-                    <option key={pageSize} value={pageSize}>
-                      {pageSize}
-                    </option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    className="
+                      appearance-none
+                      w-full
+                      border
+                      border-gray-300
+                      rounded-md
+                      pl-3
+                      pr-10
+                      py-2
+                      focus:outline-none
+                    "
+                  >
+                    {[10, 20, 30, 40, 50].map((pageSize) => (
+                      <option key={pageSize} value={pageSize}>
+                        {pageSize}
+                      </option>
+                    ))}
+                  </select>
+
+                  <div
+                    className="
+      absolute
+      inset-y-0
+      right-3
+      flex
+      items-center
+      pointer-events-none
+    "
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      className="w-4 h-4 text-gray-500"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
               </div>
               {/* <div>
                                 <p className="text-sm text-gray-700">
@@ -521,4 +568,4 @@ export function CustomTable<T = any>({
   );
 }
 
-export { IndeterminateCheckbox };
+export { CustomTable };
