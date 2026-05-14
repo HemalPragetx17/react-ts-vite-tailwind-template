@@ -9,13 +9,14 @@ import CustomTextarea from "../../components/input/CustomTextarea";
 import CustomButton from "../../components/button/CustomButton";
 
 export interface UserFormValues {
+  agreeToTerms: boolean;
   name: string;
   email: string;
   age: string;
   gender: string;
   technologies: string[];
   role: string;
-  status: string;
+  status: string[];
   bio?: string;
 }
 
@@ -26,13 +27,14 @@ interface UserFormProps {
 
 const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
   const initialValues: UserFormValues = {
+    agreeToTerms: false,
     name: "",
     email: "",
     age: "",
     gender: "Male",
     technologies: [] as string[],
     role: "",
-    status: "Active",
+    status: [] as string[],
     bio: "",
   };
 
@@ -49,7 +51,10 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
       .min(1, "Please select at least one technology")
       .required("Technologies stack is required"),
     role: Yup.string().required("Role is required"),
-    status: Yup.string().required("Status is required"),
+    status: Yup.array()
+      .of(Yup.string())
+      .min(1, "Please select at least one status")
+      .required("Status is required"),
     bio: Yup.string().max(300, "Bio must be at most 300 characters"),
   });
 
@@ -136,17 +141,16 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
               />
             </div>
 
-            {/* Technologies Stack (CustomCheckbox with options array) */}
-            <div className="relative shrink-0">
+            {/* <div className="relative shrink-0">
               <Field
                 name="technologies"
                 label="Technologies Stack"
                 component={CustomCheckbox}
                 options={technologyOptions}
               />
-            </div>
+            </div> */}
 
-            {/* Role (CustomSelect) */}
+            {/* Role (CustomSelect - single select) */}
             <div className="relative shrink-0">
               <Field
                 name="role"
@@ -156,13 +160,16 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
               />
             </div>
 
-            {/* Status (CustomSelect) */}
+            {/* Technologies Stack (CustomSelect - multi select with options array) */}
             <div className="relative shrink-0">
               <Field
-                name="status"
-                label="Status"
+                name="technologies"
+                label="Technologies Stack"
                 component={CustomSelect}
-                options={statusOptions}
+                options={technologyOptions}
+                isMulti
+                isClearable
+                showCheckbox
               />
             </div>
 
@@ -174,6 +181,15 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
                 placeholder="Enter short bio or background notes"
                 component={CustomTextarea}
                 rows={3}
+              />
+            </div>
+            
+            {/* Agree to Terms Checkbox */}
+            <div className="relative shrink-0">
+              <Field
+                name="agreeToTerms"
+                label="Agree to terms"
+                component={CustomCheckbox}
               />
             </div>
           </div>

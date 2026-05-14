@@ -2,6 +2,7 @@ import React from "react";
 import Select, { components } from "react-select";
 import type { MultiValue, OptionProps, SingleValue } from "react-select";
 import type { FieldProps } from "formik";
+import CustomCheckbox from "./CustomCheckbox";
 /* -------------------------------------------------------------------------- */
 /*                                   Types                                    */
 /* -------------------------------------------------------------------------- */
@@ -28,6 +29,8 @@ interface CustomSelectProps extends FieldProps {
 
   className?: string;
 
+  showCheckbox?: boolean;
+
   onInputChange?: (value: string) => void;
 
   isLoading?: boolean;
@@ -41,13 +44,25 @@ interface CustomSelectProps extends FieldProps {
 
 const CustomOption = (props: OptionProps<SelectOption, boolean>) => {
   const { isSelected } = props;
+  const showCheckbox = !!((props.selectProps as any)?.showCheckbox);
 
   return (
     <components.Option {...props}>
-      <div className="flex items-center justify-between">
-        <span className="text-black">{props.children}</span>
+      <div className="flex items-center justify-between w-full gap-2">
+        <div className="min-w-0 flex items-center gap-2 overflow-hidden">
+          {showCheckbox && (
+            <CustomCheckbox
+              checked={isSelected}
+              onChange={() => {}}
+              className="pointer-events-none"
+              containerClassName="m-0 p-0"
+              label=""
+            />
+          )}
+          <span className="whitespace-nowrap text-black">{props.children}</span>
+        </div>
 
-        {isSelected && (
+        {!showCheckbox && isSelected && (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
@@ -84,6 +99,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   onInputChange,
   isLoading = false,
   isApiSearch = true, 
+  showCheckbox = false,
 }) => {
   const { name, value } = field;
 
@@ -91,10 +107,20 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
 
   const error = touched[name] && errors[name];
 
+  const normalizedValue = isMulti
+    ? options.filter(option => Array.isArray(value) && value.includes(option.value))
+    : options.find(option => option.value === value) || null;
+
   const handleChange = (
     selected: MultiValue<SelectOption> | SingleValue<SelectOption>,
   ) => {
-    setFieldValue(name, selected);
+    if (isMulti) {
+      const values = selected ? (selected as MultiValue<SelectOption>).map(s => s.value) : [];
+      setFieldValue(name, values);
+    } else {
+      const val = selected ? (selected as SingleValue<SelectOption>)?.value : null;
+      setFieldValue(name, val);
+    }
   };
 
   return (
@@ -104,9 +130,10 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
       )}
 
       <Select
+        {...({ showCheckbox } as any)}
         name={name}
         options={options}
-        value={value}
+        value={normalizedValue}
         onChange={handleChange}
         onBlur={() => setFieldTouched(name, true)}
         isMulti={isMulti}
@@ -140,14 +167,14 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
             `
             min-h-[42px]
             border
+            border-gray-300
             rounded-md
             shadow-sm
+            hover:border-gray-300
             ${
-              error
-                ? "border-red-500"
-                : state.isFocused
-                  ? "border-blue-500 ring-2 ring-blue-100"
-                  : "border-gray-300"
+              state.menuIsOpen
+                ? "border-gray-300"
+                : "border-gray-300"
             }
           `,
 
@@ -197,6 +224,15 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
             ":active": {
               backgroundColor: "transparent",
             },
+          }),
+          control: (base) => ({
+            ...base,
+            borderColor: "#d1d5db",
+            boxShadow: "none",
+          
+            ":hover": {
+              borderColor: "#d1d5db",
+            },        
           }),
         }}
         noOptionsMessage={() => "No data found"}

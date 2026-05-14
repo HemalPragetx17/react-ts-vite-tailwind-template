@@ -43,7 +43,7 @@ const CustomCheckbox = forwardRef<HTMLDivElement, CustomCheckboxProps>((props, r
   const fieldTouched = fieldName && form?.touched?.[fieldName] ? true : touched;
 
   // Current value prioritization
-  const currentValue = value !== undefined ? value : (field?.value ?? "");
+  const currentValue = value !== undefined ? value : (field?.value ?? restProps.checked ?? "");
 
   // If options array is provided, treat as multi-select checkbox group
   const isMulti = options && options.length > 0;
@@ -119,7 +119,7 @@ const CustomCheckbox = forwardRef<HTMLDivElement, CustomCheckboxProps>((props, r
             {...restProps}
             type="checkbox"
             name={fieldName}
-            checked={!!currentValue}
+            checked={restProps.checked !== undefined ? restProps.checked : !!currentValue}
             onChange={handleSingleChange}
             onBlur={field?.onBlur || props.onBlur}
             className="w-4 h-4 text-indigo-600 rounded border-gray-300 outline-none focus:outline-none focus:ring-0 cursor-pointer"
