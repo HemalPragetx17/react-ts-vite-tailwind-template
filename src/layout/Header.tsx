@@ -1,12 +1,10 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { Routing } from '../routes/routing';
-import accountService from '../services/account-service';
-import { adminLogout } from '../store/slices/authSlice';
-import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
 import NotificationsMenu from '../components/header/NotificationsMenu';
 import UserMenu from '../components/header/UserMenu';
+import { Routing } from '../routes/routing';
+import { adminLogout } from '../store/slices/authSlice';
 
 export const toggleSidebar = () => {
   if (document.body.classList.contains('hide-sidebar')) {
@@ -54,7 +52,7 @@ const Header = () => {
   const spanBaseClass = "block bg-white w-full h-[0.125rem] rounded-[2px] bg-black shadow-[0_0.5px_2px_0_hsla(0,0%,0%,0.2)] transition-colors duration-400 relative";
 
   return (
-    <div className='w-full h-[70px] bg-white flex justify-between items-center p-2.5 border-b border-[#7979798a] sticky top-0 z-10'>
+    <div className='w-full h-[70px] bg-white flex justify-between items-center px-3 sm:px-5 py-2.5 border-b border-[#7979798a] sticky top-0 z-50'>
       <div
         className={`sidebar-icon bg-primary rounded-[5px] cursor-pointer`}
         onClick={() => {

@@ -13,10 +13,11 @@ const Login = () => {
 
   const initialValues: ILoginRequestModel = {
     email: "admin@gmail.com",
-    password: "password",
+    password: "Admin@123",
   };
 
-  const handleSubmit = async (_values: ILoginRequestModel) => {
+  const handleSubmit = async (values: ILoginRequestModel) => {
+    console.log("🚀 ~ handleSubmit ~ values:", values)
     dispatch(adminLogin({
       id: '1',
       email: "admin@gmail.com",
@@ -53,17 +54,17 @@ const Login = () => {
               validateOnChange={true}
               enableReinitialize={true}
             >
-              {({ values, setFieldValue, handleSubmit }) => {
+              {({ handleSubmit, values, setFieldValue }) => {
                 return (
                   <Form onSubmit={handleSubmit} className='mt-[30px]'>
                     <div className="mb-3 relative">
                       <Field
                         name="email"
                         type="email"
-                        value={values?.email}
                         label="Email"
                         placeholder="Enter your email"
-                        onChange={(value: string) => setFieldValue('email', value)}
+                        value={values?.email}
+                        onChange={(e: any) => setFieldValue("email", e.target.value)}
                         component={CustomInput}
                       />
                     </div>
@@ -71,10 +72,11 @@ const Login = () => {
                       <Field
                         name="password"
                         type="password"
-                        value={values?.password}
                         label="Password"
                         placeholder="Enter your password"
-                        onChange={(value: string) => setFieldValue('password', value)}
+                        isPasswordToggle={true}
+                        value={values?.password}
+                        onChange={(e: any) => setFieldValue("password", e.target.value)}
                         component={CustomInput}
                       />
                     </div>

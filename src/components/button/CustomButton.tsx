@@ -53,7 +53,7 @@ const radiusClasses = {
   circle: "rounded-full aspect-square justify-center p-0",
 };
 
-const Button: React.FC<ButtonProps> = ({
+const CustomButton: React.FC<ButtonProps> = ({
   variant = "primary",
   size = "md",
   radius = "default",
@@ -73,7 +73,7 @@ const Button: React.FC<ButtonProps> = ({
       disabled={disabled || loading}
       className={clsx(
         "inline-flex items-center gap-2 font-medium transition-all duration-200",
-        "focus:outline-none focus:ring-2 focus:ring-focus focus:ring-offset-2",
+        "outline-none focus:outline-none focus:ring-0",
         "disabled:pointer-events-none disabled:opacity-50",
 
         variantClasses[variant],
@@ -102,4 +102,4 @@ const Button: React.FC<ButtonProps> = ({
   );
 };
 
-export default Button;
+export default CustomButton;

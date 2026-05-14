@@ -86,7 +86,7 @@ const NotificationsMenu: React.FC = () => {
       </button>
 
       {isOpen ? (
-        <div className="absolute right-0 z-30 mt-3 w-80 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl shadow-gray-200/60">
+        <div className="absolute right-0 !z-50 mt-3 w-[calc(100vw-90px)] sm:w-80 max-w-[20rem] overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl shadow-gray-200/60">
           <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
             <div>
               <p className="text-sm font-semibold text-gray-900">Notifications</p>

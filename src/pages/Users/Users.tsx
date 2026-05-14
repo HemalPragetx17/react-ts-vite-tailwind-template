@@ -1,5 +1,9 @@
+import { useState } from "react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { CustomTable } from "../../components/data-table";
+import CustomButton from "../../components/button/CustomButton";
+import CustomModal from "../../components/modal/CustomModal";
+import UserForm, { type UserFormValues } from "./UserForm";
 
 interface User {
   id: number;
@@ -9,14 +13,17 @@ interface User {
   gender: string;
   role: string;
   status: string;
+  technologies?: string[];
 }
 
 const Users = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
   const columns: ColumnDef<User>[] = [
     {
       accessorKey: "name",
       header: "Name",
-      enableSorting: true, // Enable sorting for this column
+      enableSorting: true,
     },
     {
       accessorKey: "email",
@@ -31,6 +38,22 @@ const Users = () => {
       header: "Gender",
     },
     {
+      accessorKey: "technologies",
+      header: "Technologies",
+      cell: ({ row }) => {
+        const techs = row.original.technologies || [];
+        return (
+          <div className="flex flex-wrap gap-1">
+            {techs.map((tech, i) => (
+              <span key={i} className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-full text-xs font-medium border border-indigo-100">
+                {tech}
+              </span>
+            ))}
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: "role",
       header: "Role",
     },
@@ -40,7 +63,7 @@ const Users = () => {
     },
   ];
 
-  const data = [
+  const [usersList, setUsersList] = useState<User[]>([
     {
       id: 1,
       name: "John Doe",
@@ -49,6 +72,7 @@ const Users = () => {
       gender: "Male",
       role: "Admin",
       status: "Active",
+      technologies: ["React", "TypeScript", "Node.js"],
     },
     {
       id: 2,
@@ -58,6 +82,7 @@ const Users = () => {
       gender: "Female",
       role: "User",
       status: "Inactive",
+      technologies: ["React", "Tailwind CSS"],
     },
     {
       id: 3,
@@ -67,6 +92,7 @@ const Users = () => {
       gender: "Male",
       role: "Admin",
       status: "Active",
+      technologies: ["Python", "Node.js"],
     },
     {
       id: 4,
@@ -76,17 +102,61 @@ const Users = () => {
       gender: "Female",
       role: "User",
       status: "Inactive",
+      technologies: ["TypeScript"],
     },
-  ]
+  ]);
+
+  const handleAddUserSubmit = (values: UserFormValues) => {
+    console.log("🚀 ~ handleAddUserSubmit ~ values:", values)
+    const newUser: User = {
+      id: usersList.length ? Math.max(...usersList.map((u) => u.id)) + 1 : 1,
+      name: values.name,
+      email: values.email,
+      age: Number(values.age),
+      gender: values.gender,
+      role: values.role,
+      status: values.status,
+      technologies: values.technologies,
+    };
+
+    setUsersList((prev) => [newUser, ...prev]);
+    setIsModalOpen(false);
+  };
 
   return (
     <section>
-      <div className='flex justify-between items-center mb-4'>
-        <p className='text-2xl'>Users</p>
+      <div className="flex justify-between items-center mb-4">
+        <p className="text-2xl">Users</p>
+        <CustomButton className="mt-5 justify-center" onClick={() => setIsModalOpen(true)}>
+          Add User
+        </CustomButton>
       </div>
-      <CustomTable data={data} columns={columns} enablePagination enableCheckbox enableSorting defaultSortKey="name" defaultSortOrder="desc" />
+
+      <CustomTable
+        data={usersList}
+        columns={columns}
+        enablePagination
+        enableCheckbox
+        enableSorting
+        defaultSortKey="name"
+        defaultSortOrder="desc"
+      />
+
+      {/* Reusable Custom Modal */}
+      <CustomModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Add New User"
+        maxWidthClassName="sm:max-w-xl"
+      >
+        {/* Dedicated static UserForm mapped as children inside the modal */}
+        <UserForm
+          onSubmit={handleAddUserSubmit}
+          onCancel={() => setIsModalOpen(false)}
+        />
+      </CustomModal>
     </section>
-  )
+  );
 };
 
-export default Users
+export default Users;

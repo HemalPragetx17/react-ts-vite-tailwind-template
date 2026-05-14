@@ -2,14 +2,14 @@ import { Field, Form, Formik } from 'formik';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import type { IForgotPasswordEmailModel, IForgotPasswordOTPModel, IForgotPasswordPasswordModel, ILoginResponseModel } from '../../models/account';
-import { Routing } from '../../routes/routing';
-import accountService from '../../services/account-service';
+import BackIcon from '../../assets/back.svg';
 import CustomButton from '../../components/button/CustomButton';
 import CustomInput from '../../components/input/CustomInput';
-import { adminLogin } from '../../store/slices/authSlice';
-import BackIcon from '../../assets/back.svg';
+import CustomOTPInput from '../../components/input/CustomOTPInput';
+import type { IForgotPasswordEmailModel, IForgotPasswordOTPModel, IForgotPasswordPasswordModel } from '../../models/account';
+import { Routing } from '../../routes/routing';
 import { ForgotEmailValidationSchema, ForgotOTPValidationSchema, ForgotPasswordValidationSchema } from '../../validation/account';
+
 const ActionType = {
   Email: 'Email',
   Otp: 'Otp',
@@ -34,6 +34,7 @@ const ForgotPassword = () => {
   };
 
   const handleEmailSubmit = async (values: IForgotPasswordEmailModel) => {
+    console.log("🚀 ~ handleEmailSubmit ~ values:", values)
     // await accountService
     //   .forgotPassword(values)
     //   .then((response) => {
@@ -47,6 +48,7 @@ const ForgotPassword = () => {
   };
 
   const handleOtpSubmit = async (values: IForgotPasswordOTPModel) => {
+    console.log("🚀 ~ handleOtpSubmit ~ values:", values)
     // await accountService
     //   .varifyOTP(values)
     //   .then((response) => {
@@ -72,14 +74,15 @@ const ForgotPassword = () => {
   };
 
   const handlePasswordSubmit = async (values: IForgotPasswordPasswordModel) => {
-    await accountService
-      .resetPassword(values)
-      .then((response) => {
-        if (response?.data?.status) {
+    console.log("🚀 ~ handlePasswordSubmit ~ values:", values)
+    // await accountService
+    //   .resetPassword(values)
+    //   .then((response) => {
+    //     if (response?.data?.status) {
           navigate(Routing.Login)
-        }
-      })
-      .catch((error: Error) => console.log(error?.message));
+      //   }
+      // })
+      // .catch((error: Error) => console.log(error?.message));
   };
 
 
@@ -113,17 +116,17 @@ const ForgotPassword = () => {
                   validateOnChange={true}
                   enableReinitialize={true}
                 >
-                  {({ values, setFieldValue, handleSubmit }) => {
+                  {({ handleSubmit, values, setFieldValue }) => {
                     return (
                       <Form onSubmit={handleSubmit} className='mt-[30px]'>
                         <div className="mb-5 relative">
                           <Field
                             name="email"
                             type="email"
-                            value={values?.email}
                             label="Email"
                             placeholder="Enter your email"
-                            onChange={(value: string) => setFieldValue('email', value)}
+                            value={values?.email}
+                            onChange={(e: any) => setFieldValue("email", e.target.value)}
                             component={CustomInput}
                           />
                         </div>
@@ -151,18 +154,18 @@ const ForgotPassword = () => {
                   validateOnChange={true}
                   enableReinitialize={true}
                 >
-                  {({ values, setFieldValue, handleSubmit }) => {
+                  {({ handleSubmit, values, setFieldValue }) => {
                     return (
                       <Form onSubmit={handleSubmit} className='mt-[30px]'>
                         <div className='mt-5'>
                           <Field
                             name="otp"
                             numInputs={6}
-                            value={values?.otp}
                             label="OTP"
                             placeholder="Enter OTP"
-                            onChange={(value: string) => setFieldValue('otp', value)}
-                            component={CustomInput}
+                            value={values?.otp}
+                            onChange={(e: any) => setFieldValue("otp", e.target.value)}
+                            component={CustomOTPInput}
                           />
                           <div className="text-right mt-5">
                             <p className="hover:cursor-pointer text-secondary-700 text-sm inline-block" onClick={ResendOTP}>
@@ -194,17 +197,18 @@ const ForgotPassword = () => {
                   validateOnChange={true}
                   enableReinitialize={true}
                 >
-                  {({ values, setFieldValue, handleSubmit }) => {
+                  {({ handleSubmit, values, setFieldValue }) => {
                     return (
                       <Form onSubmit={handleSubmit} className='mt-[30px]'>
                         <div className="mb-5 relative">
                           <Field
                             type="password"
                             name="password"
-                            value={values?.password}
                             label="Password"
                             placeholder="Enter new password"
-                            onChange={(value: string) => setFieldValue('password', value)}
+                            isPasswordToggle={true}
+                            value={values?.password}
+                            onChange={(e: any) => setFieldValue("password", e.target.value)}
                             component={CustomInput}
                           />
                         </div>
@@ -212,10 +216,11 @@ const ForgotPassword = () => {
                           <Field
                             type="password"
                             name="confirmPassword"
-                            value={values?.confirmPassword}
                             label="Confirm Password"
                             placeholder="Confirm new password"
-                            onChange={(value: string) => setFieldValue('confirmPassword', value)}
+                            isPasswordToggle={true}
+                            value={values?.confirmPassword}
+                            onChange={(e: any) => setFieldValue("confirmPassword", e.target.value)}
                             component={CustomInput}
                           />
                         </div>

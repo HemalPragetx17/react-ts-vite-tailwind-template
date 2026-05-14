@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 export const LoginValidationSchema = () => {
     return Yup.object().shape({
         email: Yup.string().required('Email is required!'),
-        // password: Yup.string().min(6, 'Password must be 6 character length!').required('Password is required!'),
+        password: Yup.string().min(6, 'Password must be 6 character length!').required('Password is required!'),
     });
 };
 

@@ -73,7 +73,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ onLogout }) => {
       </button>
 
       {isOpen ? (
-        <div className="absolute right-0 z-30 mt-3 w-72 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl shadow-gray-200/60">
+        <div className="absolute right-0 !z-50 mt-3 w-[calc(100vw-90px)] sm:w-72 max-w-[18rem] overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl shadow-gray-200/60">
           <div className="border-b border-gray-100 px-4 py-4">
             <p className="text-sm font-semibold text-gray-900">{displayName}</p>
             <p className="mt-1 text-sm text-gray-500">{user.email || 'No email available'}</p>
