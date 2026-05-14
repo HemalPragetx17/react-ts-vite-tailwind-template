@@ -31,15 +31,21 @@ export const sidebarRoutes: ISidebarData[] = [
     image: Dashboard,
     childs: [
       {
-        module: Modules.Dashboard,
-        route: Routing.Dashboard,
-        name: "Child Menu 1",
+        module: Modules.Category,
+        route: Routing.Category,
+        name: "Category",
         image: Dashboard,
       },
       {
-        module: Modules.Users,
-        route: Routing.Users,
-        name: "Child Menu 2",
+        module: Modules.SubCategory,
+        route: Routing.SubCategory,
+        name: "SubCategory",
+        image: Dashboard,
+      },
+      {
+        module: Modules.Product,
+        route: Routing.Product,
+        name: "Product",
         image: Dashboard,
       },
     ],

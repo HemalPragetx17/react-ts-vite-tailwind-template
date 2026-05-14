@@ -19,14 +19,14 @@ const Sidebar = () => {
     setActiveMenu(null);
   };
 
-  const filterInactive = "[filter:brightness(0)_saturate(100%)_invert(44%)_sepia(10%)_saturate(21%)_hue-rotate(325deg)_brightness(101%)_contrast(92%)]";
-  const filterActive = "[filter:brightness(0)_saturate(100%)_invert(44%)_sepia(98%)_saturate(1627%)_hue-rotate(184deg)_brightness(98%)_contrast(95%)]";
-  const filterHover = "group-hover:[filter:brightness(0)_saturate(100%)_invert(78%)_sepia(25%)_saturate(5223%)_hue-rotate(178deg)_brightness(96%)_contrast(102%)]";
-  const filterHoverChild = "group-hover/child:[filter:brightness(0)_saturate(100%)_invert(100%)_sepia(60%)_saturate(83%)_hue-rotate(183deg)_brightness(114%)_contrast(100%)]";
+  const filterInactive = "[filter:brightness(0)_saturate(100%)_invert(45%)_sepia(6%)_saturate(24%)_hue-rotate(338deg)_brightness(100%)_contrast(89%)]";
+  const filterActive = "[filter:brightness(0)_saturate(100%)_invert(100%)_sepia(93%)_saturate(0%)_hue-rotate(198deg)_brightness(105%)_contrast(108%)]";
+  const filterHover = "group-hover:[filter:brightness(0)_saturate(100%)_invert(100%)_sepia(93%)_saturate(0%)_hue-rotate(198deg)_brightness(105%)_contrast(108%)]";
+  const filterHoverChild = "group-hover/child:[filter:brightness(0)_saturate(100%)_invert(100%)_sepia(93%)_saturate(0%)_hue-rotate(198deg)_brightness(105%)_contrast(108%)]";
 
   return (
-    <div className='w-[250px] !important h-screen fixed top-0 left-0 overflow-auto overflow-x-hidden transition-all duration-300 ease-linear [&::-webkit-scrollbar]:w-0 [.hide-sidebar_&]:w-[70px] bg-white border-r-2 border-primary'>
-      <div className="h-[70px] flex justify-start items-center gap-[15px] border-b border-[#7979798a] bg-white transition-all duration-300 ease-linear [.hide-sidebar_&]:px-[5px] [.hide-sidebar_&]:w-full">
+    <div className='w-[250px] !important h-screen fixed top-0 left-0 overflow-auto overflow-x-hidden transition-all duration-300 ease-linear [&::-webkit-scrollbar]:w-0 [.hide-sidebar_&]:w-[70px] bg-black'>
+      <div className="h-[70px] flex justify-start items-center gap-[15px] border-b border-[#7979798a] bg-black text-white transition-all duration-300 ease-linear [.hide-sidebar_&]:px-[5px] [.hide-sidebar_&]:w-full">
         <img className="w-[55px] h-[55px]" src="/favicon.svg" alt='img not found' />
         <p className='text-2xl'>Admin Portal</p>
       </div>
@@ -49,7 +49,7 @@ const Sidebar = () => {
               }}
             >
               <Link
-                className={`w-full relative flex items-center box-border text-[15px] leading-[19px] py-4 px-[14px] text-black gap-[10px] no-underline ${pathname?.includes(menu?.route) ? 'active bg-secondary-200 text-primary' : ''} hover:bg-secondary-200 hover:text-primary transition-colors duration-100 ease-linear`}
+                className={`group w-full relative flex items-center box-border text-[15px] leading-[19px] py-4 px-[14px] gap-[10px] no-underline ${isActive || pathname?.includes(menu?.route) ? 'active text-white' : 'text-secondary-600'} ${pathname?.includes(menu?.route) ? 'bg-primary' : ''} hover:bg-primary hover:text-white transition-colors duration-100 ease-linear`}
                 to={menu?.route ? menu?.route : '/'}
                 onClick={(e) => {
                   if ((menu?.childs?.length ?? 0) > 0) e.preventDefault();
@@ -59,13 +59,13 @@ const Sidebar = () => {
                 aria-label={isActive ? 'true' : 'false'}
               >
                 <img
-                  className={`w-[20px] h-[20px] mr-[5px] transition-all duration-200 ${isActive || pathname?.includes(menu?.route) ? filterActive : `${filterInactive} ${filterHover}`}`}
+                  className={`w-[18px] h-[18px] mr-[7px] transition-all duration-200 ${isActive || pathname?.includes(menu?.route) ? filterActive : `${filterInactive} ${filterHover}`}`}
                   src={menu?.image}
                   alt=''
                 />
-                <span className="text-[18px] inline-block mr-[8px]">{menu?.name}</span>
+                <span className="text-[16px] font-medium inline-block mr-[8px]">{menu?.name}</span>
                 {(menu?.childs?.length ?? 0) > 0 && (
-                  <span className={`w-[13px] h-[13px] inline-block relative -bottom-[5px] -left-[10px] transition-all duration-500 ease-in-out mt-[2px] text-left transform rotate-45 ml-auto before:absolute before:content-[''] before:inline-block before:w-[10.5px] before:h-[2.5px] before:bg-black before:transition-all before:duration-500 before:ease-in-out before:rounded-[2px] after:absolute after:content-[''] after:inline-block after:w-[10.5px] after:h-[2.5px] after:bg-black after:transition-all after:duration-500 after:ease-in-out after:rounded-[2px] after:transform after:rotate-90 after:-top-[5px] after:left-[5px] aria-[label=true]:before:-rotate-90 aria-[label=true]:after:rotate-180`} aria-label={isActive ? 'true' : 'false'}></span>
+                    <span className={`w-[13px] h-[13px] inline-block relative -bottom-[5px] -left-[10px] transition-all duration-500 ease-in-out mt-[2px] text-left transform rotate-45 ml-auto before:absolute before:content-[''] before:inline-block before:w-[10.5px] before:h-[2.5px] before:bg-secondary-600 before:transition-all before:duration-500 before:ease-in-out before:rounded-[2px] after:absolute after:content-[''] after:inline-block after:w-[10.5px] after:h-[2.5px] after:bg-secondary-600 after:transition-all after:duration-500 after:ease-in-out after:rounded-[2px] after:transform after:rotate-90 after:-top-[5px] after:left-[5px] aria-[label=true]:before:-rotate-90 aria-[label=true]:after:rotate-180 group-hover:before:bg-white group-hover:after:bg-white`} aria-label={isActive ? 'true' : 'false'}></span>
                 )}
               </Link>
               {(menu?.childs?.length ?? 0) > 0 &&
@@ -84,7 +84,7 @@ const Sidebar = () => {
                           key={index}
                         >
                           <Link
-                            className={`w-full relative flex items-center box-border text-[15px] leading-[19px] p-[12px] rounded-[10px] text-black gap-[10px] no-underline ${pathname?.includes(childMenu?.route) ? 'active bg-secondary-200 text-primary' : ''} hover:bg-secondary-200 hover:text-primary transition-colors duration-100 ease-linear`}
+                            className={`group/child w-full relative flex items-center box-border text-[15px] leading-[19px] p-[12px] rounded-[10px] gap-[10px] no-underline ${pathname?.includes(childMenu?.route) ? 'active bg-primary text-white' : 'text-secondary-600'} hover:bg-primary hover:text-white transition-colors duration-100 ease-linear`}
                             to={childMenu?.route ? childMenu?.route : '/'}
                             onClick={(e) => {
                               if ((childMenu?.childs?.length ?? 0) > 0) e.preventDefault();
@@ -93,7 +93,7 @@ const Sidebar = () => {
                             onFocus={(e) => e.preventDefault()}
                           >
                             <img
-                              className={`w-[18px] transition-all duration-200 ${filterInactive} ${filterHoverChild}`}
+                              className={`w-[18px] transition-all duration-200 mr-[5px] ${pathname?.includes(childMenu?.route) ? filterActive : `${filterInactive} ${filterHoverChild}`}`}
                               src={childMenu?.image}
                               alt=''
                             />

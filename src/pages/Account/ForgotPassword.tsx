@@ -1,6 +1,5 @@
 import { Field, Form, Formik } from 'formik';
 import React from 'react';
-// import { IoIosArrowBack } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import type { IForgotPasswordEmailModel, IForgotPasswordOTPModel, IForgotPasswordPasswordModel, ILoginResponseModel } from '../../models/account';
@@ -9,6 +8,7 @@ import accountService from '../../services/account-service';
 import CustomButton from '../../components/button/CustomButton';
 import CustomInput from '../../components/input/CustomInput';
 import { adminLogin } from '../../store/slices/authSlice';
+import BackIcon from '../../assets/back.svg';
 import { ForgotEmailValidationSchema, ForgotOTPValidationSchema, ForgotPasswordValidationSchema } from '../../validation/account';
 const ActionType = {
   Email: 'Email',
@@ -39,11 +39,11 @@ const ForgotPassword = () => {
     //   .then((response) => {
     //     const responseData: ILoginResponseModel = response?.data?.data;
     //     if (response?.data?.status) {
-          // dispatch(adminLogin(responseData));
-          setActionType(ActionType.Otp);
-      //   }
-      // })
-      // .catch((error: Error) => console.log(error?.message));
+    // dispatch(adminLogin(responseData));
+    setActionType(ActionType.Otp);
+    //   }
+    // })
+    // .catch((error: Error) => console.log(error?.message));
   };
 
   const handleOtpSubmit = async (values: IForgotPasswordOTPModel) => {
@@ -52,11 +52,11 @@ const ForgotPassword = () => {
     //   .then((response) => {
     //     const responseData: ILoginResponseModel = response?.data?.data;
     //     if (response?.data?.status) {
-          // dispatch(adminLogin(responseData));
-          setActionType(ActionType.Password);
-      //   }
-      // })
-      // .catch((error: Error) => console.log(error?.message));
+    // dispatch(adminLogin(responseData));
+    setActionType(ActionType.Password);
+    //   }
+    // })
+    // .catch((error: Error) => console.log(error?.message));
   };
 
   const ResendOTP = async () => {
@@ -65,10 +65,10 @@ const ForgotPassword = () => {
     //   .then((response) => {
     //     const responseData: ILoginResponseModel = response?.data?.data;
     //     if (response?.data?.status) {
-          // dispatch(adminLogin(responseData));
-      //   }
-      // })
-      // .catch((error: Error) => console.log(error?.message));
+    // dispatch(adminLogin(responseData));
+    //   }
+    // })
+    // .catch((error: Error) => console.log(error?.message));
   };
 
   const handlePasswordSubmit = async (values: IForgotPasswordPasswordModel) => {
@@ -88,7 +88,7 @@ const ForgotPassword = () => {
       <div className="fixed -bottom-[500px] -left-[500px] max-w-[1000px] w-[1000px] h-[1000px] z-0 opacity-50 animate-rotate-bg"></div>
       <div className="flex justify-center items-center w-full z-10">
         <div className='max-w-[450px] w-full shadow-[0px_18px_50px_-10px_rgba(0,0,0,0.2)] border-none px-[40px] py-[50px] z-10 bg-white rounded-xl' >
-          {/* <IoIosArrowBack className='text-[22px] cursor-pointer' onClick={() => navigate(Routing.Login)} /> */}
+          <img src={BackIcon} className='text-[22px] cursor-pointer' onClick={() => navigate(Routing.Login)} />
           <div className="text-center">
             <div className="max-w-[100px] w-full mx-auto flex justify-center">
               <img src="/favicon.svg" alt='' />
