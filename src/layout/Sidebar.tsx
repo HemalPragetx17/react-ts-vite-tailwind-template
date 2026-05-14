@@ -25,13 +25,13 @@ const Sidebar = () => {
   const filterHoverChild = "group-hover/child:[filter:brightness(0)_saturate(100%)_invert(100%)_sepia(93%)_saturate(0%)_hue-rotate(198deg)_brightness(105%)_contrast(108%)]";
 
   return (
-    <div className='w-[250px] !important h-screen fixed top-0 left-0 overflow-auto overflow-x-hidden transition-all duration-300 ease-linear [&::-webkit-scrollbar]:w-0 [.hide-sidebar_&]:w-[70px] bg-black'>
-      <div className="h-[70px] flex justify-start items-center gap-[15px] border-b border-[#7979798a] bg-black text-white transition-all duration-300 ease-linear [.hide-sidebar_&]:px-[5px] [.hide-sidebar_&]:w-full">
+    <div className='w-[250px] !important h-screen fixed top-0 left-0 flex flex-col overflow-hidden transition-all duration-300 ease-linear [.hide-sidebar_&]:w-[70px] bg-black'>
+      <div className="sticky top-0 z-20 shrink-0 h-[70px] flex justify-start items-center gap-[15px] border-b border-[#7979798a] bg-black text-white transition-all duration-300 ease-linear [.hide-sidebar_&]:px-[5px] [.hide-sidebar_&]:w-full">
         <img className="w-[55px] h-[55px]" src="/favicon.svg" alt='img not found' />
         <p className='text-2xl'>Admin Portal</p>
       </div>
 
-      <nav className="px-[10px] flex flex-col items-start h-full" tabIndex={-1}
+      <nav className="flex-1 w-full px-[10px] flex flex-col items-start overflow-y-auto overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pb-4" tabIndex={-1}
         onFocus={(e) => e.preventDefault()}>
         <ul className='flex flex-col w-full m-0 p-0 list-none'>
           {sidebarRoutes?.map((menu: ISidebarData, index) => {

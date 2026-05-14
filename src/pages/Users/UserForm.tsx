@@ -4,19 +4,23 @@ import * as Yup from "yup";
 import CustomInput from "../../components/input/CustomInput";
 import CustomRadio from "../../components/input/CustomRadio";
 import CustomCheckbox from "../../components/input/CustomCheckbox";
+import CustomCheckboxGroup from "../../components/input/CustomCheckboxGroup";
 import CustomSelect from "../../components/input/CustomSelect";
 import CustomTextarea from "../../components/input/CustomTextarea";
+import CustomSwitch from "../../components/input/CustomSwitch";
 import CustomButton from "../../components/button/CustomButton";
+import CustomDatePicker from "../../components/input/date-picker/CustomDatePicker";
 
 export interface UserFormValues {
   agreeToTerms: boolean;
   name: string;
   email: string;
+  joiningDate: string;
   age: string;
   gender: string;
   technologies: string[];
   role: string;
-  status: string[];
+  status: boolean;
   bio?: string;
 }
 
@@ -30,17 +34,19 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
     agreeToTerms: false,
     name: "",
     email: "",
+    joiningDate: "",
     age: "",
     gender: "Male",
     technologies: [] as string[],
     role: "",
-    status: [] as string[],
+    status: true,
     bio: "",
   };
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Full name is required"),
     email: Yup.string().email("Invalid email address").required("Email is required"),
+    joiningDate: Yup.string().required("Joining date is required"),
     age: Yup.number()
       .typeError("Age must be a valid number")
       .positive("Age must be positive")
@@ -51,10 +57,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
       .min(1, "Please select at least one technology")
       .required("Technologies stack is required"),
     role: Yup.string().required("Role is required"),
-    status: Yup.array()
-      .of(Yup.string())
-      .min(1, "Please select at least one status")
-      .required("Status is required"),
+    status: Yup.boolean().required("Status is required"),
     bio: Yup.string().max(300, "Bio must be at most 300 characters"),
   });
 
@@ -76,11 +79,6 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
     { label: "Admin", value: "Admin" },
     { label: "User", value: "User" },
     { label: "Manager", value: "Manager" },
-  ];
-
-  const statusOptions = [
-    { label: "Active", value: "Active" },
-    { label: "Inactive", value: "Inactive" },
   ];
 
   return (
@@ -120,6 +118,17 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
               />
             </div>
 
+            {/* Joining Date */}
+            <div className="relative shrink-0">
+              <Field
+                name="joiningDate"
+                label="Joining Date"
+                placeholder="Select joining date"
+                isClearable={true}
+                component={CustomDatePicker}
+              />
+            </div>
+
             {/* Age */}
             <div className="relative shrink-0">
               <Field
@@ -136,19 +145,35 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
               <Field
                 name="gender"
                 label="Gender"
+                orientation="horizontal"
                 component={CustomRadio}
                 options={genderOptions}
               />
             </div>
 
-            {/* <div className="relative shrink-0">
+            {/* Status (CustomSwitch) */}
+            <div className="relative shrink-0">
+              <Field
+                name="status"
+                label="Account Status"
+                component={CustomSwitch}
+                size="lg"
+                activeLabel="Active"
+                inactiveLabel="Inactive"
+              />
+            </div>
+
+            {/* Technologies Stack (CustomCheckboxGroup) */}
+            <div className="relative shrink-0">
               <Field
                 name="technologies"
                 label="Technologies Stack"
-                component={CustomCheckbox}
+                orientation="horizontal"
+                component={CustomCheckboxGroup}
                 options={technologyOptions}
+                color="primary"
               />
-            </div> */}
+            </div>
 
             {/* Role (CustomSelect - single select) */}
             <div className="relative shrink-0">
@@ -179,6 +204,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
                 name="bio"
                 label="User Bio / Notes (Optional)"
                 placeholder="Enter short bio or background notes"
+                isClearable={true}
                 component={CustomTextarea}
                 rows={3}
               />

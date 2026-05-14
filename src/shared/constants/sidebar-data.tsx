@@ -49,6 +49,6 @@ export const sidebarRoutes: ISidebarData[] = [
         image: Dashboard,
       },
     ],
-  }
+  },
 ];
 

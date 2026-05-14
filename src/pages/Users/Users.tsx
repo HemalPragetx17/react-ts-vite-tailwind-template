@@ -9,10 +9,11 @@ interface User {
   id: number;
   name: string;
   email: string;
+  joiningDate?: string;
   age: number;
   gender: string;
   role: string;
-  status: string;
+  status: boolean;
   technologies?: string[];
 }
 
@@ -28,6 +29,20 @@ const Users = () => {
     {
       accessorKey: "email",
       header: "Email",
+    },
+    {
+      accessorKey: "joiningDate",
+      header: "Joining Date",
+      cell: ({ row }) => {
+        const val = row.original.joiningDate;
+        if (!val) return <span className="text-gray-400">-</span>;
+        const date = new Date(val);
+        return isNaN(date.getTime()) ? val : date.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      },
     },
     {
       accessorKey: "age",
@@ -60,6 +75,25 @@ const Users = () => {
     {
       accessorKey: "status",
       header: "Status",
+      cell: ({ row }) => {
+        const isActive = row.original.status;
+        return (
+          <span
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
+              isActive
+                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                : "bg-gray-50 text-gray-600 border-gray-200"
+            }`}
+          >
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                isActive ? "bg-emerald-500" : "bg-gray-400"
+              }`}
+            />
+            {isActive ? "Active" : "Inactive"}
+          </span>
+        );
+      },
     },
   ];
 
@@ -68,40 +102,44 @@ const Users = () => {
       id: 1,
       name: "John Doe",
       email: "[EMAIL_ADDRESS]",
+      joiningDate: "2025-01-15",
       age: 30,
       gender: "Male",
       role: "Admin",
-      status: "Active",
+      status: true,
       technologies: ["React", "TypeScript", "Node.js"],
     },
     {
       id: 2,
       name: "Jane Doe",
       email: "[EMAIL_ADDRESS]",
+      joiningDate: "2025-03-20",
       age: 25,
       gender: "Female",
       role: "User",
-      status: "Inactive",
+      status: false,
       technologies: ["React", "Tailwind CSS"],
     },
     {
       id: 3,
       name: "Bawana Doe",
       email: "[EMAIL_ADDRESS]",
+      joiningDate: "2025-06-10",
       age: 23,
       gender: "Male",
       role: "Admin",
-      status: "Active",
+      status: true,
       technologies: ["Python", "Node.js"],
     },
     {
       id: 4,
       name: "Aka Doe",
       email: "[EMAIL_ADDRESS]",
+      joiningDate: "2025-08-05",
       age: 22,
       gender: "Female",
       role: "User",
-      status: "Inactive",
+      status: false,
       technologies: ["TypeScript"],
     },
   ]);
@@ -112,6 +150,7 @@ const Users = () => {
       id: usersList.length ? Math.max(...usersList.map((u) => u.id)) + 1 : 1,
       name: values.name,
       email: values.email,
+      joiningDate: values.joiningDate,
       age: Number(values.age),
       gender: values.gender,
       role: values.role,
@@ -125,9 +164,9 @@ const Users = () => {
 
   return (
     <section>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center py-4">
         <p className="text-2xl">Users</p>
-        <CustomButton className="mt-5 justify-center" onClick={() => setIsModalOpen(true)}>
+        <CustomButton size="lg" onClick={() => setIsModalOpen(true)}>
           Add User
         </CustomButton>
       </div>

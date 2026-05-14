@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import Select, { components } from "react-select";
-import type { MultiValue, OptionProps, SingleValue } from "react-select";
+import type {
+  MultiValue,
+  OptionProps,
+  SingleValue,
+  DropdownIndicatorProps,
+  ClearIndicatorProps,
+  MultiValueRemoveProps,
+} from "react-select";
 import type { FieldProps } from "formik";
-import CustomCheckbox from "./CustomCheckbox";
+import { motion, AnimatePresence } from "framer-motion";
+import type { CheckboxColor } from "./CustomCheckbox";
+
 /* -------------------------------------------------------------------------- */
 /*                                   Types                                    */
 /* -------------------------------------------------------------------------- */
@@ -12,68 +21,271 @@ export interface SelectOption {
   value: string | number;
 }
 
+type SelectVariant = "flat" | "bordered" | "underlined" | "faded";
+type SelectSize = "sm" | "md" | "lg";
+type SelectRadius = "none" | "sm" | "md" | "lg" | "full";
+type SelectColor =
+  | "default"
+  | "primary"
+  | "secondary"
+  | "success"
+  | "warning"
+  | "danger";
+type SelectLabelPlacement = "inside" | "outside" | "outside-left";
+
 interface CustomSelectProps extends FieldProps {
   label?: string;
-
+  placeholder?: string;
   options: SelectOption[];
 
-  placeholder?: string;
-
   isMulti?: boolean;
-
   isClearable?: boolean;
-
   isDisabled?: boolean;
-
   isSearchable?: boolean;
-
-  className?: string;
-
   showCheckbox?: boolean;
+  closeMenuOnSelect?: boolean;
+  /** Max chips shown before showing "+N more" badge (default: 3) */
+  maxVisibleChips?: number;
 
   onInputChange?: (value: string) => void;
-
   isLoading?: boolean;
-
   isApiSearch?: boolean;
+
+  // HeroUI-style props
+  variant?: SelectVariant;
+  size?: SelectSize;
+  radius?: SelectRadius;
+  color?: SelectColor;
+  labelPlacement?: SelectLabelPlacement;
+
+  containerClassName?: string;
+  labelClassName?: string;
+  errorClassName?: string;
 }
 
 /* -------------------------------------------------------------------------- */
-/*                             Custom Option UI                               */
+/*                              Color Tokens                                  */
+/* -------------------------------------------------------------------------- */
+
+const colorTokens: Record<
+  SelectColor,
+  { bg: string; text: string; multiValueBg: string; multiValueText: string; focusBorder: string }
+> = {
+  default:   { bg: "bg-neutral-500",   text: "text-white",      multiValueBg: "bg-neutral-500",   multiValueText: "text-white",      focusBorder: "border-neutral-500"  },
+  primary:   { bg: "bg-blue-500",      text: "text-white",      multiValueBg: "bg-blue-500",      multiValueText: "text-white",      focusBorder: "border-blue-500"     },
+  secondary: { bg: "bg-purple-500",    text: "text-white",      multiValueBg: "bg-purple-500",    multiValueText: "text-white",      focusBorder: "border-purple-500"   },
+  success:   { bg: "bg-emerald-500",   text: "text-white",      multiValueBg: "bg-emerald-500",   multiValueText: "text-white",      focusBorder: "border-emerald-500"  },
+  warning:   { bg: "bg-amber-500",     text: "text-neutral-900",multiValueBg: "bg-amber-500",     multiValueText: "text-neutral-900",focusBorder: "border-amber-500"    },
+  danger:    { bg: "bg-rose-500",      text: "text-white",      multiValueBg: "bg-rose-500",      multiValueText: "text-white",      focusBorder: "border-rose-500"     },
+};
+
+/* -------------------------------------------------------------------------- */
+/*                              Size Tokens                                   */
+/* -------------------------------------------------------------------------- */
+
+const sizeTokens: Record<SelectSize, { minH: string; textSize: string; labelSize: string; ptInside: string; pb: string; px: string }> = {
+  sm: { minH: "min-h-[36px]", textSize: "text-xs",   labelSize: "text-[10px]", ptInside: "pt-4",   pb: "",   px: "px-2.5" },
+  md: { minH: "min-h-[44px]", textSize: "text-sm",   labelSize: "text-xs",    ptInside: "pt-5",   pb: "", px: "px-3"   },
+  lg: { minH: "min-h-[52px]", textSize: "text-base",  labelSize: "text-sm",   ptInside: "pt-6",   pb: "",   px: "px-4"   },
+};
+
+/* -------------------------------------------------------------------------- */
+/*                           Variant / Radius Tokens                          */
+/* -------------------------------------------------------------------------- */
+
+const variantBase: Record<SelectVariant, string> = {
+  flat:       "bg-neutral-100 dark:bg-neutral-800 border-2 border-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700",
+  bordered:   "bg-transparent border-2 border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500",
+  underlined: "bg-transparent border-b-2 border-neutral-300 dark:border-neutral-700 hover:border-neutral-500 rounded-none",
+  faded:      "bg-neutral-50 dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-800 hover:border-neutral-300",
+};
+
+const radiusMap: Record<SelectRadius, string> = {
+  none: "rounded-none",
+  sm:   "rounded-sm",
+  md:   "rounded-md",
+  lg:   "rounded-lg",
+  full: "rounded-full",
+};
+
+/* -------------------------------------------------------------------------- */
+/*                         Custom Dropdown Indicator                          */
+/* -------------------------------------------------------------------------- */
+
+const CustomDropdownIndicator = (props: DropdownIndicatorProps<SelectOption, boolean>) => {
+  return (
+    <components.DropdownIndicator {...props}>
+      <motion.svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="w-4 h-4 text-neutral-400"
+        animate={{ rotate: props.selectProps.menuIsOpen ? 180 : 0 }}
+        transition={{ duration: 0.2, ease: "easeInOut" }}
+      >
+        <polyline points="6 9 12 15 18 9" />
+      </motion.svg>
+    </components.DropdownIndicator>
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/*                         Custom Clear Indicator                             */
+/* -------------------------------------------------------------------------- */
+
+const CustomClearIndicator = (props: ClearIndicatorProps<SelectOption, boolean>) => {
+  return (
+    <components.ClearIndicator {...props}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        className="w-3.5 h-3.5 text-neutral-400 hover:text-neutral-700 dark:hover:text-white transition-colors"
+      >
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </components.ClearIndicator>
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/*                       Custom Multi-Value Remove                            */
+/* -------------------------------------------------------------------------- */
+
+const CustomMultiValueRemove = (props: MultiValueRemoveProps<SelectOption>) => {
+  return (
+    <components.MultiValueRemove {...props}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        className="w-3 h-3 text-white"
+      >
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </components.MultiValueRemove>
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/*       Custom Multi-Value: limits visible chips, shows "+N more" badge      */
+/* -------------------------------------------------------------------------- */
+
+const CustomMultiValue = (props: any) => {
+  const maxVisible: number = (props.selectProps as any)?.maxVisibleChips ?? 3;
+  const total: number = props.getValue().length;
+  const { index } = props;
+
+  // Within limit — render normally
+  if (index < maxVisible) {
+    return <components.MultiValue {...props} />;
+  }
+
+  // First chip beyond limit → show "+N more" badge (rendered once)
+  if (index === maxVisible) {
+    const hiddenCount = total - maxVisible;
+    const colorProp: SelectColor = (props.selectProps as any)?.colorProp ?? "primary";
+    const badgeMap: Record<SelectColor, string> = {
+      default:   "bg-neutral-200 text-neutral-700",
+      primary:   "bg-blue-100 text-blue-700",
+      secondary: "bg-purple-100 text-purple-700",
+      success:   "bg-emerald-100 text-emerald-700",
+      warning:   "bg-amber-100 text-amber-800",
+      danger:    "bg-rose-100 text-rose-700",
+    };
+    return (
+      <span className={`inline-flex items-center shrink-0 rounded-md px-2 py-1.5 text-sm font-semibold whitespace-nowrap ${badgeMap[colorProp]}`}>
+        +{hiddenCount}
+      </span>
+    );
+  }
+
+  // All further chips are invisible
+  return null;
+};
+
+/* -------------------------------------------------------------------------- */
+/*              Static Option Checkbox (no animation = no height shift)       */
+/* -------------------------------------------------------------------------- */
+
+const StaticCheckbox = ({ checked, color }: { checked: boolean; color: CheckboxColor }) => {
+  const bgMap: Record<CheckboxColor, string> = {
+    default:   "bg-neutral-500",
+    primary:   "bg-blue-500",
+    secondary: "bg-purple-500",
+    success:   "bg-emerald-500",
+    warning:   "bg-amber-500",
+    danger:    "bg-rose-500",
+  };
+  const borderMap: Record<CheckboxColor, string> = {
+    default:   "border-neutral-400",
+    primary:   "border-blue-500",
+    secondary: "border-purple-500",
+    success:   "border-emerald-500",
+    warning:   "border-amber-500",
+    danger:    "border-rose-500",
+  };
+
+  return (
+    <span
+      className={`
+        inline-flex items-center justify-center shrink-0 w-5 h-5 rounded-md border-2 transition-colors duration-150
+        ${checked ? `${bgMap[color]} border-transparent` : `bg-transparent ${borderMap[color]}`}
+      `}
+    >
+      {/* SVG always in DOM — opacity toggles so box height never shifts */}
+      <svg
+        viewBox="0 0 12 10"
+        fill="none"
+        stroke="white"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={`w-3 h-3 transition-opacity duration-150 ${checked ? "opacity-100" : "opacity-0"}`}
+      >
+        <path d="M1.5 5L4.5 8L10.5 1.5" />
+      </svg>
+    </span>
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/*                             Custom Option                                  */
 /* -------------------------------------------------------------------------- */
 
 const CustomOption = (props: OptionProps<SelectOption, boolean>) => {
   const { isSelected } = props;
   const showCheckbox = !!((props.selectProps as any)?.showCheckbox);
+  const colorProp: CheckboxColor = (props.selectProps as any)?.colorProp ?? "primary";
 
   return (
     <components.Option {...props}>
       <div className="flex items-center justify-between w-full gap-2">
         <div className="min-w-0 flex items-center gap-2 overflow-hidden">
           {showCheckbox && (
-            <CustomCheckbox
-              checked={isSelected}
-              onChange={() => {}}
-              className="pointer-events-none"
-              containerClassName="m-0 p-0"
-              label=""
-            />
+            <StaticCheckbox checked={isSelected} color={colorProp} />
           )}
-          <span className="whitespace-nowrap text-black">{props.children}</span>
+          <span className="whitespace-nowrap text-sm text-neutral-700 dark:text-neutral-200">
+            {props.children}
+          </span>
         </div>
-
+        {/* Checkmark for single-select */}
         {!showCheckbox && isSelected && (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className="w-4 h-4 text-blue-600"
-          >
-            <path
-              fillRule="evenodd"
-              d="M16.704 5.29a1 1 0 010 1.414l-7.2 7.2a1 1 0 01-1.414 0l-3.2-3.2a1 1 0 111.414-1.414l2.493 2.493 6.493-6.493a1 1 0 011.414 0z"
-              clipRule="evenodd"
-            />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+            className="w-4 h-4 shrink-0 text-neutral-700 dark:text-neutral-200">
+            <path fillRule="evenodd" d="M16.704 5.29a1 1 0 010 1.414l-7.2 7.2a1 1 0 01-1.414 0l-3.2-3.2a1 1 0 111.414-1.414l2.493 2.493 6.493-6.493a1 1 0 011.414 0z" clipRule="evenodd" />
           </svg>
         )}
       </div>
@@ -82,7 +294,7 @@ const CustomOption = (props: OptionProps<SelectOption, boolean>) => {
 };
 
 /* -------------------------------------------------------------------------- */
-/*                              Select Component                                */
+/*                              Select Component                              */
 /* -------------------------------------------------------------------------- */
 
 const CustomSelect: React.FC<CustomSelectProps> = ({
@@ -95,150 +307,282 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   isClearable = false,
   isDisabled = false,
   isSearchable = false,
-  className = "",
+  showCheckbox = false,
+  closeMenuOnSelect,
   onInputChange,
   isLoading = false,
-  isApiSearch = true, 
-  showCheckbox = false,
-}) => {
-  const { name, value } = field;
+  isApiSearch = true,
 
+  variant = "bordered",
+  size = "md",
+  radius = "md",
+  color = "primary",
+  labelPlacement = "outside",
+
+  containerClassName = "",
+  labelClassName = "",
+  errorClassName = "",
+}) => {
+  const [isFocused, setIsFocused] = useState(false);
+  const [maxVisibleChips, setMaxVisibleChips] = useState<number>(999);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLDivElement>(null);
+
+  const { name, value } = field;
   const { setFieldValue, setFieldTouched, touched, errors } = form;
 
-  const error = touched[name] && errors[name];
+  const hasError = !!(touched[name] && errors[name]);
+  const errorMsg = hasError ? String(errors[name]) : undefined;
 
   const normalizedValue = isMulti
-    ? options.filter(option => Array.isArray(value) && value.includes(option.value))
-    : options.find(option => option.value === value) || null;
+    ? options.filter((o) => Array.isArray(value) && value.includes(o.value))
+    : options.find((o) => o.value === value) || null;
 
-  const handleChange = (
-    selected: MultiValue<SelectOption> | SingleValue<SelectOption>,
-  ) => {
+  const hasValue = isMulti
+    ? Array.isArray(normalizedValue) && normalizedValue.length > 0
+    : normalizedValue !== null && normalizedValue !== undefined;
+
+  // For inside floating label
+  const isLabelActive = isFocused || hasValue;
+
+  const handleChange = (selected: MultiValue<SelectOption> | SingleValue<SelectOption>) => {
     if (isMulti) {
-      const values = selected ? (selected as MultiValue<SelectOption>).map(s => s.value) : [];
+      const values = selected ? (selected as MultiValue<SelectOption>).map((s) => s.value) : [];
       setFieldValue(name, values);
     } else {
-      const val = selected ? (selected as SingleValue<SelectOption>)?.value : null;
+      const val = selected ? (selected as SingleValue<SelectOption>)?.value ?? null : null;
       setFieldValue(name, val);
     }
   };
 
-  return (
-    <div className={className}>
-      {label && (
-        <label className="block mb-1 text-sm font-medium">{label}</label>
-      )}
+  const tokens = colorTokens[color];
+  const sz = sizeTokens[size];
+  const isInside = labelPlacement === "inside";
+  const isOutsideLeft = labelPlacement === "outside-left";
 
-      <Select
-        {...({ showCheckbox } as any)}
-        name={name}
-        options={options}
-        value={normalizedValue}
-        onChange={handleChange}
-        onBlur={() => setFieldTouched(name, true)}
-        isMulti={isMulti}
-        isClearable={isClearable}
-        isDisabled={isDisabled}
-        isSearchable={isSearchable}
-        closeMenuOnSelect={isMulti ? false : true}
-        hideSelectedOptions={false}
-        placeholder={placeholder}
-        onInputChange={onInputChange}
-        isLoading={isLoading}
-        filterOption={
-          isApiSearch ? null : undefined
+  const radiusClass = variant === "underlined" ? "rounded-none" : radiusMap[radius];
+  const variantClass = variantBase[variant];
+
+  // Dynamic layout measurement for multi-select overflow chips
+  useLayoutEffect(() => {
+    if (!isMulti || !Array.isArray(normalizedValue) || normalizedValue.length === 0) return;
+
+    const updateMeasurements = () => {
+      if (!containerRef.current || !measureRef.current) return;
+      // Reserve ~120px buffer for right-side indicators, input field cursor, padding, and "+N more" badge
+      const availableWidth = containerRef.current.clientWidth - 120;
+
+      const chipNodes = Array.from(measureRef.current.children) as HTMLElement[];
+      let currentWidth = 0;
+      let count = 0;
+
+      for (let i = 0; i < chipNodes.length; i++) {
+        const nodeWidth = chipNodes[i].offsetWidth + 4; // account for gap-1 (4px)
+        if (currentWidth + nodeWidth > availableWidth && i > 0) {
+          break;
         }
-        components={{
-          Option: CustomOption,
-        }}
-        theme={(theme) => ({
-          ...theme,
-          colors: {
-            ...theme.colors,
-            primary: "#f3f4f6",
-            primary25: "#f3f4f6",
-            primary50: "#f3f4f6",
-            neutral0: "#ffffff",
-            neutral80: "#000000",
-          },
-        })}
-        classNames={{
-          control: (state) =>
-            `
-            min-h-[42px]
-            border
-            border-gray-300
-            rounded-md
-            shadow-sm
-            hover:border-gray-300
-            ${
-              state.menuIsOpen
-                ? "border-gray-300"
-                : "border-gray-300"
+        currentWidth += nodeWidth;
+        count++;
+      }
+
+      setMaxVisibleChips(count < normalizedValue.length ? count : normalizedValue.length);
+    };
+
+    updateMeasurements();
+
+    const observer = new ResizeObserver(() => {
+      updateMeasurements();
+    });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [isMulti, normalizedValue]);
+
+  // ── Inside label animation ────────────────────────────────────────────────
+  const insideLabelVariants = {
+    default: { top: "50%", y: "-50%", scale: 1 },
+    active:  { top: "0.3rem", y: "0%", scale: 0.82 },
+  };
+
+  // ── Render outside label ──────────────────────────────────────────────────
+  const renderOutsideLabel = () => {
+    if (!label || isInside) return null;
+    return (
+      <label
+        htmlFor={name}
+        className={`block font-medium text-neutral-700 dark:text-neutral-300 select-none ${
+          isOutsideLeft ? "shrink-0 mb-0" : "mb-1.5"
+        } ${sz.labelSize} ${labelClassName}`}
+      >
+        {label}
+      </label>
+    );
+  };
+
+  return (
+    <div className={`w-full ${containerClassName}`}>
+      <div className={isOutsideLeft ? "flex items-center gap-3 w-full" : "w-full"}>
+        {/* Outside label */}
+        {renderOutsideLabel()}
+
+        {/* Wrapper container */}
+        <div
+          ref={containerRef}
+          className={`
+            relative w-full transition-all duration-200 ease-in-out
+            ${variantClass}
+            ${radiusClass}
+            ${hasError ? "!border-red-500 dark:!border-red-500" : ""}
+            ${isFocused && !hasError
+              ? variant === "bordered" || variant === "faded"
+                ? "border-neutral-800 dark:border-neutral-200"
+                : ""
+              : ""}
+          `}
+        >
+          {/* Hidden measuring container for dynamic multi-select chip overflow */}
+          {isMulti && Array.isArray(normalizedValue) && normalizedValue.length > 0 && (
+            <div
+              ref={measureRef}
+              aria-hidden="true"
+              className="absolute top-0 left-0 invisible pointer-events-none flex gap-1 h-0 overflow-hidden"
+            >
+              {normalizedValue.map((opt) => (
+                <div
+                  key={opt.value}
+                  className={`inline-flex items-center gap-1 ${
+                    sz.textSize === "text-xs" ? "text-xs" : "text-sm"
+                  } rounded-md px-2 py-1.5 font-medium whitespace-nowrap`}
+                >
+                  <span className="leading-normal">{opt.label}</span>
+                  <div className="w-3 h-3 ml-0.5" />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Inside floating label */}
+          {isInside && label && (
+            <motion.label
+              htmlFor={name}
+              className={`absolute left-0 ${sz.px} font-medium text-neutral-500 dark:text-neutral-400 select-none origin-top-left pointer-events-none whitespace-nowrap z-10 ${sz.labelSize} ${labelClassName}`}
+              variants={insideLabelVariants}
+              initial={isLabelActive ? "active" : "default"}
+              animate={isLabelActive ? "active" : "default"}
+              transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
+              style={{ transformOrigin: "top left" }}
+            />
+          )}
+
+          {/* react-select */}
+          <Select
+            {...({ showCheckbox, colorProp: color, maxVisibleChips } as any)}
+            inputId={name}
+            name={name}
+            options={options}
+            value={normalizedValue}
+            onChange={handleChange}
+            onBlur={() => { setFieldTouched(name, true); setIsFocused(false); }}
+            onFocus={() => setIsFocused(true)}
+            isMulti={isMulti}
+            isClearable={isClearable}
+            isDisabled={isDisabled}
+            isSearchable={isSearchable}
+            closeMenuOnSelect={closeMenuOnSelect ?? (!isMulti)}
+            hideSelectedOptions={false}
+            placeholder={
+              isInside
+                ? isLabelActive
+                  ? placeholder
+                  : label || placeholder
+                : placeholder
             }
-          `,
+            onInputChange={onInputChange}
+            isLoading={isLoading}
+            filterOption={isApiSearch ? null : undefined}
+            components={{
+              Option: CustomOption,
+              DropdownIndicator: CustomDropdownIndicator,
+              ClearIndicator: CustomClearIndicator,
+              MultiValueRemove: CustomMultiValueRemove,
+              MultiValue: CustomMultiValue,
+              IndicatorSeparator: () => null,
+            }}
+            unstyled
+            classNames={{
+              container: () => "w-full",
 
-          valueContainer: () => "px-2 py-1",
+              control: () =>
+                `flex items-center w-full cursor-pointer bg-transparent ${sz.minH} ${sz.px} ${isInside && label ? sz.ptInside : ""} ${sz.pb}`,
 
-          placeholder: () => "text-gray-400",
+              placeholder: () =>
+                `${sz.textSize} text-neutral-400 dark:text-neutral-500 select-none truncate`,
 
-          menu: () =>
-            `
-            mt-1
-            border
-            border-gray-200
-            rounded-md
-            overflow-hidden
-            shadow-lg
-            bg-white
-            z-50
-          `,
+              singleValue: () =>
+                `${sz.textSize} text-neutral-800 dark:text-neutral-100`,
 
-          option: () =>
-            `
-            px-3
-            py-2
-            cursor-pointer
-            transition-colors
-            bg-transparent
-            text-black
-          `,
+              valueContainer: () => "flex flex-nowrap items-center gap-1 flex-1 min-w-0 overflow-hidden",
 
-          multiValue: () => "bg-blue-100 rounded px-1",
+              input: () =>
+                `${sz.textSize} text-neutral-800 dark:text-neutral-100 outline-none`,
 
-          multiValueLabel: () => "text-blue-700 text-sm",
+              indicatorsContainer: () => "flex items-center gap-1 shrink-0 pr-1",
 
-          multiValueRemove: () =>
-            "hover:bg-blue-transparent active:bg-transparent rounded",
-        }}
-        styles={{
-          multiValueRemove: (base) => ({
-            ...base,
-            backgroundColor: "transparent",
+              menu: () =>
+                `mt-1.5 border border-neutral-200 dark:border-neutral-700 ${radiusClass} overflow-hidden shadow-xl bg-white dark:bg-neutral-900 z-50`,
 
-            ":hover": {
-              backgroundColor: "transparent",
-              color: "black",
-            },
+              menuList: () => "py-1",
 
-            ":active": {
-              backgroundColor: "transparent",
-            },
-          }),
-          control: (base) => ({
-            ...base,
-            borderColor: "#d1d5db",
-            boxShadow: "none",
-          
-            ":hover": {
-              borderColor: "#d1d5db",
-            },        
-          }),
-        }}
-        noOptionsMessage={() => "No data found"}
-      />
+              option: ({ isSelected, isFocused: optFocused }) =>
+                `px-3 py-2 cursor-pointer transition-colors duration-100 text-neutral-700 dark:text-neutral-200
+                ${ optFocused && !isSelected
+                    ? "bg-neutral-100 dark:bg-neutral-800"
+                    : "bg-transparent"
+                }`,
 
-      {error && <p className="mt-1 text-sm text-red-500">{String(error)}</p>}
+              noOptionsMessage: () =>
+                "px-3 py-2 text-sm text-neutral-500 dark:text-neutral-400",
+
+              loadingMessage: () =>
+                "px-3 py-2 text-sm text-neutral-500 dark:text-neutral-400",
+
+              multiValue: () =>
+                `inline-flex items-center gap-1 ${sz.textSize === "text-xs" ? "text-xs" : "text-sm"} ${tokens.multiValueBg} ${tokens.multiValueText} rounded-md px-2 py-1.5 font-medium whitespace-nowrap`,
+
+              multiValueLabel: () => "leading-normal",
+
+              multiValueRemove: () =>
+                "ml-0.5 flex items-center justify-center text-white opacity-70 hover:opacity-100 cursor-pointer transition-opacity",
+
+              clearIndicator: () =>
+                "flex items-center justify-center p-1 cursor-pointer",
+
+              dropdownIndicator: () =>
+                "flex items-center justify-center p-1 cursor-pointer",
+            }}
+            noOptionsMessage={() => "No data found"}
+          />
+        </div>
+      </div>
+
+      {/* Error */}
+      <AnimatePresence>
+        {hasError && (
+          <motion.p
+            key="err"
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.15 }}
+            className={`mt-1.5 text-xs text-red-500 ${errorClassName}`}
+          >
+            {errorMsg}
+          </motion.p>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

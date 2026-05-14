@@ -131,9 +131,12 @@ function CustomTable<T = any>({
       header: ({ table }) => (
         <div className="flex items-center justify-center px-1">
           <CustomCheckbox
-            indeterminate={table.getIsSomeRowsSelected()}
+            indeterminate={table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()}
             checked={table.getIsAllRowsSelected()}
-            onChange={table.getToggleAllRowsSelectedHandler()}
+            onChange={(checkedOrEvent: any) => {
+              const checked = typeof checkedOrEvent === "boolean" ? checkedOrEvent : checkedOrEvent?.target?.checked;
+              table.toggleAllRowsSelected(checked);
+            }}
             className="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded focus:ring-indigo-500"
           />
         </div>
@@ -143,7 +146,10 @@ function CustomTable<T = any>({
           <CustomCheckbox
             checked={row.getIsSelected()}
             indeterminate={row.getIsSomeSelected()}
-            onChange={row.getToggleSelectedHandler()}
+            onChange={(checkedOrEvent: any) => {
+              const checked = typeof checkedOrEvent === "boolean" ? checkedOrEvent : checkedOrEvent?.target?.checked;
+              row.toggleSelected(checked);
+            }}
             className="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded focus:ring-indigo-500"
           />
         </div>
