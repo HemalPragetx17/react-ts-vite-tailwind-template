@@ -69,7 +69,7 @@ const NotificationsMenu: React.FC = () => {
       <button
         type="button"
         onClick={toggle}
-        className="relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        className="relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-600"
         aria-label="View notifications"
         aria-haspopup="true"
         aria-expanded={isOpen}

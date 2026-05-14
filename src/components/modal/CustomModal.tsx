@@ -33,7 +33,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
       <div className="flex items-center justify-center min-h-screen p-4 text-center sm:p-0">
         {/* Background overlay */}
         <div 
-          className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm cursor-pointer" 
+          className="fixed inset-0 bg-black/30 transition-opacity backdrop-blur-sm cursor-pointer" 
           aria-hidden="true"
           onClick={onClose}
         ></div>

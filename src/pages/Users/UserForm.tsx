@@ -196,10 +196,10 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
 
           {/* Fixed Shrink-0 Footer Action Area */}
           <div className="mt-4 shrink-0 flex justify-end gap-3 pt-3 border-t border-gray-100 bg-white">
-            <CustomButton type="button" variant="white" onClick={onCancel}>
+            <CustomButton type="button" variant="bordered" color="danger" onClick={onCancel}>
               Cancel
             </CustomButton>
-            <CustomButton type="submit" variant="primary">
+            <CustomButton type="submit" variant="solid" color="primary">
               Add User
             </CustomButton>
           </div>

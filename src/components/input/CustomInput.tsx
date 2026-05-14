@@ -102,6 +102,11 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) 
           value={inputValue}
           onChange={handleChange}
           onBlur={field?.onBlur || props.onBlur}
+          onWheel={(e) => {
+            if (type === "number") {
+              (e.target as HTMLInputElement).blur();
+            }
+          }}
           ref={ref}
           type={inputType}
           className={`

@@ -61,13 +61,13 @@ const UserMenu: React.FC<UserMenuProps> = ({ onLogout }) => {
       <button
         type="button"
         onClick={() => setIsOpen((current) => !current)}
-        className="flex items-center gap-3 rounded-full bg-white px-1 py-1 text-left focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        className="flex items-center gap-3 rounded-full bg-white px-1 py-1 text-left"
         id="user-menu-button"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
         <span className="sr-only">Open user menu</span>
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 text-sm font-semibold text-white">
+        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white">
           {initials || 'U'}
         </span>
       </button>
