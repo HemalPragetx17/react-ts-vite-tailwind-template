@@ -1,8 +1,13 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import DatePicker from "react-datepicker";
-import Select from "react-select";
 import type { FieldProps } from "formik";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  animate,
+  useMotionValue,
+  useTransform,
+} from "framer-motion";
 import "react-datepicker/dist/react-datepicker.css";
 import "./index.css";
 
@@ -47,30 +52,65 @@ export interface CustomDatePickerProps extends Partial<FieldProps> {
   containerClassName?: string;
   labelClassName?: string;
   errorClassName?: string;
+  enableMonthYearPicker?: boolean;
 }
 
 /* -------------------------------------------------------------------------- */
 /*                              Tokens & Helpers                              */
 /* -------------------------------------------------------------------------- */
 
-const sizeTokens: Record<PickerSize, { minH: string; textSize: string; labelSize: string; ptInside: string; pb: string; px: string }> = {
-  sm: { minH: "min-h-[36px]", textSize: "text-xs",   labelSize: "text-[10px]", ptInside: "pt-4", pb: "", px: "px-2.5" },
-  md: { minH: "min-h-[44px]", textSize: "text-sm",   labelSize: "text-xs",    ptInside: "pt-5", pb: "", px: "px-3"   },
-  lg: { minH: "min-h-[52px]", textSize: "text-base", labelSize: "text-sm",    ptInside: "pt-6", pb: "", px: "px-4"   },
+const sizeTokens: Record<
+  PickerSize,
+  {
+    minH: string;
+    textSize: string;
+    labelSize: string;
+    ptInside: string;
+    pb: string;
+    px: string;
+  }
+> = {
+  sm: {
+    minH: "min-h-[36px]",
+    textSize: "text-xs",
+    labelSize: "text-[10px]",
+    ptInside: "pt-4",
+    pb: "",
+    px: "px-2.5",
+  },
+  md: {
+    minH: "min-h-[44px]",
+    textSize: "text-sm",
+    labelSize: "text-xs",
+    ptInside: "pt-5",
+    pb: "",
+    px: "px-3",
+  },
+  lg: {
+    minH: "min-h-[52px]",
+    textSize: "text-base",
+    labelSize: "text-sm",
+    ptInside: "pt-6",
+    pb: "",
+    px: "px-4",
+  },
 };
 
 const variantBase: Record<PickerVariant, string> = {
-  flat:       "bg-neutral-100 dark:bg-neutral-800 border-2 border-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700",
-  bordered:   "bg-transparent border-2 border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500",
-  underlined: "bg-transparent border-b-2 border-neutral-300 dark:border-neutral-700 hover:border-neutral-500 rounded-none",
-  faded:      "bg-neutral-50 dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-800 hover:border-neutral-300",
+  flat: "bg-secondary-100 border-2 border-transparent hover:bg-secondary-200 ",
+  bordered:
+    "bg-transparent border-2 border-secondary-300 hover:border-secondary-400 ",
+  underlined:
+    "bg-transparent border-b-2 border-secondary-300 hover:border-secondary-500 rounded-none",
+  faded:
+    "bg-secondary-50 border-2 border-secondary-200 hover:border-secondary-300",
 };
 
 const radiusMap: Record<PickerRadius, string> = {
   none: "rounded-none",
-  sm:   "rounded-sm",
-  md:   "rounded-md",
-  lg:   "rounded-lg",
+  sm: "rounded-sm",
+  md: "rounded-md",
+  lg: "rounded-lg",
   full: "rounded-full",
 };
 
@@ -106,7 +146,13 @@ function toLocalYYYYMMDD(date: Date): string {
 }
 
 function isSameDate(a: Date | null, b: Date | null): boolean {
-  return !!a && !!b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  return (
+    !!a &&
+    !!b &&
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
 }
 
 function formatDateDisplay(date: Date | null): string {
@@ -139,7 +185,7 @@ function CalendarIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="text-neutral-400 shrink-0"
+      className="text-secondary-400 shrink-0"
       aria-hidden="true"
     >
       <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -157,14 +203,180 @@ function ClearIcon({ onClick }: { onClick: (e: React.MouseEvent) => void }) {
       aria-label="Clear date"
       tabIndex={-1}
       type="button"
-      className="flex items-center justify-center text-neutral-400 hover:text-neutral-700 dark:hover:text-white transition-colors p-1 rounded-full"
+      className="flex items-center justify-center text-secondary-400 hover:text-secondary-700 transition-colors p-1 rounded-full"
     >
-      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+      <svg
+        className="w-3.5 h-3.5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        viewBox="0 0 24 24"
+      >
         <line x1="18" y1="6" x2="6" y2="18" />
         <line x1="6" y1="6" x2="18" y2="18" />
       </svg>
     </button>
   );
+}
+
+/* -------------------------------------------------------------------------- */
+/*                         iOS Drum-Roll Picker Hook                          */
+/* -------------------------------------------------------------------------- */
+
+const ITEM_HEIGHT = 44; // px — height of each row in the drum
+const VISIBLE_ITEMS = 7; // must be odd so center = selected — 7 rows covers calendar date grid
+const DRUM_HEIGHT = ITEM_HEIGHT * VISIBLE_ITEMS; // 308px
+
+/**
+ * useDrumPicker
+ * Framer-motion powered scroll for a single drum column.
+ *
+ * - animate() drives scrollTop with a spring so it feels physical
+ * - scrollY MotionValue tracks live scroll position for per-item transforms
+ * - Native scroll still works (touch/wheel); on scroll-end we snap with spring
+ */
+/* -------------------------------------------------------------------------- */
+/* 3. REPLACE YOUR useDrumPicker() WITH THIS */
+/* -------------------------------------------------------------------------- */
+
+function useDrumPicker<T extends { value: number; label: string }>(
+  items: T[],
+  currentValue: number,
+  onChange: (value: number) => void,
+) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const programmaticRef = useRef(false);
+
+  const scrollY = useMotionValue(0);
+
+  const PADDING = ((VISIBLE_ITEMS - 1) / 2) * ITEM_HEIGHT;
+
+  const indexToScrollTop = useCallback((idx: number) => idx * ITEM_HEIGHT, []);
+
+  const scrollTopToIndex = useCallback(
+    (scrollTop: number) => Math.round(scrollTop / ITEM_HEIGHT),
+    [],
+  );
+
+  /* ---------------------------------------------------------------------- */
+  /* SMOOTH SPRING */
+  /* ---------------------------------------------------------------------- */
+
+  const animateToIndex = useCallback(
+    (idx: number, instant = false) => {
+      const el = containerRef.current;
+
+      if (!el) return;
+
+      const target = indexToScrollTop(idx);
+
+      programmaticRef.current = true;
+
+      if (instant) {
+        el.scrollTop = target;
+        scrollY.set(target);
+        programmaticRef.current = false;
+        return;
+      }
+
+      animate(scrollY, target, {
+        type: "spring",
+
+        stiffness: 140,
+        damping: 24,
+        mass: 0.8,
+
+        restDelta: 0.2,
+        restSpeed: 0.2,
+
+        onUpdate: (v) => {
+          if (el) {
+            el.scrollTop = v;
+          }
+        },
+
+        onComplete: () => {
+          programmaticRef.current = false;
+        },
+      });
+    },
+    [indexToScrollTop, scrollY],
+  );
+
+  /* ---------------------------------------------------------------------- */
+  /* INITIAL POSITION */
+  /* ---------------------------------------------------------------------- */
+
+  useEffect(() => {
+    const idx = items.findIndex((it) => it.value === currentValue);
+
+    if (idx !== -1) {
+      animateToIndex(idx, true);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentValue]);
+
+  /* ---------------------------------------------------------------------- */
+  /* SCROLL */
+  /* ---------------------------------------------------------------------- */
+
+  const handleScroll = useCallback(() => {
+    const el = containerRef.current;
+
+    if (!el) return;
+
+    scrollY.set(el.scrollTop);
+
+    if (programmaticRef.current) return;
+
+    if (scrollTimerRef.current) {
+      clearTimeout(scrollTimerRef.current);
+    }
+
+    scrollTimerRef.current = setTimeout(() => {
+      const idx = Math.max(
+        0,
+        Math.min(scrollTopToIndex(el.scrollTop), items.length - 1),
+      );
+
+      animateToIndex(idx);
+
+      if (items[idx] && items[idx].value !== currentValue) {
+        onChange(items[idx].value);
+      }
+    }, 60);
+  }, [
+    scrollY,
+    scrollTopToIndex,
+    animateToIndex,
+    items,
+    currentValue,
+    onChange,
+  ]);
+
+  /* ---------------------------------------------------------------------- */
+  /* CLICK */
+  /* ---------------------------------------------------------------------- */
+
+  const handleItemClick = useCallback(
+    (idx: number) => {
+      animateToIndex(idx);
+      onChange(items[idx].value);
+    },
+    [animateToIndex, items, onChange],
+  );
+
+  return {
+    containerRef,
+    handleScroll,
+    handleItemClick,
+    scrollY,
+    PADDING,
+  };
 }
 
 /* -------------------------------------------------------------------------- */
@@ -188,12 +400,13 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   variant = "bordered",
   size = "md",
   radius = "md",
-  color = "primary",
   labelPlacement = "outside",
 
   containerClassName = "",
   labelClassName = "",
   errorClassName = "",
+
+  enableMonthYearPicker = true,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -229,14 +442,20 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     : formatDateDisplay(startDate);
 
   // Determine Formik errors / touched state safely
-  const fieldError = fieldName && form?.errors?.[fieldName] ? String(form.errors[fieldName]) : error;
+  const fieldError =
+    fieldName && form?.errors?.[fieldName]
+      ? String(form.errors[fieldName])
+      : error;
   const fieldTouched = fieldName && form?.touched?.[fieldName] ? true : touched;
   const hasError = !!(fieldTouched && fieldError);
 
   // Click outside listener
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
         if (isOpen) {
           setIsOpen(false);
           if (form?.setFieldTouched && fieldName) {
@@ -250,7 +469,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   }, [isOpen, form, fieldName]);
 
   // Date selection change event
-  const handleDateChange = (dates: any, event?: React.SyntheticEvent<any>) => {
+  const handleDateChange = (dates: any) => {
     if (selectsRange) {
       const [start, end] = Array.isArray(dates) ? dates : [dates, null];
       const cleanStart = start ? stripTime(start) : null;
@@ -309,7 +528,8 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 
   const sz = sizeTokens[size];
   const variantClass = variantBase[variant];
-  const radiusClass = variant === "underlined" ? "rounded-none" : radiusMap[radius];
+  const radiusClass =
+    variant === "underlined" ? "rounded-none" : radiusMap[radius];
 
   const isInside = labelPlacement === "inside";
   const isOutsideLeft = labelPlacement === "outside-left";
@@ -317,7 +537,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 
   const insideLabelVariants = {
     default: { top: "50%", y: "-50%", scale: 1 },
-    active:  { top: "0.3rem", y: "0%", scale: 0.82 },
+    active: { top: "0.3rem", y: "0%", scale: 0.82 },
   };
 
   const renderOutsideLabel = () => {
@@ -325,7 +545,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     return (
       <label
         htmlFor={fieldName}
-        className={`block font-medium text-neutral-700 dark:text-neutral-300 select-none ${
+        className={`block font-medium text-secondary-700 select-none ${
           isOutsideLeft ? "shrink-0 mb-0" : "mb-1.5"
         } ${sz.labelSize} ${labelClassName}`}
       >
@@ -334,7 +554,12 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     );
   };
 
-  // Custom react-datepicker header styling mapping
+  const [showMonthYearPicker, setShowMonthYearPicker] = useState(false);
+
+  /* -------------------------------------------------------------------------- */
+  /* CUSTOM HEADER */
+  /* -------------------------------------------------------------------------- */
+
   const renderHeader = ({
     date,
     decreaseMonth,
@@ -347,108 +572,237 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     const currentMonth = date.getMonth();
     const currentYear = date.getFullYear();
 
-    const selectStyles = {
-      control: (base: any) => ({
-        ...base,
-        minHeight: 30,
-        height: 30,
-        borderRadius: 8,
-        borderColor: "#d1d5db",
-        backgroundColor: "#ffffff",
-        boxShadow: "none",
-        fontSize: "12px",
-      }),
-      valueContainer: (base: any) => ({
-        ...base,
-        padding: "0 8px",
-        height: 30,
-      }),
-      indicatorsContainer: (base: any) => ({
-        ...base,
-        paddingRight: 4,
-      }),
-      singleValue: (base: any) => ({
-        ...base,
-        lineHeight: "30px",
-      }),
-      dropdownIndicator: (base: any) => ({
-        ...base,
-        padding: 2,
-      }),
-      menu: (base: any) => ({
-        ...base,
-        borderRadius: 8,
-        overflow: "hidden",
-        boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
-        zIndex: 99999,
-      }),
-      menuPortal: (base: any) => ({
-        ...base,
-        zIndex: 99999,
-      }),
-      menuList: (base: any) => ({
-        ...base,
-        padding: 0,
-        maxHeight: 180,
-      }),
-      option: (base: any, state: any) => ({
-        ...base,
-        padding: "4px 8px",
-        fontSize: "12px",
-        backgroundColor: state.isFocused ? "#eff6ff" : "#fff",
-        color: "#111827",
-      }),
-    };
+    const monthYearLabel = `${date.toLocaleString("en-US", {
+      month: "short",
+    })} ${currentYear}`;
 
     return (
-      <div className="flex flex-col items-center gap-2 px-2 pb-2 pt-1 bg-white select-none">
-        <div className="flex items-center justify-between w-full">
-          <button
-            type="button"
-            onClick={decreaseMonth}
-            disabled={prevMonthButtonDisabled}
-            className="flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-600 disabled:opacity-40 transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
-            </svg>
-          </button>
-          <span className="text-xs font-bold text-gray-800">
-            {date.toLocaleString("en-US", { month: "short" })} {currentYear}
-          </span>
-          <button
-            type="button"
-            onClick={increaseMonth}
-            disabled={nextMonthButtonDisabled}
-            className="flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-600 disabled:opacity-40 transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
-            </svg>
-          </button>
-        </div>
-        <div className="flex items-center justify-center gap-2 w-full mt-1">
-          <div className="flex-1">
-            <Select
-              value={monthOptions[currentMonth]}
-              options={monthOptions}
-              onChange={(option) => changeMonth((option as any).value)}
-              isSearchable={false}
-              menuPlacement="auto"
-              menuPortalTarget={typeof document !== "undefined" ? document.body : undefined}
-              styles={selectStyles}
-            />
+      <div className="relative flex flex-col bg-white">
+        {/* HEADER ROW */}
+        <div className="relative flex items-center justify-between w-full px-2 pt-3 pb-2">
+          {/* LEFT */}
+          <div className="flex items-center justify-center w-9 h-9">
+            <AnimatePresence mode="wait">
+              {!showMonthYearPicker && (
+                <motion.button
+                  key="prev-btn"
+                  initial={{ opacity: 0, scale: 0.92 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.92 }}
+                  transition={{ duration: 0.15 }}
+                  type="button"
+                  onClick={decreaseMonth}
+                  disabled={prevMonthButtonDisabled}
+                  className="
+                  flex items-center justify-center
+                  w-9 h-9
+                  rounded-full
+                  border border-secondary-200
+                  bg-secondary-50
+                  text-secondary-600
+                  hover:bg-secondary-100
+                  disabled:opacity-40
+                  transition-colors
+                "
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 18l-6-6 6-6"
+                    />
+                  </svg>
+                </motion.button>
+              )}
+            </AnimatePresence>
           </div>
-          <div className="w-20">
-            <Select
-              value={{ value: currentYear, label: String(currentYear) }}
-              options={yearOptions}
-              onChange={(option) => changeYear((option as any).value)}
-              isSearchable={false}
-              menuPlacement="auto"
-              menuPortalTarget={typeof document !== "undefined" ? document.body : undefined}
-              styles={selectStyles}
-            />
+
+          {/* MONTH YEAR BUTTON */}
+          <div className="relative flex-1 flex justify-center">
+            {enableMonthYearPicker ? (
+              <>
+                <motion.button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowMonthYearPicker((prev) => !prev);
+                  }}
+                  whileTap={{ scale: 0.96 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 24,
+                  }}
+                  className={`
+          inline-flex items-center justify-center gap-2
+          px-4 py-2
+          text-sm font-semibold
+          transition-all duration-300 ease-out
+
+          ${
+            showMonthYearPicker
+              ? `
+                rounded-full
+                border border-secondary-200
+                bg-secondary-100
+                shadow-none
+                text-secondary-900
+              `
+              : `
+                rounded-full
+                border border-secondary-200
+                bg-secondary-50
+                shadow-sm
+                text-secondary-900
+                hover:bg-secondary-100
+              `
+          }
+        `}
+                >
+                  <motion.span
+                    key={monthYearLabel}
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 380,
+                      damping: 26,
+                    }}
+                  >
+                    {monthYearLabel}
+                  </motion.span>
+
+                  <motion.svg
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-3.5 h-3.5"
+                    animate={{
+                      rotate: showMonthYearPicker ? 180 : 0,
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 320,
+                      damping: 24,
+                    }}
+                  >
+                    <path d="M6 8l4 4 4-4" />
+                  </motion.svg>
+                </motion.button>
+
+                {/* DRUM OVERLAY */}
+                <AnimatePresence>
+                  {showMonthYearPicker && (
+                    <motion.div
+                      initial={{
+                        opacity: 0,
+                        y: -8,
+                        scale: 0.98,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        y: -8,
+                        scale: 0.98,
+                      }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 320,
+                        damping: 28,
+                      }}
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        top: "calc(100% + 8px)",
+                        x: "-50%",
+                        zIndex: 50,
+                      }}
+                    >
+                      <DrumOverlay
+                        currentMonth={currentMonth}
+                        currentYear={currentYear}
+                        onMonthChange={(m) => {
+                          changeMonth(m);
+                        }}
+                        onYearChange={(y) => {
+                          changeYear(y);
+                        }}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </>
+            ) : (
+              <div
+                className="
+        inline-flex items-center justify-center
+        px-4 py-2
+        text-sm font-semibold
+        rounded-full
+        border border-secondary-200
+        bg-secondary-50
+        text-secondary-900
+      "
+              >
+                {monthYearLabel}
+              </div>
+            )}
+          </div>
+
+          {/* RIGHT */}
+          <div className="flex items-center justify-center w-9 h-9">
+            <AnimatePresence mode="wait">
+              {!showMonthYearPicker && (
+                <motion.button
+                  key="next-btn"
+                  initial={{ opacity: 0, scale: 0.92 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.92 }}
+                  transition={{ duration: 0.15 }}
+                  type="button"
+                  onClick={increaseMonth}
+                  disabled={nextMonthButtonDisabled}
+                  className="
+                  flex items-center justify-center
+                  w-9 h-9
+                  rounded-full
+                  border border-secondary-200
+                  bg-secondary-50
+                  text-secondary-600
+                  hover:bg-secondary-100
+                  disabled:opacity-40
+                  transition-colors
+                "
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 18l6-6-6-6"
+                    />
+                  </svg>
+                </motion.button>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
@@ -470,7 +824,9 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 
   return (
     <div className={`w-full ${containerClassName}`} ref={wrapperRef}>
-      <div className={isOutsideLeft ? "flex items-center gap-3 w-full" : "w-full"}>
+      <div
+        className={isOutsideLeft ? "flex items-center gap-3 w-full" : "w-full"}
+      >
         {renderOutsideLabel()}
 
         {/* Trigger input box */}
@@ -482,12 +838,14 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             ${sz.minH}
             ${sz.px}
             ${isInside && label ? sz.ptInside : ""}
-            ${hasError ? "!border-red-500 dark:!border-red-500" : ""}
-            ${isOpen && !hasError
-              ? variant === "bordered" || variant === "faded"
-                ? "border-neutral-800 dark:border-neutral-200"
+            ${hasError ? "!border-danger" : ""}
+            ${
+              isOpen && !hasError
+                ? variant === "bordered" || variant === "faded"
+                  ? "border-secondary-800"
+                  : ""
                 : ""
-              : ""}
+            }
             ${disabled ? "opacity-50 cursor-not-allowed" : ""}
           `}
           onClick={() => !disabled && setIsOpen((prev) => !prev)}
@@ -495,7 +853,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
           {/* Inside floating label */}
           {isInside && label && (
             <motion.label
-              className={`absolute left-0 ${sz.px} font-medium text-neutral-500 dark:text-neutral-400 select-none origin-top-left pointer-events-none whitespace-nowrap z-10 ${sz.labelSize} ${labelClassName}`}
+              className={`absolute left-0 ${sz.px} font-medium text-secondary-500 select-none origin-top-left pointer-events-none whitespace-nowrap z-10 ${sz.labelSize} ${labelClassName}`}
               variants={insideLabelVariants}
               initial={isLabelActive ? "active" : "default"}
               animate={isLabelActive ? "active" : "default"}
@@ -509,11 +867,15 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
           {/* Value Display */}
           <div className="flex-1 min-w-0 truncate pr-2">
             {!displayString ? (
-              <span className={`text-neutral-400 dark:text-neutral-500 truncate select-none ${sz.textSize}`}>
+              <span
+                className={`text-secondary-400 truncate select-none ${sz.textSize}`}
+              >
                 {isInside ? (isLabelActive ? placeholder : "") : placeholder}
               </span>
             ) : (
-              <span className={`text-neutral-800 dark:text-neutral-100 font-medium truncate select-none ${sz.textSize}`}>
+              <span
+                className={`text-secondary-800 font-medium truncate select-none ${sz.textSize}`}
+              >
                 {displayString}
               </span>
             )}
@@ -531,7 +893,8 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
           {/* Dropdown Calendar Portal Wrapper */}
           {isOpen && !disabled && (
             <div
-              className="absolute left-0 top-[calc(100%+6px)] z-50 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+              className="absolute left-0 top-[calc(100%+6px)] z-50 bg-background border border-secondary-200 rounded-xl shadow-xl overflow-hidden"
+              style={{ width: 256 }}
               onClick={(e) => e.stopPropagation()}
             >
               <DatePicker
@@ -543,9 +906,11 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
                   selectsRange: selectsRange,
                   shouldCloseOnSelect: false,
                   inline: true,
-                  calendarClassName: "drp-calendar !border-none !rounded-xl !shadow-none",
+                  calendarClassName:
+                    "drp-calendar !border-none !rounded-xl !shadow-none",
                   dayClassName: getDayClass,
                   renderCustomHeader: renderHeader,
+                  fixedHeight: true,
                 } as any)}
               />
             </div>
@@ -561,7 +926,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className={`mt-1.5 text-xs text-red-500 ${errorClassName}`}
+            className={`mt-1.5 text-xs text-danger ${errorClassName}`}
           >
             {fieldError}
           </motion.p>
@@ -574,3 +939,214 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 CustomDatePicker.displayName = "CustomDatePicker";
 
 export default CustomDatePicker;
+
+/* -------------------------------------------------------------------------- */
+/*                           DrumOverlay Component                            */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * DrumOverlay
+ * Renders two side-by-side iOS-style drum columns (month | year).
+ * - Fixed selection band sits at the vertical centre (pointer-events: none)
+ * - Month and year lists scroll independently behind it
+ * - Fade masks at top/bottom created via CSS (see index.css .drp-drum-*)
+ */
+interface DrumOverlayProps {
+  currentMonth: number;
+  currentYear: number;
+  onMonthChange: (month: number) => void;
+  onYearChange: (year: number) => void;
+}
+
+/* -------------------------------------------------------------------------- */
+/* DRUM OVERLAY */
+/* -------------------------------------------------------------------------- */
+
+const DrumOverlay: React.FC<DrumOverlayProps> = ({
+  currentMonth,
+  currentYear,
+  onMonthChange,
+  onYearChange,
+}) => {
+  const {
+    containerRef: monthRef,
+    handleScroll: handleMonthScroll,
+    handleItemClick: handleMonthClick,
+    scrollY: monthScrollY,
+    PADDING,
+  } = useDrumPicker(monthOptions, currentMonth, onMonthChange);
+
+  const {
+    containerRef: yearRef,
+    handleScroll: handleYearScroll,
+    handleItemClick: handleYearClick,
+    scrollY: yearScrollY,
+  } = useDrumPicker(yearOptions, currentYear, onYearChange);
+
+  return (
+    <div
+      className="
+        relative
+        overflow-hidden
+        bg-secondary-100
+        border-0
+        shadow-none
+      "
+      style={{
+        width: 256,
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* ACTIVE CENTER BAND */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-2 right-2"
+        style={{
+          top: "50%",
+          height: ITEM_HEIGHT - 4,
+          transform: "translateY(-50%)",
+          zIndex: 0,
+          borderRadius: 16,
+
+          background: "color-mix(in srgb, var(--color-background) 85%, transparent)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid color-mix(in srgb, var(--color-background) 75%, transparent)",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+        }}
+      />
+
+      {/* DRUMS */}
+      <div
+        className="flex"
+        style={{
+          height: DRUM_HEIGHT,
+        }}
+      >
+        {/* MONTH */}
+        <DrumColumn
+          items={monthOptions}
+          selectedValue={currentMonth}
+          containerRef={monthRef}
+          onScroll={handleMonthScroll}
+          onItemClick={handleMonthClick}
+          scrollY={monthScrollY}
+          padding={PADDING}
+          align="center"
+        />
+
+        {/* YEAR */}
+        <DrumColumn
+          items={yearOptions}
+          selectedValue={currentYear}
+          containerRef={yearRef}
+          onScroll={handleYearScroll}
+          onItemClick={handleYearClick}
+          scrollY={yearScrollY}
+          padding={PADDING}
+          align="center"
+        />
+      </div>
+    </div>
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/*                           DrumColumn Component                             */
+/* -------------------------------------------------------------------------- */
+
+interface DrumColumnProps {
+  items: { value: number; label: string }[];
+  selectedValue: number;
+  containerRef: React.RefObject<HTMLDivElement>;
+  onScroll: () => void;
+  onItemClick: (idx: number) => void;
+  scrollY: ReturnType<typeof useMotionValue<number>>;
+  padding: number;
+  align: "left" | "center" | "right";
+}
+
+const DrumColumn: React.FC<DrumColumnProps> = ({
+  items,
+  selectedValue,
+  containerRef,
+  onScroll,
+  onItemClick,
+  scrollY,
+  padding,
+  align,
+}) => {
+  return (
+    /* Outer wrapper: clips content + applies fade mask via CSS class */
+    <div className="relative flex-1 overflow-hidden drp-drum-fade">
+      {/* Scrollable list — no native scroll-snap; framer spring handles snapping */}
+      <div
+        ref={containerRef}
+        onScroll={onScroll}
+        className="drp-drum-scroll h-full overflow-y-scroll"
+      >
+        {/* Top padding spacer so first item can reach centre */}
+        <div style={{ height: padding, flexShrink: 0 }} />
+
+        {items.map((item, idx) => {
+          /**
+           * Per-item animated transforms driven by scrollY MotionValue.
+           * scrollY tracks live scrollTop, so these update on every scroll frame.
+           *
+           * itemCenter  = exact scrollTop where this item is centred
+           * offset      = distance of item from the current centre (in px)
+           * We map |offset| → opacity and scale so items physically recede.
+           */
+          const itemCenter = idx * ITEM_HEIGHT;
+
+          // useTransform requires a MotionValue — derive opacity + scale live
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const opacity = useTransform(
+            scrollY,
+            [
+              itemCenter - ITEM_HEIGHT * 3,
+              itemCenter - ITEM_HEIGHT,
+              itemCenter,
+              itemCenter + ITEM_HEIGHT,
+              itemCenter + ITEM_HEIGHT * 3,
+            ],
+            [0.25, 0.55, 1, 0.55, 0.25],
+          );
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const scale = useTransform(
+            scrollY,
+            [
+              itemCenter - ITEM_HEIGHT * 2,
+              itemCenter,
+              itemCenter + ITEM_HEIGHT * 2,
+            ],
+            [0.88, 1, 0.88],
+          );
+
+          const isSelected = item.value === selectedValue;
+
+          return (
+            <motion.div
+              key={item.value}
+              onClick={() => onItemClick(idx)}
+              style={{
+                height: ITEM_HEIGHT,
+                opacity,
+                scale,
+              }}
+              className={`
+                relative z-10 flex items-center cursor-pointer px-4 text-base
+                ${align === "left" ? "justify-start" : align === "right" ? "justify-end" : "justify-center"}
+                ${isSelected ? "text-secondary-900 font-semibold" : "text-secondary-700 font-medium"}
+              `}
+            >
+              {item.label}
+            </motion.div>
+          );
+        })}
+
+        {/* Bottom padding spacer so last item can reach centre */}
+        <div style={{ height: padding, flexShrink: 0 }} />
+      </div>
+    </div>
+  );
+};

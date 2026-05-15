@@ -11,4 +11,5 @@ export interface IUserModal {
     hobbies?: string[];
     agreeToTerms?: boolean;
     bio?: string;
+    dateRange?: [Date | null, Date | null];
 }

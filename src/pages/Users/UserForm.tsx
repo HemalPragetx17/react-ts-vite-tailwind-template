@@ -22,6 +22,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose 
   const initialState: IUserModal = {
     name: "",
     email: "",
+    dateRange: [null, null],
     joiningDate: "",
     age: 0,
     gender: "Male",
@@ -163,6 +164,14 @@ const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose 
             label="Role"
             component={CustomSelect}
             options={roleOptions}
+          />
+
+          <Field
+            name="dateRange"
+            label="Project Duration"
+            placeholder="Select date range"
+            selectsRange={true}
+            component={CustomDatePicker}
           />
 
           {/* User Bio / Notes (CustomTextarea) */}
