@@ -229,20 +229,12 @@ const StaticCheckbox = ({ checked, color }: { checked: boolean; color: CheckboxC
     warning:   "bg-amber-500",
     danger:    "bg-rose-500",
   };
-  const borderMap: Record<CheckboxColor, string> = {
-    default:   "border-neutral-400",
-    primary:   "border-blue-500",
-    secondary: "border-purple-500",
-    success:   "border-emerald-500",
-    warning:   "border-amber-500",
-    danger:    "border-rose-500",
-  };
 
   return (
     <span
       className={`
         inline-flex items-center justify-center shrink-0 w-5 h-5 rounded-md border-2 transition-colors duration-150
-        ${checked ? `${bgMap[color]} border-transparent` : `bg-transparent ${borderMap[color]}`}
+        ${checked ? `${bgMap[color]} border-transparent` : `bg-transparent}`}
       `}
     >
       {/* SVG always in DOM — opacity toggles so box height never shifts */}

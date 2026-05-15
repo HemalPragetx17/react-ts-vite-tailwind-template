@@ -186,9 +186,10 @@ const Users = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="Add New User"
-        maxWidthClassName="sm:max-w-xl"
+        size="2xl"
+        backdrop="blur"
+        scrollBehavior="inside"
       >
-        {/* Dedicated static UserForm mapped as children inside the modal */}
         <UserForm
           onSubmit={handleAddUserSubmit}
           onCancel={() => setIsModalOpen(false)}

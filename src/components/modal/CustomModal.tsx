@@ -1,20 +1,69 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import CustomButton from '../button/CustomButton';
+
+type ModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | 'full';
+type ModalBackdrop = 'transparent' | 'opaque' | 'blur';
+type ModalScrollBehavior = 'inside' | 'outside';
 
 interface CustomModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title?: string;
+  title?: React.ReactNode;
   children: React.ReactNode;
-  maxWidthClassName?: string;
+  footer?: React.ReactNode;
+  size?: ModalSize;
+  backdrop?: ModalBackdrop;
+  scrollBehavior?: ModalScrollBehavior;
+  isDraggable?: boolean;
+  className?: string;
+  closeButton?: boolean;
+  primaryActionText?: string;
+  secondaryActionText?: string;
+  onPrimaryAction?: () => void;
+  onSecondaryAction?: () => void;
+  primaryButtonForm?: string;
+  primaryButtonColor?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'default';
+  secondaryButtonColor?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'default';
 }
+
+const sizeClasses: Record<ModalSize, string> = {
+  xs: 'max-w-xs',
+  sm: 'max-w-sm',
+  md: 'max-w-md',
+  lg: 'max-w-lg',
+  xl: 'max-w-xl',
+  '2xl': 'max-w-2xl',
+  '3xl': 'max-w-3xl',
+  '4xl': 'max-w-4xl',
+  '5xl': 'max-w-5xl',
+  full: 'max-w-full m-0 h-full'
+};
 
 const CustomModal: React.FC<CustomModalProps> = ({
   isOpen,
   onClose,
   title,
   children,
-  maxWidthClassName = "sm:max-w-lg",
+  footer,
+  size = 'md',
+  backdrop = 'opaque',
+  scrollBehavior = 'inside',
+  isDraggable = false,
+  className = '',
+  closeButton = true,
+  primaryActionText,
+  secondaryActionText,
+  onPrimaryAction,
+  onSecondaryAction,
+  primaryButtonForm,
+  primaryButtonColor = 'primary',
+  secondaryButtonColor = 'danger',
 }) => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartPos = useRef({ x: 0, y: 0 });
+  const modalRef = useRef<HTMLDivElement>(null);
+
   // Close on Escape key pressed
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -22,51 +71,171 @@ const CustomModal: React.FC<CustomModalProps> = ({
         onClose();
       }
     };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
   }, [isOpen, onClose]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!isDraggable) return;
+    // Only allow dragging from header
+    const target = e.target as HTMLElement;
+    if (!target.closest('.modal-header')) return;
+
+    setIsDragging(true);
+    dragStartPos.current = {
+      x: e.clientX - position.x,
+      y: e.clientY - position.y
+    };
+  };
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!isDragging) return;
+    
+    setPosition({
+      x: e.clientX - dragStartPos.current.x,
+      y: e.clientY - dragStartPos.current.y
+    });
+  }, [isDragging]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    } else {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, handleMouseMove, handleMouseUp]);
+
+  // Reset position when modal closes/opens
+  useEffect(() => {
+    if (!isOpen) {
+      setPosition({ x: 0, y: 0 });
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed z-50 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-      <div className="flex items-center justify-center min-h-screen p-4 text-center sm:p-0">
-        {/* Background overlay */}
-        <div 
-          className="fixed inset-0 bg-black/30 transition-opacity backdrop-blur-sm cursor-pointer" 
-          aria-hidden="true"
-          onClick={onClose}
-        ></div>
+  const backdropClasses = {
+    transparent: 'bg-transparent',
+    opaque: 'bg-black/50',
+    blur: 'bg-black/30 backdrop-blur-md'
+  };
 
-        {/* Modal panel */}
-        <div className={`relative flex flex-col bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 ${maxWidthClassName} w-full max-h-[90vh]`}>
+  const renderFooter = () => {
+    if (footer) return footer;
+    if (!primaryActionText && !secondaryActionText) return null;
+
+    return (
+      <div className="flex justify-end gap-3 w-full">
+        {secondaryActionText && (
+          <CustomButton 
+            variant="bordered" 
+            color={secondaryButtonColor as any} 
+            onClick={onSecondaryAction || onClose}
+            type="button"
+          >
+            {secondaryActionText}
+          </CustomButton>
+        )}
+        {primaryActionText && (
+          <CustomButton 
+            variant="solid" 
+            color={primaryButtonColor as any} 
+            onClick={onPrimaryAction}
+            type='submit'
+            form={primaryButtonForm}
+          >
+            {primaryActionText}
+          </CustomButton>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center">
+      {/* Backdrop - now inside the same container to handle clicks better */}
+      <div 
+        className={`fixed inset-0 transition-opacity duration-300 ${backdropClasses[backdrop]}`} 
+        onClick={onClose}
+      />
+
+      {/* Modal Container - captures scroll from anywhere */}
+      <div 
+        className={`fixed inset-0 overflow-y-auto flex justify-center p-4 transition-all duration-300 ${
+          scrollBehavior === 'outside' ? 'items-start py-10 md:py-20' : 'items-center'
+        }`}
+        onClick={(e) => {
+          // Close if clicking outside the modal panel
+          if (e.target === e.currentTarget) onClose();
+        }}
+      >
+        <div 
+          ref={modalRef}
+          style={{
+            transform: `translate(${position.x}px, ${position.y}px)`,
+            transition: isDragging ? 'none' : 'transform 0.2s ease-out'
+          }}
+          className={`
+            relative w-full flex flex-col bg-white shadow-2xl pointer-events-auto
+            ${size === 'full' ? 'rounded-none min-h-screen' : 'rounded-2xl'}
+            ${sizeClasses[size]}
+            ${scrollBehavior === 'inside' ? 'max-h-[calc(100vh-4rem)] md:max-h-[calc(100vh-8rem)]' : 'h-fit mb-8'}
+            ${className}
+          `}
+          onMouseDown={handleMouseDown}
+          onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+        >
           {/* Close Button */}
-          <div className="absolute top-4 right-4 z-20">
+          {closeButton && (
             <button 
-              type="button" 
               onClick={onClose}
-              className="bg-white rounded-md text-gray-400 hover:text-gray-500 outline-none focus:outline-none cursor-pointer"
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors z-30"
             >
-              <span className="sr-only">Close</span>
-              <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-          </div>
+          )}
 
           {/* Modal Header */}
           {title && (
-            <div className="px-6 pt-5 pb-4 border-b border-gray-200 shrink-0">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 pr-8" id="modal-title">
+            <div className={`modal-header px-6 py-4 border-b border-gray-100 shrink-0 ${isDraggable ? 'cursor-move select-none' : ''}`}>
+              <h3 className="text-xl font-semibold text-gray-900 pr-8">
                 {title}
               </h3>
             </div>
           )}
 
-          {/* Modal Content Wrapper */}
-          <div className="flex-1 overflow-hidden flex flex-col p-6">
+          {/* Modal Body */}
+          <div className={`
+            modal-body flex-1 px-6 py-4 min-h-0
+            ${scrollBehavior === 'inside' ? 'overflow-y-auto' : ''}
+          `}>
             {children}
           </div>
+
+          {/* Modal Footer Slot */}
+          {(footer || primaryActionText || secondaryActionText) && (
+            <div className="modal-footer px-6 py-4 border-t border-gray-100 shrink-0 bg-white rounded-b-2xl">
+              {renderFooter()}
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -74,3 +243,4 @@ const CustomModal: React.FC<CustomModalProps> = ({
 };
 
 export default CustomModal;
+

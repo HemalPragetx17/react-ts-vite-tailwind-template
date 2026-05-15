@@ -94,141 +94,111 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
       enableReinitialize={true}
     >
       {({ handleSubmit }) => (
-        <Form onSubmit={handleSubmit} className="flex flex-col h-full overflow-hidden w-full mt-2">
-          {/* Inner Scrollable Fields Container */}
-          <div className="flex-1 overflow-y-auto pr-2 flex flex-col gap-4">
+        <Form id="user-form" onSubmit={handleSubmit} className="space-y-4">
+          {/* Form Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Full Name */}
-            <div className="relative shrink-0">
-              <Field
-                name="name"
-                label="Full Name"
-                placeholder="Enter full name"
-                component={CustomInput}
-              />
-            </div>
+            <Field
+              name="name"
+              label="Full Name"
+              placeholder="Enter full name"
+              component={CustomInput}
+            />
 
             {/* Email Address */}
-            <div className="relative shrink-0">
-              <Field
-                name="email"
-                type="email"
-                label="Email Address"
-                placeholder="Enter email address"
-                component={CustomInput}
-              />
-            </div>
+            <Field
+              name="email"
+              type="email"
+              label="Email Address"
+              placeholder="Enter email address"
+              component={CustomInput}
+            />
 
             {/* Joining Date */}
-            <div className="relative shrink-0">
-              <Field
-                name="joiningDate"
-                label="Joining Date"
-                placeholder="Select joining date"
-                isClearable={true}
-                component={CustomDatePicker}
-              />
-            </div>
+            <Field
+              name="joiningDate"
+              label="Joining Date"
+              placeholder="Select joining date"
+              isClearable={true}
+              component={CustomDatePicker}
+            />
 
             {/* Age */}
-            <div className="relative shrink-0">
-              <Field
-                name="age"
-                type="number"
-                label="Age"
-                placeholder="Enter age"
-                component={CustomInput}
-              />
-            </div>
+            <Field
+              name="age"
+              type="number"
+              label="Age"
+              placeholder="Enter age"
+              component={CustomInput}
+            />
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Gender (CustomRadio) */}
-            <div className="relative shrink-0">
-              <Field
-                name="gender"
-                label="Gender"
-                orientation="horizontal"
-                component={CustomRadio}
-                options={genderOptions}
-              />
-            </div>
+            <Field
+              name="gender"
+              label="Gender"
+              orientation="horizontal"
+              component={CustomRadio}
+              options={genderOptions}
+            />
 
             {/* Status (CustomSwitch) */}
-            <div className="relative shrink-0">
-              <Field
-                name="status"
-                label="Account Status"
-                component={CustomSwitch}
-                size="lg"
-                activeLabel="Active"
-                inactiveLabel="Inactive"
-              />
-            </div>
-
-            {/* Technologies Stack (CustomCheckboxGroup) */}
-            <div className="relative shrink-0">
-              <Field
-                name="technologies"
-                label="Technologies Stack"
-                orientation="horizontal"
-                component={CustomCheckboxGroup}
-                options={technologyOptions}
-                color="primary"
-              />
-            </div>
-
-            {/* Role (CustomSelect - single select) */}
-            <div className="relative shrink-0">
-              <Field
-                name="role"
-                label="Role"
-                component={CustomSelect}
-                options={roleOptions}
-              />
-            </div>
-
-            {/* Technologies Stack (CustomSelect - multi select with options array) */}
-            <div className="relative shrink-0">
-              <Field
-                name="technologies"
-                label="Technologies Stack"
-                component={CustomSelect}
-                options={technologyOptions}
-                isMulti
-                isClearable
-                showCheckbox
-              />
-            </div>
-
-            {/* User Bio / Notes (CustomTextarea) */}
-            <div className="relative shrink-0">
-              <Field
-                name="bio"
-                label="User Bio / Notes (Optional)"
-                placeholder="Enter short bio or background notes"
-                isClearable={true}
-                component={CustomTextarea}
-                rows={3}
-              />
-            </div>
-            
-            {/* Agree to Terms Checkbox */}
-            <div className="relative shrink-0">
-              <Field
-                name="agreeToTerms"
-                label="Agree to terms"
-                component={CustomCheckbox}
-              />
-            </div>
+            <Field
+              name="status"
+              label="Account Status"
+              component={CustomSwitch}
+              size="lg"
+              activeLabel="Active"
+              inactiveLabel="Inactive"
+            />
           </div>
 
-          {/* Fixed Shrink-0 Footer Action Area */}
-          <div className="mt-4 shrink-0 flex justify-end gap-3 pt-3 border-t border-gray-100 bg-white">
-            <CustomButton type="button" variant="bordered" color="danger" onClick={onCancel}>
-              Cancel
-            </CustomButton>
-            <CustomButton type="submit" variant="solid" color="primary">
-              Add User
-            </CustomButton>
-          </div>
+          {/* Technologies Stack (CustomSelect - multi select) */}
+          <Field
+            name="technologies"
+            label="Technologies Stack"
+            component={CustomSelect}
+            options={technologyOptions}
+            isMulti
+            isClearable
+            showCheckbox
+          />
+
+          {/* Role (CustomSelect - single select) */}
+          <Field
+            name="role"
+            label="Role"
+            component={CustomSelect}
+            options={roleOptions}
+          />
+
+          {/* User Bio / Notes (CustomTextarea) */}
+          <Field
+            name="bio"
+            label="User Bio / Notes (Optional)"
+            placeholder="Enter short bio or background notes"
+            isClearable={true}
+            component={CustomTextarea}
+            rows={3}
+          />
+          
+          {/* Agree to Terms Checkbox */}
+          <Field
+            name="agreeToTerms"
+            label="Agree to terms"
+            component={CustomCheckbox}
+          />
+
+          {/* Footer Action Area */}
+            <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-gray-100">
+              <CustomButton type="button" variant="bordered" color="danger" onClick={onCancel}>
+                Cancel
+              </CustomButton>
+              <CustomButton type="submit" variant="solid" color="primary">
+                Add User
+              </CustomButton>
+            </div>
         </Form>
       )}
     </Formik>
