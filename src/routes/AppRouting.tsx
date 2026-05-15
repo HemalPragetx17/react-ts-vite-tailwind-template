@@ -7,7 +7,7 @@ import { Routing } from "./routing";
 const PublicLayout = lazy(() => import("../layout/PublicLayout"));
 const MainLayout = lazy(() => import("../layout/MainLayout"));
 
-const Login = lazy(() => import("../pages/Account/Login"));
+const LoginLayout = lazy(() => import("../pages/Account/LoginLayout"));
 const ForgotPassword = lazy(() => import("../pages/Account/ForgotPassword"));
 
 const Dashboard = lazy(() => import("../pages/Dashboard/Dashboard"));
@@ -31,7 +31,7 @@ const routes = createBrowserRouter([
   },
   {
     path: Routing.Login,
-    element: (<PublicLayout><Login /></PublicLayout>),
+    element: (<PublicLayout><LoginLayout variant="two-column" /></PublicLayout>),
   },
   {
     path: Routing.ForgotPassword,
