@@ -11,6 +11,6 @@ export const Routing = {
   SubCategory: `${PATH_PREFIX}/sub-category`,
   Product: `${PATH_PREFIX}/product`,
 
-  ErrorPage: `${PATH_PREFIX}/error`,
   NotFound: `${PATH_PREFIX}/not-found`,
+  ErrorPage: `${PATH_PREFIX}/error`,
 };

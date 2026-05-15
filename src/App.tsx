@@ -8,7 +8,7 @@ function App() {
   return (
     <Provider store={store}>
       <Suspense fallback={<Spinner />}>
-        <Toaster position="bottom-right" />
+        <Toaster position="top-right" />
         <AppRouting />
       </Suspense>
     </Provider>

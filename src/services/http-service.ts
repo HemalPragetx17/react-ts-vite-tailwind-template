@@ -39,7 +39,7 @@ axios.interceptors.request.use(
     (config: any) => {
         const storeData: IApplicationState = store?.getState();
         let token = null;
-        token = `bearer ${storeData?.UserData?.token}`;
+        token = `Bearer ${storeData?.UserData?.token}`;
 
         if (config.url) {
             const baseURL = import.meta.env.VITE_BASE_URL || "";
@@ -74,34 +74,34 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     (response: AxiosResponse) => {
         hideLoader();
-        if (!response?.data?.status) {
-            toast.error(response?.data?.message);
-        }
-        return response;
+        // if (!response?.data?.status) {
+        //     toast.error(response?.data?.message);
+        // }
+        return response?.data;
     },
     (error: AxiosErrors) => {
         hideLoader();
 
         switch (error.response?.status) {
             case HttpStatusCode.BadRequest:
-                toast.error(error?.response?.data?.message);
+                toast.error(error?.response?.data?.error);
                 return;
             case HttpStatusCode.ConflictError:
-                toast.error(error?.response?.data?.message);
+                toast.error(error?.response?.data?.error);
                 return;
             case HttpStatusCode.InternalServerError:
-                toast.error(error?.response?.data?.message);
+                toast.error(error?.response?.data?.error);
                 return;
             case HttpStatusCode.Unauthorized:
-                toast.error(error?.response?.data?.message);
+                toast.error(error?.response?.data?.error);
                 store.dispatch(adminLogout());
                 return;
             case HttpStatusCode.Forbidden:
-                toast.error(error?.response?.data?.message);
+                toast.error(error?.response?.data?.error);
                 store.dispatch(adminLogout());
                 return;
             case HttpStatusCode.NotFound:
-                toast.error(error?.response?.data?.message);
+                toast.error(error?.response?.data?.error);
                 store.dispatch(adminLogout());
                 return;
         }

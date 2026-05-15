@@ -13,10 +13,10 @@ import httpService from "./http-service";
 
 const endPointBaseURL = `admin`;
 
-const login = async (requestBody: ILoginRequestModel): Promise<AxiosResponse<ApiResponseModel<ILoginResponseModel>>> =>
-    httpService.post<ApiResponseModel<ILoginResponseModel>>(`${endPointBaseURL}/login/`, requestBody);
+const login = async (requestBody: ILoginRequestModel): Promise<AxiosResponse<ILoginResponseModel>> =>
+    httpService.post<ILoginResponseModel>(`${endPointBaseURL}/login`, requestBody);
 
-const logout = async (): Promise<AxiosResponse<boolean>> => httpService.get<boolean>(`${endPointBaseURL}/logout/`);
+const logout = async (): Promise<AxiosResponse<boolean>> => httpService.post<boolean>(`${endPointBaseURL}/logout`, {});
 
 const readPermission = async (): Promise<AxiosResponse<ApiResponseModel<Array<IRoutesModel>>>> =>
     httpService.get<ApiResponseModel<Array<IRoutesModel>>>(`${endPointBaseURL}/readPermission`);

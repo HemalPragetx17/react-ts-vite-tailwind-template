@@ -5,6 +5,7 @@ import NotificationsMenu from '../components/header/NotificationsMenu';
 import UserMenu from '../components/header/UserMenu';
 import { Routing } from '../routes/routing';
 import { adminLogout } from '../store/slices/authSlice';
+import accountService from '../services/account-service';
 
 export const toggleSidebar = () => {
   if (document.body.classList.contains('hide-sidebar')) {
@@ -20,13 +21,13 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleLogoutClick = async () => {
-    // await accountService
-    //   .logout()
-    //   .then(async () => {
+    await accountService
+      .logout()
+      .then(async () => {
         dispatch(adminLogout());
         navigate(Routing.Login);
-      // })
-      // .catch((error: Error) => console.log(error?.message));
+      })
+      .catch((error: Error) => console.log(error?.message));
   };
 
   React.useEffect(() => {

@@ -17,6 +17,7 @@ const SubCategory = lazy(() => import("../pages/Master/SubCategory/SubCategory")
 const Product = lazy(() => import("../pages/Master/Product/Product"));
 
 const ErrorPage = lazy(() => import("../pages/Account/ErrorPage"));
+const Error404Page = lazy(() => import("../pages/Account/Error404Page"));
 const NotFound = lazy(() => import("../pages/Account/NotFound"));
 
 
@@ -63,7 +64,7 @@ const routes = createBrowserRouter([
   },
   {
     path: "*",
-    element: (<PublicLayout><NotFound /></PublicLayout>),
+    element: (<PublicLayout><Error404Page /></PublicLayout>),
   },
 ]);
 

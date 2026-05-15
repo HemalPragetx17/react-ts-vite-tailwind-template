@@ -4,14 +4,16 @@ export interface ILoginRequestModel {
 }
 
 export interface ILoginResponseModel {
-    id?: string;
-    email?: string;
-    phone?: string;
-    role?: string;
-    is_active?: boolean;
     token: string;
-    first_name: string;
-    last_name: string;
+    user: {
+        id: string;
+        email?: string;
+        phone?: string;
+        role?: string;
+        is_active?: boolean;
+        first_name: string;
+        last_name: string;
+    }
 }
 
 export interface IChangePasswordModel {
