@@ -37,6 +37,11 @@ interface CustomTableProps<T = any> {
   onRowClick?: (row: T) => void;
   hideHeader?: boolean;
   loading?: boolean;
+  paginationSize?: "sm" | "md" | "lg";
+  paginationColor?: "primary" | "secondary" | "success" | "warning" | "danger" | "default";
+  paginationVariant?: "solid" | "bordered" | "light" | "flat";
+  showPaginationControls?: boolean;
+  scrollBehavior?: "inside" | "outside";
 }
 
 function Filter({ column, table }: { column: any; table: any }) {
@@ -104,6 +109,11 @@ function CustomTable<T = any>({
   onRowClick,
   hideHeader = false,
   loading = false,
+  paginationSize = "md",
+  paginationColor = "primary",
+  paginationVariant = "solid",
+  showPaginationControls = true,
+  scrollBehavior = "inside",
 }: CustomTableProps<T>) {
   const [expanded, setExpanded] = useState<ExpandedState>({});
   const [rowSelection, setRowSelection] = useState({});
@@ -234,17 +244,20 @@ function CustomTable<T = any>({
   return (
     <div
       className={clsx(
-        "flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm w-full overflow-hidden",
+        "flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm w-full overflow-hidden mt-5",
         className,
       )}
     >
-      <div
-        className="flex-1 overflow-auto"
-        style={{ maxHeight: "calc(100vh - 220px)" }}
-      >
+      <div className={clsx(
+        "min-h-0",
+        scrollBehavior === "inside" ? "flex-1 overflow-auto" : "h-fit overflow-visible"
+      )}>
         <table className="min-w-full divide-y divide-gray-200 border-collapse m-0">
           {!hideHeader && (
-            <thead className="sticky top-0 z-20 bg-gray-50 shadow-[0_1px_0_0_#e5e7eb]">
+            <thead className={clsx(
+              "z-20 bg-gray-50 shadow-[0_1px_0_0_#e5e7eb]",
+              scrollBehavior === "inside" && "sticky top-0"
+            )}>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
@@ -423,151 +436,156 @@ function CustomTable<T = any>({
       </div>
 
       {enablePagination && (
-        <div className="flex items-center justify-between px-6 py-3 bg-white border-t border-gray-200">
-          <div className="flex flex-1 justify-between sm:hidden">
-            <button
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Previous
-            </button>
-            <button
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Next
-            </button>
-          </div>
-          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                {/* <span className="text-sm text-gray-700">Rows per page:</span> */}
-                <div className="relative">
-                  <select
-                    className="
-                      appearance-none
-                      w-full
-                      border
-                      border-gray-300
-                      rounded-md
-                      pl-3
-                      pr-10
-                      py-2
-                      focus:outline-none
-                    "
-                  >
-                    {[10, 20, 30, 40, 50].map((pageSize) => (
-                      <option key={pageSize} value={pageSize}>
-                        {pageSize}
-                      </option>
-                    ))}
-                  </select>
-
-                  <div
-                    className="
-      absolute
-      inset-y-0
-      right-3
-      flex
-      items-center
-      pointer-events-none
-    "
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="w-4 h-4 text-gray-500"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
+        <div className={clsx(
+          "flex flex-col md:flex-row items-center justify-between px-6 py-4 bg-white border-t border-gray-200 gap-4",
+          scrollBehavior === "inside" && "sticky bottom-0 z-20 shadow-[0_-1px_0_0_#e5e7eb]"
+        )}>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500 whitespace-nowrap">Rows per page:</span>
+              <div className="relative">
+                <select
+                  value={table.getState().pagination.pageSize}
+                  onChange={(e) => table.setPageSize(Number(e.target.value))}
+                  className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-primary focus:border-primary block w-full p-2 pr-8 cursor-pointer transition-all hover:bg-gray-100"
+                >
+                  {[10, 20, 30, 40, 50].map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
                 </div>
               </div>
-              {/* <div>
-                                <p className="text-sm text-gray-700">
-                                    Showing <span className="font-medium">{table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}</span> to <span className="font-medium">{Math.min((table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize, data.length)}</span> of{' '}
-                                    <span className="font-medium">{data.length}</span> results
-                                </p>
-                            </div> */}
             </div>
-            <div>
-              <nav
-                className="isolate inline-flex -space-x-px rounded-md shadow-sm"
-                aria-label="Pagination"
+            <div className="hidden lg:block text-sm text-gray-500">
+              Total {data.length} items
+            </div>
+          </div>
+
+          <nav className="flex items-center gap-2" aria-label="Pagination">
+            {showPaginationControls && (
+              <button
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+                className={clsx(
+                  "flex items-center justify-center rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed",
+                  paginationSize === "sm" && "w-8 h-8",
+                  paginationSize === "md" && "w-10 h-10",
+                  paginationSize === "lg" && "w-12 h-12",
+                  "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                )}
               >
-                <button
-                  onClick={() => table.previousPage()}
-                  disabled={!table.getCanPreviousPage()}
-                  className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <span className="sr-only">Previous</span>
-                  <svg
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-                {pages.map((pageNum, idx) =>
-                  pageNum === "..." ? (
+                <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </button>
+            )}
+
+            <div className="flex items-center gap-1">
+              {pages.map((pageNum, idx) => {
+                const isActive = pageNum === currentPage;
+                const isEllipsis = pageNum === "...";
+
+                if (isEllipsis) {
+                  return (
                     <span
-                      key={idx}
-                      className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0"
+                      key={`ellipsis-${idx}`}
+                      className={clsx(
+                        "flex items-center justify-center text-gray-400",
+                        paginationSize === "sm" && "w-8 h-8 text-xs",
+                        paginationSize === "md" && "w-10 h-10 text-sm",
+                        paginationSize === "lg" && "w-12 h-12 text-base"
+                      )}
                     >
                       ...
                     </span>
-                  ) : (
-                    <button
-                      key={idx}
-                      onClick={() =>
-                        table.setPageIndex((pageNum as number) - 1)
-                      }
-                      className={clsx(
-                        "relative inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20 focus:outline-offset-0",
-                        pageNum === currentPage
-                          ? "z-10 bg-primary text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                          : "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50",
-                      )}
-                    >
-                      {pageNum}
-                    </button>
-                  ),
-                )}
-                <button
-                  onClick={() => table.nextPage()}
-                  disabled={!table.getCanNextPage()}
-                  className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <span className="sr-only">Next</span>
-                  <svg
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
+                  );
+                }
+
+                const colorMap = {
+                  primary: {
+                    solid: "bg-primary text-white shadow-lg shadow-primary/30",
+                    bordered: "border-2 border-primary text-primary bg-transparent",
+                    flat: "bg-primary/10 text-primary",
+                    light: "text-primary hover:bg-primary/10",
+                  },
+                  secondary: {
+                    solid: "bg-secondary text-white shadow-lg shadow-secondary/30",
+                    bordered: "border-2 border-secondary text-secondary bg-transparent",
+                    flat: "bg-secondary/10 text-secondary",
+                    light: "text-secondary hover:bg-secondary/10",
+                  },
+                  success: {
+                    solid: "bg-success text-white shadow-lg shadow-success/30",
+                    bordered: "border-2 border-success text-success bg-transparent",
+                    flat: "bg-success/10 text-success",
+                    light: "text-success hover:bg-success/10",
+                  },
+                  warning: {
+                    solid: "bg-warning text-white shadow-lg shadow-warning/30",
+                    bordered: "border-2 border-warning text-warning bg-transparent",
+                    flat: "bg-warning/10 text-warning",
+                    light: "text-warning hover:bg-warning/10",
+                  },
+                  danger: {
+                    solid: "bg-danger text-white shadow-lg shadow-danger/30",
+                    bordered: "border-2 border-danger text-danger bg-transparent",
+                    flat: "bg-danger/10 text-danger",
+                    light: "text-danger hover:bg-danger/10",
+                  },
+                  default: {
+                    solid: "bg-gray-600 text-white shadow-lg shadow-gray-600/30",
+                    bordered: "border-2 border-gray-600 text-gray-600 bg-transparent",
+                    flat: "bg-gray-100 text-gray-700",
+                    light: "text-gray-600 hover:bg-gray-50",
+                  },
+                };
+
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => table.setPageIndex((pageNum as number) - 1)}
+                    className={clsx(
+                      "flex items-center justify-center font-medium rounded-xl transition-all",
+                      paginationSize === "sm" && "w-8 h-8 text-xs",
+                      paginationSize === "md" && "w-10 h-10 text-sm",
+                      paginationSize === "lg" && "w-12 h-12 text-base",
+                      
+                      // Active State
+                      isActive ? colorMap[paginationColor as keyof typeof colorMap][paginationVariant as keyof (typeof colorMap)['primary']] : [
+                        "text-gray-600 hover:bg-gray-100",
+                      ]
+                    )}
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              </nav>
+                    {pageNum}
+                  </button>
+                );
+              })}
             </div>
-          </div>
+
+            {showPaginationControls && (
+              <button
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+                className={clsx(
+                  "flex items-center justify-center rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed",
+                  paginationSize === "sm" && "w-8 h-8",
+                  paginationSize === "md" && "w-10 h-10",
+                  paginationSize === "lg" && "w-12 h-12",
+                  "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                )}
+              >
+                <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                </svg>
+              </button>
+            )}
+          </nav>
         </div>
       )}
     </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import CustomButton from '../button/CustomButton';
 
 type ModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | 'full';
@@ -6,8 +6,8 @@ type ModalBackdrop = 'transparent' | 'opaque' | 'blur';
 type ModalScrollBehavior = 'inside' | 'outside';
 
 interface CustomModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  openDialog: boolean;
+  handleDialogClose: () => void;
   title?: React.ReactNode;
   children: React.ReactNode;
   footer?: React.ReactNode;
@@ -40,8 +40,8 @@ const sizeClasses: Record<ModalSize, string> = {
 };
 
 const CustomModal: React.FC<CustomModalProps> = ({
-  isOpen,
-  onClose,
+  openDialog,
+  handleDialogClose,
   title,
   children,
   footer,
@@ -67,11 +67,11 @@ const CustomModal: React.FC<CustomModalProps> = ({
   // Close on Escape key pressed
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
+      if (e.key === 'Escape' && openDialog) {
+        handleDialogClose();
       }
     };
-    if (isOpen) {
+    if (openDialog) {
       document.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
     }
@@ -79,7 +79,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, onClose]);
+  }, [openDialog, handleDialogClose]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!isDraggable) return;
@@ -123,12 +123,12 @@ const CustomModal: React.FC<CustomModalProps> = ({
 
   // Reset position when modal closes/opens
   useEffect(() => {
-    if (!isOpen) {
+    if (!openDialog) {
       setPosition({ x: 0, y: 0 });
     }
-  }, [isOpen]);
+  }, [openDialog]);
 
-  if (!isOpen) return null;
+  if (!openDialog) return null;
 
   const backdropClasses = {
     transparent: 'bg-transparent',
@@ -146,7 +146,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           <CustomButton 
             variant="bordered" 
             color={secondaryButtonColor as any} 
-            onClick={onSecondaryAction || onClose}
+            onClick={onSecondaryAction || handleDialogClose}
             type="button"
           >
             {secondaryActionText}
@@ -172,17 +172,17 @@ const CustomModal: React.FC<CustomModalProps> = ({
       {/* Backdrop - now inside the same container to handle clicks better */}
       <div 
         className={`fixed inset-0 transition-opacity duration-300 ${backdropClasses[backdrop]}`} 
-        onClick={onClose}
+        onClick={handleDialogClose}
       />
 
       {/* Modal Container - captures scroll from anywhere */}
       <div 
-        className={`fixed inset-0 overflow-y-auto flex justify-center p-4 transition-all duration-300 ${
-          scrollBehavior === 'outside' ? 'items-start py-10 md:py-20' : 'items-center'
+        className={`fixed inset-0 flex justify-center p-4 transition-all duration-300 ${
+          scrollBehavior === 'outside' ? 'overflow-y-auto items-start py-10 md:py-20' : 'overflow-hidden items-center'
         }`}
         onClick={(e) => {
           // Close if clicking outside the modal panel
-          if (e.target === e.currentTarget) onClose();
+          if (e.target === e.currentTarget) handleDialogClose();
         }}
       >
         <div 
@@ -204,7 +204,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           {/* Close Button */}
           {closeButton && (
             <button 
-              onClick={onClose}
+              onClick={handleDialogClose}
               className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors z-30"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

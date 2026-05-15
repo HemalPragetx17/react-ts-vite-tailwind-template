@@ -1,65 +1,39 @@
+import { Field, Form, Formik } from "formik";
 import React from "react";
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
-import CustomInput from "../../components/input/CustomInput";
-import CustomRadio from "../../components/input/CustomRadio";
+import CustomButton from "../../components/button/CustomButton";
 import CustomCheckbox from "../../components/input/CustomCheckbox";
 import CustomCheckboxGroup from "../../components/input/CustomCheckboxGroup";
+import CustomInput from "../../components/input/CustomInput";
+import CustomRadio from "../../components/input/CustomRadio";
 import CustomSelect from "../../components/input/CustomSelect";
-import CustomTextarea from "../../components/input/CustomTextarea";
 import CustomSwitch from "../../components/input/CustomSwitch";
-import CustomButton from "../../components/button/CustomButton";
+import CustomTextarea from "../../components/input/CustomTextarea";
 import CustomDatePicker from "../../components/input/date-picker/CustomDatePicker";
-
-export interface UserFormValues {
-  agreeToTerms: boolean;
-  name: string;
-  email: string;
-  joiningDate: string;
-  age: string;
-  gender: string;
-  technologies: string[];
-  role: string;
-  status: boolean;
-  bio?: string;
-}
+import type { IUserModal } from "../../models/user";
+import { UserValidationSchema } from "../../validation/user";
 
 interface UserFormProps {
-  onSubmit: (values: UserFormValues) => void;
-  onCancel: () => void;
+  user: IUserModal
+  onUserAdd: () => void;
+  handleDialogClose: () => void;
 }
 
-const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
-  const initialValues: UserFormValues = {
-    agreeToTerms: false,
+const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose }) => {
+  const initialState: IUserModal = {
     name: "",
     email: "",
     joiningDate: "",
-    age: "",
+    age: 0,
     gender: "Male",
     technologies: [] as string[],
+    hobbies: [] as string[],
     role: "",
     status: true,
+    agreeToTerms: false,
     bio: "",
   };
 
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Full name is required"),
-    email: Yup.string().email("Invalid email address").required("Email is required"),
-    joiningDate: Yup.string().required("Joining date is required"),
-    age: Yup.number()
-      .typeError("Age must be a valid number")
-      .positive("Age must be positive")
-      .integer("Age must be an integer")
-      .required("Age is required"),
-    gender: Yup.string().required("Gender is required"),
-    technologies: Yup.array()
-      .min(1, "Please select at least one technology")
-      .required("Technologies stack is required"),
-    role: Yup.string().required("Role is required"),
-    status: Yup.boolean().required("Status is required"),
-    bio: Yup.string().max(300, "Bio must be at most 300 characters"),
-  });
+  const getData = () => user ? user : initialState;
 
   const genderOptions = [
     { label: "Male", value: "Male" },
@@ -75,26 +49,36 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
     { label: "Python", value: "Python" },
   ];
 
+  const hobbiesOptions = [
+    { label: "Reading", value: "Reading" },
+    { label: "Coding", value: "Coding" },
+    { label: "Gaming", value: "Gaming" },
+    { label: "Sports", value: "Sports" },
+    { label: "Music", value: "Music" },
+  ];
+
   const roleOptions = [
     { label: "Admin", value: "Admin" },
     { label: "User", value: "User" },
     { label: "Manager", value: "Manager" },
   ];
 
+  const handleSubmit = (values: IUserModal) => {
+    console.log("🚀 ~ handleSubmit ~ values:", values)
+    onUserAdd();
+  };
+
   return (
     <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={(values, { resetForm }) => {
-        onSubmit(values);
-        resetForm();
-      }}
+      initialValues={getData()}
+      validationSchema={UserValidationSchema}
+      onSubmit={handleSubmit}
       validateOnBlur={false}
       validateOnChange={true}
       enableReinitialize={true}
     >
       {({ handleSubmit }) => (
-        <Form id="user-form" onSubmit={handleSubmit} className="space-y-4">
+        <Form onSubmit={handleSubmit} className="space-y-4">
           {/* Form Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Full Name */}
@@ -165,6 +149,14 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
             showCheckbox
           />
 
+          <Field
+            name="hobbies"
+            label="Hobbies"
+            component={CustomCheckboxGroup}
+            options={hobbiesOptions}
+            orientation="horizontal"
+          />
+
           {/* Role (CustomSelect - single select) */}
           <Field
             name="role"
@@ -182,7 +174,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
             component={CustomTextarea}
             rows={3}
           />
-          
+
           {/* Agree to Terms Checkbox */}
           <Field
             name="agreeToTerms"
@@ -191,14 +183,14 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
           />
 
           {/* Footer Action Area */}
-            <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-gray-100">
-              <CustomButton type="button" variant="bordered" color="danger" onClick={onCancel}>
-                Cancel
-              </CustomButton>
-              <CustomButton type="submit" variant="solid" color="primary">
-                Add User
-              </CustomButton>
-            </div>
+          <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-gray-100">
+            <CustomButton type="button" variant="bordered" color="danger" onClick={handleDialogClose}>
+              Cancel
+            </CustomButton>
+            <CustomButton type="submit" variant="solid" color="primary">
+              Add User
+            </CustomButton>
+          </div>
         </Form>
       )}
     </Formik>
