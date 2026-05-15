@@ -65,22 +65,6 @@ const Users = () => {
       header: "Gender",
     },
     {
-      accessorKey: "technologies",
-      header: "Technologies",
-      cell: ({ row }) => {
-        const techs = row.original.technologies || [];
-        return (
-          <div className="flex flex-wrap gap-1">
-            {techs.map((tech, i) => (
-              <span key={i} className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-full text-xs font-medium border border-indigo-100">
-                {tech}
-              </span>
-            ))}
-          </div>
-        );
-      },
-    },
-    {
       accessorKey: "role",
       header: "Role",
     },
@@ -135,21 +119,177 @@ const Users = () => {
   }, [])
 
   const getUsers = async (filter: IUsersFilter) => {
+    const params = {
+      pageNo: 1,
+      limit: 10,
+      sortKey: "createdAt",
+      sortOrder: "-1",
+      needCount: true,
+      searchTerm: filter?.search || "",
+      warehouse: "64709a6ff0e018908dee8947",
+    };
+
     await userService
-      .getAllUsers(
-        1,
-        10,
-        "createdAt",
-        "-1",
-        true,
-        filter?.search || "",
-        "64709a6ff0e018908dee8947",
-        0
-      )
+      .getAllUsers(params)
       .then((response: any) => {
         if (response) {
           setTotalRecords(response?.total);
-          setUsersList(response?.records);
+          setUsersList([
+            {
+              name: "John Doe",
+              email: "johndoe@gmail.com",
+              joiningDate: "2022-01-01",
+              age: 25,
+              gender: "Male",
+              technologies: ["React", "Node", "Express"],
+              role: "Admin",
+              status: true,
+              hobbies: ["Reading", "Coding", "Gaming"],
+              bio: "John Doe is a software engineer",
+              projectDuration: [new Date(), new Date()],
+              agreeToTerms: true,
+            },
+            {
+              name: "Jane Doe",
+              email: "[EMAIL_ADDRESS]",
+              joiningDate: "2022-01-01",
+              age: 25,
+              gender: "Female",
+              technologies: ["React", "Node", "Express"],
+              role: "Admin",
+              status: true,
+              hobbies: ["Reading", "Coding", "Gaming"],
+              bio: "John Doe is a software engineer",
+              projectDuration: [new Date(), new Date()],
+              agreeToTerms: true,
+            },
+            {
+              name: "Jane Doe",
+              email: "[EMAIL_ADDRESS]",
+              joiningDate: "2022-01-01",
+              age: 25,
+              gender: "Female",
+              technologies: ["React", "Node", "Express"],
+              role: "Admin",
+              status: true,
+              hobbies: ["Reading", "Coding", "Gaming"],
+              bio: "John Doe is a software engineer",
+              projectDuration: [new Date(), new Date()],
+              agreeToTerms: true,
+            },
+            {
+              name: "John Doe",
+              email: "[EMAIL_ADDRESS]",
+              joiningDate: "2022-01-01",
+              age: 25,
+              gender: "Male",
+              technologies: ["React", "Node", "Express"],
+              role: "Admin",
+              status: true,
+              hobbies: ["Reading", "Coding", "Gaming"],
+              bio: "John Doe is a software engineer",
+              projectDuration: [new Date(), new Date()],
+              agreeToTerms: true,
+            },
+            {
+              name: "Jane Doe",
+              email: "[EMAIL_ADDRESS]",
+              joiningDate: "2022-01-01",
+              age: 25,
+              gender: "Female",
+              technologies: ["React", "Node", "Express"],
+              role: "Admin",
+              status: true,
+              hobbies: ["Reading", "Coding", "Gaming"],
+              bio: "John Doe is a software engineer",
+              projectDuration: [new Date(), new Date()],
+              agreeToTerms: true,
+            },
+            {
+              name: "John Doe",
+              email: "[EMAIL_ADDRESS]",
+              joiningDate: "2022-01-01",
+              age: 25,
+              gender: "Male",
+              technologies: ["React", "Node", "Express"],
+              role: "Admin",
+              status: true,
+              hobbies: ["Reading", "Coding", "Gaming"],
+              bio: "John Doe is a software engineer",
+              projectDuration: [new Date(), new Date()],
+              agreeToTerms: true,
+            },
+            {
+              name: "Jane Doe",
+              email: "[EMAIL_ADDRESS]",
+              joiningDate: "2022-01-01",
+              age: 25,
+              gender: "Female",
+              technologies: ["React", "Node", "Express"],
+              role: "Admin",
+              status: true,
+              hobbies: ["Reading", "Coding", "Gaming"],
+              bio: "John Doe is a software engineer",
+              projectDuration: [new Date(), new Date()],
+              agreeToTerms: true,
+            },
+            {
+              name: "John Doe",
+              email: "[EMAIL_ADDRESS]",
+              joiningDate: "2022-01-01",
+              age: 25,
+              gender: "Male",
+              technologies: ["React", "Node", "Express"],
+              role: "Admin",
+              status: true,
+              hobbies: ["Reading", "Coding", "Gaming"],
+              bio: "John Doe is a software engineer",
+              projectDuration: [new Date(), new Date()],
+              agreeToTerms: true,
+            },
+            {
+              name: "Jane Doe",
+              email: "[EMAIL_ADDRESS]",
+              joiningDate: "2022-01-01",
+              age: 25,
+              gender: "Female",
+              technologies: ["React", "Node", "Express"],
+              role: "Admin",
+              status: true,
+              hobbies: ["Reading", "Coding", "Gaming"],
+              bio: "John Doe is a software engineer",
+              projectDuration: [new Date(), new Date()],
+              agreeToTerms: true,
+            },
+            {
+              name: "John Doe",
+              email: "[EMAIL_ADDRESS]",
+              joiningDate: "2022-01-01",
+              age: 25,
+              gender: "Male",
+              technologies: ["React", "Node", "Express"],
+              role: "Admin",
+              status: true,
+              hobbies: ["Reading", "Coding", "Gaming"],
+              bio: "John Doe is a software engineer",
+              projectDuration: [new Date(), new Date()],
+              agreeToTerms: true,
+            },
+            {
+              name: "Jane Doe",
+              email: "[EMAIL_ADDRESS]",
+              joiningDate: "2022-01-01",
+              age: 25,
+              gender: "Female",
+              technologies: ["React", "Node", "Express"],
+              role: "Admin",
+              status: true,
+              hobbies: ["Reading", "Coding", "Gaming"],
+              bio: "John Doe is a software engineer",
+              projectDuration: [new Date(), new Date()],
+              agreeToTerms: true,
+            },
+          ]);
         } else {
           setTotalRecords(0);
           setUsersList([]);
@@ -204,7 +344,7 @@ const Users = () => {
           const { handleSubmit } = props;
           return (
             <Form onSubmit={handleSubmit} noValidate className='my-5'>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Field
                   name="search"
                   placeholder="Search by name"
@@ -222,6 +362,7 @@ const Users = () => {
                     { label: "Active", value: "true" },
                     { label: "Inactive", value: "false" }
                   ]}
+                  isClearable={true}
                 />
               </div>
             </Form>

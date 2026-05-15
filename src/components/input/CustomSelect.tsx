@@ -84,9 +84,9 @@ const colorTokens: Record<
 /* -------------------------------------------------------------------------- */
 
 const sizeTokens: Record<SelectSize, { minH: string; textSize: string; labelSize: string; ptInside: string; pb: string; px: string }> = {
-  sm: { minH: "min-h-[36px]", textSize: "text-xs",   labelSize: "text-[10px]", ptInside: "pt-4",   pb: "",   px: "px-2.5" },
-  md: { minH: "min-h-[44px]", textSize: "text-sm",   labelSize: "text-xs",    ptInside: "pt-5",   pb: "", px: "px-3"   },
-  lg: { minH: "min-h-[52px]", textSize: "text-base",  labelSize: "text-sm",   ptInside: "pt-6",   pb: "",   px: "px-4"   },
+  sm: { minH: "!min-h-[36px]", textSize: "text-xs",   labelSize: "text-[10px]", ptInside: "pt-4",   pb: "",   px: "px-2.5" },
+  md: { minH: "!min-h-[40px]", textSize: "text-sm",   labelSize: "text-xs",    ptInside: "pt-5",   pb: "", px: "px-3"   },
+  lg: { minH: "!min-h-[52px]", textSize: "text-base",  labelSize: "text-sm",   ptInside: "pt-6",   pb: "",   px: "px-4"   },
 };
 
 /* -------------------------------------------------------------------------- */
@@ -425,6 +425,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
           ref={containerRef}
           className={`
             relative w-full transition-all duration-200 ease-in-out
+            ${isFocused ? "z-40" : "z-30"}
             ${variantClass}
             ${radiusClass}
             ${hasError ? "!border-red-500 dark:!border-red-500" : ""}

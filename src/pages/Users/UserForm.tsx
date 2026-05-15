@@ -22,7 +22,6 @@ const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose 
   const initialState: IUserModal = {
     name: "",
     email: "",
-    dateRange: [null, null],
     joiningDate: "",
     age: 0,
     gender: "Male",
@@ -32,6 +31,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose 
     status: true,
     agreeToTerms: false,
     bio: "",
+    projectDuration: [null, null],
   };
 
   const getData = () => user ? user : initialState;
@@ -167,7 +167,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose 
           />
 
           <Field
-            name="dateRange"
+            name="projectDuration"
             label="Project Duration"
             placeholder="Select date range"
             selectsRange={true}

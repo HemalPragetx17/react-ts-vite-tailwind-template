@@ -255,3 +255,19 @@ export const truncatedText = (text: string, maxLength:  number) => {
 
   return truncatedText;
 };
+
+export const buildQueryParams = (params: Record<string, any>): string => {
+  const processedParams = { ...params };
+
+  if (processedParams.pageNo && processedParams.limit && processedParams.skip === undefined) {
+    processedParams.skip =
+      parseInt(processedParams.pageNo) * parseInt(processedParams.limit) -
+        parseInt(processedParams.limit) || 0;
+  }
+
+  const query = Object.entries(processedParams)
+    .filter(([_, value]) => value !== undefined && value !== null && value !== "")
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .join("&");
+  return query ? `?${query}` : "";
+};
