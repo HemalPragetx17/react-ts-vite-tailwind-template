@@ -48,6 +48,7 @@ axios.interceptors.request.use(
         config.headers = {
             ...config.headers,
             Authorization: token,
+            "ngrok-skip-browser-warning": "69420",
         };
 
         if (storeData?.GeneralData.showLoader) {

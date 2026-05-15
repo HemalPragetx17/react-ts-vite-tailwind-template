@@ -9,9 +9,20 @@ import UserForm from "./UserForm";
 import ViewIcon from "../../assets/eye-info.svg"
 import EditIcon from "../../assets/edit.svg"
 import DeleteIcon from "../../assets/trash.svg"
+import userService from "../../services/user-service";
+import { Field, Form, Formik } from "formik";
+import CustomInput from "../../components/input/CustomInput";
+import CustomSelect from "../../components/input/CustomSelect";
+import SearchIcon from "../../assets/search.svg"
+
+interface IUsersFilter {
+  search: string;
+  status: string;
+}
 
 const Users = () => {
   const [usersList, setUsersList] = useState<IUserModal[]>([]);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
   const [user, setUser] = useState<IUserModal | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [openConfirmDialogDelete, setOpenConfirmDialogDelete] = useState(false);
@@ -114,73 +125,41 @@ const Users = () => {
     }
   ];
 
+  const initialState: IUsersFilter = {
+    search: '',
+    status: '',
+  };
+
   useEffect(() => {
-    getUsers();
+    getUsers(initialState);
   }, [])
 
-  const getUsers = async () => {
-    setUsersList([
-      {
-        id: 1,
-        name: "John Doe",
-        email: "johndoe@gmail.com",
-        joiningDate: "2025-01-15",
-        age: 30,
-        gender: "Male",
-        role: "Admin",
-        status: true,
-        technologies: ["React", "TypeScript", "Node.js"],
-        hobbies: ["Reading", "Traveling", "Gaming"],
-        agreeToTerms: true,
-        bio: "John Doe is a software engineer",
-      },
-      {
-        id: 2,
-        name: "Jane Doe",
-        email: "janedoe@gmail.com",
-        joiningDate: "2025-03-20",
-        age: 25,
-        gender: "Female",
-        role: "User",
-        status: false,
-        technologies: ["React", "Tailwind CSS"],
-        hobbies: ["Cooking", "Painting"],
-        agreeToTerms: true,
-        bio: "Jane Doe is a software engineer",
-      },
-      {
-        id: 3,
-        name: "Bawana Doe",
-        email: "bawanadoe@gmail.com",
-        joiningDate: "2025-06-10",
-        age: 23,
-        gender: "Male",
-        role: "Admin",
-        status: true,
-        technologies: ["Python", "Node.js"],
-        hobbies: ["Coding", "Gaming", "Reading"],
-        agreeToTerms: false,
-        bio: "Bawana Doe is a software engineer",
-      },
-      {
-        id: 4,
-        name: "Aka Doe",
-        email: "akadoe@gmail.com",
-        joiningDate: "2025-08-05",
-        age: 22,
-        gender: "Female",
-        role: "User",
-        status: false,
-        technologies: ["TypeScript"],
-        hobbies: ["Reading", "Sports"],
-        agreeToTerms: true,
-        bio: "Aka Doe is a software engineer",
-      },
-    ]);
+  const getUsers = async (filter: IUsersFilter) => {
+    await userService
+      .getAllUsers(
+        1,
+        10,
+        "createdAt",
+        "-1",
+        true,
+        filter?.search || "",
+        "64709a6ff0e018908dee8947",
+        0
+      )
+      .then((response: any) => {
+        if (response) {
+          setTotalRecords(response?.total);
+          setUsersList(response?.records);
+        } else {
+          setTotalRecords(0);
+          setUsersList([]);
+        }
+      })
+      .catch((error: Error) => console.log(error?.message));
   }
 
   const handleAddUserSubmit = () => {
-    getUsers();
+    getUsers(initialState);
     setOpenDialog(false);
   };
 
@@ -210,6 +189,45 @@ const Users = () => {
           Add User
         </CustomButton>
       </div>
+
+      <Formik
+        initialValues={initialState}
+        onSubmit={(data: any) => {
+          getUsers(data);
+        }}
+        enableReinitialize
+        onReset={() => {
+          getUsers(initialState);
+        }}
+      >
+        {(props) => {
+          const { handleSubmit } = props;
+          return (
+            <Form onSubmit={handleSubmit} noValidate className='my-5'>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Field
+                  name="search"
+                  placeholder="Search by name"
+                  component={CustomInput}
+                  startIcon={
+                    <img src={SearchIcon} alt="Search" className="w-4 h-4" />
+                  }
+                />
+
+                <Field
+                  name="status"
+                  placeholder="Select status"
+                  component={CustomSelect}
+                  options={[
+                    { label: "Active", value: "true" },
+                    { label: "Inactive", value: "false" }
+                  ]}
+                />
+              </div>
+            </Form>
+          );
+        }}
+      </Formik>
 
       <CustomTable
         data={usersList}
