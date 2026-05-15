@@ -1,10 +1,12 @@
 import { Field, Form, Formik } from "formik";
+import toast from "react-hot-toast";
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import CustomButton from '../../components/button/CustomButton';
 import CustomInput from '../../components/input/CustomInput';
 import type { ILoginRequestModel } from '../../models/account';
 import { Routing } from "../../routes/routing";
+import accountService from "../../services/account-service";
 import { adminLogin } from '../../store/slices/authSlice';
 import { LoginValidationSchema } from "../../validation/account";
 
@@ -13,23 +15,21 @@ const LoginTwoColumn = () => {
   const dispatch = useDispatch()
 
   const initialValues: ILoginRequestModel = {
-    email: "admin@gmail.com",
-    password: "Admin@123",
+    email: "",
+    password: "",
   };
 
   const handleSubmit = async (values: ILoginRequestModel) => {
-    console.log("🚀 ~ handleSubmit ~ values:", values)
-    dispatch(adminLogin({
-      id: '1',
-      email: "admin@gmail.com",
-      phone: "1234567890",
-      role: "admin",
-      first_name: "Admin",
-      last_name: "User",
-      is_active: true,
-      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkFkbWluIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE2OTQ4ODQyMDksImV4cCI6MTY5NDg4Nzg4OX0.7n8sHj3lqj8a9e7vKqLhXoG8u2b3n9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z5s9z"
-    }))
-    navigate(Routing.Dashboard)
+    await accountService
+      .login(values)
+      .then(async (response) => {
+        if (response) {
+          toast.success("Login successful");
+          dispatch(adminLogin(response as any));
+          navigate(Routing.Dashboard)
+        }
+      })
+      .catch((error: Error) => console.log(error?.message));
   };
 
   return (
