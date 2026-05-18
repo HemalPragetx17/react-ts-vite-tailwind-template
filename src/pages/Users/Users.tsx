@@ -1,6 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Field, Form, Formik } from "formik";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import EditIcon from "../../assets/edit.svg";
 import ViewIcon from "../../assets/eye-info.svg";
 import SearchIcon from "../../assets/search.svg";
@@ -14,6 +14,7 @@ import CustomModal from "../../components/modal/CustomModal";
 import type { IUserModal } from "../../models/user";
 import userService from "../../services/user-service";
 import UserForm from "./UserForm";
+import { debounce } from "lodash";
 
 interface IUsersFilter {
   search: string;
@@ -22,7 +23,12 @@ interface IUsersFilter {
 
 const Users = () => {
   const [usersList, setUsersList] = useState<IUserModal[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [totalRecords, setTotalRecords] = useState<number>(0);
+  const [pagination, setPagination] = useState({
+    page: 0,
+    limit: 10,
+  });
   const [user, setUser] = useState<IUserModal | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [openConfirmDialogDelete, setOpenConfirmDialogDelete] = useState(false);
@@ -117,18 +123,18 @@ const Users = () => {
 
   useEffect(() => {
     getUsers(initialState);
-  }, [])
+  }, [pagination.page, pagination.limit])
 
   const getUsers = async (filter: IUsersFilter) => {
     const params = {
-      pageNo: 1,
-      limit: 10,
+      pageNo: pagination.page + 1,
+      limit: pagination.limit,
       sortKey: "_createdAt",
       sortOrder: "-1",
       needCount: true,
       searchTerm: filter?.search || "",
     };
-
+    setLoading(true);
     await userService
       .getAllUsers(params)
       .then((response: any) => {
@@ -140,7 +146,8 @@ const Users = () => {
           setUsersList([]);
         }
       })
-      .catch((error: Error) => console.log(error?.message));
+      .catch((error: Error) => console.log(error?.message))
+      .finally(() => setLoading(false));
   }
 
   const handleAddUserSubmit = () => {
@@ -171,6 +178,16 @@ const Users = () => {
     handleConfirmDialogCloseForDelete();
   };
 
+  const debouncedResults = React.useMemo(() => {
+    return debounce(getUsers, 300);
+  }, []);
+ 
+  React.useEffect(() => {
+    return () => {
+      debouncedResults.cancel();
+    };
+  });
+
   return (
     <section>
       <div className="flex justify-between items-center">
@@ -183,15 +200,17 @@ const Users = () => {
       <Formik
         initialValues={initialState}
         onSubmit={(data: any) => {
+          setPagination(prev => ({ ...prev, page: 0 }));
           getUsers(data);
         }}
         enableReinitialize
         onReset={() => {
+          setPagination(prev => ({ ...prev, page: 0 }));
           getUsers(initialState);
         }}
       >
         {(props) => {
-          const { handleSubmit } = props;
+          const { handleSubmit, setFieldValue } = props;
           return (
             <Form onSubmit={handleSubmit} noValidate className='my-5'>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -202,6 +221,14 @@ const Users = () => {
                   startIcon={
                     <img src={SearchIcon} alt="Search" className="w-4 h-4" />
                   }
+                  onChange={(value) => {
+                    setFieldValue('search', value);
+                    const values = props?.values
+                      ? props.values
+                      : initialState;
+                    setPagination({ ...pagination, page: 0 });
+                    debouncedResults(values);
+                  }}
                 />
 
                 <Field
@@ -224,10 +251,14 @@ const Users = () => {
         data={usersList}
         columns={columns}
         enablePagination
+        pagination={pagination}
+        onPaginationChange={setPagination}
         enableCheckbox
         enableSorting
         defaultSortKey="name"
         defaultSortOrder="desc"
+        loading={loading}
+        totalCount={totalRecords}
       />
 
       {/* Reusable Custom Modal */}

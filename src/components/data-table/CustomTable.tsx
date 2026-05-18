@@ -37,11 +37,15 @@ interface CustomTableProps<T = any> {
   onRowClick?: (row: T) => void;
   hideHeader?: boolean;
   loading?: boolean;
+  totalCount?: number;
   paginationSize?: "sm" | "md" | "lg";
   paginationColor?: "primary" | "secondary" | "success" | "warning" | "danger" | "default";
   paginationVariant?: "solid" | "bordered" | "light" | "flat";
   showPaginationControls?: boolean;
   scrollBehavior?: "inside" | "outside";
+  manualPagination?: boolean;
+  pagination?: { page: number; limit: number };
+  onPaginationChange?: React.Dispatch<React.SetStateAction<{ page: number; limit: number }>>;
 }
 
 function Filter({ column, table }: { column: any; table: any }) {
@@ -109,11 +113,15 @@ function CustomTable<T = any>({
   onRowClick,
   hideHeader = false,
   loading = false,
+  totalCount,
   paginationSize = "md",
   paginationColor = "primary",
   paginationVariant = "solid",
   showPaginationControls = true,
   scrollBehavior = "inside",
+  manualPagination = true,
+  pagination,
+  onPaginationChange,
 }: CustomTableProps<T>) {
   const [expanded, setExpanded] = useState<ExpandedState>({});
   const [rowSelection, setRowSelection] = useState({});
@@ -122,6 +130,35 @@ function CustomTable<T = any>({
       ? [{ id: defaultSortKey, desc: defaultSortOrder === "desc" }]
       : [],
   );
+
+  const reactTablePagination = enablePagination && pagination 
+    ? { pageIndex: pagination.page, pageSize: pagination.limit }
+    : undefined;
+
+  const handlePaginationChange = (updater: any) => {
+    if (onPaginationChange) {
+      if (typeof updater === 'function') {
+        const newTableState = updater(reactTablePagination);
+        onPaginationChange((prev) => {
+          const limitChanged = prev.limit !== newTableState.pageSize;
+          return {
+            ...prev,
+            page: limitChanged ? 0 : newTableState.pageIndex,
+            limit: newTableState.pageSize,
+          };
+        });
+      } else {
+        onPaginationChange((prev) => {
+          const limitChanged = prev.limit !== updater.pageSize;
+          return {
+            ...prev,
+            page: limitChanged ? 0 : updater.pageIndex,
+            limit: updater.pageSize,
+          };
+        });
+      }
+    }
+  };
 
   const tableColumns = React.useMemo(() => {
     let processedColumns = [...columns];
@@ -147,7 +184,7 @@ function CustomTable<T = any>({
               const checked = typeof checkedOrEvent === "boolean" ? checkedOrEvent : checkedOrEvent?.target?.checked;
               table.toggleAllRowsSelected(checked);
             }}
-            className="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded focus:ring-indigo-500"
+            className="w-4 h-4 text-primary bg-white border-gray-300 rounded focus:ring-primary"
           />
         </div>
       ),
@@ -160,7 +197,7 @@ function CustomTable<T = any>({
               const checked = typeof checkedOrEvent === "boolean" ? checkedOrEvent : checkedOrEvent?.target?.checked;
               row.toggleSelected(checked);
             }}
-            className="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded focus:ring-indigo-500"
+            className="w-4 h-4 text-primary bg-white border-gray-300 rounded focus:ring-primary"
           />
         </div>
       ),
@@ -177,11 +214,15 @@ function CustomTable<T = any>({
       expanded: enableExpanding ? expanded : {}, // Only manage expanded state if enabled
       rowSelection,
       sorting: enableSorting ? sorting : [],
+      ...(enablePagination && reactTablePagination ? { pagination: reactTablePagination } : {}),
     },
     enableRowSelection: enableCheckbox,
     onRowSelectionChange: setRowSelection,
     onExpandedChange: enableExpanding ? setExpanded : undefined,
     onSortingChange: enableSorting ? setSorting : undefined,
+    onPaginationChange: enablePagination && onPaginationChange ? handlePaginationChange : undefined,
+    manualPagination: manualPagination,
+    pageCount: manualPagination && totalCount !== undefined ? Math.ceil(totalCount / (pagination?.limit || pageSize)) : undefined,
     getSubRows: enableExpanding ? (getSubRows as any) : undefined,
     getRowCanExpand: enableExpanding ? undefined : () => false, // Disable expansion when flag is false
     getCoreRowModel: getCoreRowModel(),
@@ -361,7 +402,7 @@ function CustomTable<T = any>({
                 <td colSpan={enableCheckbox ? columns.length + 1 : columns.length} className="text-center py-8">
                   <div className="flex justify-center items-center text-gray-500">
                     <svg
-                      className="animate-spin h-5 w-5 mr-3 text-indigo-600"
+                      className="animate-spin h-5 w-5 mr-3 text-primary"
                       viewBox="0 0 24 24"
                     >
                       <circle
@@ -442,7 +483,7 @@ function CustomTable<T = any>({
         )}>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500 whitespace-nowrap">Rows per page:</span>
+              <span className="text-sm text-gray-500 whitespace-nowrap font-semibold">Rows per page:</span>
               <div className="relative">
                 <select
                   value={table.getState().pagination.pageSize}
@@ -462,8 +503,8 @@ function CustomTable<T = any>({
                 </div>
               </div>
             </div>
-            <div className="hidden lg:block text-sm text-gray-500">
-              Total {data.length} items
+            <div className="hidden lg:block text-sm text-gray-500 font-semibold">
+              Total {typeof totalCount === "number" ? totalCount : data.length} items
             </div>
           </div>
 
