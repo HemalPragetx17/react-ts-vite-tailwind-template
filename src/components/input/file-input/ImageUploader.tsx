@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
+import "./index.css";
+import DeleteIcon from "../../../assets/trash.svg";
 
 export interface Image {
-    id: number;
+    _id: string;
     url: File | string;
 }
 
@@ -23,7 +25,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
 
     const onDrop = (acceptedFiles: File[]) => {
         const newImages: Image[] = acceptedFiles.map((file, index) => ({
-            id: images.length + index + 1,
+            _id: (images.length + index + 1).toString(),
             url: file,
         }));
 
@@ -34,7 +36,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
         if (typeof deleteImage?.url === 'string') {
             setDeleteImages([...deleteImages, deleteImage]);
         } else {
-            setImages(images.filter((img) => img.id !== deleteImage.id));
+            setImages(images.filter((img) => img._id !== deleteImage._id));
         }
     };
 
@@ -49,19 +51,21 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
                         : image.url;
                 if (
                     !deleteImages.some(
-                        (delImg) => delImg.id === image.id && delImg.url === image.url
+                        (delImg) => delImg._id === image._id && delImg.url === image.url
                     )
                 ) {
                     return (
                         <div key={index} className="rounded-lg relative group before:content-[''] before:absolute before:top-full before:left-0 before:w-full before:h-full before:bg-black/50 before:z-[9999] before:transition-all before:duration-300 before:backdrop-blur-[2px] hover:before:top-0 overflow-hidden">
-                            <img src={preview} alt={`Images ${image?.id}`} />
+                            <img src={preview} alt={`Images ${image?._id}`} />
                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] opacity-0 transition-all duration-400 group-hover:opacity-100">
                                 <div className='flex gap-5'>
                                     <div
                                         className='bg-white w-[40px] h-[40px] rounded-full flex items-center justify-center hover:cursor-pointer hover:bg-primary-200'
                                         onClick={() => handleImageDelete(image)}
                                     >
-                                        {/* <MdDelete className='text-xl' /> */}
+                                        <div className="w-[20px] h-[20px]">
+                                            <img src={DeleteIcon} alt="delete" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>

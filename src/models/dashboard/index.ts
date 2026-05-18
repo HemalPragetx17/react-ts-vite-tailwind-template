@@ -1,5 +1,5 @@
 export interface IFormModal {
-    id?: number;
+    _id?: number;
     name: string;
     email: string;
     joiningDate?: string;
@@ -14,4 +14,11 @@ export interface IFormModal {
     projectDuration?: [Date | null, Date | null];
     phone: string;
     phoneCountry: string;
+    profile_pic: File | string;
+    image: File | string;
+    images: {
+        _id: string;
+        url: string;
+    }[];
+    imageToDelete: string[];
 }

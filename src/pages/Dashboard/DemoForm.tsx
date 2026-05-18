@@ -1,7 +1,7 @@
 import { Field, Form, Formik } from "formik";
 import React from "react";
 import CustomButton from "../../components/button/CustomButton";
-import { CustomCheckbox, CustomCheckboxGroup, CustomDatePicker, CustomInput, CustomPhoneNumberInput, CustomRadio, CustomSelect, CustomSwitch, CustomTextarea } from "../../components/input";
+import { CustomCheckbox, CustomCheckboxGroup, CustomDatePicker, CustomDropzoneInput, CustomInput, CustomPhoneNumberInput, CustomProfileInput, CustomRadio, CustomSelect, CustomSwitch, CustomTextarea, ImageUploader } from "../../components/input";
 import type { IFormModal } from "../../models/dashboard";
 import { FormValidationSchema } from "../../validation/dashboard";
 
@@ -12,6 +12,17 @@ interface DemoFormProps {
 }
 
 const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose }) => {
+    const [preview, setPreview] = React.useState(null);
+    const [imagePreview, setImagePreview] = React.useState(null);
+
+    const [images, setImages] = React.useState([]);
+    const [deleteImages, setDeleteImages] = React.useState([]);
+
+    React.useEffect(() => {
+        if (user?._id) setPreview(user?.profile_pic);
+        if (user?._id) setImagePreview(user?.image);
+    }, [user]);
+
     const initialState: IFormModal = {
         name: "",
         email: "",
@@ -27,6 +38,10 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
         projectDuration: [null, null],
         phone: "",
         phoneCountry: "",
+        profile_pic: "",
+        image: "",
+        images: [],
+        imageToDelete: [],
     };
 
     const getData = () => user ? user : initialState;
@@ -59,8 +74,53 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
         { label: "Manager", value: "Manager" },
     ];
 
-    const handleSubmit = (values: IFormModal) => {
-        console.log("🚀 ~ handleSubmit ~ values:", values)
+    const handleSubmit = (value: IFormModal) => {
+        console.log("🚀 ~ handleSubmit ~ value:", value)
+
+        const data = {
+            ...value,
+            imageToDelete: deleteImages,
+            productImages: images?.filter((img) => typeof img.url !== 'string').map((img) => img?.url)
+        }
+        delete data?.images
+
+        const formData = new FormData();
+
+        // Append key-value pairs to the FormData object
+        Object.entries(data).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+                // Handle arrays
+                if (key === 'images') {
+                    value.forEach((image) => {
+                        const file = new File([image], image.name); // Assuming 'image' is a File object
+                        formData.append(`images`, file);
+                    });
+                } else {
+                    formData.append(`${key}`, JSON.stringify(value));
+                }
+            } else if (typeof value === 'object' && value !== null) {
+                // Handle nested objects
+                if (key === 'image' || key === 'profile_pic') {
+                    if (value instanceof File) {
+                        // If value is already a File, no need to create a new one
+                        formData.append(`${key}`, value);
+                    } else {
+                        // Convert IProductCategoriesModel to Blob and then create a File
+                        const blob = new Blob([JSON.stringify(value)], { type: 'application/json' });
+                        const file = new File([blob], 'filename.json');
+                        formData.append(`${key}`, file);
+                    }
+                } else {
+                    Object.entries(value).forEach(([subKey, subValue]) => {
+                        formData.append(`${key}[${subKey}]`, subValue as string);
+                    });
+                }
+            } else {
+                // Handle other types
+                formData.append(key, value as string);
+            }
+        });
+
         onUserAdd();
     };
 
@@ -75,7 +135,19 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
         >
             {({ handleSubmit, values, setFieldValue }) => (
                 <Form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Form Fields */}
+                    {/* Profile Pic */}
+                    <Field
+                        label="Profile Pic"
+                        name="profile_pic"
+                        value={values?.profile_pic}
+                        onChange={(file: File | string) => {
+                            setPreview(file);
+                            setFieldValue('profile_pic', file)
+                        }}
+                        preview={preview}
+                        component={CustomProfileInput}
+                    />
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Full Name */}
                         <Field
@@ -152,6 +224,25 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                             inactiveLabel="Inactive"
                         />
                     </div>
+
+                    <Field
+                        label="Image"
+                        name="image"
+                        onChange={(file: File | string) => {
+                            setImagePreview(file);
+                            setFieldValue('image', file)
+                        }}
+                        preview={imagePreview}
+                        component={CustomDropzoneInput}
+                    />
+
+                    <ImageUploader
+                        imageArray={user?.images}
+                        images={images ?? []}
+                        setImages={setImages}
+                        deleteImages={deleteImages ?? []}
+                        setDeleteImages={setDeleteImages}
+                    />
 
                     {/* Technologies Stack (CustomSelect - multi select) */}
                     <Field

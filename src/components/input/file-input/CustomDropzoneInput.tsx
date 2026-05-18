@@ -1,6 +1,9 @@
 import type { FieldProps } from 'formik';
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
+import DownloadIcon from "../../../assets/download-icon.svg";
+import EditIcon from "../../../assets/edit-icon.svg";
+import "./index.css";
 import PdfPreview from './PdfPreview';
 
 interface CustomDropzoneInputProps extends FieldProps {
@@ -34,10 +37,10 @@ const CustomDropzoneInput: React.FC<CustomDropzoneInputProps> = ({
     return (
         <>
             {label && <label className='ml-2.5' htmlFor='label'>{label}</label>}
-            <div className={`${error && "error-red-border"}`}>
+            <div className={`${error ? "error-red-border" : ""}`}>
                 {!preview ? (
                     <div {...getRootProps()}>
-                        <label className=" flex flex-col items-center px-4 py-[42px] bg-white rounded-lg tracking-wide uppercase border cursor-pointer ">
+                        <label className="flex flex-col items-center px-4 py-[42px] bg-white w-full h-[200px] rounded-lg tracking-wide uppercase border cursor-pointer ">
                             <svg className="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                 <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
                             </svg>
@@ -45,7 +48,7 @@ const CustomDropzoneInput: React.FC<CustomDropzoneInputProps> = ({
                         </label>
                     </div>
                 ) : (
-                        <div className={`border rounded-lg ${isPdf ? 'form-upload-pdf' : 'form-upload-img'} `}>
+                    <div className={`border rounded-lg w-full h-[200px] py-1 ${isPdf ? 'form-upload-pdf' : 'form-upload-img'} `}>
                         {isPdf ? (
                             <>
                                 <PdfPreview file={preview} />
@@ -53,24 +56,30 @@ const CustomDropzoneInput: React.FC<CustomDropzoneInputProps> = ({
                                 <div className='form-upload-pdf-icon'>
                                     <div className='flex gap-5'>
                                         {!disabled && <div  {...getRootProps()} className='bg-white w-[40px] h-[40px] rounded-full flex items-center justify-center hover:cursor-pointer hover:bg-primary-200'>
-                                            {/* <MdOutlineModeEditOutline className='text-xl' /> */}
+                                            <div className="w-[20px] h-[20px]">
+                                                <img src={EditIcon} alt="edit" />
+                                            </div>
                                         </div>}
                                         <div className='bg-white w-[40px] h-[40px] rounded-full  items-center justify-center hover:cursor-pointer hover:bg-primary-200 flex'>
                                             <a target='_blank' href={preview} download rel="noreferrer">
-                                                {/* <HiOutlineDownload className='text-xl' /> */}
+                                                <div className="w-[20px] h-[20px]">
+                                                    <img src={DownloadIcon} alt="edit" />
+                                                </div>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
                             </>
                         ) : (
-                                isImage ? (
+                            isImage ? (
                                 <>
                                     <img src={URL.createObjectURL(preview)} alt="Preview" />
                                     <div className='form-upload-pdf-icon'>
                                         <div className='flex gap-5'>
                                             {!disabled && <div  {...getRootProps()} className='bg-white w-[40px] h-[40px] rounded-full flex items-center justify-center hover:cursor-pointer hover:bg-primary-200'>
-                                                {/* <MdOutlineModeEditOutline className='text-xl' /> */}
+                                                <div className="w-[20px] h-[20px]">
+                                                    <img src={EditIcon} alt="edit" />
+                                                </div>
                                             </div>}
                                         </div>
                                     </div>
@@ -81,7 +90,9 @@ const CustomDropzoneInput: React.FC<CustomDropzoneInputProps> = ({
                                     <div className="form-upload-pdf-icon">
                                         <div className='flex gap-5'>
                                             {!disabled && <div  {...getRootProps()} className='bg-white w-[40px] h-[40px] rounded-full flex items-center justify-center hover:cursor-pointer hover:bg-primary-200'>
-                                                {/* <MdOutlineModeEditOutline className='text-xl' /> */}
+                                                <div className="w-[20px] h-[20px]">
+                                                    <img src={EditIcon} alt="edit" />
+                                                </div>
                                             </div>}
                                         </div>
                                     </div>
