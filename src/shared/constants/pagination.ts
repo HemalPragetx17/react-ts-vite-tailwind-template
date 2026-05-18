@@ -16,7 +16,7 @@ export const Sorting = {
 };
 
 export const DEFAULT_ORDERBY = 'created_at';
-export const DEFAULT_PAGE_SIZE = 1;
+export const DEFAULT_PAGE_SIZE = 10;
 export const PAGE_OPTIONS = [10, 20, 30, 40, 50];
 
 export const PAGINATION: Pagination = {
