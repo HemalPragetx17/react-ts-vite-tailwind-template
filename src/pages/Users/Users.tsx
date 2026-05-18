@@ -1,6 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Field, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import EditIcon from "../../assets/edit.svg";
 import ViewIcon from "../../assets/eye-info.svg";
 import SearchIcon from "../../assets/search.svg";
@@ -21,14 +21,18 @@ interface IUsersFilter {
   status: string;
 }
 
+const initialFilter: IUsersFilter = {
+  search: '',
+  status: '',
+};
+
 const Users = () => {
   const [usersList, setUsersList] = useState<IUserModal[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [totalRecords, setTotalRecords] = useState<number>(0);
-  const [pagination, setPagination] = useState({
-    page: 0,
-    limit: 10,
-  });
+  const [pagination, setPagination] = useState({ page: 1, limit: 10 });
+  const [filterValues, setFilterValues] = useState<IUsersFilter>(initialFilter);
+
   const [user, setUser] = useState<IUserModal | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [openConfirmDialogDelete, setOpenConfirmDialogDelete] = useState(false);
@@ -89,8 +93,7 @@ const Users = () => {
               }`}
           >
             <span
-              className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-emerald-500" : "bg-gray-400"
-                }`}
+              className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-emerald-500" : "bg-gray-400"}`}
             />
             {isActive ? "Active" : "Inactive"}
           </span>
@@ -116,31 +119,44 @@ const Users = () => {
     }
   ];
 
-  const initialState: IUsersFilter = {
-    search: '',
-    status: '',
-  };
+  // Initial load only — all subsequent calls are triggered explicitly
+  useEffect(() => {
+    getUsers(initialFilter);
+  }, []);
+
+  // Debounced search — passes new values directly to avoid stale closure
+  const debouncedSearch = useMemo(() =>
+    debounce((filter: IUsersFilter, page: number, limit: number) => {
+      getUsers(filter, page, limit);
+    }, 400),
+    []
+  );
 
   useEffect(() => {
-    getUsers(initialState);
-  }, [pagination.page, pagination.limit])
+    return () => { debouncedSearch.cancel(); };
+  }, []);
 
-  const getUsers = async (filter: IUsersFilter) => {
-    const params = {
-      pageNo: pagination.page + 1,
-      limit: pagination.limit,
+  const getUsers = async (filter: IUsersFilter, page: number = pagination.page, limit: number = pagination.limit) => {
+    const params: any = {
+      pageNo: page,
+      limit: limit,
       sortKey: "_createdAt",
       sortOrder: "-1",
       needCount: true,
       searchTerm: filter?.search || "",
     };
+
+    if (filter?.status && filter.status !== '') {
+      params.active = filter.status === "true";
+    }
+
     setLoading(true);
     await userService
       .getAllUsers(params)
       .then((response: any) => {
         if (response) {
-          setTotalRecords(response?.total);
-          setUsersList(response?.records);
+          setTotalRecords(response?.total || 0);
+          setUsersList(response?.records || []);
         } else {
           setTotalRecords(0);
           setUsersList([]);
@@ -148,10 +164,19 @@ const Users = () => {
       })
       .catch((error: Error) => console.log(error?.message))
       .finally(() => setLoading(false));
-  }
+  };
+
+  // Called by CustomTable when page or limit changes
+  const handlePageChange = (newPagination: { page: number; limit: number }) => {
+    console.log("newPagination", newPagination);
+    if (pagination.page !== newPagination.page) {
+      setPagination(newPagination);
+      getUsers(filterValues, newPagination.page, newPagination.limit);
+    }
+  };
 
   const handleAddUserSubmit = () => {
-    getUsers(initialState);
+    getUsers(filterValues, pagination.page, pagination.limit);
     setOpenDialog(false);
   };
 
@@ -178,16 +203,6 @@ const Users = () => {
     handleConfirmDialogCloseForDelete();
   };
 
-  const debouncedResults = React.useMemo(() => {
-    return debounce(getUsers, 300);
-  }, []);
- 
-  React.useEffect(() => {
-    return () => {
-      debouncedResults.cancel();
-    };
-  });
-
   return (
     <section>
       <div className="flex justify-between items-center">
@@ -198,15 +213,17 @@ const Users = () => {
       </div>
 
       <Formik
-        initialValues={initialState}
-        onSubmit={(data: any) => {
-          setPagination(prev => ({ ...prev, page: 0 }));
-          getUsers(data);
+        initialValues={initialFilter}
+        onSubmit={(data: IUsersFilter) => {
+          setPagination(prev => ({ ...prev, page: 1 }));
+          setFilterValues(data);
+          getUsers(data, 1, pagination.limit);
         }}
         enableReinitialize
         onReset={() => {
-          setPagination(prev => ({ ...prev, page: 0 }));
-          getUsers(initialState);
+          setPagination(prev => ({ ...prev, page: 1 }));
+          setFilterValues(initialFilter);
+          getUsers(initialFilter, 1, pagination.limit);
         }}
       >
         {(props) => {
@@ -221,13 +238,14 @@ const Users = () => {
                   startIcon={
                     <img src={SearchIcon} alt="Search" className="w-4 h-4" />
                   }
-                  onChange={(value) => {
+                  onChange={(e: any) => {
+                    const value = e?.target ? e.target.value : e;
                     setFieldValue('search', value);
-                    const values = props?.values
-                      ? props.values
-                      : initialState;
-                    setPagination({ ...pagination, page: 0 });
-                    debouncedResults(values);
+                    // Build new filter inline to avoid stale closure
+                    const newFilter = { ...filterValues, search: value };
+                    setFilterValues(newFilter);
+                    setPagination(prev => ({ ...prev, page: 1 }));
+                    debouncedSearch(newFilter, 1, pagination.limit);
                   }}
                 />
 
@@ -240,6 +258,14 @@ const Users = () => {
                     { label: "Inactive", value: "false" }
                   ]}
                   isClearable={true}
+                  onChange={(option: any) => {
+                    const value = option ? option.value : '';
+                    setFieldValue('status', value);
+                    const newFilter = { ...filterValues, status: value };
+                    setFilterValues(newFilter);
+                    setPagination(prev => ({ ...prev, page: 1 }));
+                    getUsers(newFilter, 1, pagination.limit);
+                  }}
                 />
               </div>
             </Form>
@@ -251,8 +277,9 @@ const Users = () => {
         data={usersList}
         columns={columns}
         enablePagination
+        manualPagination
         pagination={pagination}
-        onPaginationChange={setPagination}
+        onPaginationChange={handlePageChange}
         enableCheckbox
         enableSorting
         defaultSortKey="name"
