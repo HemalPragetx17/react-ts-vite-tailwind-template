@@ -19,6 +19,7 @@ import clsx from "clsx";
 import "./index.css";
 import AnimatedExpand from "./AnimatedExpand";
 import CustomCheckbox from "../input/CustomCheckbox";
+import { PAGE_OPTIONS } from "../../shared/constants/pagination";
 
 interface CustomTableProps<T = any> {
   data: T[];
@@ -481,7 +482,7 @@ function CustomTable<T = any>({
                   onChange={(e) => table.setPageSize(Number(e.target.value))}
                   className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-primary focus:border-primary block w-full p-2 pr-8 cursor-pointer transition-all hover:bg-gray-100"
                 >
-                  {[10, 20, 30, 40, 50].map((size) => (
+                  {PAGE_OPTIONS.map((size) => (
                     <option key={size} value={size}>
                       {size}
                     </option>

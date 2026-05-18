@@ -1,6 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Field, Form, Formik } from "formik";
-import { useState, useEffect, useMemo } from "react";
+import { debounce } from "lodash";
+import { useEffect, useMemo, useState } from "react";
 import EditIcon from "../../assets/edit.svg";
 import ViewIcon from "../../assets/eye-info.svg";
 import SearchIcon from "../../assets/search.svg";
@@ -11,10 +12,11 @@ import CustomInput from "../../components/input/CustomInput";
 import CustomSelect from "../../components/input/CustomSelect";
 import CustomConfirmModal from "../../components/modal/CustomConfirmModal";
 import CustomModal from "../../components/modal/CustomModal";
+import type { Pagination } from "../../models/base-type";
 import type { IUserModal } from "../../models/user";
 import userService from "../../services/user-service";
+import { PAGINATION } from "../../shared/constants/pagination";
 import UserForm from "./UserForm";
-import { debounce } from "lodash";
 
 interface IUsersFilter {
   search: string;
@@ -30,7 +32,7 @@ const Users = () => {
   const [usersList, setUsersList] = useState<IUserModal[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [totalRecords, setTotalRecords] = useState<number>(0);
-  const [pagination, setPagination] = useState({ page: 1, limit: 10 });
+  const [pagination, setPagination] = useState<Pagination>(PAGINATION);
   const [filterValues, setFilterValues] = useState<IUsersFilter>(initialFilter);
 
   const [user, setUser] = useState<IUserModal | null>(null);
@@ -121,7 +123,7 @@ const Users = () => {
 
   // Initial load only — all subsequent calls are triggered explicitly
   useEffect(() => {
-    getUsers(initialFilter);
+    getUsers(filterValues);
   }, []);
 
   // Debounced search — passes new values directly to avoid stale closure
@@ -166,9 +168,8 @@ const Users = () => {
       .finally(() => setLoading(false));
   };
 
-  // Called by CustomTable when page or limit changes
   const handlePageChange = (newPagination: { page: number; limit: number }) => {
-    console.log("newPagination", newPagination);
+    console.log("🚀 ~ handlePageChange ~ newPagination:", newPagination)
     if (pagination.page !== newPagination.page) {
       setPagination(newPagination);
       getUsers(filterValues, newPagination.page, newPagination.limit);
