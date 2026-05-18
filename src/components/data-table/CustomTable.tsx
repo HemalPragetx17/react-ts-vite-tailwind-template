@@ -131,32 +131,23 @@ function CustomTable<T = any>({
       : [],
   );
 
+  // Convert 1-based external page to TanStack's 0-based pageIndex
   const reactTablePagination = enablePagination && pagination 
-    ? { pageIndex: pagination.page, pageSize: pagination.limit }
+    ? { pageIndex: pagination.page - 1, pageSize: pagination.limit }
     : undefined;
 
   const handlePaginationChange = (updater: any) => {
     if (onPaginationChange) {
-      if (typeof updater === 'function') {
-        const newTableState = updater(reactTablePagination);
-        onPaginationChange((prev) => {
-          const limitChanged = prev.limit !== newTableState.pageSize;
-          return {
-            ...prev,
-            page: limitChanged ? 0 : newTableState.pageIndex,
-            limit: newTableState.pageSize,
-          };
-        });
-      } else {
-        onPaginationChange((prev) => {
-          const limitChanged = prev.limit !== updater.pageSize;
-          return {
-            ...prev,
-            page: limitChanged ? 0 : updater.pageIndex,
-            limit: updater.pageSize,
-          };
-        });
-      }
+      const currentPagination = pagination || { page: 1, limit: 10 };
+      const nextTableState = typeof updater === 'function' ? updater(reactTablePagination) : updater;
+      
+      const limitChanged = currentPagination.limit !== nextTableState.pageSize;
+      const nextPagination = {
+        page: limitChanged ? 1 : nextTableState.pageIndex + 1,
+        limit: nextTableState.pageSize,
+      };
+      
+      onPaginationChange(nextPagination as any);
     }
   };
 
