@@ -358,7 +358,7 @@ function CustomTable<T = any>({
           <tbody className="bg-white divide-y divide-gray-200">
             {loading ? (
               <tr>
-                <td colSpan={columns.length} className="text-center py-8">
+                <td colSpan={enableCheckbox ? columns.length + 1 : columns.length} className="text-center py-8">
                   <div className="flex justify-center items-center text-gray-500">
                     <svg
                       className="animate-spin h-5 w-5 mr-3 text-indigo-600"
@@ -424,7 +424,7 @@ function CustomTable<T = any>({
               })
             ) : (
               <tr>
-                <td colSpan={columns.length} className="text-center py-8">
+                <td colSpan={enableCheckbox ? columns.length + 1 : columns.length} className="text-center py-8">
                   <span className="text-sm font-medium text-gray-500">
                     No data found
                   </span>
