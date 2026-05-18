@@ -161,7 +161,6 @@ const ForgotPassword = () => {
                           <Field
                             name="otp"
                             numInputs={6}
-                            label="OTP"
                             placeholder="Enter OTP"
                             value={values?.otp}
                             onChange={(e: any) => setFieldValue("otp", e.target.value)}

@@ -260,9 +260,9 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) 
               className="flex items-center justify-center shrink-0 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 transition"
             >
               {showPassword ? (
-                <img src={EyeOffIcon} alt="Hide password" className="w-4 h-4 opacity-75" />
+                <img src={EyeOffIcon} alt="Hide password" className="w-6 h-6 opacity-75" />
               ) : (
-                <img src={EyeIcon} alt="Show password" className="w-4 h-4 opacity-75" />
+                <img src={EyeIcon} alt="Show password" className="w-6 h-6 opacity-75" />
               )}
             </button>
           ) : (

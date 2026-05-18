@@ -146,7 +146,7 @@ const CustomOTPInput = forwardRef<HTMLInputElement, CustomOTPInputProps>((props,
       )}
 
       {/* OTP Inputs Wrapper */}
-      <div className="flex gap-2 items-center justify-start">
+      <div className="flex gap-2 items-center justify-center">
         {Array.from({ length }).map((_, index) => {
           const charValue = currentValue[index] || "";
           return (
