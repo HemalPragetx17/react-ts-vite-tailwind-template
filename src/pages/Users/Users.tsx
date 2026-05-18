@@ -121,12 +121,10 @@ const Users = () => {
     }
   ];
 
-  // Initial load only — all subsequent calls are triggered explicitly
   useEffect(() => {
     getUsers(filterValues);
   }, []);
 
-  // Debounced search — passes new values directly to avoid stale closure
   const debouncedSearch = useMemo(() =>
     debounce((filter: IUsersFilter, page: number, limit: number) => {
       getUsers(filter, page, limit);
@@ -169,7 +167,6 @@ const Users = () => {
   };
 
   const handlePageChange = (newPagination: { page: number; limit: number }) => {
-    console.log("🚀 ~ handlePageChange ~ newPagination:", newPagination)
     if (pagination.page !== newPagination.page) {
       setPagination(newPagination);
       getUsers(filterValues, newPagination.page, newPagination.limit);
@@ -242,7 +239,6 @@ const Users = () => {
                   onChange={(e: any) => {
                     const value = e?.target ? e.target.value : e;
                     setFieldValue('search', value);
-                    // Build new filter inline to avoid stale closure
                     const newFilter = { ...filterValues, search: value };
                     setFilterValues(newFilter);
                     setPagination(prev => ({ ...prev, page: 1 }));
@@ -283,13 +279,12 @@ const Users = () => {
         onPaginationChange={handlePageChange}
         enableCheckbox
         enableSorting
-        defaultSortKey="name"
+        defaultSortKey="firstName"
         defaultSortOrder="desc"
         loading={loading}
         totalCount={totalRecords}
       />
 
-      {/* Reusable Custom Modal */}
       <CustomModal
         openDialog={openDialog}
         handleDialogClose={handleDialogClose}
