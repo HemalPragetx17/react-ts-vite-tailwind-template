@@ -28,7 +28,6 @@ const Dashboard = () => {
         title="Add New User"
         size="2xl"
         backdrop="blur"
-        scrollBehavior="inside"
       >
         <DemoForm
           user={user}

@@ -1,8 +1,7 @@
 import { Field, Form, Formik } from "formik";
 import React from "react";
 import CustomButton from "../../components/button/CustomButton";
-import CustomInput from "../../components/input/CustomInput";
-import CustomSwitch from "../../components/input/CustomSwitch";
+import { CustomInput, CustomPhoneNumberInput, CustomSwitch } from "../../components/input";
 import type { IUserModal } from "../../models/user";
 import { UserValidationSchema } from "../../validation/user";
 
@@ -14,14 +13,13 @@ interface UserFormProps {
 
 const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose }) => {
   const initialState: IUserModal = {
-    _id: "",
     firstName: "",
     lastName: "",
     email: "",
     phoneCountry: "",
     phone: "",
     role: 3,
-    active: true,
+    active: null,
   };
 
   const getData = () => user ? user : initialState;
@@ -40,9 +38,9 @@ const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose 
       validateOnChange={true}
       enableReinitialize={true}
     >
-      {({ handleSubmit }) => (
+      {({ handleSubmit, values, setFieldValue }) => (
         <Form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="">
             <Field
               name="firstName"
               label="First Name"
@@ -61,6 +59,23 @@ const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose 
               label="Email Address"
               placeholder="Enter email address"
               component={CustomInput}
+            />
+            <Field
+              country={'in'}
+              type="tel"
+              name='phone'
+              label="Phone Number"
+              inputProps={{
+                name: 'phone',
+                required: true,
+                autoFocus: true,
+              }}
+              value={values?.phone}
+              onChange={(value, country, e, formattedValue) => {
+                setFieldValue('phoneCountry', `+${country.dialCode}`);
+                setFieldValue('phone', value);
+              }}
+              component={CustomPhoneNumberInput}
             />
             {user?._id && (
               <Field

@@ -12,4 +12,6 @@ export interface IFormModal {
     agreeToTerms?: boolean;
     bio?: string;
     projectDuration?: [Date | null, Date | null];
+    phone: string;
+    phoneCountry: string;
 }

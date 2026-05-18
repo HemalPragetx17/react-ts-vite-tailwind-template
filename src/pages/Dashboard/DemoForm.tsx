@@ -1,14 +1,7 @@
 import { Field, Form, Formik } from "formik";
 import React from "react";
 import CustomButton from "../../components/button/CustomButton";
-import CustomCheckbox from "../../components/input/CustomCheckbox";
-import CustomCheckboxGroup from "../../components/input/CustomCheckboxGroup";
-import CustomInput from "../../components/input/CustomInput";
-import CustomRadio from "../../components/input/CustomRadio";
-import CustomSelect from "../../components/input/CustomSelect";
-import CustomSwitch from "../../components/input/CustomSwitch";
-import CustomTextarea from "../../components/input/CustomTextarea";
-import CustomDatePicker from "../../components/input/date-picker/CustomDatePicker";
+import { CustomCheckbox, CustomCheckboxGroup, CustomDatePicker, CustomInput, CustomPhoneNumberInput, CustomRadio, CustomSelect, CustomSwitch, CustomTextarea } from "../../components/input";
 import type { IFormModal } from "../../models/dashboard";
 import { FormValidationSchema } from "../../validation/dashboard";
 
@@ -32,6 +25,8 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
         agreeToTerms: false,
         bio: "",
         projectDuration: [null, null],
+        phone: "",
+        phoneCountry: "",
     };
 
     const getData = () => user ? user : initialState;
@@ -78,7 +73,7 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
             validateOnChange={true}
             enableReinitialize={true}
         >
-            {({ handleSubmit }) => (
+            {({ handleSubmit, values, setFieldValue }) => (
                 <Form onSubmit={handleSubmit} className="space-y-4">
                     {/* Form Fields */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -106,6 +101,25 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                             placeholder="Select joining date"
                             isClearable={true}
                             component={CustomDatePicker}
+                        />
+
+                        {/* Phone Number */}
+                        <Field
+                            country={'in'}
+                            type="tel"
+                            name='phone'
+                            label="Phone Number"
+                            inputProps={{
+                                name: 'phone',
+                                required: true,
+                                autoFocus: true,
+                            }}
+                            value={values?.phone}
+                            onChange={(value, country, e, formattedValue) => {
+                                setFieldValue('phoneCountry', `+${country.dialCode}`);
+                                setFieldValue('phone', value);
+                            }}
+                            component={CustomPhoneNumberInput}
                         />
 
                         {/* Age */}
