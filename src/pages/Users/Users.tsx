@@ -1,19 +1,19 @@
 import type { ColumnDef } from "@tanstack/react-table";
+import { Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
+import EditIcon from "../../assets/edit.svg";
+import ViewIcon from "../../assets/eye-info.svg";
+import SearchIcon from "../../assets/search.svg";
+import DeleteIcon from "../../assets/trash.svg";
 import CustomButton from "../../components/button/CustomButton";
 import { CustomTable } from "../../components/data-table";
-import CustomModal from "../../components/modal/CustomModal";
-import CustomConfirmModal from "../../components/modal/CustomConfirmModal";
-import type { IUserModal } from "../../models/user";
-import UserForm from "./UserForm";
-import ViewIcon from "../../assets/eye-info.svg"
-import EditIcon from "../../assets/edit.svg"
-import DeleteIcon from "../../assets/trash.svg"
-import userService from "../../services/user-service";
-import { Field, Form, Formik } from "formik";
 import CustomInput from "../../components/input/CustomInput";
 import CustomSelect from "../../components/input/CustomSelect";
-import SearchIcon from "../../assets/search.svg"
+import CustomConfirmModal from "../../components/modal/CustomConfirmModal";
+import CustomModal from "../../components/modal/CustomModal";
+import type { IUserModal } from "../../models/user";
+import userService from "../../services/user-service";
+import UserForm from "./UserForm";
 
 interface IUsersFilter {
   search: string;
@@ -34,19 +34,33 @@ const Users = () => {
 
   const columns: ColumnDef<IUserModal>[] = [
     {
-      accessorKey: "name",
+      accessorKey: "firstName",
       header: "Name",
       enableSorting: true,
+      cell: ({ row }) => {
+        const val = row.original.firstName + " " + row.original.lastName;
+        if (!val) return <span className="text-gray-400">-</span>;
+        return val;
+      },
     },
     {
       accessorKey: "email",
       header: "Email",
     },
     {
+      accessorKey: "phone",
+      header: "Phone Number",
+      cell: ({ row }) => {
+        const val = row.original.phoneCountry + " " + row.original.phone;
+        if (!val) return <span className="text-gray-400">-</span>;
+        return val;
+      },
+    },
+    {
       accessorKey: "joiningDate",
       header: "Joining Date",
       cell: ({ row }) => {
-        const val = row.original.joiningDate;
+        const val = row.original._createdAt;
         if (!val) return <span className="text-gray-400">-</span>;
         const date = new Date(val);
         return isNaN(date.getTime()) ? val : date.toLocaleDateString("en-GB", {
@@ -57,22 +71,10 @@ const Users = () => {
       },
     },
     {
-      accessorKey: "age",
-      header: "Age",
-    },
-    {
-      accessorKey: "gender",
-      header: "Gender",
-    },
-    {
-      accessorKey: "role",
-      header: "Role",
-    },
-    {
-      accessorKey: "status",
+      accessorKey: "active",
       header: "Status",
       cell: ({ row }) => {
-        const isActive = row.original.status;
+        const isActive = row.original.active;
         return (
           <span
             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${isActive
@@ -92,7 +94,6 @@ const Users = () => {
     {
       accessorKey: "actions",
       header: "Actions",
-      size: 300,
       cell: ({ row }) => {
         return <div className="flex gap-2">
           <div className="cursor-pointer" onClick={() => handleView(row.original)}>
@@ -122,11 +123,10 @@ const Users = () => {
     const params = {
       pageNo: 1,
       limit: 10,
-      sortKey: "createdAt",
+      sortKey: "_createdAt",
       sortOrder: "-1",
       needCount: true,
       searchTerm: filter?.search || "",
-      warehouse: "64709a6ff0e018908dee8947",
     };
 
     await userService
@@ -134,162 +134,7 @@ const Users = () => {
       .then((response: any) => {
         if (response) {
           setTotalRecords(response?.total);
-          setUsersList([
-            {
-              name: "John Doe",
-              email: "johndoe@gmail.com",
-              joiningDate: "2022-01-01",
-              age: 25,
-              gender: "Male",
-              technologies: ["React", "Node", "Express"],
-              role: "Admin",
-              status: true,
-              hobbies: ["Reading", "Coding", "Gaming"],
-              bio: "John Doe is a software engineer",
-              projectDuration: [new Date(), new Date()],
-              agreeToTerms: true,
-            },
-            {
-              name: "Jane Doe",
-              email: "[EMAIL_ADDRESS]",
-              joiningDate: "2022-01-01",
-              age: 25,
-              gender: "Female",
-              technologies: ["React", "Node", "Express"],
-              role: "Admin",
-              status: true,
-              hobbies: ["Reading", "Coding", "Gaming"],
-              bio: "John Doe is a software engineer",
-              projectDuration: [new Date(), new Date()],
-              agreeToTerms: true,
-            },
-            {
-              name: "Jane Doe",
-              email: "[EMAIL_ADDRESS]",
-              joiningDate: "2022-01-01",
-              age: 25,
-              gender: "Female",
-              technologies: ["React", "Node", "Express"],
-              role: "Admin",
-              status: true,
-              hobbies: ["Reading", "Coding", "Gaming"],
-              bio: "John Doe is a software engineer",
-              projectDuration: [new Date(), new Date()],
-              agreeToTerms: true,
-            },
-            {
-              name: "John Doe",
-              email: "[EMAIL_ADDRESS]",
-              joiningDate: "2022-01-01",
-              age: 25,
-              gender: "Male",
-              technologies: ["React", "Node", "Express"],
-              role: "Admin",
-              status: true,
-              hobbies: ["Reading", "Coding", "Gaming"],
-              bio: "John Doe is a software engineer",
-              projectDuration: [new Date(), new Date()],
-              agreeToTerms: true,
-            },
-            {
-              name: "Jane Doe",
-              email: "[EMAIL_ADDRESS]",
-              joiningDate: "2022-01-01",
-              age: 25,
-              gender: "Female",
-              technologies: ["React", "Node", "Express"],
-              role: "Admin",
-              status: true,
-              hobbies: ["Reading", "Coding", "Gaming"],
-              bio: "John Doe is a software engineer",
-              projectDuration: [new Date(), new Date()],
-              agreeToTerms: true,
-            },
-            {
-              name: "John Doe",
-              email: "[EMAIL_ADDRESS]",
-              joiningDate: "2022-01-01",
-              age: 25,
-              gender: "Male",
-              technologies: ["React", "Node", "Express"],
-              role: "Admin",
-              status: true,
-              hobbies: ["Reading", "Coding", "Gaming"],
-              bio: "John Doe is a software engineer",
-              projectDuration: [new Date(), new Date()],
-              agreeToTerms: true,
-            },
-            {
-              name: "Jane Doe",
-              email: "[EMAIL_ADDRESS]",
-              joiningDate: "2022-01-01",
-              age: 25,
-              gender: "Female",
-              technologies: ["React", "Node", "Express"],
-              role: "Admin",
-              status: true,
-              hobbies: ["Reading", "Coding", "Gaming"],
-              bio: "John Doe is a software engineer",
-              projectDuration: [new Date(), new Date()],
-              agreeToTerms: true,
-            },
-            {
-              name: "John Doe",
-              email: "[EMAIL_ADDRESS]",
-              joiningDate: "2022-01-01",
-              age: 25,
-              gender: "Male",
-              technologies: ["React", "Node", "Express"],
-              role: "Admin",
-              status: true,
-              hobbies: ["Reading", "Coding", "Gaming"],
-              bio: "John Doe is a software engineer",
-              projectDuration: [new Date(), new Date()],
-              agreeToTerms: true,
-            },
-            {
-              name: "Jane Doe",
-              email: "[EMAIL_ADDRESS]",
-              joiningDate: "2022-01-01",
-              age: 25,
-              gender: "Female",
-              technologies: ["React", "Node", "Express"],
-              role: "Admin",
-              status: true,
-              hobbies: ["Reading", "Coding", "Gaming"],
-              bio: "John Doe is a software engineer",
-              projectDuration: [new Date(), new Date()],
-              agreeToTerms: true,
-            },
-            {
-              name: "John Doe",
-              email: "[EMAIL_ADDRESS]",
-              joiningDate: "2022-01-01",
-              age: 25,
-              gender: "Male",
-              technologies: ["React", "Node", "Express"],
-              role: "Admin",
-              status: true,
-              hobbies: ["Reading", "Coding", "Gaming"],
-              bio: "John Doe is a software engineer",
-              projectDuration: [new Date(), new Date()],
-              agreeToTerms: true,
-            },
-            {
-              name: "Jane Doe",
-              email: "[EMAIL_ADDRESS]",
-              joiningDate: "2022-01-01",
-              age: 25,
-              gender: "Female",
-              technologies: ["React", "Node", "Express"],
-              role: "Admin",
-              status: true,
-              hobbies: ["Reading", "Coding", "Gaming"],
-              bio: "John Doe is a software engineer",
-              projectDuration: [new Date(), new Date()],
-              agreeToTerms: true,
-            },
-          ]);
+          setUsersList(response?.records);
         } else {
           setTotalRecords(0);
           setUsersList([]);
@@ -305,6 +150,11 @@ const Users = () => {
 
   const handleView = (user: IUserModal) => {
     setUser(user);
+  };
+
+  const handleAdd = () => {
+    setUser(null);
+    handleDialogOpen();
   };
 
   const handleEdit = (user: IUserModal) => {
@@ -325,7 +175,7 @@ const Users = () => {
     <section>
       <div className="flex justify-between items-center">
         <p className="text-2xl">Users</p>
-        <CustomButton size="lg" onClick={handleDialogOpen}>
+        <CustomButton size="lg" onClick={handleAdd}>
           Add User
         </CustomButton>
       </div>
@@ -400,7 +250,7 @@ const Users = () => {
         title="Delete User"
         openDialog={openConfirmDialogDelete}
         handleDialogClose={handleConfirmDialogCloseForDelete}
-        message={`Are you sure you want to delete ${user?.name} ?`}
+        message={`Are you sure you want to delete ${user?.firstName} ${user?.lastName} ?`}
         handleSuccess={handleDeleteConfirm}
       />
     </section>

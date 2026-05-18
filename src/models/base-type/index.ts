@@ -1,14 +1,13 @@
-import { ORDER_BY_ENUM } from "../../shared/constants/pagination";
-import type { ORDER_BY_TYPE } from "../../shared/constants/pagination";
+import type { ORDER_BY_ENUM, ORDER_BY_TYPE } from "../../shared/constants/pagination";
 
 export interface IBaseCreateRequest {
-    createdBy?: number;
-    created_at?: Date;
+    _createdBy?: number;
+    _createdAt?: Date;
 }
 
 export interface IBaseUpdateRequest {
-    updatedBy?: number;
-    updated_at?: Date;
+    _updatedBy?: number;
+    _updatedAt?: Date;
 }
 
 export interface IColumn {

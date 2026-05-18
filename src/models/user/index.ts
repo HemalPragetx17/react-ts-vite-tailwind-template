@@ -1,15 +1,13 @@
-export interface IUserModal {
-    id?: number;
-    name: string;
+import type { IBaseCreateRequest, IBaseUpdateRequest } from "../base-type";
+
+export interface IUserModal extends IBaseCreateRequest, IBaseUpdateRequest {
+    _id?: string;
+    firstName: string;
+    lastName: string;
     email: string;
-    joiningDate?: string;
-    age: number;
-    gender: string;
-    role: string;
-    status: boolean;
-    technologies?: string[];
-    hobbies?: string[];
-    agreeToTerms?: boolean;
-    bio?: string;
-    projectDuration?: [Date | null, Date | null];
+    phoneCountry: string;
+    phone: string;
+    userType?: number;
+    role?: number;
+    active?: boolean;
 }

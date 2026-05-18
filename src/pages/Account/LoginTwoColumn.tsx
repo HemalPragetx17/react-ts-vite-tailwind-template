@@ -15,8 +15,8 @@ const LoginTwoColumn = () => {
   const dispatch = useDispatch()
 
   const initialValues: ILoginRequestModel = {
-    email: "",
-    password: "",
+    email: "admin@metamed.ie",
+    password: "Admin@123",
   };
 
   const handleSubmit = async (values: ILoginRequestModel) => {
