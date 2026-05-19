@@ -180,7 +180,7 @@ const CustomCheckboxGroup = forwardRef<HTMLDivElement, CustomCheckboxGroupProps>
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.15 }}
-              className={`mt-2 text-xs text-red-500 ${errorClassName}`}
+              className={`mt-1.5 text-sm text-red-500 ${errorClassName}`}
             >
               {fieldError}
             </motion.p>

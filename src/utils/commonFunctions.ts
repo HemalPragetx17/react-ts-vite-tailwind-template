@@ -1,9 +1,5 @@
 import { camelCase } from 'lodash';
 import React from "react";
-import type { Pagination } from "../models/base-type";
-// import { ORDER_BY_ASC, ORDER_BY_DESC } from "../shared/constants/pagination";
-import { Digits } from "../shared/enums/digits";
-import { PageActions } from "../shared/enums/table-page-actions";
 
 export const stringIsNumber = (value: string): boolean => isNaN(Number(value)) === false;
 
@@ -96,11 +92,10 @@ interface CheckboxClickEvent {
 }
 
 export const handleCheckboxClick = (
-  event: CheckboxClickEvent,
+  _event: CheckboxClickEvent,
   id: string | number,
   selected: Array<string | number>
 ): Array<string | number> => {
-  console.log("🚀 ~ handleCheckboxClick ~ event:", event)
   const selectedIndex = selected.indexOf(id);
   let newSelected: Array<string | number> = [];
 

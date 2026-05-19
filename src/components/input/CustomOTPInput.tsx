@@ -1,5 +1,6 @@
-import React, { forwardRef, useRef } from "react";
 import type { FieldInputProps, FormikErrors, FormikTouched } from "formik";
+import { AnimatePresence, motion } from "framer-motion";
+import React, { forwardRef, useRef } from "react";
 
 interface CustomOTPInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "form" | "onChange"> {
@@ -185,10 +186,9 @@ const CustomOTPInput = forwardRef<HTMLInputElement, CustomOTPInputProps>((props,
                 rounded-md border border-gray-300
                 outline-none transition
                 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
-                ${
-                  fieldTouched && fieldError
-                    ? "border-red-500 focus:ring-red-500 focus:border-red-500"
-                    : ""
+                ${fieldTouched && fieldError
+                  ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                  : ""
                 }
                 ${inputClassName}
               `}
@@ -197,12 +197,21 @@ const CustomOTPInput = forwardRef<HTMLInputElement, CustomOTPInputProps>((props,
         })}
       </div>
 
-      {/* Error Message */}
-      {fieldTouched && fieldError && (
-        <p className={`mt-1 text-sm text-red-500 ${errorClassName}`}>
-          {fieldError}
-        </p>
-      )}
+      {/* Error */}
+      <AnimatePresence>
+        {fieldTouched && fieldError && (
+          <motion.p
+            key="err"
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.15 }}
+            className={`mt-1.5 text-sm text-red-500 ${errorClassName}`}
+          >
+            {fieldError}
+          </motion.p>
+        )}
+      </AnimatePresence>
     </div>
   );
 });

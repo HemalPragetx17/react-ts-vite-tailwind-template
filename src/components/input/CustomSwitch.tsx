@@ -111,12 +111,12 @@ const CustomSwitch = forwardRef<HTMLDivElement, CustomSwitchProps>((props, ref) 
 
   // ─── Color Configurations ────────────────────────────────────────────────
   const colorConfigs = {
-    default:   "bg-neutral-500",
-    primary:   "bg-blue-600",
-    secondary: "bg-purple-600",
-    success:   "bg-emerald-500",
-    warning:   "bg-amber-500",
-    danger:    "bg-rose-600",
+    default:   "bg-secondary-600",
+    primary:   "bg-primary",
+    secondary: "bg-secondary",
+    success:   "bg-success",
+    warning:   "bg-warning",
+    danger:    "bg-danger",
   };
 
   const currentSize = sizeConfigs[size] || sizeConfigs.md;
@@ -227,7 +227,7 @@ const CustomSwitch = forwardRef<HTMLDivElement, CustomSwitchProps>((props, ref) 
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className={`mt-2 text-xs text-red-500 ${errorClassName}`}
+            className={`mt-1.5 text-sm text-red-500 ${errorClassName}`}
           >
             {fieldError}
           </motion.p>

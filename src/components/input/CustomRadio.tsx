@@ -37,30 +37,30 @@ interface CustomRadioProps
 // ─── Color Maps ─────────────────────────────────────────────────────────────
 
 const ringColorMap: Record<RadioColor, string> = {
-  default:   "border-neutral-400 dark:border-neutral-500",
-  primary:   "border-blue-500",
-  secondary: "border-purple-500",
-  success:   "border-emerald-500",
-  warning:   "border-amber-500",
-  danger:    "border-red-500",
+  default:   "border-secondary-600 dark:border-secondary-400",
+  primary:   "border-primary",
+  secondary: "border-secondary",
+  success:   "border-success",
+  warning:   "border-warning",
+  danger:    "border-danger",
 };
 
 const checkedRingColorMap: Record<RadioColor, string> = {
-  default:   "border-neutral-600 dark:border-neutral-300",
-  primary:   "border-blue-500",
-  secondary: "border-purple-500",
-  success:   "border-emerald-500",
-  warning:   "border-amber-500",
-  danger:    "border-red-500",
+  default:   "border-secondary-600 dark:border-secondary-400",
+  primary:   "border-primary",
+  secondary: "border-secondary",
+  success:   "border-success",
+  warning:   "border-warning",
+  danger:    "border-danger",
 };
 
 const dotColorMap: Record<RadioColor, string> = {
-  default:   "bg-neutral-600 dark:bg-neutral-300",
-  primary:   "bg-blue-500",
-  secondary: "bg-purple-500",
-  success:   "bg-emerald-500",
-  warning:   "bg-amber-500",
-  danger:    "bg-red-500",
+  default:   "bg-secondary-600 dark:bg-secondary-400",
+  primary:   "bg-primary",
+  secondary: "bg-secondary",
+  success:   "bg-success",
+  warning:   "bg-warning",
+  danger:    "bg-danger",
 };
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -126,7 +126,7 @@ const CustomRadio = forwardRef<HTMLDivElement, CustomRadioProps>((props, ref) =>
             <label
               key={i}
               htmlFor={optId}
-              className="inline-flex items-start gap-3 cursor-pointer group select-none"
+              className="relative inline-flex items-start gap-3 cursor-pointer group select-none"
             >
               {/* Hidden native input */}
               <input
@@ -167,7 +167,7 @@ const CustomRadio = forwardRef<HTMLDivElement, CustomRadioProps>((props, ref) =>
               </span>
 
               {/* Label Text (+ optional description) */}
-              <span className="flex flex-col leading-tight">
+              <span className="flex flex-col leading-tight mt-[1px]">
                 <span
                   className="text-sm font-medium text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors duration-150"
                 >
@@ -193,7 +193,7 @@ const CustomRadio = forwardRef<HTMLDivElement, CustomRadioProps>((props, ref) =>
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className={`mt-2 text-xs text-red-500 ${errorClassName}`}
+            className={`mt-1.5 text-sm text-red-500 ${errorClassName}`}
           >
             {fieldError}
           </motion.p>

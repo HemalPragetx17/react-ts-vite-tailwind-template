@@ -24,6 +24,8 @@ interface CustomModalProps {
   primaryButtonForm?: string;
   primaryButtonColor?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'default';
   secondaryButtonColor?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'default';
+  isDismissable?: boolean;
+  isKeyboardDismissDisabled?: boolean;
 }
 
 const sizeClasses: Record<ModalSize, string> = {
@@ -58,6 +60,8 @@ const CustomModal: React.FC<CustomModalProps> = ({
   primaryButtonForm,
   primaryButtonColor = 'primary',
   secondaryButtonColor = 'danger',
+  isDismissable = false,
+  isKeyboardDismissDisabled = true,
 }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -67,7 +71,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
   // Close on Escape key pressed
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && openDialog) {
+      if (e.key === 'Escape' && openDialog && !isKeyboardDismissDisabled) {
         handleDialogClose();
       }
     };
@@ -79,7 +83,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'unset';
     };
-  }, [openDialog, handleDialogClose]);
+  }, [openDialog, handleDialogClose, isKeyboardDismissDisabled]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!isDraggable) return;
@@ -172,7 +176,9 @@ const CustomModal: React.FC<CustomModalProps> = ({
       {/* Backdrop - now inside the same container to handle clicks better */}
       <div 
         className={`fixed inset-0 transition-opacity duration-300 ${backdropClasses[backdrop]}`} 
-        onClick={handleDialogClose}
+        onClick={() => {
+          if (isDismissable) handleDialogClose();
+        }}
       />
 
       {/* Modal Container - captures scroll from anywhere */}
@@ -182,7 +188,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
         }`}
         onClick={(e) => {
           // Close if clicking outside the modal panel
-          if (e.target === e.currentTarget) handleDialogClose();
+          if (e.target === e.currentTarget && isDismissable) handleDialogClose();
         }}
       >
         <div 

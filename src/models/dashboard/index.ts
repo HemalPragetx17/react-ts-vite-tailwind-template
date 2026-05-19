@@ -3,7 +3,7 @@ export interface IFormModal {
     name: string;
     email: string;
     joiningDate?: string;
-    age: number;
+    age: number | null;
     gender: string;
     role: string;
     status: boolean;

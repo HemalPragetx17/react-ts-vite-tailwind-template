@@ -185,7 +185,7 @@ function CalendarIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="text-secondary-400 shrink-0"
+      className="text-secondary shrink-0"
       aria-hidden="true"
     >
       <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -436,7 +436,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       : null
     : null;
 
-  const hasValue = selectsRange ? !!(startDate || endDate) : !!startDate;
+  const hasValue = selectsRange ? !!(startDate && endDate) : !!startDate;
   const displayString = selectsRange
     ? formatDisplayRange(startDate, endDate)
     : formatDateDisplay(startDate);
@@ -487,6 +487,9 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       if (onChange) onChange(valArr);
 
       if (cleanStart && cleanEnd) {
+        if (form?.setFieldTouched && fieldName) {
+          form.setFieldTouched(fieldName, true, false);
+        }
         setTimeout(() => setIsOpen(false), 80);
       }
     } else {
@@ -496,6 +499,9 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 
       if (form?.setFieldValue && fieldName) {
         form.setFieldValue(fieldName, valStr);
+        if (form.setFieldTouched) {
+          form.setFieldTouched(fieldName, true, false);
+        }
       } else if (field?.onChange) {
         const syntheticEvent = {
           target: { name: fieldName, value: valStr },
@@ -511,12 +517,21 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (selectsRange) {
-      if (form?.setFieldValue && fieldName) form.setFieldValue(fieldName, []);
+      if (form?.setFieldValue && fieldName) {
+        form.setFieldValue(fieldName, []);
+        if (form.setFieldTouched) {
+          form.setFieldTouched(fieldName, true, false);
+        }
+      }
       onRangeChange?.(null, null);
       if (onChange) onChange([]);
     } else {
-      if (form?.setFieldValue && fieldName) form.setFieldValue(fieldName, "");
-      else if (field?.onChange) {
+      if (form?.setFieldValue && fieldName) {
+        form.setFieldValue(fieldName, "");
+        if (form.setFieldTouched) {
+          form.setFieldTouched(fieldName, true, false);
+        }
+      } else if (field?.onChange) {
         const syntheticEvent = {
           target: { name: fieldName, value: "" },
         } as unknown as React.ChangeEvent<HTMLInputElement>;
@@ -868,7 +883,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
           <div className="flex-1 min-w-0 truncate pr-2">
             {!displayString ? (
               <span
-                className={`text-secondary-400 truncate select-none ${sz.textSize}`}
+                className={`text-secondary truncate select-none ${sz.textSize}`}
               >
                 {isInside ? (isLabelActive ? placeholder : "") : placeholder}
               </span>
@@ -926,7 +941,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className={`mt-1.5 text-xs text-danger ${errorClassName}`}
+            className={`mt-1.5 text-sm text-red-500 ${errorClassName}`}
           >
             {fieldError}
           </motion.p>

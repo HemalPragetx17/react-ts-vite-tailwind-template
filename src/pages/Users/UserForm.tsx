@@ -19,7 +19,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose 
     phoneCountry: "",
     phone: "",
     role: 3,
-    active: null,
+    active: undefined,
   };
 
   const getData = () => user ? user : initialState;
@@ -68,10 +68,9 @@ const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose 
               inputProps={{
                 name: 'phone',
                 required: true,
-                autoFocus: true,
               }}
               value={values?.phone}
-              onChange={(value, country, e, formattedValue) => {
+              onChange={(value: string, country: any) => {
                 setFieldValue('phoneCountry', `+${country.dialCode}`);
                 setFieldValue('phone', value);
               }}

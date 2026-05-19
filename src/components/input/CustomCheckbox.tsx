@@ -47,21 +47,21 @@ interface CustomCheckboxProps
 // ─── Color Maps ──────────────────────────────────────────────────────────────
 
 export const bgColorMap: Record<CheckboxColor, string> = {
-  default:   "bg-neutral-500",
-  primary:   "bg-blue-500",
-  secondary: "bg-purple-500",
-  success:   "bg-emerald-500",
-  warning:   "bg-amber-500",
-  danger:    "bg-rose-500",
+  default:   "bg-secondary-600",
+  primary:   "bg-primary",
+  secondary: "bg-secondary",
+  success:   "bg-success",
+  warning:   "bg-warning",
+  danger:    "bg-danger",
 };
 
 export const borderColorMap: Record<CheckboxColor, string> = {
-  default:   "border-neutral-400 dark:border-neutral-500",
-  primary:   "border-blue-500",
-  secondary: "border-purple-500",
-  success:   "border-emerald-500",
-  warning:   "border-amber-500",
-  danger:    "border-rose-500",
+  default:   "border-secondary-600",
+  primary:   "border-primary",
+  secondary: "border-secondary",
+  success:   "border-success",
+  warning:   "border-warning",
+  danger:    "border-danger",
 };
 
 // ─── Size Maps ───────────────────────────────────────────────────────────────
@@ -165,7 +165,7 @@ export const CheckAtom: React.FC<CheckAtomProps> = ({
   return (
     <label
       htmlFor={id}
-      className={`inline-flex items-start gap-2.5 cursor-pointer group select-none ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+      className={`relative inline-flex items-start gap-2.5 cursor-pointer group select-none ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
     >
       {/* Hidden native input */}
       <input
@@ -204,7 +204,7 @@ export const CheckAtom: React.FC<CheckAtomProps> = ({
 
       {/* Label */}
       {(label || description) && (
-        <span className="flex flex-col leading-tight">
+        <span className="flex flex-col leading-tight mt-[1px]">
           {label && (
             <span
               className={`font-medium text-neutral-700 dark:text-neutral-300 transition-all duration-200 ${sc.text} ${
@@ -366,7 +366,7 @@ const CustomCheckbox = forwardRef<HTMLDivElement, CustomCheckboxProps>((props, r
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className={`mt-2 text-xs text-red-500 ${errorClassName}`}
+            className={`mt-1.5 text-sm text-red-500 ${errorClassName}`}
           >
             {fieldError}
           </motion.p>

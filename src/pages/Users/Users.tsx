@@ -167,7 +167,7 @@ const Users = () => {
   };
 
   const handlePageChange = (newPagination: { page: number; limit: number }) => {
-    if (pagination.page !== newPagination.page) {
+    if (pagination.page !== newPagination.page || pagination.limit !== newPagination.limit) {
       setPagination(newPagination);
       getUsers(filterValues, newPagination.page, newPagination.limit);
     }

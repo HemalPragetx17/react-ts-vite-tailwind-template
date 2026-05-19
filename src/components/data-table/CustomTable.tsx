@@ -46,7 +46,7 @@ interface CustomTableProps<T = any> {
   scrollBehavior?: "inside" | "outside";
   manualPagination?: boolean;
   pagination?: { page: number; limit: number };
-  onPaginationChange?: React.Dispatch<React.SetStateAction<{ page: number; limit: number }>>;
+  onPaginationChange?: (pagination: { page: number; limit: number }) => void;
 }
 
 function Filter({ column, table }: { column: any; table: any }) {
@@ -131,6 +131,19 @@ function CustomTable<T = any>({
       ? [{ id: defaultSortKey, desc: defaultSortOrder === "desc" }]
       : [],
   );
+
+  const [isPageSizeOpen, setIsPageSizeOpen] = useState(false);
+  const pageSizeRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (pageSizeRef.current && !pageSizeRef.current.contains(event.target as Node)) {
+        setIsPageSizeOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Convert 1-based external page to TanStack's 0-based pageIndex
   const reactTablePagination = enablePagination && pagination 
@@ -476,23 +489,47 @@ function CustomTable<T = any>({
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500 whitespace-nowrap font-semibold">Rows per page:</span>
-              <div className="relative">
-                <select
-                  value={table.getState().pagination.pageSize}
-                  onChange={(e) => table.setPageSize(Number(e.target.value))}
-                  className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-primary focus:border-primary block w-full p-2 pr-8 cursor-pointer transition-all hover:bg-gray-100"
+              <div className="relative" ref={pageSizeRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsPageSizeOpen(!isPageSizeOpen)}
+                  className="flex items-center justify-between gap-2 min-w-[70px] bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl px-3 py-1.5 cursor-pointer transition-all hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/20"
                 >
-                  {PAGE_OPTIONS.map((size) => (
-                    <option key={size} value={size}>
-                      {size}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <span>{table.getState().pagination.pageSize}</span>
+                  <svg
+                    className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isPageSizeOpen ? "rotate-180" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                   </svg>
-                </div>
+                </button>
+
+                {isPageSizeOpen && (
+                  <div className="absolute bottom-full mb-1.5 left-0 z-30 min-w-[70px] bg-white border border-gray-200 rounded-xl shadow-lg py-1 overflow-hidden">
+                    {PAGE_OPTIONS.map((size) => {
+                      const isSelected = table.getState().pagination.pageSize === size;
+                      return (
+                        <button
+                          key={size}
+                          type="button"
+                          onClick={() => {
+                            table.setPageSize(size);
+                            setIsPageSizeOpen(false);
+                          }}
+                          className={`w-full text-left px-3 py-1.5 text-sm transition-colors duration-150 ${
+                            isSelected
+                              ? "bg-primary text-white font-medium"
+                              : "text-gray-700 hover:bg-primary-300 hover:text-white"
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
             <div className="hidden lg:block text-sm text-gray-500 font-semibold">

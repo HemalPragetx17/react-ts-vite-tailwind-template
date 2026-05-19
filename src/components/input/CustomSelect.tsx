@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
+import React, { useState, useLayoutEffect, useRef } from "react";
 import Select, { components } from "react-select";
 import type {
   MultiValue,
@@ -71,12 +71,12 @@ const colorTokens: Record<
   SelectColor,
   { bg: string; text: string; multiValueBg: string; multiValueText: string; focusBorder: string }
 > = {
-  default:   { bg: "bg-neutral-500",   text: "text-white",      multiValueBg: "bg-neutral-500",   multiValueText: "text-white",      focusBorder: "border-neutral-500"  },
-  primary:   { bg: "bg-blue-500",      text: "text-white",      multiValueBg: "bg-blue-500",      multiValueText: "text-white",      focusBorder: "border-blue-500"     },
-  secondary: { bg: "bg-purple-500",    text: "text-white",      multiValueBg: "bg-purple-500",    multiValueText: "text-white",      focusBorder: "border-purple-500"   },
-  success:   { bg: "bg-emerald-500",   text: "text-white",      multiValueBg: "bg-emerald-500",   multiValueText: "text-white",      focusBorder: "border-emerald-500"  },
-  warning:   { bg: "bg-amber-500",     text: "text-neutral-900",multiValueBg: "bg-amber-500",     multiValueText: "text-neutral-900",focusBorder: "border-amber-500"    },
-  danger:    { bg: "bg-rose-500",      text: "text-white",      multiValueBg: "bg-rose-500",      multiValueText: "text-white",      focusBorder: "border-rose-500"     },
+  default:   { bg: "bg-secondary-600",   text: "text-white",      multiValueBg: "bg-secondary-600",   multiValueText: "text-white",      focusBorder: "border-secondary-600"  },
+  primary:   { bg: "bg-primary",      text: "text-white",      multiValueBg: "bg-primary",      multiValueText: "text-white",      focusBorder: "border-primary"     },
+  secondary: { bg: "bg-secondary",    text: "text-white",      multiValueBg: "bg-secondary",    multiValueText: "text-white",      focusBorder: "border-secondary"   },
+  success:   { bg: "bg-success",   text: "text-white",      multiValueBg: "bg-success",   multiValueText: "text-white",      focusBorder: "border-success"  },
+  warning:   { bg: "bg-warning",     text: "text-neutral-900",multiValueBg: "bg-warning",     multiValueText: "text-neutral-900",focusBorder: "border-warning"    },
+  danger:    { bg: "bg-danger",      text: "text-white",      multiValueBg: "bg-danger",      multiValueText: "text-white",      focusBorder: "border-danger"     },
 };
 
 /* -------------------------------------------------------------------------- */
@@ -198,15 +198,15 @@ const CustomMultiValue = (props: any) => {
     const hiddenCount = total - maxVisible;
     const colorProp: SelectColor = (props.selectProps as any)?.colorProp ?? "primary";
     const badgeMap: Record<SelectColor, string> = {
-      default:   "bg-neutral-200 text-neutral-700",
-      primary:   "bg-blue-100 text-blue-700",
-      secondary: "bg-purple-100 text-purple-700",
-      success:   "bg-emerald-100 text-emerald-700",
-      warning:   "bg-amber-100 text-amber-800",
-      danger:    "bg-rose-100 text-rose-700",
+      default:   "bg-secondary-200",
+      primary:   "bg-primary",
+      secondary: "bg-secondary",
+      success:   "bg-success",
+      warning:   "bg-warning",
+      danger:    "bg-danger",
     };
     return (
-      <span className={`inline-flex items-center shrink-0 rounded-md px-2 py-1.5 text-sm font-semibold whitespace-nowrap ${badgeMap[colorProp]}`}>
+      <span className={`inline-flex items-center shrink-0 rounded-md px-2 py-1.5 text-sm font-semibold whitespace-nowrap text-white ${badgeMap[colorProp]}`}>
         +{hiddenCount}
       </span>
     );
@@ -222,12 +222,12 @@ const CustomMultiValue = (props: any) => {
 
 const StaticCheckbox = ({ checked, color }: { checked: boolean; color: CheckboxColor }) => {
   const bgMap: Record<CheckboxColor, string> = {
-    default:   "bg-neutral-500",
-    primary:   "bg-blue-500",
-    secondary: "bg-purple-500",
-    success:   "bg-emerald-500",
-    warning:   "bg-amber-500",
-    danger:    "bg-rose-500",
+    default:   "bg-secondary-600",
+    primary:   "bg-primary",
+    secondary: "bg-secondary",
+    success:   "bg-success",
+    warning:   "bg-warning",
+    danger:    "bg-danger",
   };
 
   return (
@@ -570,7 +570,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className={`mt-1.5 text-xs text-red-500 ${errorClassName}`}
+            className={`mt-1.5 text-sm text-red-500 ${errorClassName}`}
           >
             {errorMsg}
           </motion.p>

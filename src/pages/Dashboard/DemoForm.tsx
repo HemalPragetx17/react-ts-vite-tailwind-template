@@ -11,40 +11,39 @@ interface DemoFormProps {
     handleDialogClose: () => void;
 }
 
-const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose }) => {
-    const [preview, setPreview] = React.useState(null);
-    const [imagePreview, setImagePreview] = React.useState(null);
+const initialState: IFormModal = {
+    name: "",
+    email: "",
+    joiningDate: "",
+    age: null,
+    gender: "Male",
+    technologies: [] as string[],
+    hobbies: [] as string[],
+    role: "",
+    status: true,
+    agreeToTerms: false,
+    bio: "",
+    projectDuration: [null, null],
+    phone: "",
+    phoneCountry: "",
+    profile_pic: "",
+    image: "",
+    images: [],
+    imageToDelete: [],
+};
 
-    const [images, setImages] = React.useState([]);
-    const [deleteImages, setDeleteImages] = React.useState([]);
+const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose }) => {
+    const [preview, setPreview] = React.useState<string | File | null>(null);
+    const [imagePreview, setImagePreview] = React.useState<string | File | null>(null);
 
     React.useEffect(() => {
         if (user?._id) setPreview(user?.profile_pic);
         if (user?._id) setImagePreview(user?.image);
     }, [user]);
 
-    const initialState: IFormModal = {
-        name: "",
-        email: "",
-        joiningDate: "",
-        age: 0,
-        gender: "Male",
-        technologies: [] as string[],
-        hobbies: [] as string[],
-        role: "",
-        status: true,
-        agreeToTerms: false,
-        bio: "",
-        projectDuration: [null, null],
-        phone: "",
-        phoneCountry: "",
-        profile_pic: "",
-        image: "",
-        images: [],
-        imageToDelete: [],
-    };
-
-    const getData = () => user ? user : initialState;
+    const initialValues = React.useMemo(() => {
+        return user ? { ...user, imageToDelete: user.imageToDelete || [] } : initialState;
+    }, [user]);
 
     const genderOptions = [
         { label: "Male", value: "Male" },
@@ -58,6 +57,8 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
         { label: "TypeScript", value: "TypeScript" },
         { label: "Tailwind CSS", value: "Tailwind CSS" },
         { label: "Python", value: "Python" },
+        { label: "Django", value: "Django" },
+        { label: "FastAPI", value: "FastAPI" },
     ];
 
     const hobbiesOptions = [
@@ -77,12 +78,10 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
     const handleSubmit = (value: IFormModal) => {
         console.log("🚀 ~ handleSubmit ~ value:", value)
 
-        const data = {
+        const { images: _, ...data } = {
             ...value,
-            imageToDelete: deleteImages,
-            productImages: images?.filter((img) => typeof img.url !== 'string').map((img) => img?.url)
-        }
-        delete data?.images
+            productImages: value.images?.filter((img) => typeof img.url !== 'string').map((img) => img?.url)
+        };
 
         const formData = new FormData();
 
@@ -90,10 +89,14 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
         Object.entries(data).forEach(([key, value]) => {
             if (Array.isArray(value)) {
                 // Handle arrays
-                if (key === 'images') {
-                    value.forEach((image) => {
-                        const file = new File([image], image.name); // Assuming 'image' is a File object
-                        formData.append(`images`, file);
+                if (key === 'images' || key === 'productImages') {
+                    (value as any[]).forEach((image) => {
+                        if (image instanceof File) {
+                            formData.append(`${key}`, image);
+                        } else if (image && (image as any).name) {
+                            const file = new File([image], (image as any).name); // Assuming 'image' is a File object
+                            formData.append(`${key}`, file);
+                        }
                     });
                 } else {
                     formData.append(`${key}`, JSON.stringify(value));
@@ -126,7 +129,7 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
 
     return (
         <Formik
-            initialValues={getData()}
+            initialValues={initialValues}
             validationSchema={FormValidationSchema}
             onSubmit={handleSubmit}
             validateOnBlur={false}
@@ -184,10 +187,9 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                             inputProps={{
                                 name: 'phone',
                                 required: true,
-                                autoFocus: true,
                             }}
                             value={values?.phone}
-                            onChange={(value, country, e, formattedValue) => {
+                            onChange={(value: string, country: any) => {
                                 setFieldValue('phoneCountry', `+${country.dialCode}`);
                                 setFieldValue('phone', value);
                             }}
@@ -236,12 +238,12 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                         component={CustomDropzoneInput}
                     />
 
-                    <ImageUploader
-                        imageArray={user?.images}
-                        images={images ?? []}
-                        setImages={setImages}
-                        deleteImages={deleteImages ?? []}
-                        setDeleteImages={setDeleteImages}
+                    <Field
+                        name="images"
+                        deleteName="imageToDelete"
+                        imageArray={user?.images ?? []}
+                        label="Images"
+                        component={ImageUploader}
                     />
 
                     {/* Technologies Stack (CustomSelect - multi select) */}
@@ -276,6 +278,7 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                         label="Project Duration"
                         placeholder="Select date range"
                         selectsRange={true}
+                        isClearable={true}
                         component={CustomDatePicker}
                     />
 

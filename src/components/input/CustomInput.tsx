@@ -1,7 +1,8 @@
-import React, { forwardRef, useState } from "react";
 import type { FieldInputProps, FormikErrors, FormikTouched } from "formik";
-import EyeIcon from "../../assets/eye.svg";
+import { AnimatePresence, motion } from "framer-motion";
+import React, { forwardRef, useState } from "react";
 import EyeOffIcon from "../../assets/eye-slash.svg";
+import EyeIcon from "../../assets/eye.svg";
 
 interface CustomInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "form" | "size"> {
@@ -166,9 +167,8 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) 
     return (
       <label
         htmlFor={field?.name || props.id || props.name}
-        className={`block font-medium text-neutral-700 dark:text-neutral-300 select-none ${
-          labelPlacement === "outside-left" ? "mb-0 shrink-0" : "mb-1.5"
-        } ${currentSize.labelSize} ${labelClassName}`}
+        className={`block font-medium text-neutral-700 dark:text-neutral-300 select-none ${labelPlacement === "outside-left" ? "mb-0 shrink-0" : "mb-1.5"
+          } ${currentSize.labelSize} ${labelClassName}`}
       >
         {label}
       </label>
@@ -275,12 +275,21 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) 
         </div>
       </div>
 
-      {/* Error Message */}
-      {fieldTouched && fieldError && (
-        <p className={`mt-1.5 text-xs text-red-500 ${errorClassName}`}>
-          {fieldError}
-        </p>
-      )}
+      {/* Error */}
+      <AnimatePresence>
+        {fieldTouched && fieldError && (
+          <motion.p
+            key="err"
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.15 }}
+            className={`mt-1.5 text-sm text-red-500 ${errorClassName}`}
+          >
+            {fieldError}
+          </motion.p>
+        )}
+      </AnimatePresence>
     </div>
   );
 });

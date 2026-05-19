@@ -1,4 +1,5 @@
 import type { FieldProps } from "formik";
+import { AnimatePresence, motion } from "framer-motion";
 import _ from 'lodash';
 import React from 'react';
 import RPI from 'react-phone-input-2';
@@ -48,7 +49,7 @@ const CustomPhoneNumberInput: React.FC<CustomPhoneNumberInputProps> = ({
         labelPlacement = "outside-top",
         dropdownPosition,
         value,
-        countryCodeEditable=false,
+        countryCodeEditable = false,
         onChange,
         ...rest
     } = props;
@@ -62,7 +63,7 @@ const CustomPhoneNumberInput: React.FC<CustomPhoneNumberInputProps> = ({
         const rect = containerRef.current.getBoundingClientRect();
         const spaceBelow = window.innerHeight - rect.bottom;
         const dropdownHeight = 260; // Max height is 250px + 10px margin
-        
+
         // If there's not enough space below, and there is more space above, open upwards
         if (spaceBelow < dropdownHeight && rect.top > spaceBelow) {
             setAutoDropdownPosition("top");
@@ -73,11 +74,11 @@ const CustomPhoneNumberInput: React.FC<CustomPhoneNumberInputProps> = ({
 
     React.useEffect(() => {
         updateDropdownPosition();
-        
+
         // Use capture phase for scroll so we catch scrolls inside the modal body!
         window.addEventListener('scroll', updateDropdownPosition, true);
         window.addEventListener('resize', updateDropdownPosition);
-        
+
         return () => {
             window.removeEventListener('scroll', updateDropdownPosition, true);
             window.removeEventListener('resize', updateDropdownPosition);
@@ -170,9 +171,8 @@ const CustomPhoneNumberInput: React.FC<CustomPhoneNumberInputProps> = ({
         return (
             <label
                 htmlFor={fieldName}
-                className={`block font-medium text-neutral-700 dark:text-neutral-300 select-none ${
-                    isOutsideLeft ? "mb-0 shrink-0" : "mb-1.5"
-                } ${currentSize.labelSize} ${labelClassName}`}
+                className={`block font-medium text-neutral-700 dark:text-neutral-300 select-none ${isOutsideLeft ? "mb-0 shrink-0" : "mb-1.5"
+                    } ${currentSize.labelSize} ${labelClassName}`}
             >
                 {label}
             </label>
@@ -207,11 +207,21 @@ const CustomPhoneNumberInput: React.FC<CustomPhoneNumberInputProps> = ({
                 </div>
             </div>
 
-            {hasError && (
-                <p className={`mt-1.5 text-xs text-red-500 ${errorClassName}`}>
-                    {fieldError}
-                </p>
-            )}
+            {/* Error */}
+            <AnimatePresence>
+                {hasError && (
+                    <motion.p
+                        key="err"
+                        initial={{ opacity: 0, y: -4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -4 }}
+                        transition={{ duration: 0.15 }}
+                        className={`mt-1.5 text-sm text-red-500 ${errorClassName}`}
+                    >
+                        {fieldError}
+                    </motion.p>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
