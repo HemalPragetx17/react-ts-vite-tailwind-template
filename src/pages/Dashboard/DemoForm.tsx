@@ -23,10 +23,11 @@ const initialState: IFormModal = {
     status: true,
     agreeToTerms: false,
     bio: "",
-    projectDuration: [null, null],
+    startDate: null,
+    endDate: null,
     phone: "",
     phoneCountry: "",
-    profile_pic: "",
+    profilePic: "",
     image: "",
     images: [],
     imageToDelete: [],
@@ -37,8 +38,10 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
     const [imagePreview, setImagePreview] = React.useState<string | File | null>(null);
 
     React.useEffect(() => {
-        if (user?._id) setPreview(user?.profile_pic);
-        if (user?._id) setImagePreview(user?.image);
+        if (user?._id) {
+            setPreview(user?.profilePic);
+            setImagePreview(user?.image);
+        }
     }, [user]);
 
     const initialValues = React.useMemo(() => {
@@ -103,7 +106,7 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                 }
             } else if (typeof value === 'object' && value !== null) {
                 // Handle nested objects
-                if (key === 'image' || key === 'profile_pic') {
+                if (key === 'image' || key === 'profilePic') {
                     if (value instanceof File) {
                         // If value is already a File, no need to create a new one
                         formData.append(`${key}`, value);
@@ -141,11 +144,11 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                     {/* Profile Pic */}
                     <Field
                         label="Profile Pic"
-                        name="profile_pic"
-                        value={values?.profile_pic}
+                        name="profilePic"
+                        value={values?.profilePic}
                         onChange={(file: File | string) => {
                             setPreview(file);
-                            setFieldValue('profile_pic', file)
+                            setFieldValue('profilePic', file)
                         }}
                         preview={preview}
                         component={CustomProfileInput}
@@ -274,7 +277,8 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                     />
 
                     <Field
-                        name="projectDuration"
+                        name="startDate"
+                        endDateName="endDate"
                         label="Project Duration"
                         placeholder="Select date range"
                         selectsRange={true}

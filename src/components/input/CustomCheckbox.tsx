@@ -128,6 +128,7 @@ const DashIcon = ({ size }: { size: number }) => (
 
 export interface CheckAtomProps {
   id?: string;
+  name?: string;
   checked: boolean;
   onToggle: () => void;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
@@ -145,6 +146,7 @@ export interface CheckAtomProps {
 
 export const CheckAtom: React.FC<CheckAtomProps> = ({
   id,
+  name,
   checked,
   onToggle,
   onBlur,
@@ -170,6 +172,7 @@ export const CheckAtom: React.FC<CheckAtomProps> = ({
       {/* Hidden native input */}
       <input
         id={id}
+        name={name}
         type="checkbox"
         checked={checked}
         onChange={onToggle}
@@ -321,6 +324,7 @@ const CustomCheckbox = forwardRef<HTMLDivElement, CustomCheckboxProps>((props, r
               <CheckAtom
                 key={i}
                 id={`${fieldName}-${i}`}
+                name={fieldName}
                 checked={isChecked}
                 onToggle={() => handleMultiToggle(opt.value)}
                 onBlur={field?.onBlur || props.onBlur}
@@ -342,6 +346,7 @@ const CustomCheckbox = forwardRef<HTMLDivElement, CustomCheckboxProps>((props, r
         /* Single checkbox */
         <CheckAtom
           id={field?.name || props.id || props.name}
+          name={fieldName}
           checked={restProps.checked !== undefined ? !!restProps.checked : !!currentValue}
           onToggle={handleSingleToggle}
           onBlur={field?.onBlur || props.onBlur}

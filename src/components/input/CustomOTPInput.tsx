@@ -43,6 +43,13 @@ const CustomOTPInput = forwardRef<HTMLInputElement, CustomOTPInputProps>((props,
   const length = numInputs > 0 ? numInputs : 6;
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      inputRefs.current[0]?.focus();
+    }, 50);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Extract field name for accessing error and touched state from form
   const fieldName = field?.name || (props.name as string | undefined);
 
@@ -79,12 +86,20 @@ const CustomOTPInput = forwardRef<HTMLInputElement, CustomOTPInputProps>((props,
     }
 
     if (onChange) {
-      onChange(newValue);
+      const syntheticEvent = {
+        target: {
+          name: fieldName || "",
+          value: newValue,
+        },
+      } as any;
+      onChange(syntheticEvent);
     }
 
     // Move focus to the next input if a character was added
     if (char && index < length - 1) {
-      inputRefs.current[index + 1]?.focus();
+      setTimeout(() => {
+        inputRefs.current[index + 1]?.focus();
+      }, 0);
     }
   };
 
@@ -126,7 +141,13 @@ const CustomOTPInput = forwardRef<HTMLInputElement, CustomOTPInputProps>((props,
     }
 
     if (onChange) {
-      onChange(newValue);
+      const syntheticEvent = {
+        target: {
+          name: fieldName || "",
+          value: newValue,
+        },
+      } as any;
+      onChange(syntheticEvent);
     }
 
     // Focus the next empty input or the last input
@@ -163,6 +184,7 @@ const CustomOTPInput = forwardRef<HTMLInputElement, CustomOTPInputProps>((props,
                   }
                 }
               }}
+              autoFocus={index === 0}
               type="text"
               inputMode="text"
               maxLength={2} // Allow typing a new char over an existing one
@@ -185,7 +207,7 @@ const CustomOTPInput = forwardRef<HTMLInputElement, CustomOTPInputProps>((props,
                 text-center text-lg font-semibold
                 rounded-md border border-gray-300
                 outline-none transition
-                focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                focus:ring-2 focus:ring-primary focus:border-primary
                 ${fieldTouched && fieldError
                   ? "border-red-500 focus:ring-red-500 focus:border-red-500"
                   : ""
@@ -206,7 +228,7 @@ const CustomOTPInput = forwardRef<HTMLInputElement, CustomOTPInputProps>((props,
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className={`mt-1.5 text-sm text-red-500 ${errorClassName}`}
+            className={`mt-1.5 text-sm text-red-500 flex justify-center ${errorClassName}`}
           >
             {fieldError}
           </motion.p>

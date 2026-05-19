@@ -145,6 +145,8 @@ const CustomSwitch = forwardRef<HTMLDivElement, CustomSwitchProps>((props, ref) 
       {/* Switch Control Area */}
       <div className="flex items-center gap-3 mt-1">
         <button
+          id={fieldName}
+          name={fieldName}
           type="button"
           role="switch"
           aria-checked={currentValue}

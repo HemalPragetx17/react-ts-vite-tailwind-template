@@ -22,18 +22,21 @@ export const FormValidationSchema = () => {
             .matches(RegularExpression.Description, 'Invalid bio')
             .max(300, "Bio must be at most 300 characters")
             .optional(),
-        projectDuration: Yup.array()
-            .test("is-range-complete", "Please select a project duration", (value) => {
-                if (!value || value.length === 0) return false;
-                const [start, end] = value;
-                return start !== null && start !== undefined && start !== "" &&
-                       end !== null && end !== undefined && end !== "";
+        startDate: Yup.string()
+            .nullable()
+            .test("is-start-date", "Start date is required", (value) => {
+                return value !== null && value !== undefined && value !== "";
+            }),
+        endDate: Yup.string()
+            .nullable()
+            .test("is-end-date", "End date is required", (value) => {
+                return value !== null && value !== undefined && value !== "";
             }),
         phone: Yup.string()
-            .matches(/^[0-9]{10}$/, "Phone number must be exactly 10 digits")
+            // .matches(/^[0-9]{10}$/, "Phone number must be exactly 10 digits")
             .required("Phone number is required"),
         phoneCountry: Yup.string().required("Country code is required"),
-        profile_pic: Yup.mixed()
+        profilePic: Yup.mixed()
             .nullable()
             .required('Profile picture is required!')
             .test("fileFormat", "Unsupported file format", (value) => {

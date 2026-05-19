@@ -155,6 +155,7 @@ const CustomCheckboxGroup = forwardRef<HTMLDivElement, CustomCheckboxGroupProps>
               <CheckAtom
                 key={i}
                 id={`${fieldName ?? "cbg"}-${i}`}
+                name={fieldName}
                 checked={isChecked}
                 onToggle={() => handleToggle(opt.value)}
                 onBlur={field?.onBlur}

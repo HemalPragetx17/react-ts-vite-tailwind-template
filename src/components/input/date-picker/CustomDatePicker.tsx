@@ -33,6 +33,7 @@ export interface CustomDatePickerProps extends Partial<FieldProps> {
   selectsRange?: boolean;
   isClearable?: boolean;
   disabled?: boolean;
+  endDateName?: string;
 
   // Custom static props if not using Formik
   value?: any;
@@ -396,6 +397,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   onRangeChange,
   error,
   touched,
+  endDateName,
 
   variant = "bordered",
   size = "md",
@@ -425,13 +427,17 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   const resolvedValue = value !== undefined ? value : field?.value;
 
   const startDate = selectsRange
-    ? Array.isArray(resolvedValue)
+    ? endDateName
+      ? parseDate(resolvedValue)
+      : Array.isArray(resolvedValue)
       ? parseDate(resolvedValue[0])
       : null
     : parseDate(resolvedValue);
 
   const endDate = selectsRange
-    ? Array.isArray(resolvedValue)
+    ? endDateName
+      ? parseDate(form?.values?.[endDateName])
+      : Array.isArray(resolvedValue)
       ? parseDate(resolvedValue[1])
       : null
     : null;
@@ -442,12 +448,39 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     : formatDateDisplay(startDate);
 
   // Determine Formik errors / touched state safely
-  const fieldError =
+  const startError =
     fieldName && form?.errors?.[fieldName]
       ? String(form.errors[fieldName])
       : error;
-  const fieldTouched = fieldName && form?.touched?.[fieldName] ? true : touched;
-  const hasError = !!(fieldTouched && fieldError);
+  const startTouched = fieldName && form?.touched?.[fieldName] ? true : touched;
+
+  const endError =
+    endDateName && form?.errors?.[endDateName]
+      ? String(form.errors[endDateName])
+      : undefined;
+  const endTouched = endDateName && form?.touched?.[endDateName] ? true : false;
+
+  // Show error of the first invalid touched field
+  const startErrorToDisplay = startTouched && startError ? startError : undefined;
+  const endErrorToDisplay = endTouched && endError ? endError : undefined;
+
+  const fieldError = startErrorToDisplay || endErrorToDisplay;
+  const hasError = !!fieldError;
+
+  // Track if the picker has been opened to set touched when closed
+  const wasOpenedRef = useRef(false);
+  useEffect(() => {
+    if (isOpen) {
+      wasOpenedRef.current = true;
+    } else if (wasOpenedRef.current) {
+      if (form?.setFieldTouched && fieldName) {
+        form.setFieldTouched(fieldName, true);
+        if (endDateName) {
+          form.setFieldTouched(endDateName, true);
+        }
+      }
+    }
+  }, [isOpen, fieldName, endDateName, form]);
 
   // Click outside listener
   useEffect(() => {
@@ -458,15 +491,12 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       ) {
         if (isOpen) {
           setIsOpen(false);
-          if (form?.setFieldTouched && fieldName) {
-            form.setFieldTouched(fieldName, true);
-          }
         }
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isOpen, form, fieldName]);
+  }, [isOpen]);
 
   // Date selection change event
   const handleDateChange = (dates: any) => {
@@ -475,22 +505,42 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       const cleanStart = start ? stripTime(start) : null;
       const cleanEnd = end ? stripTime(end) : null;
 
-      const valArr = [
-        cleanStart ? toLocalYYYYMMDD(cleanStart) : null,
-        cleanEnd ? toLocalYYYYMMDD(cleanEnd) : null,
-      ];
+      if (endDateName) {
+        const formattedStart = cleanStart ? toLocalYYYYMMDD(cleanStart) : null;
+        const formattedEnd = cleanEnd ? toLocalYYYYMMDD(cleanEnd) : null;
 
-      if (form?.setFieldValue && fieldName) {
-        form.setFieldValue(fieldName, valArr);
-      }
-      onRangeChange?.(cleanStart, cleanEnd);
-      if (onChange) onChange(valArr);
-
-      if (cleanStart && cleanEnd) {
-        if (form?.setFieldTouched && fieldName) {
-          form.setFieldTouched(fieldName, true, false);
+        if (form?.setFieldValue && fieldName) {
+          form.setFieldValue(fieldName, formattedStart);
+          form.setFieldValue(endDateName, formattedEnd);
         }
-        setTimeout(() => setIsOpen(false), 80);
+        onRangeChange?.(cleanStart, cleanEnd);
+        if (onChange) onChange([formattedStart, formattedEnd]);
+
+        if (cleanStart && cleanEnd) {
+          if (form?.setFieldTouched) {
+            form.setFieldTouched(fieldName, true, false);
+            form.setFieldTouched(endDateName, true, false);
+          }
+          setTimeout(() => setIsOpen(false), 80);
+        }
+      } else {
+        const valArr = [
+          cleanStart ? toLocalYYYYMMDD(cleanStart) : null,
+          cleanEnd ? toLocalYYYYMMDD(cleanEnd) : null,
+        ];
+
+        if (form?.setFieldValue && fieldName) {
+          form.setFieldValue(fieldName, valArr);
+        }
+        onRangeChange?.(cleanStart, cleanEnd);
+        if (onChange) onChange(valArr);
+
+        if (cleanStart && cleanEnd) {
+          if (form?.setFieldTouched && fieldName) {
+            form.setFieldTouched(fieldName, true, false);
+          }
+          setTimeout(() => setIsOpen(false), 80);
+        }
       }
     } else {
       const singleDate = Array.isArray(dates) ? dates[0] : dates;
@@ -517,14 +567,27 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (selectsRange) {
-      if (form?.setFieldValue && fieldName) {
-        form.setFieldValue(fieldName, []);
-        if (form.setFieldTouched) {
-          form.setFieldTouched(fieldName, true, false);
+      if (endDateName) {
+        if (form?.setFieldValue && fieldName) {
+          form.setFieldValue(fieldName, null);
+          form.setFieldValue(endDateName, null);
+          if (form.setFieldTouched) {
+            form.setFieldTouched(fieldName, true, false);
+            form.setFieldTouched(endDateName, true, false);
+          }
         }
+        onRangeChange?.(null, null);
+        if (onChange) onChange([null, null]);
+      } else {
+        if (form?.setFieldValue && fieldName) {
+          form.setFieldValue(fieldName, []);
+          if (form.setFieldTouched) {
+            form.setFieldTouched(fieldName, true, false);
+          }
+        }
+        onRangeChange?.(null, null);
+        if (onChange) onChange([]);
       }
-      onRangeChange?.(null, null);
-      if (onChange) onChange([]);
     } else {
       if (form?.setFieldValue && fieldName) {
         form.setFieldValue(fieldName, "");

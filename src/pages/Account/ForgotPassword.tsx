@@ -4,8 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import BackIcon from '../../assets/back.svg';
 import CustomButton from '../../components/button/CustomButton';
-import CustomInput from '../../components/input/CustomInput';
-import CustomOTPInput from '../../components/input/CustomOTPInput';
+import { CustomInput, CustomOTPInput } from '../../components/input';
 import type { IForgotPasswordEmailModel, IForgotPasswordOTPModel, IForgotPasswordPasswordModel } from '../../models/account';
 import { Routing } from '../../routes/routing';
 import { ForgotEmailValidationSchema, ForgotOTPValidationSchema, ForgotPasswordValidationSchema } from '../../validation/account';
@@ -24,9 +23,9 @@ const ForgotPassword = () => {
 
   const [actionType, setActionType] = React.useState<ActionType>(ActionType.Email);
 
-  const emailState: IForgotPasswordEmailModel = { email: "admin@gmail.com" };
+  const emailState: IForgotPasswordEmailModel = { email: "" };
 
-  const otpState: IForgotPasswordOTPModel = { otp: '123456' };
+  const otpState: IForgotPasswordOTPModel = { otp: '' };
 
   const passwordState: IForgotPasswordPasswordModel = {
     password: '',
@@ -79,10 +78,10 @@ const ForgotPassword = () => {
     //   .resetPassword(values)
     //   .then((response) => {
     //     if (response?.data?.status) {
-          navigate(Routing.Login)
-      //   }
-      // })
-      // .catch((error: Error) => console.log(error?.message));
+    navigate(Routing.Login)
+    //   }
+    // })
+    // .catch((error: Error) => console.log(error?.message));
   };
 
 

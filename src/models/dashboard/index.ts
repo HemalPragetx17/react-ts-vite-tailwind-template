@@ -11,10 +11,11 @@ export interface IFormModal {
     hobbies?: string[];
     agreeToTerms?: boolean;
     bio?: string;
-    projectDuration?: [Date | null, Date | null];
+    startDate?: string | null;
+    endDate?: string | null;
     phone: string;
     phoneCountry: string;
-    profile_pic: File | string;
+    profilePic: File | string;
     image: File | string;
     images: {
         _id: string;
