@@ -1,5 +1,5 @@
 import { Field, Form, Formik } from "formik";
-import toast from "react-hot-toast";
+import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import CustomButton from '../../components/button/CustomButton';

@@ -1,7 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 import type { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import axios, { AxiosError } from "axios";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import messages from "../shared/constants/messages";
 import { HttpStatusCode } from "../shared/enums/http-status-code";
 import { adminLogout } from "../store/slices/authSlice";
