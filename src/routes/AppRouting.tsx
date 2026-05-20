@@ -11,6 +11,7 @@ const LoginLayout = lazy(() => import("../pages/Account/LoginLayout"));
 const ForgotPassword = lazy(() => import("../pages/Account/ForgotPassword"));
 
 const Dashboard = lazy(() => import("../pages/Dashboard/Dashboard"));
+const DemoFormPage = lazy(() => import("../pages/Dashboard/DemoFormPage"));
 const Users = lazy(() => import("../pages/Users/Users"));
 const Category = lazy(() => import("../pages/Master/Category/Category"));
 const SubCategory = lazy(() => import("../pages/Master/SubCategory/SubCategory"));
@@ -41,6 +42,10 @@ const routes = createBrowserRouter([
   {
     path: Routing.Dashboard,
     element: <MainLayout>{privateRoute(Dashboard)}</MainLayout>,
+  },
+  {
+    path: Routing.DemoFormPage,
+    element: <MainLayout>{privateRoute(DemoFormPage)}</MainLayout>,
   },
   {
     path: Routing.Users,

@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/button/CustomButton";
 import CustomModal from "../../components/modal/CustomModal";
-import DemoForm from "./DemoForm";
 import type { IFormModal } from "../../models/dashboard";
+import DemoForm from "./DemoForm";
+import { Routing } from "../../routes/routing";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState<IFormModal | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -42,7 +45,7 @@ const Dashboard = () => {
         },
         {
           _id: "5y74928475928345234",
-          url: "https://umart-production.s3.af-south-1.amazonaws.com/category/categories/1751966524412_5390255224354014.png"  
+          url: "https://umart-production.s3.af-south-1.amazonaws.com/category/categories/1751966524412_5390255224354014.png"
         },
         {
           _id: "6y85934784579834598",
@@ -59,13 +62,22 @@ const Dashboard = () => {
   const handleAddUserSubmit = () => {
     setOpenDialog(false);
   };
+
+  const handleFormOpen = () => {
+    navigate(Routing.DemoFormPage);
+  };
   return (
     <section>
       <div className="flex justify-between items-center">
         <p className="text-2xl">Dashboard</p>
-        <CustomButton size="lg" onClick={handleDialogOpen}>
-          Demo Form
-        </CustomButton>
+        <div className="flex gap-2">
+          <CustomButton size="lg" onClick={handleDialogOpen}>
+            Demo Form
+          </CustomButton>
+          <CustomButton size="lg" onClick={handleFormOpen}>
+            Demo Form Page
+          </CustomButton>
+        </div>
       </div>
 
       <CustomModal

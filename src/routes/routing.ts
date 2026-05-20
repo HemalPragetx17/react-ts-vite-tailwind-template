@@ -5,6 +5,7 @@ export const Routing = {
   ForgotPassword: `${PATH_PREFIX}/forgot-password`,
 
   Dashboard: `${PATH_PREFIX}/dashboard`,
+  DemoFormPage: `${PATH_PREFIX}/dashboard/demo-form`,
   Users: `${PATH_PREFIX}/users`,
   Master: `${PATH_PREFIX}/master`,
   Category: `${PATH_PREFIX}/category`,
