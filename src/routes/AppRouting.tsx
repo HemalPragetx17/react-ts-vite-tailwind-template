@@ -13,6 +13,7 @@ const ForgotPassword = lazy(() => import("../pages/Account/ForgotPassword"));
 const Dashboard = lazy(() => import("../pages/Dashboard/Dashboard"));
 const DemoFormPage = lazy(() => import("../pages/Dashboard/DemoFormPage"));
 const Users = lazy(() => import("../pages/Users/Users"));
+const UserDetails = lazy(() => import("../pages/Users/UserDetails"));
 const Category = lazy(() => import("../pages/Master/Category/Category"));
 const SubCategory = lazy(() => import("../pages/Master/SubCategory/SubCategory"));
 const Product = lazy(() => import("../pages/Master/Product/Product"));
@@ -50,6 +51,10 @@ const routes = createBrowserRouter([
   {
     path: Routing.Users,
     element: <MainLayout>{privateRoute(Users)}</MainLayout>,
+  },
+  {
+    path: Routing.UserDetails,
+    element: <MainLayout>{privateRoute(UserDetails)}</MainLayout>,
   },
   {
     path: Routing.Category,

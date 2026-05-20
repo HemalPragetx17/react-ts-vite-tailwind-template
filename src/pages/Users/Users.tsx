@@ -2,6 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Field, Form, Formik } from "formik";
 import { debounce } from "lodash";
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import EditIcon from "../../assets/edit.svg";
 import ViewIcon from "../../assets/eye-info.svg";
 import SearchIcon from "../../assets/search.svg";
@@ -14,6 +15,7 @@ import CustomConfirmModal from "../../components/modal/CustomConfirmModal";
 import CustomModal from "../../components/modal/CustomModal";
 import type { Pagination } from "../../models/base-type";
 import type { IUserModal } from "../../models/user";
+import { Routing } from "../../routes/routing";
 import userService from "../../services/user-service";
 import { PAGINATION } from "../../shared/constants/pagination";
 import UserForm from "./UserForm";
@@ -29,6 +31,7 @@ const initialFilter: IUsersFilter = {
 };
 
 const Users = () => {
+  const navigate = useNavigate();
   const [usersList, setUsersList] = useState<IUserModal[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [totalRecords, setTotalRecords] = useState<number>(0);
@@ -180,6 +183,7 @@ const Users = () => {
 
   const handleView = (user: IUserModal) => {
     setUser(user);
+    navigate(Routing.UserDetails);
   };
 
   const handleAdd = () => {

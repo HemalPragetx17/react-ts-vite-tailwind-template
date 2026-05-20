@@ -7,6 +7,7 @@ export const Routing = {
   Dashboard: `${PATH_PREFIX}/dashboard`,
   DemoFormPage: `${PATH_PREFIX}/dashboard/demo-form`,
   Users: `${PATH_PREFIX}/users`,
+  UserDetails: `${PATH_PREFIX}/users/user-details`,
   Master: `${PATH_PREFIX}/master`,
   Category: `${PATH_PREFIX}/category`,
   SubCategory: `${PATH_PREFIX}/sub-category`,
