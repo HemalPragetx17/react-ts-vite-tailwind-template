@@ -6,6 +6,7 @@ import type { IFormModal } from "../../models/dashboard";
 import DemoForm from "./DemoForm";
 import { Routing } from "../../routes/routing";
 import CustomTabs from "../../components/tabs/CustomTabs";
+import CustomPopover from "../../components/popover/CustomPopover";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -149,7 +150,22 @@ const Dashboard = () => {
   return (
     <section>
       <div className="flex justify-between items-center">
-        <p className="text-2xl">Dashboard</p>
+        <CustomPopover
+          triggerMode="hover"
+          placement="top"
+          showArrow
+          offset={8}
+          delay={{ open: 100, close: 150 }}
+          className="px-3 py-2 text-sm max-w-xs"
+          color="primary"
+          trigger={
+            <p className="text-2xl cursor-default select-none">Dashboard</p>
+          }
+        >
+          <p className="text-xs text-secondary-600 dark:text-secondary-300 leading-relaxed">
+            Real-time overview of your application's key metrics, sessions, and reports.
+          </p>
+        </CustomPopover>
         <div className="flex gap-2">
           <CustomButton size="lg" onClick={handleDialogOpen}>
             Demo Form
