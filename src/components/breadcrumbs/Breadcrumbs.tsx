@@ -155,19 +155,19 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
 
     const sizeClasses = {
         sm: {
-            container: "text-xs px-2.5 py-1 gap-1",
+            container: "text-xs py-1 gap-1",
             list: "space-x-1",
             separator: "h-3.5 w-3.5 mx-1.5",
             icon: "w-3 h-3 mr-1",
         },
         md: {
-            container: "text-sm px-3.5 py-1.5 gap-1.5",
+            container: "text-sm py-1.5 gap-1.5",
             list: "space-x-1.5",
             separator: "h-4 w-4 mx-2",
             icon: "w-3.5 h-3.5 mr-1.5",
         },
         lg: {
-            container: "text-base px-4.5 py-2 gap-2",
+            container: "text-base py-2 gap-2",
             list: "space-x-2",
             separator: "h-4.5 w-4.5 mx-2.5",
             icon: "w-4 h-4 mr-2",
