@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { RegularExpression } from '../../shared/constants/regular-expression';
+import { parsePhoneNumberFromString } from 'libphonenumber-js/max';
 
 export const FormValidationSchema = () => {
     return Yup.object().shape({
@@ -51,8 +52,17 @@ export const FormValidationSchema = () => {
                 return true;
             }),
         phone: Yup.string()
-            // .matches(/^[0-9]{10}$/, "Phone number must be exactly 10 digits")
-            .required("Phone number is required"),
+            .required("Phone number is required")
+            .test("is-phone-valid", "Invalid phone number", (value) => {
+                if (!value) return true;
+                const formatted = value.startsWith("+") ? value : `+${value}`;
+                const parsed = parsePhoneNumberFromString(formatted);
+                if (!parsed || !parsed.isValid()) {
+                    return false;
+                }
+                const type = parsed.getType();
+                return type === 'MOBILE' || type === 'FIXED_LINE_OR_MOBILE';
+            }),
         phoneCountry: Yup.string().required("Country code is required"),
         profilePic: Yup.mixed()
             .nullable()
