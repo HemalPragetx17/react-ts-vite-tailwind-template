@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import CustomButton from "../../components/button/CustomButton";
 import CustomModal from "../../components/modal/CustomModal";
 import DemoForm from "./DemoForm";
+import type { IFormModal } from "../../models/dashboard";
 
 const Dashboard = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<IFormModal | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {

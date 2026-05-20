@@ -460,11 +460,10 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       : undefined;
   const endTouched = endDateName && form?.touched?.[endDateName] ? true : false;
 
-  // Show error of the first invalid touched field
-  const startErrorToDisplay = startTouched && startError ? startError : undefined;
-  const endErrorToDisplay = endTouched && endError ? endError : undefined;
+  // Since it's a range picker, if either field is touched, we treat the whole component as touched.
+  const isTouched = selectsRange ? (startTouched || endTouched) : startTouched;
 
-  const fieldError = startErrorToDisplay || endErrorToDisplay;
+  const fieldError = isTouched ? (startError || endError) : undefined;
   const hasError = !!fieldError;
 
   // Track if the picker has been opened to set touched when closed
@@ -509,7 +508,13 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         const formattedStart = cleanStart ? toLocalYYYYMMDD(cleanStart) : null;
         const formattedEnd = cleanEnd ? toLocalYYYYMMDD(cleanEnd) : null;
 
-        if (form?.setFieldValue && fieldName) {
+        if (form?.setValues) {
+          form.setValues({
+            ...form.values,
+            [fieldName]: formattedStart,
+            [endDateName]: formattedEnd,
+          });
+        } else if (form?.setFieldValue && fieldName) {
           form.setFieldValue(fieldName, formattedStart);
           form.setFieldValue(endDateName, formattedEnd);
         }
@@ -568,7 +573,17 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     e.stopPropagation();
     if (selectsRange) {
       if (endDateName) {
-        if (form?.setFieldValue && fieldName) {
+        if (form?.setValues) {
+          form.setValues({
+            ...form.values,
+            [fieldName]: null,
+            [endDateName]: null,
+          });
+          if (form.setFieldTouched) {
+            form.setFieldTouched(fieldName, true, false);
+            form.setFieldTouched(endDateName, true, false);
+          }
+        } else if (form?.setFieldValue && fieldName) {
           form.setFieldValue(fieldName, null);
           form.setFieldValue(endDateName, null);
           if (form.setFieldTouched) {

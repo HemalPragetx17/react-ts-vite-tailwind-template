@@ -24,13 +24,31 @@ export const FormValidationSchema = () => {
             .optional(),
         startDate: Yup.string()
             .nullable()
-            .test("is-start-date", "Start date is required", (value) => {
-                return value !== null && value !== undefined && value !== "";
+            .test("is-start-date", "Select start date and end date", (value, context) => {
+                const { endDate } = context.parent || {};
+                const hasStart = value !== null && value !== undefined && value !== "";
+                const hasEnd = endDate !== null && endDate !== undefined && endDate !== "";
+                if (!hasStart && !hasEnd) {
+                    return context.createError({ message: "Select start date and end date" });
+                }
+                if (!hasStart) {
+                    return context.createError({ message: "Select start date" });
+                }
+                return true;
             }),
         endDate: Yup.string()
             .nullable()
-            .test("is-end-date", "End date is required", (value) => {
-                return value !== null && value !== undefined && value !== "";
+            .test("is-end-date", "Select end date", (value, context) => {
+                const { startDate } = context.parent || {};
+                const hasStart = startDate !== null && startDate !== undefined && startDate !== "";
+                const hasEnd = value !== null && value !== undefined && value !== "";
+                if (!hasStart && !hasEnd) {
+                    return context.createError({ message: "Select start date and end date" });
+                }
+                if (hasStart && !hasEnd) {
+                    return context.createError({ message: "Select end date" });
+                }
+                return true;
             }),
         phone: Yup.string()
             // .matches(/^[0-9]{10}$/, "Phone number must be exactly 10 digits")

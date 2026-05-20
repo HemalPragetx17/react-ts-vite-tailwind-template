@@ -1,5 +1,5 @@
 export interface IFormModal {
-    _id?: number;
+    _id?: string;
     name: string;
     email: string;
     joiningDate?: string;
