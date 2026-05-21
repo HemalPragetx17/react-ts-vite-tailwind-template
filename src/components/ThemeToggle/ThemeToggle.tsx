@@ -1,4 +1,27 @@
 import React, { useEffect, useState } from 'react'
+import CustomSwitch from '../input/CustomSwitch'
+
+const SunIcon: React.FC = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className="w-3.5 h-3.5 text-amber-500"
+  >
+    <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM6.16 5.1a.75.75 0 0 1 1.06 0l1.59 1.59a.75.75 0 1 1-1.06 1.06L6.16 6.16a.75.75 0 0 1 0-1.06Zm11.68 0a.75.75 0 0 1 0 1.06l-1.59 1.59a.75.75 0 1 1-1.06-1.06l1.59-1.59a.75.75 0 0 1 1.06 0ZM12 5.25a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 12a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5H3a.75.75 0 0 1-.75-.75ZM18.75 12a.75.75 0 0 1 .75-.75H21.75a.75.75 0 0 1 0 1.5H19.5a.75.75 0 0 1-.75-.75ZM6.16 17.84a.75.75 0 0 1 0 1.06l-1.59 1.59a.75.75 0 0 1-1.06-1.06l1.59-1.59a.75.75 0 0 1 1.06 0Zm11.68 0a.75.75 0 0 1 1.06 1.06l-1.59 1.59a.75.75 0 1 1-1.06-1.06l1.59-1.59ZM12 18.75a.75.75 0 0 1 .75.75V21.75a.75.75 0 0 1-1.5 0V19.5a.75.75 0 0 1 .75-.75Z" />
+  </svg>
+)
+
+const MoonIcon: React.FC = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className="w-3.5 h-3.5 text-indigo-600"
+  >
+    <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 1 1-16.925-12 10.503 10.503 0 0 1 8.009-1.572Z" clipRule="evenodd" />
+  </svg>
+)
 
 const ThemeToggle: React.FC = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -17,40 +40,16 @@ const ThemeToggle: React.FC = () => {
     } catch {}
   }, [theme])
 
-  const toggle = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))
-
   return (
-    <button
-      type="button"
-      onClick={toggle}
-      aria-pressed={theme === 'dark'}
-      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-      role="switch"
-      aria-checked={theme === 'dark'}
-      className="bg-gray-200 relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-    >
-      <span className="sr-only">Use setting</span>
-      <span
-        className={`${theme === 'dark' ? 'translate-x-5' : 'translate-x-0'} pointer-events-none relative inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200`}
-      >
-        <span
-          className={`${theme === 'dark' ? 'opacity-0 ease-out duration-100' : 'opacity-100 ease-in duration-200'} absolute inset-0 h-full w-full flex items-center justify-center transition-opacity`}
-          aria-hidden="true"
-        >
-          <svg className="h-3 w-3 text-gray-400" fill="none" viewBox="0 0 12 12">
-            <path d="M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </span>
-        <span
-          className={`${theme === 'dark' ? 'opacity-100 ease-in duration-200' : 'opacity-0 ease-out duration-100'} absolute inset-0 h-full w-full flex items-center justify-center transition-opacity`}
-          aria-hidden="true"
-        >
-          <svg className="h-3 w-3 text-indigo-600" fill="currentColor" viewBox="0 0 12 12">
-            <path d="M3.707 5.293a1 1 0 00-1.414 1.414l1.414-1.414zM5 8l-.707.707a1 1 0 001.414 0L5 8zm4.707-3.293a1 1 0 00-1.414-1.414l1.414 1.414zm-7.414 2l2 2 1.414-1.414-2-2-1.414 1.414zm3.414 2l4-4-1.414-1.414-4 4 1.414 1.414z" />
-          </svg>
-        </span>
-      </span>
-    </button>
+    <CustomSwitch
+      name="theme-toggle"
+      value={theme === 'dark'}
+      onChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+      color="primary"
+      size="md"
+      thumbIcon={(checked) => checked ? <MoonIcon /> : <SunIcon />}
+      containerClassName="w-fit flex items-center justify-center -mt-1"
+    />
   )
 }
 

@@ -16,5 +16,7 @@ export interface IAuthState {
 
 
 export interface IGeneralState {
-    showLoader?: boolean;
+    tableLoading: boolean;
+    formLoading: boolean;
+    progressLoading: boolean;
 }

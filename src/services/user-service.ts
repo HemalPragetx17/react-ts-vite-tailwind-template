@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import type { AxiosResponse } from "axios";
-import type { IUserModal } from "../models/user";
+import type { IUserModal, IUserStatusModal } from "../models/user";
 import { buildQueryParams } from "../utils/commonFunctions";
 import type { ApiResponseModel } from "./api";
 import httpService from "./http-service";
@@ -13,7 +13,11 @@ const getAllUsers = async (params: Record<string, any>): Promise<AxiosResponse<A
 const addUser = async (requestBody: IUserModal): Promise<AxiosResponse<ApiResponseModel<boolean>>> =>
     httpService.post<ApiResponseModel<boolean>>(`${endPointBaseURL}/addHcp`, requestBody);
 
+const toggleUserStatus = async (userId: string, payload: IUserStatusModal): Promise<AxiosResponse<ApiResponseModel<boolean>>> =>
+    httpService.post<ApiResponseModel<boolean>>(`${endPointBaseURL}/hcp/approve/${userId}`, payload);
+
 export default {
     getAllUsers,
     addUser,
+    toggleUserStatus,
 };

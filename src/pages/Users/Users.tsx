@@ -2,7 +2,9 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Field, Form, Formik } from "formik";
 import { debounce } from "lodash";
 import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import EditIcon from "../../assets/edit.svg";
 import ViewIcon from "../../assets/eye-info.svg";
 import SearchIcon from "../../assets/search.svg";
@@ -11,6 +13,7 @@ import CustomButton from "../../components/button/CustomButton";
 import { CustomTable } from "../../components/data-table";
 import CustomInput from "../../components/input/CustomInput";
 import CustomSelect from "../../components/input/CustomSelect";
+import CustomSwitch from "../../components/input/CustomSwitch";
 import CustomConfirmModal from "../../components/modal/CustomConfirmModal";
 import CustomModal from "../../components/modal/CustomModal";
 import type { Pagination } from "../../models/base-type";
@@ -18,6 +21,7 @@ import type { IUserModal } from "../../models/user";
 import { Routing } from "../../routes/routing";
 import userService from "../../services/user-service";
 import { PAGINATION } from "../../shared/constants/pagination";
+import { handleTableLoader } from "../../store/slices/generalSlice";
 import UserForm from "./UserForm";
 
 interface IUsersFilter {
@@ -32,8 +36,8 @@ const initialFilter: IUsersFilter = {
 
 const Users = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [usersList, setUsersList] = useState<IUserModal[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [pagination, setPagination] = useState<Pagination>(PAGINATION);
   const [filterValues, setFilterValues] = useState<IUsersFilter>(initialFilter);
@@ -106,6 +110,28 @@ const Users = () => {
       },
     },
     {
+      id: "statusToggle",
+      header: "Status Switch",
+      cell: ({ row }) => {
+        const isActive = row.original.active;
+        const userId = row.original._id;
+        return (
+          <div className="flex items-center">
+            <CustomSwitch
+              size="sm"
+              color="success"
+              value={isActive}
+              onChange={(checked) => {
+                if (userId) {
+                  handleStatusToggle(userId, checked);
+                }
+              }}
+            />
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: "actions",
       header: "Actions",
       cell: ({ row }) => {
@@ -153,7 +179,7 @@ const Users = () => {
       params.active = filter.status === "true";
     }
 
-    setLoading(true);
+    dispatch(handleTableLoader(true));
     await userService
       .getAllUsers(params)
       .then((response: any) => {
@@ -166,7 +192,22 @@ const Users = () => {
         }
       })
       .catch((error: Error) => console.log(error?.message))
-      .finally(() => setLoading(false));
+      .finally(() => dispatch(handleTableLoader(false)));
+  };
+
+  const handleStatusToggle = async (userId: string, newStatus: boolean) => {
+    const payload = {
+      status: newStatus
+    }
+    await userService
+      .toggleUserStatus(userId, payload)
+      .then(() => {
+        toast.success("User status updated successfully!");
+        getUsers(filterValues, pagination.page, pagination.limit);
+      })
+      .catch((error: any) => {
+        toast.error(error || "Failed to update status.");
+      })
   };
 
   const handlePageChange = (newPagination: { page: number; limit: number }) => {
@@ -285,7 +326,6 @@ const Users = () => {
         enableSorting
         defaultSortKey="firstName"
         defaultSortOrder="desc"
-        loading={loading}
         totalCount={totalRecords}
       />
 

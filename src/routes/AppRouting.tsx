@@ -1,27 +1,33 @@
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import { Routing } from "./routing";
+import SuspenseFallback from "../components/loader/SuspenseFallback";
 
+const Loadable = (Component: React.ComponentType) => () => {
+  return (
+    <Suspense fallback={<SuspenseFallback />}>
+      <Component />
+    </Suspense>
+  );
+};
 
 const PublicLayout = lazy(() => import("../layout/PublicLayout"));
 const MainLayout = lazy(() => import("../layout/MainLayout"));
 
 const LoginLayout = lazy(() => import("../pages/Account/LoginLayout"));
-const ForgotPassword = lazy(() => import("../pages/Account/ForgotPassword"));
+const ForgotPassword = Loadable(lazy(() => import("../pages/Account/ForgotPassword")));
 
-const Dashboard = lazy(() => import("../pages/Dashboard/Dashboard"));
-const DemoFormPage = lazy(() => import("../pages/Dashboard/DemoFormPage"));
-const Users = lazy(() => import("../pages/Users/Users"));
-const UserDetails = lazy(() => import("../pages/Users/UserDetails"));
-const Category = lazy(() => import("../pages/Master/Category/Category"));
-const SubCategory = lazy(() => import("../pages/Master/SubCategory/SubCategory"));
-const Product = lazy(() => import("../pages/Master/Product/Product"));
+const Dashboard = Loadable(lazy(() => import("../pages/Dashboard/Dashboard")));
+const DemoFormPage = Loadable(lazy(() => import("../pages/Dashboard/DemoFormPage")));
+const Users = Loadable(lazy(() => import("../pages/Users/Users")));
+const UserDetails = Loadable(lazy(() => import("../pages/Users/UserDetails")));
+const Category = Loadable(lazy(() => import("../pages/Master/Category/Category")));
+const SubCategory = Loadable(lazy(() => import("../pages/Master/SubCategory/SubCategory")));
+const Product = Loadable(lazy(() => import("../pages/Master/Product/Product")));
 
-const ErrorPage = lazy(() => import("../pages/Account/ErrorPage"));
-const Error404Page = lazy(() => import("../pages/Account/Error404Page"));
-const NotFound = lazy(() => import("../pages/Account/NotFound"));
-
+const ErrorPage = Loadable(lazy(() => import("../pages/Account/ErrorPage")));
+const Error404Page = Loadable(lazy(() => import("../pages/Account/Error404Page")));
 
 const privateRoute = (Element: any, props?: any) => {
   return <ProtectedRoute element={props ? <Element {...props} /> : <Element />} />;

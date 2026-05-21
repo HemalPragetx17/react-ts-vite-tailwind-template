@@ -11,3 +11,7 @@ export interface IUserModal extends IBaseCreateRequest, IBaseUpdateRequest {
     role?: number;
     active?: boolean;
 }
+
+export interface IUserStatusModal {
+    status: boolean;
+}

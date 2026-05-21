@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import messages from "../shared/constants/messages";
 import { HttpStatusCode } from "../shared/enums/http-status-code";
 import { adminLogout } from "../store/slices/authSlice";
-import { showLoader } from "../store/slices/generalSlice";
 import type { IApplicationState } from "../store/state/app-state";
 import store from "../store/store";
 import { getBaseURL } from "../utils/commonFunctions";
@@ -18,23 +17,6 @@ interface AxiosErrors {
     response?: AxiosResponse,
 }
 
-function showLoaderdiv() {
-    const loaderDiv = document.getElementById("loader");
-
-    if (loaderDiv) {
-        loaderDiv.style.display = "flex";
-        loaderDiv.style.visibility = "visible";
-    }
-}
-
-function hideLoader() {
-    const loaderDiv = document.getElementById("loader");
-
-    if (loaderDiv) {
-        loaderDiv.style.display = "none";
-        loaderDiv.style.visibility = "hidden";
-    }
-}
 axios.interceptors.request.use(
     (config: any) => {
         const storeData: IApplicationState = store?.getState();
@@ -51,16 +33,9 @@ axios.interceptors.request.use(
             "ngrok-skip-browser-warning": "69420",
         };
 
-        if (storeData?.GeneralData.showLoader) {
-            showLoader(false);
-            showLoaderdiv();
-        } else {
-            store.dispatch(showLoader(true));
-        }
         return config;
     },
     (error: AxiosError) => {
-        hideLoader();
         switch (error?.response?.status) {
             case HttpStatusCode.BadRequest:
             case HttpStatusCode.ConflictError:
@@ -74,15 +49,12 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
     (response: AxiosResponse) => {
-        hideLoader();
         // if (!response?.data?.status) {
         //     toast.error(response?.data?.message);
         // }
         return response?.data;
     },
     (error: AxiosErrors) => {
-        hideLoader();
-
         switch (error.response?.status) {
             case HttpStatusCode.BadRequest:
                 toast.error(error?.response?.data?.error);

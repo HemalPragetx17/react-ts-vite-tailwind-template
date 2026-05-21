@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import CustomButton from "../../components/button/CustomButton";
 import CustomModal from "../../components/modal/CustomModal";
 import type { IFormModal } from "../../models/dashboard";
@@ -7,12 +8,23 @@ import DemoForm from "./DemoForm";
 import { Routing } from "../../routes/routing";
 import CustomTabs from "../../components/tabs/CustomTabs";
 import CustomPopover from "../../components/popover/CustomPopover";
+import { handleTableLoader, handleFormLoader } from "../../store/slices/generalSlice";
+import { CustomTable } from "../../components/data-table";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [user, setUser] = useState<IFormModal | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("overview");
+
+  const triggerFormLoader = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(handleFormLoader(true));
+    setTimeout(() => {
+      dispatch(handleFormLoader(false));
+    }, 3000);
+  };
 
   useEffect(() => {
     setUser({
@@ -186,6 +198,63 @@ const Dashboard = () => {
           activeKey={activeTab}
           onChange={setActiveTab}
         />
+      </div>
+
+      <div className="mt-8 bg-white dark:bg-neutral-800 p-6 rounded-2xl border border-neutral-200 dark:border-neutral-700/60 shadow-sm">
+        <h2 className="text-xl font-bold text-neutral-900 dark:text-white mb-4">Global Redux Loaders Playground</h2>
+        <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-6">
+          Click the controls below to trigger the live Redux loaders inside the browser.
+        </p>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Card 1: Form Button Loader */}
+          <div className="p-4 rounded-xl border border-neutral-100 dark:border-neutral-700/50 bg-neutral-50/50 dark:bg-neutral-900/30 flex flex-col justify-between">
+            <div>
+              <h3 className="font-semibold text-neutral-800 dark:text-white mb-2">2. Form Button Loader</h3>
+              <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-4">
+                Submits a mock form that dispatches formLoader = true. The submit button will display the inline spinner for 3 seconds.
+              </p>
+            </div>
+            <form onSubmit={triggerFormLoader}>
+              <CustomButton type="submit" variant="solid" color="success" fullWidth>
+                Submit Form (3s)
+              </CustomButton>
+            </form>
+          </div>
+
+          {/* Card 2: Table Loader */}
+          <div className="p-4 rounded-xl border border-neutral-100 dark:border-neutral-700/50 bg-neutral-50/50 dark:bg-neutral-900/30 flex flex-col justify-between">
+            <div>
+              <h3 className="font-semibold text-neutral-800 dark:text-white mb-2">3. Table Loader</h3>
+              <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-4">
+                Toggles the tableLoader in Redux to show or hide the inline loading indicator of the table below.
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <CustomButton onClick={() => dispatch(handleTableLoader(true))} variant="bordered" color="primary" fullWidth>
+                Show Loader
+              </CustomButton>
+              <CustomButton onClick={() => dispatch(handleTableLoader(false))} variant="solid" color="secondary" fullWidth>
+                Hide Loader
+              </CustomButton>
+            </div>
+          </div>
+        </div>
+
+        {/* Live Table for testing tableLoader */}
+        <div className="mt-6">
+          <CustomTable
+            data={[
+              { id: 1, name: "John Doe", role: "Developer" },
+              { id: 2, name: "Jane Smith", role: "Designer" }
+            ]}
+            columns={[
+              { accessorKey: "id", header: "ID" },
+              { accessorKey: "name", header: "Name" },
+              { accessorKey: "role", header: "Role" }
+            ]}
+          />
+        </div>
       </div>
 
       <CustomModal

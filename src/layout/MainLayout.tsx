@@ -15,13 +15,7 @@ const MainLayout: React.FC<IMainLayoutProps> = ({ children }) => {
                 <Header />
                 <main className='main-content p-5'>
                     {/* Comment the line below to hide/disable breadcrumbs throughout the entire system */}
-                    <Breadcrumbs
-                        variant='light'
-                        size="md"
-                        color="default"
-                        underline="hover"
-                        radius="lg"
-                    />
+                    <Breadcrumbs variant='light' size="md" color="default" underline="hover" radius="lg" />
                     {children}
                 </main>
             </div>

@@ -1,13 +1,14 @@
 import { Field, Form, Formik } from "formik";
-import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import CustomButton from '../../components/button/CustomButton';
 import CustomInput from '../../components/input/CustomInput';
 import type { ILoginRequestModel } from '../../models/account';
 import { Routing } from "../../routes/routing";
 import accountService from "../../services/account-service";
 import { adminLogin } from '../../store/slices/authSlice';
+import { handleFormLoader } from "../../store/slices/generalSlice";
 import { LoginValidationSchema } from "../../validation/account";
 
 const Login = () => {
@@ -20,6 +21,7 @@ const Login = () => {
   };
 
   const handleSubmit = async (values: ILoginRequestModel) => {
+    dispatch(handleFormLoader(true));
     await accountService
       .login(values)
       .then(async (response) => {
@@ -29,7 +31,8 @@ const Login = () => {
           navigate(Routing.Dashboard)
         }
       })
-      .catch((error: Error) => console.log(error?.message));
+      .catch((error: Error) => console.log(error?.message))
+      .finally(() => dispatch(handleFormLoader(false)))
   };
 
   return (

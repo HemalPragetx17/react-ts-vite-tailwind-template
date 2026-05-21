@@ -1,6 +1,8 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import type { IApplicationState } from "../../store/state/app-state";
 import {
   flexRender,
   getCoreRowModel,
@@ -124,6 +126,9 @@ function CustomTable<T = any>({
   pagination,
   onPaginationChange,
 }: CustomTableProps<T>) {
+  const globalTableLoading = useSelector((state: IApplicationState) => state.GeneralData?.tableLoading);
+  const isLoading = loading || globalTableLoading;
+
   const [expanded, setExpanded] = useState<ExpandedState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [sorting, setSorting] = useState<SortingState>(
@@ -402,7 +407,7 @@ function CustomTable<T = any>({
             </thead>
           )}
           <tbody className="bg-white divide-y divide-gray-200">
-            {loading ? (
+            {isLoading ? (
               <tr>
                 <td colSpan={enableCheckbox ? columns.length + 1 : columns.length} className="text-center py-8">
                   <div className="flex justify-center items-center text-gray-500">
