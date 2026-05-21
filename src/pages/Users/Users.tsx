@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Field, Form, Formik } from "formik";
 import { debounce } from "lodash";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -46,12 +46,39 @@ const Users = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [openConfirmDialogDelete, setOpenConfirmDialogDelete] = useState(false);
 
-  const handleDialogOpen = () => setOpenDialog(true);
-  const handleDialogClose = () => setOpenDialog(false);
-  const handleConfirmDialogOpenForDelete = () => setOpenConfirmDialogDelete(true);
-  const handleConfirmDialogCloseForDelete = () => setOpenConfirmDialogDelete(false);
+  const handleDialogOpen = useCallback(() => setOpenDialog(true), []);
+  const handleDialogClose = useCallback(() => setOpenDialog(false), []);
+  const handleConfirmDialogOpenForDelete = useCallback(() => setOpenConfirmDialogDelete(true), []);
+  const handleConfirmDialogCloseForDelete = useCallback(() => setOpenConfirmDialogDelete(false), []);
 
-  const columns: ColumnDef<IUserModal>[] = [
+  const handleStatusToggle = useCallback(async (userId: string, newStatus: boolean) => {
+    await userService
+      .toggleUserStatus(userId, { status: newStatus })
+      .then(() => {
+        toast.success("User status updated successfully!");
+        setUsersList((prev) => prev.map((user) => user._id === userId ? { ...user, active: newStatus } : user))
+      })
+      .catch((error: any) => {
+        toast.error(error || "Failed to update status.");
+      })
+  }, []);
+
+  const handleView = useCallback((user: IUserModal) => {
+    setUser(user);
+    navigate(Routing.UserDetails);
+  }, [navigate]);
+
+  const handleEdit = useCallback((user: IUserModal) => {
+    setUser(user);
+    handleDialogOpen();
+  }, [handleDialogOpen]);
+
+  const handleDelete = useCallback((user: IUserModal) => {
+    setUser(user);
+    handleConfirmDialogOpenForDelete();
+  }, [handleConfirmDialogOpenForDelete]);
+
+  const columns: ColumnDef<IUserModal>[] = useMemo(() => [
     {
       accessorKey: "firstName",
       header: "Name",
@@ -117,16 +144,16 @@ const Users = () => {
         const userId = row.original._id;
         return (
           <div className="flex items-center">
-            <CustomSwitch
-              size="sm"
-              color="success"
-              value={isActive}
-              onChange={(checked) => {
-                if (userId) {
-                  handleStatusToggle(userId, checked);
-                }
-              }}
-            />
+          <CustomSwitch
+            size="sm"
+            color="success"
+            value={isActive}
+            onChange={(checked) => {
+              if (userId) {
+                handleStatusToggle(userId, checked);
+              }
+            }}
+          />
           </div>
         );
       },
@@ -148,7 +175,7 @@ const Users = () => {
         </div>;
       },
     }
-  ];
+  ], [handleStatusToggle, handleView, handleEdit, handleDelete]);
 
   useEffect(() => {
     getUsers(filterValues);
@@ -195,56 +222,26 @@ const Users = () => {
       .finally(() => dispatch(handleTableLoader(false)));
   };
 
-  const handleStatusToggle = async (userId: string, newStatus: boolean) => {
-    const payload = {
-      status: newStatus
-    }
-    await userService
-      .toggleUserStatus(userId, payload)
-      .then(() => {
-        toast.success("User status updated successfully!");
-        getUsers(filterValues, pagination.page, pagination.limit);
-      })
-      .catch((error: any) => {
-        toast.error(error || "Failed to update status.");
-      })
-  };
-
-  const handlePageChange = (newPagination: { page: number; limit: number }) => {
+  const handlePageChange = useCallback((newPagination: { page: number; limit: number }) => {
     if (pagination.page !== newPagination.page || pagination.limit !== newPagination.limit) {
       setPagination(newPagination);
       getUsers(filterValues, newPagination.page, newPagination.limit);
     }
-  };
+  }, [pagination, filterValues]);
 
-  const handleAddUserSubmit = () => {
+  const handleAddUserSubmit = useCallback(() => {
     getUsers(filterValues, pagination.page, pagination.limit);
     setOpenDialog(false);
-  };
+  }, [filterValues, pagination]);
 
-  const handleView = (user: IUserModal) => {
-    setUser(user);
-    navigate(Routing.UserDetails);
-  };
-
-  const handleAdd = () => {
+  const handleAdd = useCallback(() => {
     setUser(null);
     handleDialogOpen();
-  };
+  }, [handleDialogOpen]);
 
-  const handleEdit = (user: IUserModal) => {
-    setUser(user);
-    handleDialogOpen();
-  };
-
-  const handleDelete = (user: IUserModal) => {
-    setUser(user);
-    handleConfirmDialogOpenForDelete();
-  };
-
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = useCallback(() => {
     handleConfirmDialogCloseForDelete();
-  };
+  }, [handleConfirmDialogCloseForDelete]);
 
   return (
     <section>

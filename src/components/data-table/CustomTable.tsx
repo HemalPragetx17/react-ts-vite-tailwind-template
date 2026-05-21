@@ -220,6 +220,7 @@ function CustomTable<T = any>({
   const table = useReactTable({
     data,
     columns: tableColumns as any,
+    getRowId: (row: any, index: number) => row._id || row.id || index.toString(),
     state: {
       expanded: enableExpanding ? expanded : {}, // Only manage expanded state if enabled
       rowSelection,

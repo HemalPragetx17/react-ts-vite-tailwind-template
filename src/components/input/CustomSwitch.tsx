@@ -168,6 +168,7 @@ const CustomSwitch = forwardRef<HTMLDivElement, CustomSwitchProps>((props, ref) 
           {startContent && (
             <motion.div
               className={`absolute left-1.5 inset-y-0 flex items-center justify-center pointer-events-none z-0 ${currentSize.iconSize} text-white`}
+              initial={false}
               animate={{ opacity: currentValue ? 1 : 0 }}
               transition={{ duration: 0.2 }}
             >
@@ -179,6 +180,7 @@ const CustomSwitch = forwardRef<HTMLDivElement, CustomSwitchProps>((props, ref) 
           {endContent && (
             <motion.div
               className={`absolute right-1.5 inset-y-0 flex items-center justify-center pointer-events-none z-0 ${currentSize.iconSize} text-neutral-600`}
+              initial={false}
               animate={{ opacity: currentValue ? 0 : 1 }}
               transition={{ duration: 0.2 }}
             >
@@ -198,6 +200,7 @@ const CustomSwitch = forwardRef<HTMLDivElement, CustomSwitchProps>((props, ref) 
               width: currentSize.thumbSize,
               height: currentSize.thumbSize,
             }}
+            initial={false}
             animate={{ x: currentValue ? thumbX : 0 }}
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
           >
