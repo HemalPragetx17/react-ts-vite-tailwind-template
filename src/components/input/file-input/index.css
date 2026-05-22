@@ -14,39 +14,10 @@
 
 .form-upload-pdf::before,
 .form-upload-img::before {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
-    transition: all 0.3s linear;
-    backdrop-filter: blur(2px);
+    display: none;
 }
 
-.form-upload-pdf:hover::before,
-.form-upload-img:hover::before {
-    top: 0;
-}
 
-.form-upload-pdf .form-upload-pdf-icon,
-.form-upload-img .form-upload-pdf-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    opacity: 0;
-    transition: all 0.4s linear;
-}
-
-.form-upload-pdf:hover .form-upload-pdf-icon,
-.form-upload-img:hover .form-upload-pdf-icon {
-    transition: all 0.4s linear;
-    opacity: 1;
-}
 
 .white-background .bg-default-100 {
     background-color: #ffffff !important;
