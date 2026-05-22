@@ -1,6 +1,7 @@
 import type { FieldProps } from 'formik';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useDropzone } from 'react-dropzone';
 import DeleteIcon from "../../../assets/trash.svg";
 import CloseIcon from "../../../assets/ic-close-white.svg";
@@ -115,13 +116,16 @@ const ImagePreviewItem: React.FC<{
             </div>
 
             {/* Full Preview Modal */}
-            <AnimatePresence>
-                {isModalOpen && (
+            {isModalOpen && createPortal(
+                <AnimatePresence mode="wait">
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        onClick={() => setIsModalOpen(false)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsModalOpen(false);
+                        }}
                         className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 cursor-zoom-out"
                     >
                         {/* Close button */}
@@ -160,8 +164,9 @@ const ImagePreviewItem: React.FC<{
                             ) : null}
                         </motion.div>
                     </motion.div>
-                )}
-            </AnimatePresence>
+                </AnimatePresence>,
+                document.body
+            )}
         </div>
     );
 };
