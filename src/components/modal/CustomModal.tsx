@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import CustomButton from '../button/CustomButton';
 
 type ModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | 'full';
@@ -171,8 +172,8 @@ const CustomModal: React.FC<CustomModalProps> = ({
     );
   };
 
-  return (
-    <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center">
+  const modalContent = (
+    <div className="fixed inset-0 z-[9999] overflow-hidden flex items-center justify-center">
       {/* Backdrop - now inside the same container to handle clicks better */}
       <div 
         className={`fixed inset-0 transition-opacity duration-300 ${backdropClasses[backdrop]}`} 
@@ -246,6 +247,8 @@ const CustomModal: React.FC<CustomModalProps> = ({
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };
 
 export default CustomModal;

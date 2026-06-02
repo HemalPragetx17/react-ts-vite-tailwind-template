@@ -6,15 +6,13 @@ import {
     CustomCheckbox,
     CustomCheckboxGroup,
     CustomDatePicker,
-    CustomDropzoneInput,
     CustomInput,
     CustomPhoneNumberInput,
-    CustomProfileInput,
     CustomRadio,
     CustomSelect,
     CustomSwitch,
     CustomTextarea,
-    ImageUploader
+    CustomFileInput
 } from "../../components/input";
 import type { IFormModal } from "../../models/dashboard";
 import { Routing } from "../../routes/routing";
@@ -44,8 +42,6 @@ const initialState: IFormModal = {
 
 const DemoFormPage: React.FC = () => {
     const navigate = useNavigate();
-    const [preview, setPreview] = React.useState<string | File | null>(null);
-    const [imagePreview, setImagePreview] = React.useState<string | File | null>(null);
 
     const genderOptions = [
         { label: "Male", value: "Male" },
@@ -162,13 +158,9 @@ const DemoFormPage: React.FC = () => {
                                             <Field
                                                 label="Profile Pic"
                                                 name="profilePic"
-                                                value={values?.profilePic}
-                                                onChange={(file: File | string) => {
-                                                    setPreview(file);
-                                                    setFieldValue('profilePic', file);
-                                                }}
-                                                preview={preview}
-                                                component={CustomProfileInput}
+                                                radius='full'
+                                                mode="profile"
+                                                component={CustomFileInput}
                                             />
                                         </div>
 
@@ -332,12 +324,9 @@ const DemoFormPage: React.FC = () => {
                                         <Field
                                             label="Primary Image"
                                             name="image"
-                                            onChange={(file: File | string) => {
-                                                setImagePreview(file);
-                                                setFieldValue('image', file);
-                                            }}
-                                            preview={imagePreview}
-                                            component={CustomDropzoneInput}
+                                            size="sm"
+                                            mode="dropzone"
+                                            component={CustomFileInput}
                                         />
 
                                         <Field
@@ -345,7 +334,9 @@ const DemoFormPage: React.FC = () => {
                                             deleteName="imageToDelete"
                                             imageArray={[]}
                                             label="Gallery Images"
-                                            component={ImageUploader}
+                                            size="sm"
+                                            mode="multi"
+                                            component={CustomFileInput}
                                         />
                                     </div>
                                 </div>

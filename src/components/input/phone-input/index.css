@@ -9,10 +9,13 @@
 }
 
 /* Elevate stacking context when dropdown is open, hovered, or active to overlay on top of other inputs */
-.react-tel-input:has(.flag-dropdown.open),
 .react-tel-input:focus-within,
 .react-tel-input:hover {
     z-index: 50 !important;
+}
+
+.react-tel-input:has(.flag-dropdown.open) {
+    z-index: 9999 !important;
 }
 
 .react-tel-input .flag-dropdown {
@@ -73,20 +76,6 @@
     height: 58px !important;
 }
 
-/* Inside Label Placement adjustments to input padding */
-.phone-input-placement-inside.phone-input-size-sm input {
-    padding-top: 14px !important;
-    padding-bottom: 2px !important;
-}
-.phone-input-placement-inside.phone-input-size-md input {
-    padding-top: 18px !important;
-    padding-bottom: 4px !important;
-}
-.phone-input-placement-inside.phone-input-size-lg input {
-    padding-top: 22px !important;
-    padding-bottom: 6px !important;
-}
-
 /* ========================================================
    VARIANT CONFIGURATIONS (flat, bordered, underlined, faded)
    ======================================================== */
@@ -138,26 +127,30 @@
     border-top: none !important;
     border-left: none !important;
     border-right: none !important;
-    border-bottom: 2px solid #e4e4e7 !important;
+    border-bottom: 2px solid transparent !important;
     border-radius: 0px !important;
     color: #18181b !important;
 }
 .phone-input-variant-underlined:not(.phone-input-has-error) input:hover {
-    border-bottom-color: #a1a1aa !important;
+    border-bottom-color: transparent !important;
 }
 .phone-input-variant-underlined:not(.phone-input-has-error) input:focus {
-    border-bottom-color: #18181b !important;
+    border-bottom-color: transparent !important;
 }
 .phone-input-variant-underlined .flag-dropdown {
     background-color: transparent !important;
     border-top: none !important;
     border-left: none !important;
     border-right: none !important;
-    border-bottom: 2px solid #e4e4e7 !important;
+    border-bottom: 2px solid transparent !important;
     border-radius: 0px !important;
 }
 .phone-input-variant-underlined:not(.phone-input-has-error) .flag-dropdown:hover {
-    border-bottom-color: #a1a1aa !important;
+    border-bottom-color: transparent !important;
+}
+.phone-input-variant-underlined.phone-input-has-error input,
+.phone-input-variant-underlined.phone-input-has-error .flag-dropdown {
+    border-bottom-color: transparent !important;
 }
 
 /* Variant: faded */
@@ -343,20 +336,20 @@
 }
 
 .dark .phone-input-variant-underlined input {
-    border-bottom-color: #27272a !important;
+    border-bottom-color: transparent !important;
     color: #f4f4f5 !important;
 }
 .dark .phone-input-variant-underlined:not(.phone-input-has-error) input:hover {
-    border-bottom-color: #3f3f46 !important;
+    border-bottom-color: transparent !important;
 }
 .dark .phone-input-variant-underlined:not(.phone-input-has-error) input:focus {
-    border-bottom-color: #f4f4f5 !important;
+    border-bottom-color: transparent !important;
 }
 .dark .phone-input-variant-underlined .flag-dropdown {
-    border-bottom-color: #27272a !important;
+    border-bottom-color: transparent !important;
 }
 .dark .phone-input-variant-underlined:not(.phone-input-has-error) .flag-dropdown:hover {
-    border-bottom-color: #3f3f46 !important;
+    border-bottom-color: transparent !important;
 }
 
 .dark .phone-input-variant-faded input {
@@ -396,4 +389,220 @@
 }
 .dark .react-tel-input .country-list .dial-code {
     color: #a1a1aa !important;
+}
+
+/* ========================================================
+   FULL VIEWPORT OVERLAY DROPDOWN STYLING (NORMAL POSITION)
+   ======================================================== */
+
+/* Viewport fixed dropdown position next to input button */
+.react-tel-input .flag-dropdown.open .country-list {
+    position: fixed !important;
+    top: var(--dropdown-fixed-top, auto) !important;
+    bottom: var(--dropdown-fixed-bottom, auto) !important;
+    left: var(--dropdown-fixed-left, 0) !important;
+    width: 300px !important;
+    max-height: 250px !important;
+    margin: 0 !important;
+    z-index: 10000 !important;
+    
+    background-color: #ffffff !important;
+    border: 1px solid #e4e4e7 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+    overflow-y: auto !important;
+    padding: 6px !important;
+    animation: dropdownFadeIn 0.15s ease-out forwards !important;
+}
+
+.dark .react-tel-input .flag-dropdown.open .country-list {
+    background-color: #18181b !important;
+    border-color: #27272a !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3) !important;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================================
+   SINGLE BORDER UNIFIED DESIGN
+   ======================================================== */
+
+.react-tel-input.phone-input-single-border {
+    gap: 0 !important;
+    border-collapse: collapse;
+    align-items: stretch !important;
+    overflow: hidden;
+}
+
+/* Remove default borders and backgrounds from inner elements when single border is active */
+.react-tel-input.phone-input-single-border input,
+.react-tel-input.phone-input-single-border .flag-dropdown {
+    border: none !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+    height: 100% !important;
+}
+
+/* Adjust size-based heights for the single-border container */
+.phone-input-size-sm.phone-input-single-border {
+    height: 36px !important;
+}
+.phone-input-size-md.phone-input-single-border {
+    height: 44px !important;
+}
+.phone-input-size-lg.phone-input-single-border {
+    height: 58px !important;
+}
+
+/* Divider border on the right of the flag selector */
+.phone-input-variant-bordered.phone-input-single-border .flag-dropdown,
+.phone-input-variant-faded.phone-input-single-border .flag-dropdown {
+    border-right: 1px solid #e4e4e7 !important;
+}
+.dark .phone-input-variant-bordered.phone-input-single-border .flag-dropdown,
+.dark .phone-input-variant-faded.phone-input-single-border .flag-dropdown {
+    border-right: 1px solid #27272a !important;
+}
+
+/* Single Border Variant: flat */
+.phone-input-variant-flat.phone-input-single-border {
+    background-color: #f4f4f5 !important;
+    border: 2px solid transparent !important;
+    color: #18181b !important;
+}
+.phone-input-variant-flat.phone-input-single-border:not(.phone-input-has-error):hover {
+    background-color: #e4e4e7 !important;
+}
+.phone-input-variant-flat.phone-input-single-border:not(.phone-input-has-error):focus-within {
+    background-color: #e4e4e7 !important;
+}
+
+/* Single Border Variant: bordered */
+.phone-input-variant-bordered.phone-input-single-border {
+    background-color: transparent !important;
+    border: 2px solid #e4e4e7 !important;
+}
+.phone-input-variant-bordered.phone-input-single-border:not(.phone-input-has-error):hover {
+    border-color: #a1a1aa !important;
+}
+.phone-input-variant-bordered.phone-input-single-border:not(.phone-input-has-error):focus-within {
+    border-color: #18181b !important;
+}
+
+/* Single Border Variant: faded */
+.phone-input-variant-faded.phone-input-single-border {
+    background-color: #fafafa !important;
+    border: 2px solid #e4e4e7 !important;
+}
+.phone-input-variant-faded.phone-input-single-border:not(.phone-input-has-error):hover {
+    border-color: #d4d4d8 !important;
+}
+.phone-input-variant-faded.phone-input-single-border:not(.phone-input-has-error):focus-within {
+    border-color: #52525b !important;
+}
+
+/* Single Border Error State */
+.phone-input-has-error.phone-input-single-border {
+    border-color: #ef4444 !important;
+}
+
+/* Dark Mode Single Border Styles */
+.dark .phone-input-variant-flat.phone-input-single-border {
+    background-color: #27272a !important;
+    color: #f4f4f5 !important;
+}
+.dark .phone-input-variant-flat.phone-input-single-border:not(.phone-input-has-error):hover,
+.dark .phone-input-variant-flat.phone-input-single-border:not(.phone-input-has-error):focus-within {
+    background-color: #3f3f46 !important;
+}
+
+.dark .phone-input-variant-bordered.phone-input-single-border {
+    border-color: #27272a !important;
+}
+.dark .phone-input-variant-bordered.phone-input-single-border:not(.phone-input-has-error):hover {
+    border-color: #3f3f46 !important;
+}
+.dark .phone-input-variant-bordered.phone-input-single-border:not(.phone-input-has-error):focus-within {
+    border-color: #f4f4f5 !important;
+}
+
+.dark .phone-input-variant-faded.phone-input-single-border {
+    background-color: #18181b !important;
+    border-color: #27272a !important;
+}
+.dark .phone-input-variant-faded.phone-input-single-border:not(.phone-input-has-error):hover {
+    border-color: #3f3f46 !important;
+}
+.dark .phone-input-variant-faded.phone-input-single-border:not(.phone-input-has-error):focus-within {
+    border-color: #a1a1aa !important;
+}
+
+/* ========================================================
+   PLACEHOLDER STYLING
+   ======================================================== */
+.react-tel-input input::placeholder {
+    color: #a1a1aa !important;
+    opacity: 1 !important;
+}
+
+.dark .react-tel-input input::placeholder {
+    color: #71717a !important;
+    opacity: 1 !important;
+}
+
+/* ========================================================
+   INSIDE LABEL PLACEMENT HEIGHTS & PADDINGS
+   ======================================================== */
+
+.phone-input-placement-inside.phone-input-size-sm input,
+.phone-input-placement-inside.phone-input-size-sm .flag-dropdown,
+.phone-input-placement-inside.phone-input-size-sm.phone-input-single-border {
+    height: 48px !important;
+}
+
+.phone-input-placement-inside.phone-input-size-sm.phone-input-should-float input {
+    padding-top: 12px !important;
+}
+
+.phone-input-placement-inside.phone-input-size-md input,
+.phone-input-placement-inside.phone-input-size-md .flag-dropdown,
+.phone-input-placement-inside.phone-input-size-md.phone-input-single-border {
+    height: 56px !important;
+}
+.phone-input-placement-inside.phone-input-size-md.phone-input-should-float input {
+    padding-top: 16px !important;
+}
+
+.phone-input-placement-inside.phone-input-size-lg input,
+.phone-input-placement-inside.phone-input-size-lg .flag-dropdown,
+.phone-input-placement-inside.phone-input-size-lg.phone-input-single-border {
+    height: 64px !important;
+}
+.phone-input-placement-inside.phone-input-size-lg.phone-input-should-float input {
+    padding-top: 20px !important;
+}
+
+
+.react-tel-input .country-list .search {
+    top: -6px;
+}
+
+.react-tel-input .country-list .search-box {
+    margin-left: 0;
+    padding-left: 30px !important;
+}
+
+.react-tel-input .country-list .search-emoji {
+    position: absolute;
+    top: 50%;
+    transform: translate(25%, -40%);
 }

@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useId } from "react";
 import type { FieldInputProps, FormikErrors, FormikTouched } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -19,7 +19,7 @@ interface CustomRadioProps
   label?: string;
   error?: string;
   touched?: boolean;
-  options?: { label: string; value: string | number; description?: string }[];
+  options?: { label: string; value: string | number; description?: string; disabled?: boolean }[];
   containerClassName?: string;
   labelClassName?: string;
   errorClassName?: string;
@@ -80,11 +80,14 @@ const CustomRadio = forwardRef<HTMLDivElement, CustomRadioProps>((props, ref) =>
     form,
     value,
     onChange,
+    disabled = false,
     ...restProps
   } = props;
 
-  // Extract field name for error/touched lookup
-  const fieldName = field?.name || (props.name as string | undefined);
+    const generatedId = useId();
+
+    // Extract field name for error/touched lookup
+    const fieldName = field?.name || (props.name as string | undefined) || generatedId;
 
   const fieldError =
     fieldName && form?.errors?.[fieldName]
@@ -121,12 +124,15 @@ const CustomRadio = forwardRef<HTMLDivElement, CustomRadioProps>((props, ref) =>
         {options.map((opt, i) => {
           const isChecked = String(currentValue) === String(opt.value);
           const optId = `${fieldName ?? "radio"}-${i}`;
+          const isOptDisabled = opt.disabled || disabled;
 
           return (
             <label
               key={i}
               htmlFor={optId}
-              className="relative inline-flex items-start gap-3 cursor-pointer group select-none"
+              className={`relative inline-flex items-start gap-3 cursor-pointer group select-none ${
+                isOptDisabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
+              }`}
             >
               {/* Hidden native input */}
               <input
@@ -138,6 +144,7 @@ const CustomRadio = forwardRef<HTMLDivElement, CustomRadioProps>((props, ref) =>
                 checked={isChecked}
                 onChange={handleChange}
                 onBlur={field?.onBlur || props.onBlur}
+                disabled={isOptDisabled}
                 className="sr-only"
               />
 
@@ -167,7 +174,7 @@ const CustomRadio = forwardRef<HTMLDivElement, CustomRadioProps>((props, ref) =>
               </span>
 
               {/* Label Text (+ optional description) */}
-              <span className="flex flex-col leading-tight mt-[1px]">
+              <span className="flex flex-col leading-tight">
                 <span
                   className="text-sm font-medium text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors duration-150"
                 >

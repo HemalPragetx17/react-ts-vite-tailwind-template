@@ -1,6 +1,6 @@
 import type { FieldInputProps, FormikErrors, FormikTouched } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { forwardRef, useRef } from "react";
+import React, { forwardRef, useRef, useId } from "react";
 
 interface CustomOTPInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "form" | "onChange"> {
@@ -42,6 +42,7 @@ const CustomOTPInput = forwardRef<HTMLInputElement, CustomOTPInputProps>((props,
 
   const length = numInputs > 0 ? numInputs : 6;
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const generatedId = useId();
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
@@ -51,7 +52,7 @@ const CustomOTPInput = forwardRef<HTMLInputElement, CustomOTPInputProps>((props,
   }, []);
 
   // Extract field name for accessing error and touched state from form
-  const fieldName = field?.name || (props.name as string | undefined);
+  const fieldName = field?.name || (props.name as string | undefined) || generatedId;
 
   // Determine error and touched state - prioritize Formik form data
   const fieldError = fieldName && form?.errors?.[fieldName] ? (form.errors[fieldName] as string) : error;

@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useId } from "react";
 import type { FieldInputProps, FormikErrors, FormikTouched } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -16,6 +16,7 @@ interface CheckboxGroupOption {
   label: string;
   value: string | number;
   description?: string;
+  disabled?: boolean;
 }
 
 interface CustomCheckboxGroupProps
@@ -46,6 +47,9 @@ interface CustomCheckboxGroupProps
   // Controlled value (array of selected values)
   value?: (string | number)[];
   onChange?: (value: (string | number)[]) => void;
+
+  // Disabled state
+  disabled?: boolean;
 
   // Classnames
   containerClassName?: string;
@@ -84,11 +88,14 @@ const CustomCheckboxGroup = forwardRef<HTMLDivElement, CustomCheckboxGroupProps>
       errorClassName = "",
       field,
       form,
+      disabled = false,
       ...restProps
     } = props;
 
+    const generatedId = useId();
+
     // Field / Formik meta
-    const fieldName = field?.name || (restProps.id as string | undefined);
+    const fieldName = field?.name || (restProps.id as string | undefined) || generatedId;
 
     const fieldError =
       fieldName && form?.errors?.[fieldName]
@@ -151,13 +158,18 @@ const CustomCheckboxGroup = forwardRef<HTMLDivElement, CustomCheckboxGroupProps>
         >
           {options.map((opt, i) => {
             const isChecked = currentArray.includes(opt.value);
+            const isOptDisabled = opt.disabled || disabled;
             return (
               <CheckAtom
                 key={i}
-                id={`${fieldName ?? "cbg"}-${i}`}
+                id={`${fieldName}-${i}`}
                 name={fieldName}
                 checked={isChecked}
-                onToggle={() => handleToggle(opt.value)}
+                onToggle={() => {
+                  if (!isOptDisabled) {
+                    handleToggle(opt.value);
+                  }
+                }}
                 onBlur={field?.onBlur}
                 label={opt.label}
                 description={opt.description}
@@ -167,6 +179,7 @@ const CustomCheckboxGroup = forwardRef<HTMLDivElement, CustomCheckboxGroupProps>
                 isIndeterminate={isIndeterminate}
                 lineThrough={lineThrough}
                 icon={icon}
+                disabled={isOptDisabled}
               />
             );
           })}

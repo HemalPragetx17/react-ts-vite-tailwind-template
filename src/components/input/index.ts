@@ -1,7 +1,5 @@
 import CustomDatePicker from "./date-picker/CustomDatePicker";
-import CustomDropzoneInput from "./file-input/CustomDropzoneInput";
-import CustomProfileInput from "./file-input/CustomProfileInput";
-import ImageUploader from "./file-input/ImageUploader";
+import CustomFileInput from "./file-input/CustomFileInput";
 import CustomPhoneNumberInput from "./phone-input/CustomPhoneNumberInput";
 import CustomCheckbox from "./CustomCheckbox";
 import CustomCheckboxGroup from "./CustomCheckboxGroup";
@@ -14,9 +12,7 @@ import CustomTextarea from "./CustomTextarea";
 
 export {
   CustomDatePicker,
-  CustomDropzoneInput,
-  CustomProfileInput,
-  ImageUploader,
+  CustomFileInput,
   CustomPhoneNumberInput,
   CustomCheckbox,
   CustomCheckboxGroup,

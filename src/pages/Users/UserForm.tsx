@@ -40,7 +40,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose 
     >
       {({ handleSubmit, values, setFieldValue }) => (
         <Form onSubmit={handleSubmit} className="space-y-4">
-          <div className="">
+          <div className="space-y-4">
             <Field
               name="firstName"
               label="First Name"

@@ -18,7 +18,7 @@ interface CustomTextareaProps
   size?: "sm" | "md" | "lg";
   variant?: "flat" | "bordered" | "underlined" | "faded";
   radius?: "none" | "sm" | "md" | "lg" | "full";
-  labelPlacement?: "inside" | "outside" | "outside-left";
+  labelPlacement?: "inside" | "outside" | "outside-left" | "outside-top";
 
   // Clearable
   isClearable?: boolean;
@@ -63,6 +63,7 @@ const CustomTextarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
       onChange,
       placeholder,
       rows,
+      disabled = false,
       ...restProps
     } = props;
 
@@ -72,7 +73,6 @@ const CustomTextarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
     // Value resolution
     const inputValue = value !== undefined ? value : (field?.value ?? "");
     const hasValue = String(inputValue).length > 0;
-    const isLabelActive = isFocused || hasValue; // for inside floating label
 
     // Field meta
     const fieldName = field?.name || (props.name as string | undefined);
@@ -144,16 +144,58 @@ const CustomTextarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
 
     // ── Size ──────────────────────────────────────────────────────────────
     const sizeConfigs = {
-      sm: { textSize: "text-xs", labelSize: "text-[10px]", px: "px-2.5", pt: label && labelPlacement === "inside" ? "pt-5" : "pt-2", pb: "pb-2" },
-      md: { textSize: "text-sm", labelSize: "text-xs",    px: "px-3",   pt: label && labelPlacement === "inside" ? "pt-6" : "pt-2.5", pb: "pb-2.5" },
-      lg: { textSize: "text-base", labelSize: "text-sm",  px: "px-4",   pt: label && labelPlacement === "inside" ? "pt-7" : "pt-3",   pb: "pb-3" },
+      sm: { 
+        textSize: "text-xs",
+        labelSize: "text-[10px]",
+        px: "px-2.5", 
+        pt: label && labelPlacement === "inside" ? "pt-5" : "pt-2", 
+        pb: "pb-2",
+        floatY: 1,
+        floatX: -2,
+        floatYOutside: -20,
+        floatXOutside: -14,
+        initialX: -2,
+        initialY: 16,
+        initialYOutside: 10,
+        floatScale: 0.83,
+      },
+      md: { 
+        textSize: "text-sm",
+        labelSize: "text-xs",   
+        px: "px-3",   
+        pt: label && labelPlacement === "inside" ? "pt-6" : "pt-2.5", 
+        pb: "pb-2.5",
+        floatY: 2,
+        floatX: 0,
+        floatYOutside: -25,
+        floatXOutside: -14,
+        initialX: 1,
+        initialY: 20,
+        initialYOutside: 10,
+        floatScale: 0.85,
+      },
+      lg: { 
+        textSize: "text-base",
+        labelSize: "text-sm",  
+        px: "px-4",   
+        pt: label && labelPlacement === "inside" ? "pt-7" : "pt-3",   
+        pb: "pb-3",
+        floatY: 4,
+        floatX: 3,
+        floatYOutside: -27,
+        floatXOutside: -14,
+        initialX: 4,
+        initialY: 24,
+        initialYOutside: 10,
+        floatScale: 0.87,
+      },
     };
 
     // ── Variant ───────────────────────────────────────────────────────────
     const variantConfigs = {
       flat:       "bg-neutral-100 dark:bg-neutral-800 border-2 border-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700 focus-within:bg-neutral-200 dark:focus-within:bg-neutral-700",
       bordered:   "bg-transparent border-2 border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 focus-within:border-neutral-800 dark:focus-within:border-neutral-200",
-      underlined: "bg-transparent border-b-2 border-neutral-300 dark:border-neutral-700 hover:border-neutral-500 focus-within:border-neutral-800 dark:focus-within:border-neutral-200",
+      underlined: "bg-transparent border-b-2 border-transparent rounded-none relative",
       faded:      "bg-neutral-50 dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 focus-within:border-neutral-600",
     };
 
@@ -175,21 +217,22 @@ const CustomTextarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
 
     const hasError = !!(fieldTouched && fieldError);
 
-    // ── Inside label animation ────────────────────────────────────────────
-    const insideLabelVariants = {
-      default: { top: "50%", y: "-50%", scale: 1 },
-      active:  { top: "0.35rem", y: "0%", scale: 0.85 },
-    };
+    const isFloating = labelPlacement === "inside" || labelPlacement === "outside" || labelPlacement === "outside-top";
+    const shouldFloat = isFocused || hasValue || (isFloating && !!placeholder);
 
     // ── Outside label ─────────────────────────────────────────────────────
-    const renderOutsideLabel = () => {
-      if (!label || labelPlacement === "inside") return null;
+    const renderExternalLabel = () => {
+      if (!label || isFloating) return null;
       return (
         <label
           htmlFor={inputId}
-          className={`block font-medium text-neutral-700 dark:text-neutral-300 select-none ${
+          className={`block font-medium select-none transition-colors duration-200 ${
             labelPlacement === "outside-left" ? "shrink-0 mb-0" : "mb-1.5"
-          } ${cs.labelSize} ${labelClassName}`}
+          } ${cs.labelSize} ${labelClassName} ${
+            isFocused 
+              ? "text-[var(--color-primary,#2196f3)]" 
+              : "text-neutral-700 dark:text-neutral-300"
+          }`}
         >
           {label}
         </label>
@@ -199,31 +242,48 @@ const CustomTextarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
     const isOutsideLeft = labelPlacement === "outside-left";
 
     return (
-      <div className={`w-full ${containerClassName}`}>
+      <div className={`w-full flow-root ${containerClassName}`}>
         <div className={isOutsideLeft ? "flex items-start gap-3 w-full" : "w-full"}>
           {/* Outside label */}
-          {renderOutsideLabel()}
+          {renderExternalLabel()}
 
-          {/* Wrapper */}
           <div
             className={`
               relative w-full transition-all duration-200 ease-in-out box-border
               ${variantClass}
               ${radiusClass}
               ${hasError ? "!border-red-500 dark:!border-red-500" : ""}
+              ${labelPlacement === "inside" ? "" : (isFloating && label ? "mt-6" : "")}
+              ${cs.px}
+              ${disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}
             `}
             onClick={() => internalRef.current?.focus()}
           >
             {/* Inside floating label */}
-            {labelPlacement === "inside" && label && (
+            {isFloating && label && (
               <motion.label
                 htmlFor={inputId}
-                className={`absolute left-0 ${cs.px} font-medium text-neutral-500 dark:text-neutral-400 select-none origin-top-left cursor-text whitespace-nowrap pointer-events-none ${cs.labelSize} ${labelClassName}`}
-                variants={insideLabelVariants}
-                initial={isLabelActive ? "active" : "default"}
-                animate={isLabelActive ? "active" : "default"}
+                initial={false}
+                animate={{
+                  y: shouldFloat 
+                    ? (labelPlacement === "inside" ? cs.floatY : cs.floatYOutside) 
+                    : (labelPlacement === "inside" ? cs.initialY : cs.initialYOutside),
+                  x: shouldFloat 
+                    ? (labelPlacement === "inside" ? cs.floatX : cs.floatXOutside) 
+                    : cs.initialX,
+                  scale: shouldFloat ? cs.floatScale : 1,
+                }}
                 transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
-                style={{ transformOrigin: "top left" }}
+                className={`
+                  absolute left-3 top-0 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
+                  ${cs.textSize} ${labelClassName} ${
+                    shouldFloat
+                      ? isFocused
+                        ? "text-[var(--color-primary,#2196f3)]"
+                        : "text-neutral-700 dark:text-neutral-300"
+                      : "text-neutral-400 dark:text-neutral-500"
+                  }
+                `}
               >
                 {label}
               </motion.label>
@@ -244,42 +304,52 @@ const CustomTextarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
               </button>
             )}
 
-            {/* Textarea */}
-            <textarea
-              {...restProps}
-              id={inputId}
-              name={field?.name || props.name}
-              value={inputValue}
-              onChange={handleChange}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              ref={(node) => {
-                internalRef.current = node;
-                if (typeof ref === "function") ref(node);
-                else if (ref) (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = node;
-              }}
-              placeholder={
-                labelPlacement === "inside"
-                  ? isLabelActive
-                    ? placeholder
-                    : ""
-                  : placeholder
-              }
-              rows={disableAutosize ? (rows ?? minRows) : undefined}
-              style={
-                disableAutosize
-                  ? undefined
-                  : { minHeight: minH, maxHeight: maxH, overflowY: "hidden", resize: "none" }
-              }
-              className={`
-                w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0
-                text-neutral-800 dark:text-neutral-100 placeholder-neutral-400
-                resize-none transition-colors duration-200
-                ${cs.textSize} ${cs.px} ${cs.pt} ${cs.pb}
-                ${isClearable && hasValue ? "pr-8" : ""}
-                ${inputClassName}
-              `}
-            />
+            {/* Textarea Container */}
+            <div className="flex flex-col flex-1 min-w-0 justify-center">
+              <textarea
+                {...restProps}
+                id={inputId}
+                name={field?.name || props.name}
+                value={inputValue}
+                onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                disabled={disabled}
+                ref={(node) => {
+                  internalRef.current = node;
+                  if (typeof ref === "function") ref(node);
+                  else if (ref) (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = node;
+                }}
+                placeholder={!isFloating || shouldFloat ? placeholder : ""}
+                rows={disableAutosize ? (rows ?? minRows) : undefined}
+                style={
+                  disableAutosize
+                    ? undefined
+                    : { minHeight: minH, maxHeight: maxH, overflowY: "hidden", resize: "none" }
+                }
+                className={`
+                  w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0
+                  text-neutral-800 dark:text-neutral-100 placeholder-neutral-400
+                  ${disableAutosize ? "resize-y" : "resize-none"} transition-all duration-200
+                  ${cs.textSize} p-0
+                  ${labelPlacement === "inside" ? (size === "sm" ? "mt-4" : size === "lg" ? "mt-6" : "mt-5") : "mt-2.5"}
+                  mb-2.5
+                  ${isClearable && hasValue ? "pr-8" : ""}
+                  ${inputClassName}
+                `}
+              />
+            </div>
+
+            {/* Underline Animation for Underlined Variant */}
+            {variant === "underlined" && (
+              <motion.div
+                className="absolute bottom-[-2px] left-0 right-0 h-[2px] bg-neutral-800 dark:bg-neutral-200 z-20"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: isFocused ? 1 : 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                style={{ originX: 0.5 }}
+              />
+            )}
           </div>
         </div>
 

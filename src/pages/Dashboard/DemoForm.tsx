@@ -1,7 +1,7 @@
 import { Field, Form, Formik } from "formik";
 import React from "react";
 import CustomButton from "../../components/button/CustomButton";
-import { CustomCheckbox, CustomCheckboxGroup, CustomDatePicker, CustomDropzoneInput, CustomInput, CustomPhoneNumberInput, CustomProfileInput, CustomRadio, CustomSelect, CustomSwitch, CustomTextarea, ImageUploader } from "../../components/input";
+import { CustomCheckbox, CustomCheckboxGroup, CustomDatePicker, CustomInput, CustomPhoneNumberInput, CustomRadio, CustomSelect, CustomSwitch, CustomTextarea, CustomFileInput } from "../../components/input";
 import type { IFormModal } from "../../models/dashboard";
 import { FormValidationSchema } from "../../validation/dashboard";
 
@@ -34,16 +34,6 @@ const initialState: IFormModal = {
 };
 
 const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose }) => {
-    const [preview, setPreview] = React.useState<string | File | null>(null);
-    const [imagePreview, setImagePreview] = React.useState<string | File | null>(null);
-
-    React.useEffect(() => {
-        if (user?._id) {
-            setPreview(user?.profilePic);
-            setImagePreview(user?.image);
-        }
-    }, [user]);
-
     const initialValues = React.useMemo(() => {
         return user ? { ...user, imageToDelete: user.imageToDelete || [] } : initialState;
     }, [user]);
@@ -145,13 +135,9 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                     <Field
                         label="Profile Pic"
                         name="profilePic"
-                        value={values?.profilePic}
-                        onChange={(file: File | string) => {
-                            setPreview(file);
-                            setFieldValue('profilePic', file)
-                        }}
-                        preview={preview}
-                        component={CustomProfileInput}
+                        radius="full"
+                        mode="profile"
+                        component={CustomFileInput}
                     />
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -233,12 +219,9 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                     <Field
                         label="Image"
                         name="image"
-                        onChange={(file: File | string) => {
-                            setImagePreview(file);
-                            setFieldValue('image', file)
-                        }}
-                        preview={imagePreview}
-                        component={CustomDropzoneInput}
+                        size="sm"
+                        mode="dropzone"
+                        component={CustomFileInput}
                     />
 
                     <Field
@@ -246,7 +229,9 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                         deleteName="imageToDelete"
                         imageArray={user?.images ?? []}
                         label="Images"
-                        component={ImageUploader}
+                        size="sm"
+                        mode="multi"
+                        component={CustomFileInput}
                     />
 
                     {/* Technologies Stack (CustomSelect - multi select) */}

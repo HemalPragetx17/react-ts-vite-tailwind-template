@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/button/CustomButton";
-import CustomChip from "../../components/chip/CustomChip";
 import CustomModal from "../../components/modal/CustomModal";
 import CustomPopover from "../../components/popover/CustomPopover";
 import CustomTabs from "../../components/tabs/CustomTabs";
@@ -187,87 +186,6 @@ const Dashboard = () => {
           activeKey={activeTab}
           onChange={setActiveTab}
         />
-      </div>
-
-      <div className="mt-8 space-y-6">
-        <div className="bg-white dark:bg-neutral-800 p-6 rounded-xl border border-neutral-200 dark:border-neutral-700/60 shadow-sm">
-          <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">Custom Chip Variants</h3>
-          <div className="flex flex-wrap gap-3">
-            <CustomChip variant="solid" color="warning">Solid</CustomChip>
-            <CustomChip variant="bordered" color="warning">Bordered</CustomChip>
-            <CustomChip variant="light" color="warning">Light</CustomChip>
-            <CustomChip variant="flat" color="warning">Flat</CustomChip>
-            <CustomChip variant="faded" color="warning">Faded</CustomChip>
-            <CustomChip variant="shadow" color="warning">Shadow</CustomChip>
-            <CustomChip variant="dot" color="warning">Dot</CustomChip>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-neutral-800 p-6 rounded-xl border border-neutral-200 dark:border-neutral-700/60 shadow-sm">
-          <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">Chip Colors</h3>
-          <div className="flex flex-wrap gap-3">
-            <CustomChip color="default">Default</CustomChip>
-            <CustomChip color="primary">Primary</CustomChip>
-            <CustomChip color="secondary">Secondary</CustomChip>
-            <CustomChip color="success">Success</CustomChip>
-            <CustomChip color="warning">Warning</CustomChip>
-            <CustomChip color="danger">Danger</CustomChip>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-neutral-800 p-6 rounded-xl border border-neutral-200 dark:border-neutral-700/60 shadow-sm">
-          <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">Chip Sizes & Radius</h3>
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-wrap items-center gap-3">
-              <CustomChip size="sm">Small</CustomChip>
-              <CustomChip size="md">Medium</CustomChip>
-              <CustomChip size="lg">Large</CustomChip>
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <CustomChip radius="none">None</CustomChip>
-              <CustomChip radius="sm">Small</CustomChip>
-              <CustomChip radius="md">Medium</CustomChip>
-              <CustomChip radius="lg">Large</CustomChip>
-              <CustomChip radius="full">Full</CustomChip>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-neutral-800 p-6 rounded-xl border border-neutral-200 dark:border-neutral-700/60 shadow-sm">
-          <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">Chip with Content & Close</h3>
-          <div className="flex flex-wrap gap-3">
-            <CustomChip 
-              color="success" 
-              variant="flat"
-              startContent={
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              }
-            >
-              Completed
-            </CustomChip>
-            <CustomChip 
-              color="primary" 
-              variant="flat"
-              endContent={
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-              }
-            >
-              Notifications
-            </CustomChip>
-            <CustomChip 
-              color="danger" 
-              variant="bordered"
-              onClose={() => console.log("Close clicked")}
-            >
-              Removable
-            </CustomChip>
-            <CustomChip isDisabled>Disabled Chip</CustomChip>
-          </div>
-        </div>
       </div>
 
       <CustomModal

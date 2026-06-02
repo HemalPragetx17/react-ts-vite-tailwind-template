@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useId } from "react";
 import type { FieldInputProps, FormikErrors, FormikTouched } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -163,15 +163,17 @@ export const CheckAtom: React.FC<CheckAtomProps> = ({
 }) => {
   const sc = sizeMap[size];
   const isActive = isIndeterminate || checked;
+  const generatedId = useId();
+  const inputId = id || generatedId;
 
   return (
     <label
-      htmlFor={id}
+      htmlFor={inputId}
       className={`relative inline-flex items-start gap-2.5 cursor-pointer group select-none ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
     >
       {/* Hidden native input */}
       <input
-        id={id}
+        id={inputId}
         name={name}
         type="checkbox"
         checked={checked}
@@ -182,35 +184,33 @@ export const CheckAtom: React.FC<CheckAtomProps> = ({
       />
 
       {/* Custom box */}
-      <motion.span
+      <span
         className={`
           relative mt-0.5 flex items-center justify-center shrink-0 border-2 transition-colors duration-200
           ${sc.box}
           ${radiusMap[radius]}
-          ${isActive ? `${bgColorMap[color]} border-transparent` : `border-neutral-300 dark:border-neutral-600 bg-transparent`}
+          ${isActive ? `${bgColorMap[color]} ${borderColorMap[color]}` : `border-neutral-300 dark:border-neutral-600 bg-transparent`}
         `}
-        animate={{ scale: isActive ? [1, 0.88, 1] : 1 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
       >
         <AnimatePresence mode="wait">
           {isIndeterminate ? (
-            <motion.span key="dash">
+            <motion.span key="dash" className="absolute inset-0 flex items-center justify-center">
               {icon ?? <DashIcon size={sc.icon} />}
             </motion.span>
           ) : checked ? (
-            <motion.span key="check">
+            <motion.span key="check" className="absolute inset-0 flex items-center justify-center">
               {icon ?? <CheckIcon size={sc.icon} />}
             </motion.span>
           ) : null}
         </AnimatePresence>
-      </motion.span>
+      </span>
 
       {/* Label */}
       {(label || description) && (
-        <span className="flex flex-col leading-tight mt-[1px]">
+        <span className="flex flex-col leading-tight mt-[1.5px]">
           {label && (
             <span
-              className={`font-medium text-neutral-700 dark:text-neutral-300 transition-all duration-200 ${sc.text} ${
+              className={`font-medium text-neutral-700 dark:text-neutral-300 transition-colors transition-opacity duration-200 ${sc.text} ${
                 lineThrough && checked ? "line-through opacity-60" : ""
               } ${labelClassName}`}
             >

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import DatePicker from "react-datepicker";
-import type { FieldProps } from "formik";
+import type { FieldInputProps, FormikErrors, FormikTouched } from "formik";
 import {
   motion,
   AnimatePresence,
@@ -25,9 +26,9 @@ type PickerColor =
   | "success"
   | "warning"
   | "danger";
-type PickerLabelPlacement = "inside" | "outside" | "outside-left";
+type PickerLabelPlacement = "inside" | "outside" | "outside-left" | "outside-top";
 
-export interface CustomDatePickerProps extends Partial<FieldProps> {
+export interface CustomDatePickerProps {
   label?: string;
   placeholder?: string;
   selectsRange?: boolean;
@@ -54,55 +55,31 @@ export interface CustomDatePickerProps extends Partial<FieldProps> {
   labelClassName?: string;
   errorClassName?: string;
   enableMonthYearPicker?: boolean;
+
+  // Formik integration
+  field?: FieldInputProps<any>;
+  form?: {
+    values: any;
+    errors: FormikErrors<any>;
+    touched: FormikTouched<any>;
+    setFieldValue?: (field: string, value: any, shouldValidate?: boolean) => void;
+    setFieldTouched?: (field: string, isTouched?: boolean, shouldValidate?: boolean) => void;
+    setValues?: (values: any, shouldValidate?: boolean) => void;
+  };
 }
 
 /* -------------------------------------------------------------------------- */
 /*                              Tokens & Helpers                              */
 /* -------------------------------------------------------------------------- */
 
-const sizeTokens: Record<
-  PickerSize,
-  {
-    minH: string;
-    textSize: string;
-    labelSize: string;
-    ptInside: string;
-    pb: string;
-    px: string;
-  }
-> = {
-  sm: {
-    minH: "min-h-[36px]",
-    textSize: "text-xs",
-    labelSize: "text-[10px]",
-    ptInside: "pt-4",
-    pb: "",
-    px: "px-2.5",
-  },
-  md: {
-    minH: "min-h-[44px]",
-    textSize: "text-sm",
-    labelSize: "text-xs",
-    ptInside: "pt-5",
-    pb: "",
-    px: "px-3",
-  },
-  lg: {
-    minH: "min-h-[52px]",
-    textSize: "text-base",
-    labelSize: "text-sm",
-    ptInside: "pt-6",
-    pb: "",
-    px: "px-4",
-  },
-};
+
 
 const variantBase: Record<PickerVariant, string> = {
   flat: "bg-secondary-100 border-2 border-transparent hover:bg-secondary-200 ",
   bordered:
     "bg-transparent border-2 border-secondary-300 hover:border-secondary-400 ",
   underlined:
-    "bg-transparent border-b-2 border-secondary-300 hover:border-secondary-500 rounded-none",
+    "bg-transparent border-b-2 border-transparent rounded-none",
   faded:
     "bg-secondary-50 border-2 border-secondary-200 hover:border-secondary-300",
 };
@@ -388,7 +365,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   field,
   form,
   label,
-  placeholder = "Select Date",
+  placeholder,
   selectsRange = false,
   isClearable = false,
   disabled = false,
@@ -402,6 +379,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   variant = "bordered",
   size = "md",
   radius = "md",
+  color = "primary",
   labelPlacement = "outside",
 
   containerClassName = "",
@@ -412,6 +390,54 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const calendarRef = useRef<HTMLDivElement>(null);
+  const [dropdownCoords, setDropdownCoords] = useState<{
+    top: number | "auto";
+    bottom: number | "auto";
+    left: number;
+    position: "top" | "bottom";
+  } | null>(null);
+
+  const updateCoords = useCallback(() => {
+    if (!wrapperRef.current) return;
+    const rect = wrapperRef.current.getBoundingClientRect();
+    
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const dropdownHeight = 370; // standard calendar height + margin
+    
+    let top: number | "auto" = 0;
+    let bottom: number | "auto" = "auto";
+    let position: "top" | "bottom" = "bottom";
+    
+    if (spaceBelow < dropdownHeight && rect.top > spaceBelow) {
+      top = "auto";
+      bottom = window.innerHeight - rect.top - 16;
+      position = "top";
+    } else {
+      top = rect.bottom + 6;
+      bottom = "auto";
+      position = "bottom";
+    }
+    
+    setDropdownCoords({
+      top,
+      bottom,
+      left: rect.left,
+      position,
+    });
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      updateCoords();
+      window.addEventListener("scroll", updateCoords, true);
+      window.addEventListener("resize", updateCoords);
+      return () => {
+        window.removeEventListener("scroll", updateCoords, true);
+        window.removeEventListener("resize", updateCoords);
+      };
+    }
+  }, [isOpen, updateCoords]);
 
   // Field Name extraction
   const fieldName = field?.name || "";
@@ -446,6 +472,54 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   const displayString = selectsRange
     ? formatDisplayRange(startDate, endDate)
     : formatDateDisplay(startDate);
+
+  const isFloating = labelPlacement === "inside" || labelPlacement === "outside";
+  const shouldFloat = isOpen || hasValue || (isFloating && !!placeholder);
+  const resolvedPlaceholder = placeholder || (isFloating ? "" : "Select Date");
+
+  const sizeConfigs = {
+    sm: {
+      wrapperPadding: labelPlacement === "inside" && label ? "py-1 px-2.5" : "py-1.5 px-2.5",
+      textSize: "text-xs",
+      labelSize: "text-[10px]",
+      insideHeight: "h-12",
+      floatY: labelPlacement === "inside" && label ? -20 : -10,
+      floatX: labelPlacement === "inside" && label ? -2 : 0,
+      initialY: -8,
+      initialX: -1,
+      floatYOutside: -42,
+      floatXOutside: -14,
+      floatScale: 0.83,
+    },
+    md: {
+      wrapperPadding: labelPlacement === "inside" && label ? "py-1.5 px-3" : "py-2.5 px-3",
+      textSize: "text-sm",
+      labelSize: "text-xs",
+      insideHeight: "h-14",
+      floatY: labelPlacement === "inside" && label ? -23 : -12,
+      floatX: labelPlacement === "inside" && label ? 0 : 0,
+      initialY: -10,
+      initialX: 1,
+      floatYOutside: -47,
+      floatXOutside: -14,
+      floatScale: 0.85,
+    },
+    lg: {
+      wrapperPadding: labelPlacement === "inside" && label ? "py-2 px-4" : "py-3.5 px-4",
+      textSize: "text-base",
+      labelSize: "text-sm",
+      insideHeight: "h-16",
+      floatY: labelPlacement === "inside" && label ? -26 : -14,
+      floatX: labelPlacement === "inside" && label ? 4 : 0,
+      initialY: -12,
+      initialX: 5,
+      floatYOutside: -55,
+      floatXOutside: -14,
+      floatScale: 0.87,
+    },
+  };
+
+  const sz = sizeConfigs[size] || sizeConfigs.md;
 
   // Determine Formik errors / touched state safely
   const startError =
@@ -484,9 +558,12 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   // Click outside listener
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
+      const target = e.target as Node;
       if (
         wrapperRef.current &&
-        !wrapperRef.current.contains(e.target as Node)
+        !wrapperRef.current.contains(target) &&
+        calendarRef.current &&
+        !calendarRef.current.contains(target)
       ) {
         if (isOpen) {
           setIsOpen(false);
@@ -619,28 +696,24 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     }
   };
 
-  const sz = sizeTokens[size];
   const variantClass = variantBase[variant];
   const radiusClass =
     variant === "underlined" ? "rounded-none" : radiusMap[radius];
 
-  const isInside = labelPlacement === "inside";
   const isOutsideLeft = labelPlacement === "outside-left";
-  const isLabelActive = isOpen || hasValue;
-
-  const insideLabelVariants = {
-    default: { top: "50%", y: "-50%", scale: 1 },
-    active: { top: "0.3rem", y: "0%", scale: 0.82 },
-  };
 
   const renderOutsideLabel = () => {
-    if (!label || isInside) return null;
+    if (!label || isFloating) return null;
     return (
       <label
         htmlFor={fieldName}
-        className={`block font-medium text-secondary-700 select-none ${
+        className={`block font-medium select-none transition-colors duration-200 ${
           isOutsideLeft ? "shrink-0 mb-0" : "mb-1.5"
-        } ${sz.labelSize} ${labelClassName}`}
+        } ${sz.labelSize} ${labelClassName} ${
+          isOpen
+            ? "text-[var(--color-primary,#2196f3)]"
+            : "text-neutral-700 dark:text-neutral-300"
+        }`}
       >
         {label}
       </label>
@@ -928,9 +1001,8 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             relative flex items-center justify-between w-full transition-all duration-200 ease-in-out cursor-pointer select-none box-border
             ${variantClass}
             ${radiusClass}
-            ${sz.minH}
-            ${sz.px}
-            ${isInside && label ? sz.ptInside : ""}
+            ${sz.wrapperPadding}
+            ${labelPlacement === "inside" ? sz.insideHeight : (isFloating && label ? "mt-6" : "")}
             ${hasError ? "!border-danger" : ""}
             ${
               isOpen && !hasError
@@ -943,35 +1015,73 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
           `}
           onClick={() => !disabled && setIsOpen((prev) => !prev)}
         >
-          {/* Inside floating label */}
-          {isInside && label && (
+          {/* Floating Label */}
+          {isFloating && label && (
             <motion.label
-              className={`absolute left-0 ${sz.px} font-medium text-secondary-500 select-none origin-top-left pointer-events-none whitespace-nowrap z-10 ${sz.labelSize} ${labelClassName}`}
-              variants={insideLabelVariants}
-              initial={isLabelActive ? "active" : "default"}
-              animate={isLabelActive ? "active" : "default"}
+              htmlFor={fieldName}
+              initial={false}
+              animate={{
+                y: shouldFloat 
+                  ? (labelPlacement === "inside" ? sz.floatY : sz.floatYOutside) 
+                  : sz.initialY,
+                x: shouldFloat 
+                  ? (labelPlacement === "inside" ? sz.floatX : sz.floatXOutside) 
+                  : sz.initialX,
+                scale: shouldFloat ? sz.floatScale : 1,
+              }}
               transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
-              style={{ transformOrigin: "top left" }}
+              className={`
+                absolute left-3 top-1/2 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
+                ${sz.textSize} ${labelClassName} ${
+                  shouldFloat
+                    ? isOpen
+                      ? "text-[var(--color-primary,#2196f3)]"
+                      : "text-neutral-700 dark:text-neutral-300"
+                    : "text-neutral-400 dark:text-neutral-500"
+                }
+              `}
             >
               {label}
             </motion.label>
           )}
 
-          {/* Value Display */}
-          <div className="flex-1 min-w-0 truncate pr-2">
-            {!displayString ? (
+          {/* Central Stack: Label + Value */}
+          <div 
+            className={`
+              flex flex-col flex-1 min-w-0 justify-center
+              ${labelPlacement === "inside" && isFloating && shouldFloat ? (size === "sm" ? "mt-3" : size === "lg" ? "mt-5" : "mt-4") : ""}
+            `}
+          >
+            {labelPlacement === "inside" && !isFloating && label && (
               <span
-                className={`text-secondary truncate select-none ${sz.textSize}`}
+                className={`
+                  block font-medium select-none mb-0.5 text-secondary-500
+                  ${sz.labelSize} ${labelClassName}
+                `}
               >
-                {isInside ? (isLabelActive ? placeholder : "") : placeholder}
-              </span>
-            ) : (
-              <span
-                className={`text-secondary-800 font-medium truncate select-none ${sz.textSize}`}
-              >
-                {displayString}
+                {label}
               </span>
             )}
+
+            <div
+              className={`
+                flex-1 min-w-0 truncate pr-2
+              `}
+            >
+              {!displayString ? (
+                <span
+                  className={`text-secondary truncate select-none ${sz.textSize}`}
+                >
+                  {((!isFloating || shouldFloat) && resolvedPlaceholder) ? resolvedPlaceholder : "\u200b"}
+                </span>
+              ) : (
+                <span
+                  className={`text-secondary-800 font-medium truncate select-none ${sz.textSize}`}
+                >
+                  {displayString}
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Action icon: Clear or Calendar */}
@@ -984,29 +1094,74 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
           </div>
 
           {/* Dropdown Calendar Portal Wrapper */}
-          {isOpen && !disabled && (
-            <div
-              className="absolute left-0 top-[calc(100%+6px)] z-50 bg-background border border-secondary-200 rounded-xl shadow-xl overflow-hidden"
-              style={{ width: 256 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <DatePicker
-                {...({
-                  selected: startDate,
-                  onChange: handleDateChange,
-                  startDate: startDate,
-                  endDate: endDate,
-                  selectsRange: selectsRange,
-                  shouldCloseOnSelect: false,
-                  inline: true,
-                  calendarClassName:
-                    "drp-calendar !border-none !rounded-xl !shadow-none",
-                  dayClassName: getDayClass,
-                  renderCustomHeader: renderHeader,
-                  fixedHeight: true,
-                } as any)}
-              />
-            </div>
+          {createPortal(
+            <AnimatePresence>
+              {isOpen && !disabled && dropdownCoords && (
+                <motion.div
+                  ref={calendarRef}
+                  initial={{
+                    opacity: 0,
+                    y: dropdownCoords.position === "bottom" ? -10 : 10,
+                    scale: 0.97,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                  }}
+                  exit={{
+                    opacity: 0,
+                    y: dropdownCoords.position === "bottom" ? -10 : 10,
+                    scale: 0.97,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 28,
+                  }}
+                  className={`fixed z-[99999] bg-background border border-secondary-200 rounded-xl shadow-xl overflow-hidden drp-calendar-wrapper--${color}`}
+                  style={{
+                    width: 256,
+                    height: 325,
+                    top: dropdownCoords.top,
+                    bottom: dropdownCoords.bottom,
+                    left: dropdownCoords.left,
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <DatePicker
+                    {...({
+                      selected: startDate,
+                      onChange: handleDateChange,
+                      startDate: startDate,
+                      endDate: endDate,
+                      selectsRange: selectsRange,
+                      shouldCloseOnSelect: false,
+                      inline: true,
+                      calendarClassName:
+                        "drp-calendar !border-none !rounded-xl !shadow-none",
+                      dayClassName: getDayClass,
+                      renderCustomHeader: renderHeader,
+                      fixedHeight: true,
+                    } as any)}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>,
+            document.body
+          )}
+
+          {/* Underline Animation for Underlined Variant */}
+          {variant === "underlined" && (
+            <motion.div
+              className={`absolute bottom-[-2px] left-0 right-0 h-[2px] z-20 ${
+                hasError ? "bg-danger" : "bg-secondary-800"
+              }`}
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: isOpen ? 1 : 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              style={{ originX: 0.5 }}
+            />
           )}
         </div>
       </div>

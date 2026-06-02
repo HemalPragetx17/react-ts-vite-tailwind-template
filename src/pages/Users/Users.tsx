@@ -330,7 +330,7 @@ const Users = () => {
         openDialog={openDialog}
         handleDialogClose={handleDialogClose}
         title="Add New User"
-        size="2xl"
+        size="lg"
         backdrop="blur"
         scrollBehavior="inside"
       >

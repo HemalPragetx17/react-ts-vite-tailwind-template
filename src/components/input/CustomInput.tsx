@@ -9,8 +9,6 @@ interface CustomInputProps
   label?: string;
   error?: string;
   touched?: boolean;
-  startIcon?: React.ReactNode;
-  endIcon?: React.ReactNode;
   startContent?: React.ReactNode;
   endContent?: React.ReactNode;
   containerClassName?: string;
@@ -41,8 +39,6 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) 
     label,
     error,
     touched,
-    startIcon,
-    endIcon,
     startContent,
     endContent,
     containerClassName = "",
@@ -61,15 +57,41 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) 
     form,
     value,
     onChange,
+    onFocus,
+    onBlur,
+    placeholder,
+    disabled = false,
     ...restProps
   } = props;
   const [showPassword, setShowPassword] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [internalValue, setInternalValue] = useState("");
 
-  // Prioritize explicitly passed value prop, fallback to Formik field value
-  const inputValue = value !== undefined ? value : (field?.value ?? "");
+  // Determine if the component is controlled (either via value prop or Formik field)
+  const isControlled = value !== undefined || field !== undefined;
+  
+  // Prioritize explicitly passed value prop, fallback to Formik field value, then internal state
+  const inputValue = isControlled 
+    ? (value !== undefined ? value : (field?.value ?? "")) 
+    : internalValue;
+    
   const hasValue = String(inputValue).length > 0;
 
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    setIsFocused(true);
+    if (onFocus) onFocus(e);
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setIsFocused(false);
+    if (onBlur) onBlur(e);
+    if (field?.onBlur) field.onBlur(e);
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isControlled) {
+      setInternalValue(e.target.value);
+    }
     if (onChange) {
       onChange(e);
     }
@@ -123,16 +145,37 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) 
       wrapperPadding: labelPlacement === "inside" && label ? "py-1 px-2.5" : "py-1.5 px-2.5",
       textSize: "text-xs",
       labelSize: "text-[10px]",
+      insideHeight: "h-12",
+      floatY: labelPlacement === "inside" && label ? -20 : -10,
+      floatX: labelPlacement === "inside" && label ? -3 : 0,
+      initialY: -8,
+      floatYOutside: -41,
+      floatXOutside: -14,
+      floatScale: 0.83,
     },
     md: {
       wrapperPadding: labelPlacement === "inside" && label ? "py-1.5 px-3" : "py-2.5 px-3",
       textSize: "text-sm",
       labelSize: "text-xs",
+      insideHeight: "h-14",
+      floatY: labelPlacement === "inside" && label ? -23 : -12,
+      floatX: labelPlacement === "inside" && label ? 0 : 0,
+      initialY: -10,
+      floatYOutside: -47,
+      floatXOutside: -14,
+      floatScale: 0.85,
     },
     lg: {
       wrapperPadding: labelPlacement === "inside" && label ? "py-2 px-4" : "py-3.5 px-4",
       textSize: "text-base",
       labelSize: "text-sm",
+      insideHeight: "h-16",
+      floatY: labelPlacement === "inside" && label ? -26 : -14,
+      floatX: labelPlacement === "inside" && label ? 3 : 0,
+      initialY: -12,
+      floatYOutside: -54,
+      floatXOutside: -14,
+      floatScale: 0.87,
     },
   };
 
@@ -140,7 +183,7 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) 
   const variantConfigs = {
     flat: "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus-within:bg-neutral-200 dark:focus-within:bg-neutral-700 border-2 border-transparent",
     bordered: "bg-transparent border-2 border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 focus-within:border-neutral-800 dark:focus-within:border-neutral-200",
-    underlined: "bg-transparent border-b-2 border-neutral-300 dark:border-neutral-700 hover:border-neutral-500 focus-within:border-neutral-800 dark:focus-within:border-neutral-200 rounded-none",
+    underlined: "bg-transparent border-b-2 border-transparent rounded-none relative",
     faded: "bg-neutral-50 dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 focus-within:border-neutral-600",
   };
 
@@ -158,17 +201,24 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) 
   const currentRadiusClass = variant === "underlined" ? "rounded-none" : (radiusConfigs[radius] || radiusConfigs.md);
 
   // Fallback map for start/end content maintaining backwards compatibility
-  const actualStartContent = startContent || startIcon;
-  const actualEndContent = endContent || endIcon;
+  const actualStartContent = startContent;
+  const actualEndContent = endContent;
+
+  const isFloating = labelPlacement === "inside" || labelPlacement === "outside";
+  const shouldFloat = isFocused || hasValue || (isFloating && !!placeholder);
 
   // Render Label Helper
   const renderExternalLabel = () => {
-    if (!label || labelPlacement === "inside") return null;
+    if (!label || isFloating) return null;
     return (
       <label
         htmlFor={field?.name || props.id || props.name}
-        className={`block font-medium text-neutral-700 dark:text-neutral-300 select-none ${labelPlacement === "outside-left" ? "mb-0 shrink-0" : "mb-1.5"
-          } ${currentSize.labelSize} ${labelClassName}`}
+        className={`block font-medium select-none transition-colors duration-200 ${labelPlacement === "outside-left" ? "mb-0 shrink-0" : "mb-1.5"
+          } ${currentSize.labelSize} ${labelClassName} ${
+          isFocused 
+            ? "text-[var(--color-primary,#2196f3)]" 
+            : "text-neutral-700 dark:text-neutral-300"
+        }`}
       >
         {label}
       </label>
@@ -177,8 +227,10 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) 
 
   const isOutsideLeft = labelPlacement === "outside-left";
 
+  const resolvedPlaceholder = placeholder || "";
+
   return (
-    <div className={`w-full ${containerClassName}`}>
+    <div className={`w-full flow-root ${containerClassName}`}>
       {/* Outer Layout Strategy based on labelPlacement */}
       <div className={`${isOutsideLeft ? "flex items-center gap-3 w-full" : "w-full"}`}>
         {/* Render external label if outside or outside-left/top */}
@@ -192,8 +244,40 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) 
             ${currentRadiusClass}
             ${currentSize.wrapperPadding}
             ${fieldTouched && fieldError ? "!border-red-500 dark:!border-red-500" : ""}
+            ${labelPlacement === "inside" ? currentSize.insideHeight : (isFloating && label ? "mt-6" : "")}
+            ${disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}
           `}
         >
+          {/* Floating Label */}
+          {isFloating && label && (
+            <motion.label
+              htmlFor={field?.name || props.id || props.name}
+              initial={false}
+              animate={{
+                y: shouldFloat 
+                  ? (labelPlacement === "inside" ? currentSize.floatY : currentSize.floatYOutside) 
+                  : currentSize.initialY,
+                x: shouldFloat 
+                  ? (labelPlacement === "inside" ? currentSize.floatX : currentSize.floatXOutside) 
+                  : (actualStartContent ? 32 : 0),
+                scale: shouldFloat ? currentSize.floatScale : 1,
+              }}
+              transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
+              className={`
+                absolute left-3 top-1/2 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
+                ${currentSize.textSize} ${labelClassName} ${
+                  shouldFloat
+                    ? isFocused
+                      ? "text-[var(--color-primary,#2196f3)]"
+                      : "text-neutral-700 dark:text-neutral-300"
+                    : "text-neutral-400 dark:text-neutral-500"
+                }
+              `}
+            >
+              {label}
+            </motion.label>
+          )}
+
           {/* Start Content / Icon */}
           {actualStartContent && (
             <div className="flex items-center justify-center shrink-0 text-neutral-500">
@@ -201,24 +285,16 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) 
             </div>
           )}
 
-          {/* Central Stack: Label (Inside) + Input */}
+          {/* Central Stack: Input */}
           <div className="flex flex-col flex-1 min-w-0 justify-center">
-            {labelPlacement === "inside" && label && (
-              <label
-                htmlFor={field?.name || props.id || props.name}
-                className={`font-medium text-neutral-500 dark:text-neutral-400 select-none block truncate cursor-text ${currentSize.labelSize} ${labelClassName}`}
-              >
-                {label}
-              </label>
-            )}
-
             <input
               {...restProps}
               id={field?.name || props.id || props.name}
               name={field?.name || props.name}
               value={inputValue}
               onChange={handleChange}
-              onBlur={field?.onBlur || props.onBlur}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
               onWheel={(e) => {
                 if (type === "number") {
                   (e.target as HTMLInputElement).blur();
@@ -226,17 +302,20 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) 
               }}
               ref={ref}
               type={inputType}
+              placeholder={!isFloating || shouldFloat ? resolvedPlaceholder : ""}
+              disabled={disabled}
               className={`
                 w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0 p-0
                 text-neutral-800 dark:text-neutral-100 placeholder-neutral-400
                 ${currentSize.textSize}
+                ${labelPlacement === "inside" && isFloating && shouldFloat ? (size === "sm" ? "mt-3" : size === "lg" ? "mt-5" : "mt-4") : ""}
                 ${inputClassName}
               `}
             />
           </div>
 
           {/* Clear Button */}
-          {isClearable && hasValue && (
+          {isClearable && hasValue && !disabled && (
             <button
               type="button"
               onClick={handleClear}
@@ -254,7 +333,8 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) 
           {isPassword && isPasswordToggle ? (
             <button
               type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
+              disabled={disabled}
+              onClick={() => !disabled && setShowPassword((prev) => !prev)}
               tabIndex={-1}
               aria-label={showPassword ? "Hide password" : "Show password"}
               className="flex items-center justify-center shrink-0 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 transition"
@@ -271,6 +351,17 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) 
                 {actualEndContent}
               </div>
             )
+          )}
+
+          {/* Underline Animation for Underlined Variant */}
+          {variant === "underlined" && (
+            <motion.div
+              className="absolute bottom-[-2px] left-0 right-0 h-[2px] bg-neutral-800 dark:bg-neutral-200 z-20"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: isFocused ? 1 : 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              style={{ originX: 0.5 }}
+            />
           )}
         </div>
       </div>

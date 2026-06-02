@@ -34,9 +34,13 @@ export interface BreadcrumbsProps {
      * @default "md"
      */
     radius?: "none" | "sm" | "md" | "lg" | "full";
+    /**
+     * Optional static items to display. If provided, dynamic generation from path is skipped.
+     */
+    items?: BreadcrumbItem[];
 }
 
-interface BreadcrumbItem {
+export interface BreadcrumbItem {
     label: string;
     path: string;
     isLast: boolean;
@@ -49,6 +53,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
     variant = "light",
     underline = "hover",
     radius = "md",
+    items: staticItems,
 }) => {
     const { pathname } = useLocation();
 
@@ -58,118 +63,123 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
     }
 
     // Do not show breadcrumbs on auth pages (if they somehow use MainLayout) or home root
-    if (pathname === Routing.Login || pathname === Routing.ForgotPassword || pathname === "/") {
+    if (!staticItems && (pathname === Routing.Login || pathname === Routing.ForgotPassword || pathname === "/")) {
         return null;
     }
 
     // Build the items list dynamically
-    const items: BreadcrumbItem[] = [];
+    const items: BreadcrumbItem[] = staticItems ? [...staticItems] : [];
 
-    // Always start with "Home" linking to Dashboard
-    items.push({
-        label: "Home",
-        path: Routing.Dashboard,
-        isLast: pathname === Routing.Dashboard,
-        isClickable: pathname !== Routing.Dashboard,
-    });
+    if (!staticItems) {
+        // Always start with "Home" linking to Dashboard
+        items.push({
+            label: "Home",
+            path: Routing.Dashboard,
+            isLast: pathname === Routing.Dashboard,
+            isClickable: pathname !== Routing.Dashboard,
+        });
 
-    // Helper to format string to Clean Title Case (e.g. "sub-category" -> "Sub Category")
-    const formatSegmentLabel = (segment: string): string => {
-        return segment
-            .split("-")
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
-    };
+        // Helper to format string to Clean Title Case (e.g. "sub-category" -> "Sub Category")
+        const formatSegmentLabel = (segment: string): string => {
+            return segment
+                .split("-")
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(" ");
+        };
 
-    // Find the current route in sidebarRoutes dynamically to build hierarchy
-    let foundInSidebar = false;
+        // Find the current route in sidebarRoutes dynamically to build hierarchy
+        let foundInSidebar = false;
 
-    for (const menu of sidebarRoutes) {
-        if (menu.route === pathname) {
-            if (menu.route !== Routing.Dashboard) {
-                items.push({
-                    label: menu.name,
-                    path: menu.route,
-                    isLast: true,
-                    isClickable: false,
-                });
-            }
-            foundInSidebar = true;
-            break;
-        }
-
-        if (menu.childs) {
-            const child = menu.childs.find((c) => c.route === pathname);
-            if (child) {
-                // Found as a child under menu (e.g. Master)
-                items.push({
-                    label: menu.name,
-                    path: menu.route || "",
-                    isLast: false,
-                    isClickable: !!menu.route && menu.route !== pathname && (!menu.childs || menu.childs.length === 0),
-                });
-                items.push({
-                    label: child.name,
-                    path: child.route,
-                    isLast: true,
-                    isClickable: false,
-                });
+        for (const menu of sidebarRoutes) {
+            if (menu.route === pathname) {
+                if (menu.route !== Routing.Dashboard) {
+                    items.push({
+                        label: menu.name,
+                        path: menu.route,
+                        isLast: true,
+                        isClickable: false,
+                    });
+                }
                 foundInSidebar = true;
                 break;
             }
-        }
-    }
 
-    // Fallback: Dynamically generate from path segments if not registered in sidebar (e.g. /dashboard/demo-form)
-    if (!foundInSidebar) {
-        const prefix = import.meta.env.VITE_PATH_PREFIX || "";
-        const cleanPrefix = prefix.replace(/^\/|\/$/g, "");
-        const segments = pathname
-            .split("/")
-            .filter(Boolean)
-            .filter((seg) => seg !== cleanPrefix);
-
-        let accumulatedPath = prefix.endsWith("/") ? prefix.slice(0, -1) : prefix;
-
-        segments.forEach((segment, idx) => {
-            accumulatedPath += `/${segment}`;
-
-            // Skip adding "Dashboard" segment if Home already exists
-            if (segment.toLowerCase() === "dashboard") {
-                return;
+            if (menu.childs) {
+                const child = menu.childs.find((c) => c.route === pathname);
+                if (child) {
+                    // Found as a child under menu (e.g. Master)
+                    items.push({
+                        label: menu.name,
+                        path: menu.route || "",
+                        isLast: false,
+                        isClickable: !!menu.route && menu.route !== pathname && (!menu.childs || menu.childs.length === 0),
+                    });
+                    items.push({
+                        label: child.name,
+                        path: child.route,
+                        isLast: true,
+                        isClickable: false,
+                    });
+                    foundInSidebar = true;
+                    break;
+                }
             }
+        }
 
-            const label = formatSegmentLabel(segment);
-            const isLast = idx === segments.length - 1;
+        // Fallback: Dynamically generate from path segments if not registered in sidebar (e.g. /dashboard/demo-form)
+        if (!foundInSidebar) {
+            const prefix = import.meta.env.VITE_PATH_PREFIX || "";
+            const cleanPrefix = prefix.replace(/^\/|\/$/g, "");
+            const segments = pathname
+                .split("/")
+                .filter(Boolean)
+                .filter((seg) => seg !== cleanPrefix);
 
-            items.push({
-                label,
-                path: accumulatedPath,
-                isLast,
-                isClickable: !isLast,
+            let accumulatedPath = prefix.endsWith("/") ? prefix.slice(0, -1) : prefix;
+
+            segments.forEach((segment, idx) => {
+                accumulatedPath += `/${segment}`;
+
+                // Skip adding "Dashboard" segment if Home already exists
+                if (segment.toLowerCase() === "dashboard") {
+                    return;
+                }
+
+                const label = formatSegmentLabel(segment);
+                const isLast = idx === segments.length - 1;
+
+                items.push({
+                    label,
+                    path: accumulatedPath,
+                    isLast,
+                    isClickable: !isLast,
+                });
             });
-        });
+        }
     }
 
     // ── Style Mappings ──
 
     const sizeClasses = {
         sm: {
-            container: "text-xs py-1 gap-1",
+            container: "text-xs px-1.5 py-1 gap-1",
             list: "space-x-1",
-            separator: "h-3.5 w-3.5 mx-1.5",
+            separator: "h-3 w-3 mx-1",
+            strokeWidth: 2,
             icon: "w-3 h-3 mr-1",
         },
         md: {
-            container: "text-sm py-1.5 gap-1.5",
+            container: "text-sm px-2 py-1.5 gap-1.5",
             list: "space-x-1.5",
-            separator: "h-4 w-4 mx-2",
+            separator: "h-3.5 w-3.5 mx-1.5",
+            strokeWidth: 2,
             icon: "w-3.5 h-3.5 mr-1.5",
         },
         lg: {
-            container: "text-base py-2 gap-2",
+            container: "text-base px-2.5 py-2 gap-2",
             list: "space-x-2",
-            separator: "h-4.5 w-4.5 mx-2.5",
+            separator: "h-4 w-4 mx-2",
+            strokeWidth: 2,
             icon: "w-4 h-4 mr-2",
         },
     }[size];
@@ -233,7 +243,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
-                                    strokeWidth="2.5"
+                                    strokeWidth={sizeClasses.strokeWidth}
                                 >
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                                 </svg>
