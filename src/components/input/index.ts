@@ -1,25 +1,21 @@
-import CustomDatePicker from "./date-picker/CustomDatePicker";
-import CustomFileInput from "./file-input/CustomFileInput";
-import CustomPhoneNumberInput from "./phone-input/CustomPhoneNumberInput";
-import CustomCheckbox from "./CustomCheckbox";
-import CustomCheckboxGroup from "./CustomCheckboxGroup";
-import CustomInput from "./CustomInput";
-import CustomOTPInput from "./CustomOTPInput";
-import CustomRadio from "./CustomRadio";
-import CustomSelect from "./CustomSelect";
-import CustomSwitch from "./CustomSwitch";
-import CustomTextarea from "./CustomTextarea";
+import Checkbox from "./Checkbox";
+import CheckboxGroup from "./CheckboxGroup";
+import DateInput from "./date-input/DateInput";
+import FileInput from "./file-input/FileInput";
+import Input from "./Input";
+import OTPInput from "./OTPInput";
+import PhoneNumberInput from "./phone-input/PhoneNumberInput";
+import Radio from "./Radio";
+import SelectDropdown from "./SelectDropdown";
+import Switch from "./Switch";
+import Textarea from "./Textarea";
 
 export {
-  CustomDatePicker,
-  CustomFileInput,
-  CustomPhoneNumberInput,
-  CustomCheckbox,
-  CustomCheckboxGroup,
-  CustomInput,
-  CustomOTPInput,
-  CustomRadio,
-  CustomSelect,
-  CustomSwitch,
-  CustomTextarea
+  Checkbox,
+  CheckboxGroup, DateInput,
+  FileInput, Input,
+  OTPInput, PhoneNumberInput, Radio, SelectDropdown,
+  Switch,
+  Textarea
 };
+

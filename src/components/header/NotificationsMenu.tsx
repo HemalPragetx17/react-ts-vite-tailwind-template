@@ -1,5 +1,8 @@
-import React from 'react'
-import CustomPopover from '../popover/CustomPopover'
+import React from 'react';
+import { FaBell } from "react-icons/fa";
+import Badge from '../badge/Badge';
+import Button from '../button/Button';
+import Popover from '../popover/Popover';
 
 type NotificationItem = {
   id: number
@@ -50,34 +53,35 @@ const NotificationsMenu: React.FC = () => {
   }
 
   const trigger = (
-    <button
-      type="button"
-      className="relative rounded-full bg-white p-1 text-secondary-400 hover:text-secondary-600 transition-colors duration-200"
-      aria-label="View notifications"
-      aria-haspopup="true"
-      aria-expanded={isOpen}
+    <Badge
+      content={unreadCount}
+      color="primary"
+      size="sm"
+      shape="circle"
+      isInvisible={unreadCount === 0}
     >
-      <span className="sr-only">View notifications</span>
-      <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-      </svg>
-      {unreadCount > 0 && (
-        <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold leading-none text-white">
-          {unreadCount}
-        </span>
-      )}
-    </button>
+      <Button
+        isIconOnly
+        variant="light"
+        color="default"
+        radius="full"
+        size='sm'
+        className="text-secondary-400 hover:text-secondary-600"
+        aria-label="View notifications"
+      >
+        <FaBell className="h-6 w-6" aria-hidden />
+      </Button>
+    </Badge>
   )
 
   return (
-    <CustomPopover
+    <Popover
       trigger={trigger}
       placement="bottom-end"
       isOpen={isOpen}
       onOpenChange={setIsOpen}
       showArrow={true}
       offset={10}
-      color="primary"
       minWidth="20rem"
       className="w-[calc(100vw-90px)] sm:w-80 max-w-[20rem]"
     >
@@ -119,7 +123,7 @@ const NotificationsMenu: React.FC = () => {
           </button>
         ))}
       </div>
-    </CustomPopover>
+    </Popover>
   )
 }
 

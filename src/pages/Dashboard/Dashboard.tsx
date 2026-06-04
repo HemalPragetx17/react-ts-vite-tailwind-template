@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
+import { FaChartSimple, FaFileLines } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import CustomButton from "../../components/button/CustomButton";
-import CustomModal from "../../components/modal/CustomModal";
-import CustomPopover from "../../components/popover/CustomPopover";
-import CustomTabs from "../../components/tabs/CustomTabs";
+import Button from "../../components/button/Button";
+import Modal from "../../components/modal/Modal";
+import Popover from "../../components/popover/Popover";
 import type { IFormModal } from "../../models/dashboard";
 import { Routing } from "../../routes/routing";
 import DemoForm from "./DemoForm";
+import { Tabs, Tab } from "../../components/tabs";
+import { Accordion, AccordionItem } from "../../components/accordion";
+import { HiOutlineSquares2X2 } from "react-icons/hi2";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -20,6 +23,7 @@ const Dashboard = () => {
       name: "Hemal Gondaliya",
       email: "hemalgondaliya.imperoit@gmail.com",
       joiningDate: "2026-05-07",
+      document: "https://umart-production.s3.af-south-1.amazonaws.com/category/categories/1751966524412_5390255224354014.png",
       age: 27,
       gender: "Male",
       technologies: [
@@ -70,23 +74,9 @@ const Dashboard = () => {
     navigate(Routing.DemoFormPage);
   };
 
-  const overviewIcon = (
-    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-    </svg>
-  );
-
-  const analyticsIcon = (
-    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-    </svg>
-  );
-
-  const reportsIcon = (
-    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-    </svg>
-  );
+  const overviewIcon = <HiOutlineSquares2X2 className="w-4 h-4" aria-hidden />;
+  const analyticsIcon = <FaChartSimple className="w-4 h-4" aria-hidden />;
+  const reportsIcon = <FaFileLines className="w-4 h-4" aria-hidden />;
 
   const tabItems = [
     {
@@ -139,8 +129,8 @@ const Dashboard = () => {
           <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-2">System Reports</h3>
           <p className="text-sm text-neutral-500 dark:text-neutral-400">Generate, schedule, or view your automated data exports.</p>
           <div className="flex gap-3 mt-4">
-            <CustomButton size="md" variant="solid" color="primary">Download CSV</CustomButton>
-            <CustomButton size="md" variant="bordered">Download PDF</CustomButton>
+            <Button size="md" variant="solid" color="primary">Download CSV</Button>
+            <Button size="md" variant="bordered">Download PDF</Button>
           </div>
         </div>
       ),
@@ -150,14 +140,13 @@ const Dashboard = () => {
   return (
     <section>
       <div className="flex justify-between items-center">
-        <CustomPopover
+        <Popover
           triggerMode="hover"
           placement="top"
           showArrow
           offset={8}
           delay={{ open: 100, close: 150 }}
           className="px-3 py-2 text-sm max-w-xs"
-          color="primary"
           trigger={
             <p className="text-2xl cursor-default select-none">Dashboard</p>
           }
@@ -165,30 +154,59 @@ const Dashboard = () => {
           <p className="text-xs text-secondary-600 dark:text-secondary-300 leading-relaxed">
             Real-time overview of your application's key metrics, sessions, and reports.
           </p>
-        </CustomPopover>
+        </Popover>
         <div className="flex gap-2">
-          <CustomButton size="lg" onClick={handleDialogOpen}>
+          <Button size="lg" onClick={handleDialogOpen}>
             Demo Form
-          </CustomButton>
-          <CustomButton size="lg" onClick={handleFormOpen}>
+          </Button>
+          <Button size="lg" onClick={handleFormOpen}>
             Demo Form Page
-          </CustomButton>
+          </Button>
         </div>
       </div>
 
       <div className="mt-6">
-        <CustomTabs
-          items={tabItems}
+        <Tabs
           variant="underlined"
           color="primary"
           size="md"
           radius="lg"
-          activeKey={activeTab}
-          onChange={setActiveTab}
-        />
+          selectedKey={activeTab}
+          onSelectionChange={(key) => setActiveTab(key as string)}
+        >
+          {tabItems.map((item) => (
+            <Tab
+              key={item.id}
+              title={
+                <div className="flex items-center gap-2">
+                  {item.icon}
+                  <span>{item.label}</span>
+                </div>
+              }
+              count={item.count}
+            >
+              {item.content}
+            </Tab>
+          ))}
+        </Tabs>
       </div>
 
-      <CustomModal
+      <div className="mt-12 max-w-4xl bg-white dark:bg-neutral-800 p-6 rounded-xl border border-neutral-200 dark:border-neutral-700/60 shadow-sm">
+        <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">Frequently Asked Questions (Demo Accordion)</h3>
+        <Accordion variant="bordered">
+          <AccordionItem key="faq-1" title="How do I add a new user?">
+            To add a new user, click the "Demo Form" button in the top right corner. Fill in the required details such as name, email, and roles, and click submit.
+          </AccordionItem>
+          <AccordionItem key="faq-2" title="How can I export reports?">
+            Navigate to the "Reports" tab above. From there, you can download the consolidated system data in either CSV or PDF format.
+          </AccordionItem>
+          <AccordionItem key="faq-3" title="Are these metrics updated in real-time?">
+            Yes, the sessions and conversion metrics are calculated dynamically and refreshed every hour to give you the most accurate overview.
+          </AccordionItem>
+        </Accordion>
+      </div>
+
+      <Modal
         openDialog={openDialog}
         handleDialogClose={handleDialogClose}
         title="Add New User"
@@ -200,7 +218,7 @@ const Dashboard = () => {
           onUserAdd={handleAddUserSubmit}
           handleDialogClose={handleDialogClose}
         />
-      </CustomModal>
+      </Modal>
     </section>
   )
 };

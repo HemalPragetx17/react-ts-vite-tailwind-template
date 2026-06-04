@@ -2,8 +2,8 @@ import { Field, Form, Formik } from "formik";
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
-import CustomButton from '../../components/button/CustomButton';
-import CustomInput from '../../components/input/CustomInput';
+import Button from '../../components/button/Button';
+import { Input } from '../../components/input';
 import type { ILoginRequestModel } from '../../models/account';
 import { Routing } from "../../routes/routing";
 import accountService from "../../services/account-service";
@@ -80,7 +80,7 @@ const LoginTwoColumn = () => {
                       placeholder="Email"
                       value={values?.email}
                       onChange={(e: any) => setFieldValue("email", e.target.value)}
-                      component={CustomInput}
+                      component={Input}
                     />
                   </div>
                   <div className="relative">
@@ -91,13 +91,13 @@ const LoginTwoColumn = () => {
                       isPasswordToggle={true}
                       value={values?.password}
                       onChange={(e: any) => setFieldValue("password", e.target.value)}
-                      component={CustomInput}
+                      component={Input}
                     />
                   </div>
                   <div className="mt-2">
-                    <CustomButton fullWidth type="submit" className="justify-center py-2.5 font-semibold text-base">
+                    <Button fullWidth type="submit" className="justify-center py-2.5 font-semibold text-base">
                       Sign In
-                    </CustomButton>
+                    </Button>
                   </div>
                   <div className="text-center mt-4">
                     <p className="hover:cursor-pointer text-secondary-600 hover:text-primary transition-colors font-medium text-sm inline-block" onClick={() => navigate(Routing.ForgotPassword)}>

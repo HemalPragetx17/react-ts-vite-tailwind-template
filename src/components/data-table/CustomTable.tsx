@@ -1,8 +1,10 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import type { IApplicationState } from "../../store/state/app-state";
+import type {
+  ColumnDef,
+  ExpandedState,
+  SortingState,
+} from "@tanstack/react-table";
 import {
   flexRender,
   getCoreRowModel,
@@ -12,16 +14,21 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import type {
-  ColumnDef,
-  ExpandedState,
-  SortingState,
-} from "@tanstack/react-table";
 import clsx from "clsx";
-import "./index.css";
-import AnimatedExpand from "./AnimatedExpand";
-import CustomCheckbox from "../input/CustomCheckbox";
+import {
+  FaSpinner,
+  FaChevronDown,
+  FaChevronLeft,
+  FaChevronRight,
+  FaChevronUp,
+} from "react-icons/fa";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { PAGE_OPTIONS } from "../../shared/constants/pagination";
+import type { IApplicationState } from "../../store/state/app-state";
+import { Checkbox } from "../input";
+import AnimatedExpand from "./AnimatedExpand";
+import "./index.css";
 
 interface CustomTableProps<T = any> {
   data: T[];
@@ -151,7 +158,7 @@ function CustomTable<T = any>({
   }, []);
 
   // Convert 1-based external page to TanStack's 0-based pageIndex
-  const reactTablePagination = enablePagination && pagination 
+  const reactTablePagination = enablePagination && pagination
     ? { pageIndex: pagination.page - 1, pageSize: pagination.limit }
     : undefined;
 
@@ -159,13 +166,13 @@ function CustomTable<T = any>({
     if (onPaginationChange) {
       const currentPagination = pagination || { page: 1, limit: 10 };
       const nextTableState = typeof updater === 'function' ? updater(reactTablePagination) : updater;
-      
+
       const limitChanged = currentPagination.limit !== nextTableState.pageSize;
       const nextPagination = {
         page: limitChanged ? 1 : nextTableState.pageIndex + 1,
         limit: nextTableState.pageSize,
       };
-      
+
       onPaginationChange(nextPagination as any);
     }
   };
@@ -187,7 +194,7 @@ function CustomTable<T = any>({
       id: "select",
       header: ({ table }) => (
         <div className="flex items-center justify-center px-1">
-          <CustomCheckbox
+          <Checkbox
             indeterminate={table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()}
             checked={table.getIsAllRowsSelected()}
             onChange={(checkedOrEvent: any) => {
@@ -200,7 +207,7 @@ function CustomTable<T = any>({
       ),
       cell: ({ row }) => (
         <div className="flex items-center justify-center px-1">
-          <CustomCheckbox
+          <Checkbox
             checked={row.getIsSelected()}
             indeterminate={row.getIsSomeSelected()}
             onChange={(checkedOrEvent: any) => {
@@ -324,8 +331,8 @@ function CustomTable<T = any>({
                           className={clsx(
                             "flex items-center gap-2",
                             enableSorting &&
-                              header.column.getCanSort() &&
-                              "cursor-pointer select-none",
+                            header.column.getCanSort() &&
+                            "cursor-pointer select-none",
                           )}
                           onClick={
                             enableSorting && header.column.getCanSort()
@@ -341,57 +348,17 @@ function CustomTable<T = any>({
                             <div className="flex flex-col">
                               {{
                                 asc: (
-                                  <svg
-                                    className="w-3 h-3 text-gray-400"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
+                                  <FaChevronUp className="w-3 h-3 text-gray-400" aria-hidden />
                                 ),
                                 desc: (
-                                  <svg
-                                    className="w-3 h-3 text-gray-400"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
+                                  <FaChevronDown className="w-3 h-3 text-gray-400" aria-hidden />
                                 ),
                               }[header.column.getIsSorted() as string] ?? (
-                                <div className="flex flex-col opacity-30">
-                                  <svg
-                                    className="w-3 h-3 text-gray-400"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
-                                  <svg
-                                    className="w-3 h-3 text-gray-400 -mt-1"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
-                                </div>
-                              )}
+                                  <div className="flex flex-col opacity-30">
+                                    <FaChevronUp className="w-3 h-3 text-gray-400" aria-hidden />
+                                    <FaChevronDown className="w-3 h-3 text-gray-400 -mt-1" aria-hidden />
+                                  </div>
+                                )}
                             </div>
                           )}
                           {enableFiltering && header.column.getCanFilter() ? (
@@ -412,25 +379,7 @@ function CustomTable<T = any>({
               <tr>
                 <td colSpan={enableCheckbox ? columns.length + 1 : columns.length} className="text-center py-8">
                   <div className="flex justify-center items-center text-gray-500">
-                    <svg
-                      className="animate-spin h-5 w-5 mr-3 text-primary"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                        fill="none"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
+                    <FaSpinner className="animate-spin h-5 w-5 mr-3 text-primary" aria-hidden />
                     Loading...
                   </div>
                 </td>
@@ -502,14 +451,10 @@ function CustomTable<T = any>({
                   className="flex items-center justify-between gap-2 min-w-[70px] bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl px-3 py-1.5 cursor-pointer transition-all hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/20"
                 >
                   <span>{table.getState().pagination.pageSize}</span>
-                  <svg
+                  <FaChevronDown
                     className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isPageSizeOpen ? "rotate-180" : ""}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
+                    aria-hidden
+                  />
                 </button>
 
                 {isPageSizeOpen && (
@@ -524,11 +469,10 @@ function CustomTable<T = any>({
                             table.setPageSize(size);
                             setIsPageSizeOpen(false);
                           }}
-                          className={`w-full text-left px-3 py-1.5 text-sm transition-colors duration-150 ${
-                            isSelected
+                          className={`w-full text-left px-3 py-1.5 text-sm transition-colors duration-150 ${isSelected
                               ? "bg-primary text-white font-medium"
                               : "text-gray-700 hover:bg-primary-300 hover:text-white"
-                          }`}
+                            }`}
                         >
                           {size}
                         </button>
@@ -556,9 +500,7 @@ function CustomTable<T = any>({
                   "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 )}
               >
-                <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
+                <FaChevronLeft className="w-5 h-5" aria-hidden />
               </button>
             )}
 
@@ -631,7 +573,7 @@ function CustomTable<T = any>({
                       paginationSize === "sm" && "w-8 h-8 text-xs",
                       paginationSize === "md" && "w-10 h-10 text-sm",
                       paginationSize === "lg" && "w-12 h-12 text-base",
-                      
+
                       // Active State
                       isActive ? colorMap[paginationColor as keyof typeof colorMap][paginationVariant as keyof (typeof colorMap)['primary']] : [
                         "text-gray-600 hover:bg-gray-100",
@@ -656,9 +598,7 @@ function CustomTable<T = any>({
                   "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 )}
               >
-                <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                </svg>
+                <FaChevronRight className="w-5 h-5" aria-hidden />
               </button>
             )}
           </nav>
@@ -669,3 +609,4 @@ function CustomTable<T = any>({
 }
 
 export { CustomTable };
+

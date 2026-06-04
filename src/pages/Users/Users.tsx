@@ -1,21 +1,19 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Field, Form, Formik } from "formik";
 import { debounce } from "lodash";
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import EditIcon from "../../assets/edit.svg";
-import ViewIcon from "../../assets/eye-info.svg";
-import SearchIcon from "../../assets/search.svg";
-import DeleteIcon from "../../assets/trash.svg";
-import CustomButton from "../../components/button/CustomButton";
+import { FaRegTrashCan } from "react-icons/fa6";
+import { FaSearch } from "react-icons/fa";
+import { FiEye, FiEdit } from "react-icons/fi";
+import Button from "../../components/button/Button";
+import Chip from "../../components/chip/Chip";
 import { CustomTable } from "../../components/data-table";
-import CustomInput from "../../components/input/CustomInput";
-import CustomSelect from "../../components/input/CustomSelect";
-import CustomSwitch from "../../components/input/CustomSwitch";
-import CustomConfirmModal from "../../components/modal/CustomConfirmModal";
-import CustomModal from "../../components/modal/CustomModal";
+import { Input, SelectDropdown, Switch } from "../../components/input";
+import ConfirmModal from "../../components/modal/ConfirmModal";
+import Modal from "../../components/modal/Modal";
 import type { Pagination } from "../../models/base-type";
 import type { IUserModal } from "../../models/user";
 import { Routing } from "../../routes/routing";
@@ -122,17 +120,13 @@ const Users = () => {
       cell: ({ row }) => {
         const isActive = row.original.active;
         return (
-          <span
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${isActive
-              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-              : "bg-gray-50 text-gray-600 border-gray-200"
-              }`}
+          <Chip
+            variant="dot"
+            color={isActive ? "success" : "danger"}
+            size="sm"
           >
-            <span
-              className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-emerald-500" : "bg-gray-400"}`}
-            />
             {isActive ? "Active" : "Inactive"}
-          </span>
+          </Chip>
         );
       },
     },
@@ -144,16 +138,16 @@ const Users = () => {
         const userId = row.original._id;
         return (
           <div className="flex items-center">
-          <CustomSwitch
-            size="sm"
-            color="success"
-            value={isActive}
-            onChange={(checked) => {
-              if (userId) {
-                handleStatusToggle(userId, checked);
-              }
-            }}
-          />
+            <Switch
+              size="sm"
+              color="success"
+              value={isActive}
+              onChange={(checked) => {
+                if (userId) {
+                  handleStatusToggle(userId, checked);
+                }
+              }}
+            />
           </div>
         );
       },
@@ -162,17 +156,43 @@ const Users = () => {
       accessorKey: "actions",
       header: "Actions",
       cell: ({ row }) => {
-        return <div className="flex gap-2">
-          <div className="cursor-pointer" onClick={() => handleView(row.original)}>
-            <img src={ViewIcon} alt="View" />
+        return (
+          <div className="flex items-center gap-1.5">
+            <Button
+              isIconOnly
+              size="md"
+              radius="lg"
+              variant="light"
+              color="primary"
+              title="View"
+              onClick={() => handleView(row.original)}
+            >
+              <FiEye className="h-6 w-6" aria-hidden />
+            </Button>
+            <Button
+              isIconOnly
+              size="md"
+              radius="lg"
+              variant="light"
+              color="warning"
+              title="Edit"
+              onClick={() => handleEdit(row.original)}
+            >
+              <FiEdit className="h-6 w-6" aria-hidden />
+            </Button>
+            <Button
+              isIconOnly
+              size="md"
+              radius="lg"
+              variant="light"
+              color="danger"
+              title="Delete"
+              onClick={() => handleDelete(row.original)}
+            >
+              <FaRegTrashCan className="h-6 w-6" aria-hidden />
+            </Button>
           </div>
-          <div className="cursor-pointer" onClick={() => handleEdit(row.original)}>
-            <img src={EditIcon} alt="Edit" />
-          </div>
-          <div className="cursor-pointer" onClick={() => handleDelete(row.original)}>
-            <img src={DeleteIcon} alt="Delete" />
-          </div>
-        </div>;
+        );
       },
     }
   ], [handleStatusToggle, handleView, handleEdit, handleDelete]);
@@ -247,9 +267,9 @@ const Users = () => {
     <section>
       <div className="flex justify-between items-center">
         <p className="text-2xl">Users</p>
-        <CustomButton size="lg" onClick={handleAdd}>
+        <Button size="lg" onClick={handleAdd}>
           Add User
-        </CustomButton>
+        </Button>
       </div>
 
       <Formik
@@ -274,9 +294,9 @@ const Users = () => {
                 <Field
                   name="search"
                   placeholder="Search by name"
-                  component={CustomInput}
-                  startIcon={
-                    <img src={SearchIcon} alt="Search" className="w-4 h-4" />
+                  component={Input}
+                  startContent={
+                    <FaSearch className="w-4 h-4" aria-hidden />
                   }
                   onChange={(e: any) => {
                     const value = e?.target ? e.target.value : e;
@@ -286,12 +306,13 @@ const Users = () => {
                     setPagination(prev => ({ ...prev, page: 1 }));
                     debouncedSearch(newFilter, 1, pagination.limit);
                   }}
+                  isClearable={true}
                 />
 
                 <Field
                   name="status"
                   placeholder="Select status"
-                  component={CustomSelect}
+                  component={SelectDropdown}
                   options={[
                     { label: "Active", value: "true" },
                     { label: "Inactive", value: "false" }
@@ -326,7 +347,7 @@ const Users = () => {
         totalCount={totalRecords}
       />
 
-      <CustomModal
+      <Modal
         openDialog={openDialog}
         handleDialogClose={handleDialogClose}
         title="Add New User"
@@ -339,9 +360,9 @@ const Users = () => {
           onUserAdd={handleAddUserSubmit}
           handleDialogClose={handleDialogClose}
         />
-      </CustomModal>
+      </Modal>
 
-      <CustomConfirmModal
+      <ConfirmModal
         title="Delete User"
         openDialog={openConfirmDialogDelete}
         handleDialogClose={handleConfirmDialogCloseForDelete}

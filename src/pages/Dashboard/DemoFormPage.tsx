@@ -1,18 +1,18 @@
 import { Field, Form, Formik } from "formik";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import CustomButton from "../../components/button/CustomButton";
+import Button from "../../components/button/Button";
 import {
-    CustomCheckbox,
-    CustomCheckboxGroup,
-    CustomDatePicker,
-    CustomInput,
-    CustomPhoneNumberInput,
-    CustomRadio,
-    CustomSelect,
-    CustomSwitch,
-    CustomTextarea,
-    CustomFileInput
+    Checkbox,
+    CheckboxGroup,
+    DateInput,
+    FileInput,
+    Input,
+    PhoneNumberInput,
+    Radio,
+    SelectDropdown,
+    Switch,
+    Textarea
 } from "../../components/input";
 import type { IFormModal } from "../../models/dashboard";
 import { Routing } from "../../routes/routing";
@@ -22,6 +22,7 @@ const initialState: IFormModal = {
     name: "",
     email: "",
     joiningDate: "",
+    document: "",
     age: null,
     gender: "Male",
     technologies: [] as string[],
@@ -78,7 +79,6 @@ const DemoFormPage: React.FC = () => {
     };
 
     const handleSubmit = (value: IFormModal) => {
-        console.log("🚀 ~ handleSubmit ~ value:", value);
 
         const { images: _, ...data } = {
             ...value,
@@ -125,9 +125,9 @@ const DemoFormPage: React.FC = () => {
         <section>
             <div className="flex justify-between items-center">
                 <p className="text-2xl">Create New User</p>
-                <CustomButton type="button" variant="bordered" onClick={handleBack} className="shadow-sm">
+                <Button type="button" variant="bordered" onClick={handleBack} className="shadow-sm">
                     Back to Dashboard
-                </CustomButton>
+                </Button>
             </div>
 
             {/* Form Container */}
@@ -160,7 +160,7 @@ const DemoFormPage: React.FC = () => {
                                                 name="profilePic"
                                                 radius='full'
                                                 mode="profile"
-                                                component={CustomFileInput}
+                                                component={FileInput}
                                             />
                                         </div>
 
@@ -171,7 +171,7 @@ const DemoFormPage: React.FC = () => {
                                                 name="name"
                                                 label="Full Name"
                                                 placeholder="Enter full name"
-                                                component={CustomInput}
+                                                component={Input}
                                             />
 
                                             {/* Email Address */}
@@ -180,7 +180,7 @@ const DemoFormPage: React.FC = () => {
                                                 type="email"
                                                 label="Email Address"
                                                 placeholder="Enter email address"
-                                                component={CustomInput}
+                                                component={Input}
                                             />
 
                                             {/* Phone Number */}
@@ -198,7 +198,15 @@ const DemoFormPage: React.FC = () => {
                                                     setFieldValue('phoneCountry', `+${country.dialCode}`);
                                                     setFieldValue('phone', value);
                                                 }}
-                                                component={CustomPhoneNumberInput}
+                                                component={PhoneNumberInput}
+                                            />
+
+                                            {/* Document */}
+                                            <Field
+                                                name="document"
+                                                label="Document"
+                                                placeholder="Enter document"
+                                                component={FileInput}
                                             />
 
                                             {/* Age */}
@@ -207,7 +215,7 @@ const DemoFormPage: React.FC = () => {
                                                 type="number"
                                                 label="Age"
                                                 placeholder="Enter age"
-                                                component={CustomInput}
+                                                component={Input}
                                             />
 
                                             {/* Gender */}
@@ -216,7 +224,7 @@ const DemoFormPage: React.FC = () => {
                                                     name="gender"
                                                     label="Gender"
                                                     orientation="horizontal"
-                                                    component={CustomRadio}
+                                                    component={Radio}
                                                     options={genderOptions}
                                                 />
                                             </div>
@@ -226,7 +234,7 @@ const DemoFormPage: React.FC = () => {
                                                 <Field
                                                     name="status"
                                                     label="Account Status"
-                                                    component={CustomSwitch}
+                                                    component={Switch}
                                                     size="lg"
                                                     activeLabel="Active"
                                                     inactiveLabel="Inactive"
@@ -248,7 +256,7 @@ const DemoFormPage: React.FC = () => {
                                         <Field
                                             name="role"
                                             label="Role"
-                                            component={CustomSelect}
+                                            component={SelectDropdown}
                                             options={roleOptions}
                                         />
 
@@ -258,7 +266,7 @@ const DemoFormPage: React.FC = () => {
                                             label="Joining Date"
                                             placeholder="Select joining date"
                                             isClearable={true}
-                                            component={CustomDatePicker}
+                                            component={DateInput}
                                         />
 
                                         {/* Split Columns: Left (Tech, Duration, Hobbies) & Right (Bio) */}
@@ -269,7 +277,7 @@ const DemoFormPage: React.FC = () => {
                                                 <Field
                                                     name="technologies"
                                                     label="Technologies Stack"
-                                                    component={CustomSelect}
+                                                    component={SelectDropdown}
                                                     options={technologyOptions}
                                                     isMulti
                                                     isClearable
@@ -284,14 +292,14 @@ const DemoFormPage: React.FC = () => {
                                                     placeholder="Select date range"
                                                     selectsRange={true}
                                                     isClearable={true}
-                                                    component={CustomDatePicker}
+                                                    component={DateInput}
                                                 />
 
                                                 {/* Hobbies */}
                                                 <Field
                                                     name="hobbies"
                                                     label="Hobbies"
-                                                    component={CustomCheckboxGroup}
+                                                    component={CheckboxGroup}
                                                     options={hobbiesOptions}
                                                     orientation="horizontal"
                                                 />
@@ -305,7 +313,7 @@ const DemoFormPage: React.FC = () => {
                                                     label="User Bio / Notes (Optional)"
                                                     placeholder="Enter short bio or background notes"
                                                     isClearable={true}
-                                                    component={CustomTextarea}
+                                                    component={Textarea}
                                                     minRows={7}
                                                 />
                                             </div>
@@ -326,7 +334,7 @@ const DemoFormPage: React.FC = () => {
                                             name="image"
                                             size="sm"
                                             mode="dropzone"
-                                            component={CustomFileInput}
+                                            component={FileInput}
                                         />
 
                                         <Field
@@ -336,7 +344,7 @@ const DemoFormPage: React.FC = () => {
                                             label="Gallery Images"
                                             size="sm"
                                             mode="multi"
-                                            component={CustomFileInput}
+                                            component={FileInput}
                                         />
                                     </div>
                                 </div>
@@ -346,19 +354,19 @@ const DemoFormPage: React.FC = () => {
                                     <Field
                                         name="agreeToTerms"
                                         label="I agree to terms and conditions"
-                                        component={CustomCheckbox}
+                                        component={Checkbox}
                                     />
                                 </div>
                             </div>
 
                             {/* Sticky Footer */}
                             <div className="sticky bottom-0 left-0 right-0 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800 px-6 py-4 md:px-8 flex justify-end gap-3 z-30 shadow-[0_-4px_12px_rgba(0,0,0,0.03)] dark:shadow-[0_-4px_12px_rgba(0,0,0,0.2)]">
-                                <CustomButton type="button" variant="bordered" color="danger" onClick={handleBack} className="shadow-sm">
+                                <Button type="button" variant="bordered" color="danger" onClick={handleBack} className="shadow-sm">
                                     Cancel
-                                </CustomButton>
-                                <CustomButton type="submit" variant="solid" color="primary" className="shadow-sm">
+                                </Button>
+                                <Button type="submit" variant="solid" color="primary" className="shadow-sm">
                                     Add User
-                                </CustomButton>
+                                </Button>
                             </div>
                         </Form>
                     )}

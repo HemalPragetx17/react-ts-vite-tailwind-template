@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import CustomButton from "../../components/button/CustomButton";
+import Button from "../../components/button/Button";
 import { Routing } from "../../routes/routing";
 
 const UserDetails = () => {
@@ -11,9 +11,9 @@ const UserDetails = () => {
     <section>
       <div className="flex justify-between items-center">
         <p className="text-2xl">User Details</p>
-        <CustomButton type="button" variant="bordered" onClick={handleBack} className="shadow-sm">
+        <Button type="button" variant="bordered" onClick={handleBack} className="shadow-sm">
           Back to Dashboard
-        </CustomButton>
+        </Button>
       </div>
     </section>
   );

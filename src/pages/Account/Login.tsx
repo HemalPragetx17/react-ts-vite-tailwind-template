@@ -2,8 +2,8 @@ import { Field, Form, Formik } from "formik";
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import CustomButton from '../../components/button/CustomButton';
-import CustomInput from '../../components/input/CustomInput';
+import Button from '../../components/button/Button';
+import { Input } from '../../components/input';
 import type { ILoginRequestModel } from '../../models/account';
 import { Routing } from "../../routes/routing";
 import accountService from "../../services/account-service";
@@ -69,7 +69,7 @@ const Login = () => {
                         placeholder="Enter your email"
                         value={values?.email}
                         onChange={(e: any) => setFieldValue("email", e.target.value)}
-                        component={CustomInput}
+                        component={Input}
                       />
                     </div>
                     <div className="mb-3 relative">
@@ -81,7 +81,7 @@ const Login = () => {
                         isPasswordToggle={true}
                         value={values?.password}
                         onChange={(e: any) => setFieldValue("password", e.target.value)}
-                        component={CustomInput}
+                        component={Input}
                       />
                     </div>
                     <div className="text-right">
@@ -89,9 +89,9 @@ const Login = () => {
                         Forgot password?
                       </p>
                     </div>
-                    <CustomButton fullWidth type="submit" className="mt-5 justify-center">
+                    <Button fullWidth type="submit" className="mt-5 justify-center">
                       Login
-                    </CustomButton>
+                    </Button>
                   </Form>
                 )
               }}

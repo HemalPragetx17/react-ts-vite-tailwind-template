@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import type { ISidebarData } from '../shared/constants/sidebar-data';
 import { sidebarRoutes } from '../shared/constants/sidebar-data';
+import { SidebarMenuIcon } from '../shared/sidebar-icons';
 
 const Sidebar = () => {
   const { pathname } = useLocation();
@@ -19,10 +20,12 @@ const Sidebar = () => {
     setActiveMenu(null);
   };
 
-  const filterInactive = "[filter:brightness(0)_saturate(100%)_invert(45%)_sepia(6%)_saturate(24%)_hue-rotate(338deg)_brightness(100%)_contrast(89%)]";
-  const filterActive = "[filter:brightness(0)_saturate(100%)_invert(100%)_sepia(93%)_saturate(0%)_hue-rotate(198deg)_brightness(105%)_contrast(108%)]";
-  const filterHover = "group-hover:[filter:brightness(0)_saturate(100%)_invert(100%)_sepia(93%)_saturate(0%)_hue-rotate(198deg)_brightness(105%)_contrast(108%)]";
-  const filterHoverChild = "group-hover/child:[filter:brightness(0)_saturate(100%)_invert(100%)_sepia(93%)_saturate(0%)_hue-rotate(198deg)_brightness(105%)_contrast(108%)]";
+  const menuIconClass = (isActiveRoute: boolean, hoverGroup = 'group') =>
+    `w-4 h-4 shrink-0 transition-colors duration-200 ${
+      isActiveRoute
+        ? 'text-white'
+        : `text-secondary-600 ${hoverGroup === 'group' ? 'group-hover:text-white' : 'group-hover/child:text-white'}`
+    }`;
 
   return (
     <div className='w-[250px] !important h-screen fixed top-0 left-0 flex flex-col overflow-hidden transition-all duration-300 ease-linear [.hide-sidebar_&]:w-[64px] bg-black'>
@@ -58,11 +61,12 @@ const Sidebar = () => {
                 onFocus={(e) => e.preventDefault()}
                 aria-label={isActive ? 'true' : 'false'}
               >
-                <img
-                  className={`w-[16px] h-[16px] mr-[7px] transition-all duration-200 ${isActive || pathname?.includes(menu?.route) ? filterActive : `${filterInactive} ${filterHover}`}`}
-                  src={menu?.image}
-                  alt=''
-                />
+                {menu?.icon && (
+                  <SidebarMenuIcon
+                    name={menu.icon}
+                    className={`${menuIconClass(isActive || pathname?.includes(menu?.route))} mr-[7px]`}
+                  />
+                )}
                 <span className="text-[16px] font-medium inline-block mr-[8px]">{menu?.name}</span>
                 {(menu?.childs?.length ?? 0) > 0 && (
                     <span className={`w-[13px] h-[13px] inline-block relative -bottom-[5px] -left-[10px] transition-all duration-500 ease-in-out mt-[2px] text-left transform rotate-45 ml-auto before:absolute before:content-[''] before:inline-block before:w-[10.5px] before:h-[2.5px] before:bg-secondary-600 before:transition-all before:duration-500 before:ease-in-out before:rounded-[2px] after:absolute after:content-[''] after:inline-block after:w-[10.5px] after:h-[2.5px] after:bg-secondary-600 after:transition-all after:duration-500 after:ease-in-out after:rounded-[2px] after:transform after:rotate-90 after:-top-[5px] after:left-[5px] aria-[label=true]:before:-rotate-90 aria-[label=true]:after:rotate-180 group-hover:before:bg-white group-hover:after:bg-white`} aria-label={isActive ? 'true' : 'false'}></span>
@@ -92,11 +96,12 @@ const Sidebar = () => {
                             tabIndex={-1}
                             onFocus={(e) => e.preventDefault()}
                           >
-                            <img
-                              className={`w-[14px] transition-all duration-200 mr-[5px] ${pathname?.includes(childMenu?.route) ? filterActive : `${filterInactive} ${filterHoverChild}`}`}
-                              src={childMenu?.image}
-                              alt=''
-                            />
+                            {childMenu?.icon && (
+                              <SidebarMenuIcon
+                                name={childMenu.icon}
+                                className={`${menuIconClass(pathname?.includes(childMenu?.route), 'group/child')} mr-[5px]`}
+                              />
+                            )}
                             <span className="text-[16px] inline-block mr-[8px]">{childMenu?.name}</span>
                           </Link>
                         </li>

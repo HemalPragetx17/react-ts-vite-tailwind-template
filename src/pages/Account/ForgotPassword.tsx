@@ -2,9 +2,9 @@ import { Field, Form, Formik } from 'formik';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import BackIcon from '../../assets/back.svg';
-import CustomButton from '../../components/button/CustomButton';
-import { CustomInput, CustomOTPInput } from '../../components/input';
+import { FaChevronLeft } from "react-icons/fa";
+import Button from '../../components/button/Button';
+import { Input, OTPInput } from '../../components/input';
 import type { IForgotPasswordEmailModel, IForgotPasswordOTPModel, IForgotPasswordPasswordModel } from '../../models/account';
 import { Routing } from '../../routes/routing';
 import { ForgotEmailValidationSchema, ForgotOTPValidationSchema, ForgotPasswordValidationSchema } from '../../validation/account';
@@ -90,7 +90,9 @@ const ForgotPassword = () => {
       <div className="fixed -bottom-[500px] -left-[500px] max-w-[1000px] w-[1000px] h-[1000px] z-0 opacity-50 animate-rotate-bg"></div>
       <div className="flex justify-center items-center w-full z-10">
         <div className='max-w-[450px] w-full shadow-[0px_18px_50px_-10px_rgba(0,0,0,0.2)] border-none px-[40px] py-[50px] z-10 bg-white rounded-xl' >
-          <img src={BackIcon} className='text-[22px] cursor-pointer' onClick={() => navigate(Routing.Login)} />
+          <button type="button" className="cursor-pointer text-secondary-700 hover:text-primary" onClick={() => navigate(Routing.Login)} aria-label="Back to login">
+            <FaChevronLeft className="h-[1.375em] w-[1.375em]" aria-hidden />
+          </button>
           <div className="text-center">
             <div className="max-w-[100px] w-full mx-auto flex justify-center">
               <img src="/favicon.svg" alt='' />
@@ -126,12 +128,12 @@ const ForgotPassword = () => {
                             placeholder="Enter your email"
                             value={values?.email}
                             onChange={(e: any) => setFieldValue("email", e.target.value)}
-                            component={CustomInput}
+                            component={Input}
                           />
                         </div>
-                        <CustomButton fullWidth type="submit" className="mt-5 justify-center">
+                        <Button fullWidth type="submit" className="mt-5 justify-center">
                           Submit
-                        </CustomButton>
+                        </Button>
                       </Form>
                     )
                   }}
@@ -163,16 +165,16 @@ const ForgotPassword = () => {
                             placeholder="Enter OTP"
                             value={values?.otp}
                             onChange={(e: any) => setFieldValue("otp", e.target.value)}
-                            component={CustomOTPInput}
+                            component={OTPInput}
                           />
                           <div className="text-right mt-5">
                             <p className="hover:cursor-pointer text-secondary-700 text-sm inline-block" onClick={ResendOTP}>
                               Resend Otp
                             </p>
                           </div>
-                          <CustomButton fullWidth type="submit" className="mt-5 justify-center">
+                          <Button fullWidth type="submit" className="mt-5 justify-center">
                             Submit
-                          </CustomButton>
+                          </Button>
                         </div>
                       </Form>
                     )
@@ -207,7 +209,7 @@ const ForgotPassword = () => {
                             isPasswordToggle={true}
                             value={values?.password}
                             onChange={(e: any) => setFieldValue("password", e.target.value)}
-                            component={CustomInput}
+                            component={Input}
                           />
                         </div>
                         <div className="mb-4 relative">
@@ -219,12 +221,12 @@ const ForgotPassword = () => {
                             isPasswordToggle={true}
                             value={values?.confirmPassword}
                             onChange={(e: any) => setFieldValue("confirmPassword", e.target.value)}
-                            component={CustomInput}
+                            component={Input}
                           />
                         </div>
-                        <CustomButton fullWidth type="submit" className="mt-5 justify-center">
+                        <Button fullWidth type="submit" className="mt-5 justify-center">
                           Submit
-                        </CustomButton>
+                        </Button>
                       </Form>
                     )
                   }}

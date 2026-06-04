@@ -1,7 +1,7 @@
 import { Field, Form, Formik } from "formik";
 import React from "react";
-import CustomButton from "../../components/button/CustomButton";
-import { CustomCheckbox, CustomCheckboxGroup, CustomDatePicker, CustomInput, CustomPhoneNumberInput, CustomRadio, CustomSelect, CustomSwitch, CustomTextarea, CustomFileInput } from "../../components/input";
+import Button from "../../components/button/Button";
+import { Checkbox, CheckboxGroup, DateInput, FileInput, Input, PhoneNumberInput, Radio, SelectDropdown, Switch, Textarea } from "../../components/input";
 import type { IFormModal } from "../../models/dashboard";
 import { FormValidationSchema } from "../../validation/dashboard";
 
@@ -15,6 +15,7 @@ const initialState: IFormModal = {
     name: "",
     email: "",
     joiningDate: "",
+    document: "",
     age: null,
     gender: "Male",
     technologies: [] as string[],
@@ -137,7 +138,7 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                         name="profilePic"
                         radius="full"
                         mode="profile"
-                        component={CustomFileInput}
+                        component={FileInput}
                     />
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -146,7 +147,7 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                             name="name"
                             label="Full Name"
                             placeholder="Enter full name"
-                            component={CustomInput}
+                            component={Input}
                         />
 
                         {/* Email Address */}
@@ -155,7 +156,7 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                             type="email"
                             label="Email Address"
                             placeholder="Enter email address"
-                            component={CustomInput}
+                            component={Input}
                         />
 
                         {/* Joining Date */}
@@ -164,7 +165,7 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                             label="Joining Date"
                             placeholder="Select joining date"
                             isClearable={true}
-                            component={CustomDatePicker}
+                            component={DateInput}
                         />
 
                         {/* Phone Number */}
@@ -182,7 +183,15 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                                 setFieldValue('phoneCountry', `+${country.dialCode}`);
                                 setFieldValue('phone', value);
                             }}
-                            component={CustomPhoneNumberInput}
+                            component={PhoneNumberInput}
+                        />
+
+                        {/* Document */}
+                        <Field
+                            name="document"
+                            label="Document"
+                            placeholder="Enter document"
+                            component={FileInput}
                         />
 
                         {/* Age */}
@@ -191,25 +200,25 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                             type="number"
                             label="Age"
                             placeholder="Enter age"
-                            component={CustomInput}
+                            component={Input}
                         />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Gender (CustomRadio) */}
+                        {/* Gender (Radio) */}
                         <Field
                             name="gender"
                             label="Gender"
                             orientation="horizontal"
-                            component={CustomRadio}
+                            component={Radio}
                             options={genderOptions}
                         />
 
-                        {/* Status (CustomSwitch) */}
+                        {/* Status (Switch) */}
                         <Field
                             name="status"
                             label="Account Status"
-                            component={CustomSwitch}
+                            component={Switch}
                             size="lg"
                             activeLabel="Active"
                             inactiveLabel="Inactive"
@@ -221,7 +230,7 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                         name="image"
                         size="sm"
                         mode="dropzone"
-                        component={CustomFileInput}
+                        component={FileInput}
                     />
 
                     <Field
@@ -231,14 +240,14 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                         label="Images"
                         size="sm"
                         mode="multi"
-                        component={CustomFileInput}
+                        component={FileInput}
                     />
 
-                    {/* Technologies Stack (CustomSelect - multi select) */}
+                    {/* Technologies Stack (SelectDropdown - multi select) */}
                     <Field
                         name="technologies"
                         label="Technologies Stack"
-                        component={CustomSelect}
+                        component={SelectDropdown}
                         options={technologyOptions}
                         isMulti
                         isClearable
@@ -248,16 +257,16 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                     <Field
                         name="hobbies"
                         label="Hobbies"
-                        component={CustomCheckboxGroup}
+                        component={CheckboxGroup}
                         options={hobbiesOptions}
                         orientation="horizontal"
                     />
 
-                    {/* Role (CustomSelect - single select) */}
+                    {/* Role (SelectDropdown - single select) */}
                     <Field
                         name="role"
                         label="Role"
-                        component={CustomSelect}
+                        component={SelectDropdown}
                         options={roleOptions}
                     />
 
@@ -268,16 +277,16 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                         placeholder="Select date range"
                         selectsRange={true}
                         isClearable={true}
-                        component={CustomDatePicker}
+                        component={DateInput}
                     />
 
-                    {/* User Bio / Notes (CustomTextarea) */}
+                    {/* User Bio / Notes (Textarea) */}
                     <Field
                         name="bio"
                         label="User Bio / Notes (Optional)"
                         placeholder="Enter short bio or background notes"
                         isClearable={true}
-                        component={CustomTextarea}
+                        component={Textarea}
                         rows={3}
                     />
 
@@ -285,17 +294,17 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                     <Field
                         name="agreeToTerms"
                         label="Agree to terms"
-                        component={CustomCheckbox}
+                        component={Checkbox}
                     />
 
                     {/* Footer Action Area */}
                     <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-gray-100">
-                        <CustomButton type="button" variant="bordered" color="danger" onClick={handleDialogClose}>
+                        <Button type="button" variant="bordered" color="danger" onClick={handleDialogClose}>
                             Cancel
-                        </CustomButton>
-                        <CustomButton type="submit" variant="solid" color="primary">
+                        </Button>
+                        <Button type="submit" variant="solid" color="primary">
                             Add User
-                        </CustomButton>
+                        </Button>
                     </div>
                 </Form>
             )}

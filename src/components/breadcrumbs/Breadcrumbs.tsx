@@ -1,8 +1,8 @@
 import React from "react";
+import { FaChevronRight, FaHome } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import { Routing } from "../../routes/routing";
 import { sidebarRoutes } from "../../shared/constants/sidebar-data";
-import HomeIcon from "../../assets/home.svg"
 
 // Global config toggle for the breadcrumbs system
 // To disable breadcrumbs throughout the app, simply set this to false
@@ -38,6 +38,23 @@ export interface BreadcrumbsProps {
      * Optional static items to display. If provided, dynamic generation from path is skipped.
      */
     items?: BreadcrumbItem[];
+    /**
+     * Custom separator between breadcrumbs.
+     */
+    separator?: React.ReactNode;
+    /**
+     * Whether the breadcrumbs are disabled.
+     * @default false
+     */
+    isDisabled?: boolean;
+    /**
+     * Content to render at the start of the breadcrumbs container.
+     */
+    startContent?: React.ReactNode;
+    /**
+     * Content to render at the end of the breadcrumbs container.
+     */
+    endContent?: React.ReactNode;
 }
 
 export interface BreadcrumbItem {
@@ -45,6 +62,8 @@ export interface BreadcrumbItem {
     path: string;
     isLast: boolean;
     isClickable: boolean;
+    startContent?: React.ReactNode;
+    endContent?: React.ReactNode;
 }
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
@@ -54,6 +73,10 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
     underline = "hover",
     radius = "md",
     items: staticItems,
+    separator,
+    isDisabled = false,
+    startContent,
+    endContent,
 }) => {
     const { pathname } = useLocation();
 
@@ -164,23 +187,29 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         sm: {
             container: "text-xs px-1.5 py-1 gap-1",
             list: "space-x-1",
-            separator: "h-3 w-3 mx-1",
+            separator: "h-3 w-3",
+            separatorMargin: "mx-1",
             strokeWidth: 2,
-            icon: "w-3 h-3 mr-1",
+            icon: "w-3 h-3",
+            gap: "gap-1",
         },
         md: {
             container: "text-sm px-2 py-1.5 gap-1.5",
             list: "space-x-1.5",
-            separator: "h-3.5 w-3.5 mx-1.5",
+            separator: "h-3.5 w-3.5",
+            separatorMargin: "mx-1.5",
             strokeWidth: 2,
-            icon: "w-3.5 h-3.5 mr-1.5",
+            icon: "w-3.5 h-3.5",
+            gap: "gap-1.5",
         },
         lg: {
             container: "text-base px-2.5 py-2 gap-2",
             list: "space-x-2",
-            separator: "h-4 w-4 mx-2",
+            separator: "h-4 w-4",
+            separatorMargin: "mx-2",
             strokeWidth: 2,
-            icon: "w-4 h-4 mr-2",
+            icon: "w-4 h-4",
+            gap: "gap-2",
         },
     }[size];
 
@@ -210,7 +239,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
 
     // Colors mapping for the active page (last item)
     const activeColorClasses = {
-        default: "text-secondary-800 dark:text-secondary-800 font-semibold",
+        default: "text-secondary-600 dark:text-secondary-800 font-bold",
         primary: "text-primary dark:text-primary-700 font-bold",
         secondary: "text-secondary dark:text-secondary-700 font-bold",
         success: "text-success dark:text-success-700 font-bold",
@@ -232,51 +261,87 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
             className={`mb-5 select-none animate-fade-in transition-all duration-200 ${variantClasses} ${variant !== "light" ? radiusClasses : ""} ${sizeClasses.container}`}
         >
             <ol className={`flex items-center ${sizeClasses.list}`}>
+                {startContent && (
+                    <li className="flex items-center shrink-0">
+                        {startContent}
+                    </li>
+                )}
                 {items.map((item, idx) => {
                     const isLast = idx === items.length - 1;
+                    const isItemDisabled = isDisabled && !isLast;
+                    const canClick = item.isClickable && !isDisabled;
+
+                    // Determine the item separator element
+                    const showSeparator = idx > 0 || (idx === 0 && startContent !== undefined);
 
                     return (
                         <li key={idx} className="flex items-center">
-                            {idx > 0 && (
-                                <svg
-                                    className={`${sizeClasses.separator} shrink-0 text-neutral-450 dark:text-neutral-600`}
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    strokeWidth={sizeClasses.strokeWidth}
-                                >
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                                </svg>
+                            {showSeparator && (
+                                <span className={`shrink-0 flex items-center justify-center ${sizeClasses.separatorMargin}`}>
+                                    {separator !== undefined ? (
+                                        <span className="text-neutral-450 dark:text-neutral-600">{separator}</span>
+                                    ) : (
+                                        <FaChevronRight
+                                            className={`${sizeClasses.separator} text-neutral-450 dark:text-neutral-600`}
+                                            aria-hidden
+                                        />
+                                    )}
+                                </span>
                             )}
 
                             {isLast ? (
-                                <span className={`${activeColorClasses} flex items-center`}>
-                                    {item.label === "Home" && (
-                                        <img src={HomeIcon} className={sizeClasses.icon} />
+                                <span className={`${activeColorClasses} flex items-center ${sizeClasses.gap}`}>
+                                    {item.startContent}
+                                    {item.label === "Home" && !item.startContent && (
+                                        <FaHome className={sizeClasses.icon} aria-hidden />
                                     )}
                                     {item.label}
+                                    {item.endContent}
                                 </span>
-                            ) : item.isClickable ? (
+                            ) : canClick ? (
                                 <Link
                                     to={item.path}
-                                    className={`flex items-center transition-colors duration-250 ${linkColorClasses} ${underlineClasses}`}
+                                    className={`flex items-center transition-colors duration-250 ${linkColorClasses} ${underlineClasses} ${sizeClasses.gap}`}
                                 >
-                                    {item.label === "Home" && (
-                                        <img src={HomeIcon} className={sizeClasses.icon} />
+                                    {item.startContent}
+                                    {item.label === "Home" && !item.startContent && (
+                                        <FaHome className={sizeClasses.icon} aria-hidden />
                                     )}
                                     {item.label}
+                                    {item.endContent}
                                 </Link>
                             ) : (
-                                <span className="flex items-center text-neutral-400 dark:text-neutral-500">
-                                    {item.label === "Home" && (
-                                        <img src={HomeIcon} className={sizeClasses.icon} />
+                                <span className={`flex items-center ${isItemDisabled ? "text-neutral-400/50 dark:text-neutral-500/50 cursor-not-allowed select-none" : "text-neutral-400 dark:text-neutral-500"} ${sizeClasses.gap}`}>
+                                    {item.startContent}
+                                    {item.label === "Home" && !item.startContent && (
+                                        <FaHome className={sizeClasses.icon} aria-hidden />
                                     )}
                                     {item.label}
+                                    {item.endContent}
                                 </span>
                             )}
                         </li>
                     );
                 })}
+                {endContent && (
+                    <>
+                        <li className="flex items-center shrink-0">
+                            <span className={`shrink-0 flex items-center justify-center ${sizeClasses.separatorMargin}`}>
+                                {separator !== undefined ? (
+                                    <span className="text-neutral-450 dark:text-neutral-600">{separator}</span>
+                                ) : (
+                                    <FaChevronRight
+                                        className={`${sizeClasses.separator} text-neutral-450 dark:text-neutral-600`}
+                                        aria-hidden
+                                    />
+                                )}
+                            </span>
+                        </li>
+                        <li className="flex items-center shrink-0">
+                            {endContent}
+                        </li>
+                    </>
+                )}
             </ol>
         </nav>
     );

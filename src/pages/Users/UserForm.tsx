@@ -1,7 +1,7 @@
 import { Field, Form, Formik } from "formik";
 import React from "react";
-import CustomButton from "../../components/button/CustomButton";
-import { CustomInput, CustomPhoneNumberInput, CustomSwitch } from "../../components/input";
+import Button from "../../components/button/Button";
+import { Input, PhoneNumberInput, Switch } from "../../components/input";
 import type { IUserModal } from "../../models/user";
 import { UserValidationSchema } from "../../validation/user";
 
@@ -45,20 +45,20 @@ const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose 
               name="firstName"
               label="First Name"
               placeholder="Enter first name"
-              component={CustomInput}
+              component={Input}
             />
             <Field
               name="lastName"
               label="Last Name"
               placeholder="Enter last name"
-              component={CustomInput}
+              component={Input}
             />
             <Field
               name="email"
               type="email"
               label="Email Address"
               placeholder="Enter email address"
-              component={CustomInput}
+              component={Input}
             />
             <Field
               country={'in'}
@@ -74,13 +74,13 @@ const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose 
                 setFieldValue('phoneCountry', `+${country.dialCode}`);
                 setFieldValue('phone', value);
               }}
-              component={CustomPhoneNumberInput}
+              component={PhoneNumberInput}
             />
             {user?._id && (
               <Field
                 name="active"
                 label="Account Status"
-                component={CustomSwitch}
+                component={Switch}
                 size="lg"
                 activeLabel="Active"
                 inactiveLabel="Inactive"
@@ -89,12 +89,12 @@ const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose 
           </div>
 
           <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-gray-100">
-            <CustomButton type="button" variant="bordered" color="danger" onClick={handleDialogClose}>
+            <Button type="button" variant="bordered" color="danger" onClick={handleDialogClose}>
               Cancel
-            </CustomButton>
-            <CustomButton type="submit" variant="solid" color="primary">
+            </Button>
+            <Button type="submit" variant="solid" color="primary">
               Add User
-            </CustomButton>
+            </Button>
           </div>
         </Form>
       )}
