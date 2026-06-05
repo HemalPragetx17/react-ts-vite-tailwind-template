@@ -2,18 +2,13 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Field, Form, Formik } from "formik";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { FaSearch } from "react-icons/fa";
+import { FaRegTrashCan } from "react-icons/fa6";
+import { FiEdit, FiEye } from "react-icons/fi";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FaRegTrashCan } from "react-icons/fa6";
-import { FaSearch } from "react-icons/fa";
-import { FiEye, FiEdit } from "react-icons/fi";
-import Button from "../../components/button/Button";
-import Chip from "../../components/chip/Chip";
-import { CustomTable } from "../../components/data-table";
-import { Input, SelectDropdown, Switch } from "../../components/input";
-import ConfirmModal from "../../components/modal/ConfirmModal";
-import Modal from "../../components/modal/Modal";
+import { Button, Chip, ConfirmModal, CustomTable, Input, Modal, SelectDropdown, Switch } from "../../components/ui";
 import type { Pagination } from "../../models/base-type";
 import type { IUserModal } from "../../models/user";
 import { Routing } from "../../routes/routing";
@@ -63,7 +58,7 @@ const Users = () => {
 
   const handleView = useCallback((user: IUserModal) => {
     setUser(user);
-    navigate(Routing.UserDetails);
+    navigate(Routing.UserDetails, { state: { user } });
   }, [navigate]);
 
   const handleEdit = useCallback((user: IUserModal) => {

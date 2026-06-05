@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FiMoon, FiSun } from "react-icons/fi";
-import { Switch } from '../input';
+import { Switch } from '../ui';
 
 const SunIcon: React.FC = () => (
   <FiSun className="w-3.5 h-3.5 text-amber-500" aria-hidden />

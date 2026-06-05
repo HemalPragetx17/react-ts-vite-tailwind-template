@@ -1,20 +1,17 @@
 import { useEffect, useState } from "react";
 import { FaChartSimple, FaFileLines } from "react-icons/fa6";
+import { HiOutlineSquares2X2 } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
-import Button from "../../components/button/Button";
-import Modal from "../../components/modal/Modal";
-import Popover from "../../components/popover/Popover";
+import { Accordion, AccordionItem, Button, Drawer, DrawerBody, DrawerContent, DrawerHeader, Modal, Popover, Tab, Tabs } from "../../components/ui";
 import type { IFormModal } from "../../models/dashboard";
 import { Routing } from "../../routes/routing";
 import DemoForm from "./DemoForm";
-import { Tabs, Tab } from "../../components/tabs";
-import { Accordion, AccordionItem } from "../../components/accordion";
-import { HiOutlineSquares2X2 } from "react-icons/hi2";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<IFormModal | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("overview");
 
   useEffect(() => {
@@ -159,6 +156,9 @@ const Dashboard = () => {
           <Button size="lg" onClick={handleDialogOpen}>
             Demo Form
           </Button>
+          <Button size="lg" onClick={() => setOpenDrawer(true)} variant="bordered">
+            Demo Drawer
+          </Button>
           <Button size="lg" onClick={handleFormOpen}>
             Demo Form Page
           </Button>
@@ -219,6 +219,32 @@ const Dashboard = () => {
           handleDialogClose={handleDialogClose}
         />
       </Modal>
+
+      <Drawer
+        isOpen={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        size="xl"
+        backdrop="blur"
+        placement="right"
+        motionProps={{
+          variants: {
+            initial: { x: "100%" },
+            animate: { x: 0, transition: { type: "spring" as const, stiffness: 300, damping: 30 } },
+            exit: { x: "-100vw", transition: { duration: 0.35, ease: "easeIn" as const } }
+          }
+        }}
+      >
+        <DrawerContent>
+          <DrawerHeader>Add New User (Drawer Mode)</DrawerHeader>
+          <DrawerBody>
+            <DemoForm
+              user={user}
+              onUserAdd={() => setOpenDrawer(false)}
+              handleDialogClose={() => setOpenDrawer(false)}
+            />
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </section>
   )
 };

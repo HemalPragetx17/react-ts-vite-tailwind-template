@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import Breadcrumbs from '../components/breadcrumbs/Breadcrumbs';
+import { Breadcrumbs } from '../components/ui';
 
 interface IMainLayoutProps {
     children?: React.ReactNode;

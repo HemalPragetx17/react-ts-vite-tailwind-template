@@ -1,0 +1,125 @@
+/* Quill Editor Styling Overrides (Light & Dark mode) */
+.text-editor-container .ql-toolbar {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-color: #e5e7eb;
+    /* border-neutral-200 */
+    padding: 6px 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+.text-editor-container .ql-toolbar .ql-formats {
+    margin-right: 6px;
+}
+
+.text-editor-container .ql-container {
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    border-color: #e5e7eb;
+    /* border-neutral-200 */
+    font-family: inherit;
+    font-size: 0.875rem;
+}
+
+.text-editor-container .ql-editor {
+    min-height: 250px;
+}
+
+/* --- Active / selected states --- */
+.text-editor-container .ql-toolbar button.ql-active .ql-stroke,
+.text-editor-container .ql-toolbar button:focus .ql-stroke {
+    stroke: #4f46e5 !important;
+}
+.text-editor-container .ql-toolbar button.ql-active .ql-fill,
+.text-editor-container .ql-toolbar button:focus .ql-fill {
+    fill: #4f46e5 !important;
+}
+
+/* ===== Dark mode overrides ===== */
+.dark .text-editor-container .ql-toolbar {
+    background-color: #1e293b;
+    border-color: #334155 !important;
+}
+
+.dark .text-editor-container .ql-container {
+    background-color: #0f172a;
+    border-color: #334155 !important;
+    color: #f1f5f9;
+}
+
+.dark .text-editor-container .ql-editor.ql-blank::before {
+    color: #64748b !important;
+}
+
+/* SVG strokes in dark mode */
+.dark .text-editor-container .ql-toolbar .ql-stroke {
+    stroke: #94a3b8 !important;
+}
+.dark .text-editor-container .ql-toolbar .ql-fill {
+    fill: #94a3b8 !important;
+}
+.dark .text-editor-container .ql-toolbar .ql-stroke.ql-fill {
+    fill: #94a3b8 !important;
+    stroke: #94a3b8 !important;
+}
+
+/* Pickers (header, size, align, color) */
+.dark .text-editor-container .ql-toolbar .ql-picker {
+    color: #94a3b8 !important;
+}
+.dark .text-editor-container .ql-toolbar .ql-picker-label {
+    border-color: #334155 !important;
+}
+.dark .text-editor-container .ql-toolbar .ql-picker-options {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4) !important;
+}
+.dark .text-editor-container .ql-toolbar .ql-picker-item {
+    color: #94a3b8 !important;
+}
+
+/* Hover states */
+.dark .text-editor-container .ql-toolbar .ql-picker-item:hover,
+.dark .text-editor-container .ql-toolbar .ql-picker-label:hover {
+    color: #ffffff !important;
+}
+.dark .text-editor-container .ql-toolbar button:hover .ql-stroke {
+    stroke: #ffffff !important;
+}
+.dark .text-editor-container .ql-toolbar button:hover .ql-fill {
+    fill: #ffffff !important;
+}
+.dark .text-editor-container .ql-toolbar .ql-picker-label:hover .ql-stroke {
+    stroke: #ffffff !important;
+}
+
+/* Active in dark mode */
+.dark .text-editor-container .ql-toolbar button.ql-active .ql-stroke {
+    stroke: #818cf8 !important;
+}
+.dark .text-editor-container .ql-toolbar button.ql-active .ql-fill {
+    fill: #818cf8 !important;
+}
+
+/* Color picker swatches in dark mode */
+.dark .text-editor-container .ql-toolbar .ql-color-picker .ql-picker-options {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+/* Code block styling in editor */
+.text-editor-container .ql-editor pre.ql-syntax {
+    background-color: #1e293b;
+    color: #e2e8f0;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    font-family: 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.8rem;
+}
+.dark .text-editor-container .ql-editor pre.ql-syntax {
+    background-color: #0f172a;
+    color: #94a3b8;
+}

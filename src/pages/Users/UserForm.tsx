@@ -1,7 +1,6 @@
 import { Field, Form, Formik } from "formik";
 import React from "react";
-import Button from "../../components/button/Button";
-import { Input, PhoneNumberInput, Switch } from "../../components/input";
+import { Button, Input, PhoneNumberInput, Switch } from "../../components/ui";
 import type { IUserModal } from "../../models/user";
 import { UserValidationSchema } from "../../validation/user";
 

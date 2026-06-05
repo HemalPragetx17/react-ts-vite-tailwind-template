@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom"
 import { IoWarningOutline } from "react-icons/io5";
-import Button from "../../components/button/Button"
-import { Routing } from "../../routes/routing"
+import { Link } from "react-router-dom";
+import { Button } from "../../components/ui";
+import { Routing } from "../../routes/routing";
 
 const ErrorPage = () => {
   return (

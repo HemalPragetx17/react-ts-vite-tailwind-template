@@ -1,7 +1,6 @@
 import { Field, Form, Formik } from "formik";
 import React from "react";
-import Button from "../../components/button/Button";
-import { Checkbox, CheckboxGroup, DateInput, FileInput, Input, PhoneNumberInput, Radio, SelectDropdown, Switch, Textarea } from "../../components/input";
+import { Button, Checkbox, CheckboxGroup, DateInput, FileInput, Input, PhoneNumberInput, Radio, SelectDropdown, Switch, Textarea } from "../../components/ui";
 import type { IFormModal } from "../../models/dashboard";
 import { FormValidationSchema } from "../../validation/dashboard";
 
@@ -219,7 +218,6 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                             name="status"
                             label="Account Status"
                             component={Switch}
-                            size="lg"
                             activeLabel="Active"
                             inactiveLabel="Inactive"
                         />

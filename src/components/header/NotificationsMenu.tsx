@@ -1,8 +1,6 @@
 import React from 'react';
 import { FaBell } from "react-icons/fa";
-import Badge from '../badge/Badge';
-import Button from '../button/Button';
-import Popover from '../popover/Popover';
+import { Badge, Button, Popover } from '../ui';
 
 type NotificationItem = {
   id: number

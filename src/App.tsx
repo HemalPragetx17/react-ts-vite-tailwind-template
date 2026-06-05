@@ -2,10 +2,10 @@ import { Suspense } from "react";
 import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Spinner from "./components/spinner/Spinner";
+import { Spinner } from "./components/ui";
 import AppRouting from "./routes/AppRouting";
 import store from "./store/store";
-``
+
 function App() {
   return (
     <Provider store={store}>

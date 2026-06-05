@@ -1,8 +1,8 @@
 import { Field, Form, Formik } from "formik";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "../../components/button/Button";
 import {
+    Button,
     Checkbox,
     CheckboxGroup,
     DateInput,
@@ -13,7 +13,7 @@ import {
     SelectDropdown,
     Switch,
     Textarea
-} from "../../components/input";
+} from "../../components/ui";
 import type { IFormModal } from "../../models/dashboard";
 import { Routing } from "../../routes/routing";
 import { FormValidationSchema } from "../../validation/dashboard";

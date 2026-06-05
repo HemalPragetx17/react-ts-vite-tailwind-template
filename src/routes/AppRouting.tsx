@@ -15,19 +15,19 @@ const Loadable = (Component: React.ComponentType) => () => {
 const PublicLayout = lazy(() => import("../layout/PublicLayout"));
 const MainLayout = lazy(() => import("../layout/MainLayout"));
 
-const LoginLayout = lazy(() => import("../pages/Account/LoginLayout"));
-const ForgotPassword = Loadable(lazy(() => import("../pages/Account/ForgotPassword")));
+const LoginLayout = lazy(() => import("../pages/account/LoginLayout"));
+const ForgotPassword = Loadable(lazy(() => import("../pages/account/ForgotPassword")));
 
-const Dashboard = Loadable(lazy(() => import("../pages/Dashboard/Dashboard")));
-const DemoFormPage = Loadable(lazy(() => import("../pages/Dashboard/DemoFormPage")));
-const Users = Loadable(lazy(() => import("../pages/Users/Users")));
-const UserDetails = Loadable(lazy(() => import("../pages/Users/UserDetails")));
-const Category = Loadable(lazy(() => import("../pages/Master/Category/Category")));
-const SubCategory = Loadable(lazy(() => import("../pages/Master/SubCategory/SubCategory")));
-const Product = Loadable(lazy(() => import("../pages/Master/Product/Product")));
+const Dashboard = Loadable(lazy(() => import("../pages/dashboard/Dashboard")));
+const DemoFormPage = Loadable(lazy(() => import("../pages/dashboard/DemoFormPage")));
+const Users = Loadable(lazy(() => import("../pages/users/Users")));
+const UserDetails = Loadable(lazy(() => import("../pages/users/UserDetails")));
+const TermsAndCondition = Loadable(lazy(() => import("../pages/settings/termsAndCondition/TermsAndCondition")));
+const PrivacyPolicy = Loadable(lazy(() => import("../pages/settings/privacyPolicy/PrivacyPolicy")));
+const AppSettings = Loadable(lazy(() => import("../pages/settings/appSettings/AppSettings")));
 
-const ErrorPage = Loadable(lazy(() => import("../pages/Account/ErrorPage")));
-const Error404Page = Loadable(lazy(() => import("../pages/Account/Error404Page")));
+const ErrorPage = Loadable(lazy(() => import("../pages/account/ErrorPage")));
+const Error404Page = Loadable(lazy(() => import("../pages/account/Error404Page")));
 
 const privateRoute = (Element: any, props?: any) => {
   return <ProtectedRoute element={props ? <Element {...props} /> : <Element />} />;
@@ -63,16 +63,16 @@ const routes = createBrowserRouter([
     element: <MainLayout>{privateRoute(UserDetails)}</MainLayout>,
   },
   {
-    path: Routing.Category,
-    element: <MainLayout>{privateRoute(Category)}</MainLayout>,
+    path: Routing.TermsAndCondition,
+    element: <MainLayout>{privateRoute(TermsAndCondition)}</MainLayout>,
   },
   {
-    path: Routing.SubCategory,
-    element: <MainLayout>{privateRoute(SubCategory)}</MainLayout>,
+    path: Routing.PrivacyPolicy,
+    element: <MainLayout>{privateRoute(PrivacyPolicy)}</MainLayout>,
   },
   {
-    path: Routing.Product,
-    element: <MainLayout>{privateRoute(Product)}</MainLayout>,
+    path: Routing.AppSettings,
+    element: <MainLayout>{privateRoute(AppSettings)}</MainLayout>,
   },
   {
     path: Routing.ErrorPage,
