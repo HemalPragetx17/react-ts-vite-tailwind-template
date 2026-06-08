@@ -132,7 +132,7 @@ const Switch = forwardRef<HTMLDivElement, SwitchProps>((props, ref) => {
     typeof thumbIcon === "function" ? thumbIcon(currentValue) : thumbIcon;
 
   return (
-    <div className={`w-full ${containerClassName}`} ref={ref}>
+    <div className={`${containerClassName}`} ref={ref}>
       {/* Top Label */}
       {label && (
         <label

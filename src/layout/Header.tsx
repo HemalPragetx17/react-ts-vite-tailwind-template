@@ -6,7 +6,6 @@ import UserMenu from '../components/header/UserMenu';
 import { Routing } from '../routes/routing';
 import { adminLogout } from '../store/slices/authSlice';
 import accountService from '../services/account-service';
-import ThemeToggle from '../components/themeToggle/ThemeToggle';
 
 export const toggleSidebar = () => {
   if (document.body.classList.contains('hide-sidebar')) {

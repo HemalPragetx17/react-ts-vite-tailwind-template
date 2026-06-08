@@ -14,6 +14,15 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+
+declare module "@tanstack/react-table" {
+  interface ColumnMeta<TData, TValue> {
+    className?: string;
+    headerClassName?: string;
+    align?: "left" | "center" | "right";
+  }
+}
+
 import clsx from "clsx";
 import React, { useState } from "react";
 import {
@@ -492,13 +501,22 @@ function CustomTable<T = any>({
                     <th
                       key={header.id}
                       colSpan={header.colSpan}
-                      className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50 whitespace-nowrap"
+                      className={clsx(
+                        "px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50 whitespace-nowrap",
+                        header.column.columnDef.meta?.align === "center" && "text-center",
+                        header.column.columnDef.meta?.align === "right" && "text-right",
+                        (!header.column.columnDef.meta?.align || header.column.columnDef.meta?.align === "left") && "text-left",
+                        header.column.columnDef.meta?.headerClassName
+                      )}
                       style={{ width: header.getSize() }}
                     >
                       {header.isPlaceholder ? null : (
                         <div
                           className={clsx(
                             "flex items-center gap-2",
+                            header.column.columnDef.meta?.align === "center" && "justify-center",
+                            header.column.columnDef.meta?.align === "right" && "justify-end",
+                            (!header.column.columnDef.meta?.align || header.column.columnDef.meta?.align === "left") && "justify-start",
                             enableSorting &&
                             !enableInfiniteScroll &&
                             header.column.getCanSort() &&
@@ -572,7 +590,13 @@ function CustomTable<T = any>({
                         {row.getVisibleCells().map((cell) => (
                           <td
                             key={cell.id}
-                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-medium"
+                            className={clsx(
+                              "px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-medium",
+                              cell.column.columnDef.meta?.align === "center" && "text-center",
+                              cell.column.columnDef.meta?.align === "right" && "text-right",
+                              (!cell.column.columnDef.meta?.align || cell.column.columnDef.meta?.align === "left") && "text-left",
+                              cell.column.columnDef.meta?.className
+                            )}
                           >
                             {flexRender(
                               cell.column.columnDef.cell,
@@ -598,7 +622,13 @@ function CustomTable<T = any>({
                                   {subRow.getVisibleCells().map((cell) => (
                                     <td
                                       key={cell.id}
-                                      className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-medium"
+                                      className={clsx(
+                                        "px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-medium",
+                                        cell.column.columnDef.meta?.align === "center" && "text-center",
+                                        cell.column.columnDef.meta?.align === "right" && "text-right",
+                                        (!cell.column.columnDef.meta?.align || cell.column.columnDef.meta?.align === "left") && "text-left",
+                                        cell.column.columnDef.meta?.className
+                                      )}
                                     >
                                       {flexRender(
                                         cell.column.columnDef.cell,

@@ -3,10 +3,20 @@ import { Link, useLocation } from 'react-router-dom';
 import type { ISidebarData } from '../shared/constants/sidebar-data';
 import { sidebarRoutes } from '../shared/constants/sidebar-data';
 import { SidebarMenuIcon } from '../shared/sidebar-icons';
+import { Modules } from '../shared/enums/modules';
+import { Routing } from '../routes/routing';
 
 const Sidebar = () => {
   const { pathname } = useLocation();
   const [activeMenu, setActiveMenu] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    let activeMenu = null;
+    if (location?.pathname?.includes(Routing.Settings)) {
+      activeMenu = Modules.Settings;
+    }
+    setActiveMenu(activeMenu);
+  }, [location?.pathname]);
 
   const handleMenuOpen = (menu: string) => {
     if (activeMenu !== menu) {

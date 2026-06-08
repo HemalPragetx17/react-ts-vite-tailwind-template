@@ -112,6 +112,9 @@ const Users = () => {
     {
       accessorKey: "active",
       header: "Status",
+      meta: {
+        align: "center",
+      },
       cell: ({ row }) => {
         const isActive = row.original.active;
         return (
@@ -126,13 +129,16 @@ const Users = () => {
       },
     },
     {
-      id: "statusToggle",
-      header: "Status Switch",
+      accessorKey: "active",
+      header: "Status Toggle",
+      meta: {
+        align: "center",
+      },
       cell: ({ row }) => {
         const isActive = row.original.active;
         const userId = row.original._id;
         return (
-          <div className="flex items-center">
+          <div className="flex items-center justify-center">
             <Switch
               size="sm"
               color="success"
@@ -150,9 +156,12 @@ const Users = () => {
     {
       accessorKey: "actions",
       header: "Actions",
+      meta: {
+        align: "center",
+      },
       cell: ({ row }) => {
         return (
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center justify-center gap-1.5">
             <Button
               isIconOnly
               size="md"

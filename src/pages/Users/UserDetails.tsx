@@ -77,14 +77,6 @@ const UserDetails = () => {
 
   const columns: ColumnDef<IAppointmentModal>[] = useMemo(() => [
     {
-      accessorKey: "appointmentNo",
-      header: "Appt. No",
-      enableSorting: true,
-      cell: ({ getValue }) => (
-        <span className="font-mono text-xs text-primary font-semibold">#{getValue() as number}</span>
-      ),
-    },
-    {
       accessorKey: "appointmentDate",
       header: "Date",
       enableSorting: true,
@@ -132,6 +124,9 @@ const UserDetails = () => {
       accessorKey: "acuityLevel",
       header: "Acuity",
       enableSorting: true,
+      meta: {
+        align: "center",
+      },
       cell: ({ getValue }) => (
         <Chip variant="flat" color="warning" size="sm">
           Level {getValue() as number}
@@ -141,6 +136,9 @@ const UserDetails = () => {
     {
       accessorKey: "status",
       header: "Status",
+      meta: {
+        align: "center",
+      },
       cell: ({ getValue }) => {
         const status = getValue() as number;
         const config = APPOINTMENT_STATUS_MAP[status] ?? { label: `Status ${status}`, color: "default" as const };
