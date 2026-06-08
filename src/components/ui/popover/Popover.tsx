@@ -62,6 +62,8 @@ export interface PopoverProps {
      * @default { open: 0, close: 100 }
      */
     delay?: { open?: number; close?: number };
+    /** Additional CSS classes on the popover trigger wrapper */
+    triggerClassName?: string;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -204,6 +206,7 @@ const Popover: React.FC<PopoverProps> = ({
     closeOnOutsideClick = true,
     className = "",
     minWidth,
+    triggerClassName = "",
     triggerMode = "click",
     delay = {},
 }) => {
@@ -281,12 +284,14 @@ const Popover: React.FC<PopoverProps> = ({
             const triggerCenterX = triggerRect.left + triggerRect.width / 2;
             const clampedPanelLeft = position.left - scrollX;
             const raw = triggerCenterX - clampedPanelLeft - half;
-            setArrowOffset(Math.min(Math.max(raw, 12), panelRect.width - arrowSize - 12));
+            const arrowMargin = Math.min(12, (panelRect.width - arrowSize) / 2);
+            setArrowOffset(Math.min(Math.max(raw, arrowMargin), panelRect.width - arrowSize - arrowMargin));
         } else {
             const triggerCenterY = triggerRect.top + triggerRect.height / 2;
             const clampedPanelTop = position.top - scrollY;
             const raw = triggerCenterY - clampedPanelTop - half;
-            setArrowOffset(Math.min(Math.max(raw, 12), panelRect.height - arrowSize - 12));
+            const arrowMargin = Math.min(12, (panelRect.height - arrowSize) / 2);
+            setArrowOffset(Math.min(Math.max(raw, arrowMargin), panelRect.height - arrowSize - arrowMargin));
         }
     }, [side, alignment, offset]);
 
@@ -322,10 +327,10 @@ const Popover: React.FC<PopoverProps> = ({
     // Arrow static shape classes (no position helpers — those are applied via inline style)
     const arrowBaseClass = `absolute z-10 w-3 h-3 ${colorArrowBgMap[color]} ${colorArrowMap[color]}`;
     const arrowShapeClass = {
-        bottom: `${arrowBaseClass} -top-[6px] border-l border-t rotate-45`,
-        top:    `${arrowBaseClass} -bottom-[6px] border-r border-b rotate-45`,
-        left:   `${arrowBaseClass} -right-[6px] border-t border-r rotate-45`,
-        right:  `${arrowBaseClass} -left-[6px] border-b border-l rotate-45`,
+        bottom: `${arrowBaseClass} -top-[5px] border-l border-t rotate-45`,
+        top:    `${arrowBaseClass} -bottom-[5px] border-r border-b rotate-45`,
+        left:   `${arrowBaseClass} -right-[5px] border-t border-r rotate-45`,
+        right:  `${arrowBaseClass} -left-[5px] border-b border-l rotate-45`,
     }[side];
     // Inline style places the arrow at the trigger center relative to the panel edge
     const arrowStyle: React.CSSProperties = (side === "top" || side === "bottom")
@@ -391,7 +396,7 @@ const Popover: React.FC<PopoverProps> = ({
         <>
             <div
                 ref={triggerRef}
-                className="inline-flex"
+                className={`inline-flex ${triggerClassName}`}
                 onClick={triggerMode === "click" ? toggle : undefined}
                 onMouseEnter={triggerMode === "hover" ? handleMouseEnter : undefined}
                 onMouseLeave={triggerMode === "hover" ? handleMouseLeave : undefined}

@@ -19,6 +19,10 @@ const meta: Meta<typeof Switch> = {
       control: "select",
       options: ["default", "primary", "secondary", "success", "warning", "danger"],
     },
+    variant: {
+      control: "select",
+      options: ["default", "outside"],
+    },
     disabled: {
       control: "boolean",
     },
@@ -119,4 +123,24 @@ export const WithError: Story = {
     error: "This field is required",
     touched: true,
   },
+};
+
+export const OutsideVariant: Story = {
+  render: (args) => (
+    <div className="flex flex-col gap-6">
+      <div className="flex gap-8">
+        <SwitchWithState {...args} variant="outside" size="sm" label="Small Outside" value={true} />
+        <SwitchWithState {...args} variant="outside" size="md" label="Medium Outside" value={true} />
+        <SwitchWithState {...args} variant="outside" size="lg" label="Large Outside" value={true} />
+      </div>
+      <div className="flex gap-8">
+        <SwitchWithState {...args} variant="outside" color="default" label="Default" value={true} />
+        <SwitchWithState {...args} variant="outside" color="primary" label="Primary" value={true} />
+        <SwitchWithState {...args} variant="outside" color="secondary" label="Secondary" value={true} />
+        <SwitchWithState {...args} variant="outside" color="success" label="Success" value={true} />
+        <SwitchWithState {...args} variant="outside" color="warning" label="Warning" value={true} />
+        <SwitchWithState {...args} variant="outside" color="danger" label="Danger" value={true} />
+      </div>
+    </div>
+  ),
 };

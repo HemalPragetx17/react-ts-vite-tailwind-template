@@ -29,7 +29,7 @@ const meta: Meta<typeof FileInput> = {
     },
     labelPlacement: {
       control: "select",
-      options: ["inside", "outside", "outside-left", "outside-top"],
+      options: ["inside", "outside", "outside-left", "outside-top", "outlined"],
     },
     disabled: {
       control: "boolean",
@@ -177,6 +177,10 @@ export const NormalLabelPlacements: Story = {
       <div className="flex gap-4 items-end">
         <FileInputWithState label="Outside (Floating)" isClearable={true} />
         <FileInputWithState label="Outside (static with placeholder)" isClearable={true} placeholder="Select file" />
+      </div>
+      <div className="flex gap-4 items-end">
+        <FileInputWithState label="Outlined" labelPlacement="outlined" isClearable={true} />
+        <FileInputWithState label="Outlined (static with placeholder)" labelPlacement="outlined" isClearable={true} placeholder="Select file" />
       </div>
       <div className="flex gap-4 items-end">
         <FileInputWithState label="Outside Top" labelPlacement="outside-top" isClearable={true} />

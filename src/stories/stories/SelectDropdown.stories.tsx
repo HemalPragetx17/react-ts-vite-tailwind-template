@@ -28,7 +28,7 @@ const meta: Meta<typeof SelectDropdown> = {
     },
     labelPlacement: {
       control: "select",
-      options: ["inside", "outside", "outside-left", "outside-top"],
+      options: ["inside", "outside", "outside-left", "outside-top", "outlined"],
     },
     isMulti: { control: "boolean" },
     isClearable: { control: "boolean" },
@@ -193,6 +193,10 @@ export const LabelPlacements: Story = {
       <div className="flex gap-4 items-end">
         <SelectWithState {...args} isClearable labelPlacement="outside" label="Outside (Floating)" />
         <SelectWithState {...args} isClearable labelPlacement="outside" label="Outside (Static with Placeholder)" placeholder="Choose fruit..." />
+      </div>
+      <div className="flex gap-4 items-end">
+        <SelectWithState {...args} isClearable labelPlacement="outlined" label="Outlined" />
+        <SelectWithState {...args} isClearable labelPlacement="outlined" label="Outlined (Static with Placeholder)" placeholder="Choose fruit..." />
       </div>
       <div className="flex gap-4 items-end">
         <SelectWithState {...args} labelPlacement="outside-top" label="Outside Top (Static)" placeholder="Choose fruit..." />

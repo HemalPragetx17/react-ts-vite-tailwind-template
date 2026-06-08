@@ -24,7 +24,7 @@ const meta: Meta<typeof Textarea> = {
     },
     labelPlacement: {
       control: "select",
-      options: ["inside", "outside", "outside-left", "outside-top"],
+      options: ["inside", "outside", "outside-left", "outside-top", "outlined"],
     },
     isClearable: {
       control: "boolean",
@@ -121,6 +121,10 @@ export const LabelPlacements: Story = {
       <div className="flex gap-4">
         <TextareaWithState {...args} labelPlacement="outside" label="Outside (Floating)" />
         <TextareaWithState {...args} labelPlacement="outside" label="Outside (Static with Placeholder)" placeholder="Enter text" />
+      </div>
+      <div className="flex gap-4">
+        <TextareaWithState {...args} labelPlacement="outlined" label="Outlined (Floating)" />
+        <TextareaWithState {...args} labelPlacement="outlined" label="Outlined (Static with Placeholder)" placeholder="Enter text" />
       </div>
       <TextareaWithState {...args} labelPlacement="outside-top" label="Outside Top (Static)" placeholder="Enter text" />
       <TextareaWithState {...args} labelPlacement="outside-left" label="Outside Left (Static)" placeholder="Enter text" />

@@ -1,18 +1,17 @@
+import type { IconType } from "react-icons";
 import {
-  FaBox,
   FaGear,
-  FaFolder,
   FaUser,
 } from "react-icons/fa6";
-import { LuLayoutDashboard } from "react-icons/lu";
-import type { IconType } from "react-icons";
+import { LuClipboardCheck } from "react-icons/lu";
+import { MdDashboard, MdOutlineAppSettingsAlt } from "react-icons/md";
 
 export const sidebarIcons: Record<string, IconType> = {
-  dashboard: LuLayoutDashboard,
+  dashboard: MdDashboard,
   user: FaUser,
   setting: FaGear,
-  folder: FaFolder,
-  box: FaBox,
+  privacyPolicy: LuClipboardCheck,
+  appSetting: MdOutlineAppSettingsAlt,
 };
 
 interface SidebarMenuIconProps {

@@ -33,7 +33,7 @@ type SelectColor =
   | "success"
   | "warning"
   | "danger";
-type SelectLabelPlacement = "inside" | "outside" | "outside-left" | "outside-top";
+type SelectLabelPlacement = "inside" | "outside" | "outside-left" | "outside-top" | "outlined";
 
 interface SelectDropdownProps extends FieldProps {
   label?: string;
@@ -96,10 +96,15 @@ const sizeTokens: Record<
     px: string;
     floatY: number;
     floatX: number;
+    floatYOutside: number;
+    floatXOutside: number;
     floatScale: number;
     insideMinH: string;
     outsideHeight: string;
     insideHeight: string;
+    // outlined variant: y = -(wrapper_height/2 + label_height/2) to center on border line
+    outlinedFloatY: number;
+    outlinedInitialY: number;
   }
 > = {
   sm: {
@@ -109,12 +114,17 @@ const sizeTokens: Record<
     ptInside: "pt-4",
     pb: "",
     px: "px-2.5",
-    floatY: -41,
-    floatX: -10,
+    floatY: -22,
+    floatX: -3,
+    floatYOutside: -41,
+    floatXOutside: -10,
     floatScale: 0.83,
     insideMinH: "!min-h-12",
     outsideHeight: "h-10",
     insideHeight: "h-12",
+    // h-10=40px → center=20px; text-xs line-height=16px → label_height/2=8px → y=-(20+8)=-28
+    outlinedFloatY: -28.5,
+    outlinedInitialY: -8,
   },
   md: {
     minH: "!min-h-[40px]",
@@ -123,12 +133,17 @@ const sizeTokens: Record<
     ptInside: "pt-5",
     pb: "",
     px: "px-3",
-    floatY: -46.5,
-    floatX: -12,
+    floatY: -25,
+    floatX: -4,
+    floatYOutside: -46.5,
+    floatXOutside: -12,
     floatScale: 0.85,
     insideMinH: "!min-h-14",
     outsideHeight: "h-12",
     insideHeight: "h-14",
+    // h-12=48px → center=24px; text-sm line-height=20px → label_height/2=10px → y=-(24+10)=-34
+    outlinedFloatY: -35,
+    outlinedInitialY: -10,
   },
   lg: {
     minH: "!min-h-[52px]",
@@ -137,12 +152,17 @@ const sizeTokens: Record<
     ptInside: "pt-6",
     pb: "",
     px: "px-4",
-    floatY: -52,
-    floatX: -16,
+    floatY: -28,
+    floatX: -5,
+    floatYOutside: -52,
+    floatXOutside: -16,
     floatScale: 0.87,
     insideMinH: "!min-h-16",
     outsideHeight: "h-14",
     insideHeight: "h-16",
+    // h-14=56px → center=28px; text-base line-height=24px → label_height/2=12px → y=-(28+12)=-40
+    outlinedFloatY: -41,
+    outlinedInitialY: -12,
   },
 };
 
@@ -356,11 +376,14 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
   const isInside = labelPlacement === "inside";
   const isOutsideLeft = labelPlacement === "outside-left";
 
+  const isOutlined = labelPlacement === "outlined";
   const isFloating = isInside || labelPlacement === "outside";
-  const shouldFloat = isFocused || hasValue || (isFloating && !!placeholder);
+  // For outlined: show notch/float when focused OR has value OR has placeholder
+  const shouldFloat = isFocused || hasValue || (isFloating && !!placeholder) || (isOutlined && !!placeholder);
 
   const radiusClass = variant === "underlined" ? "rounded-none" : radiusMap[radius];
-  const variantClass = variantBase[variant];
+  // When labelPlacement="outlined" the fieldset draws the border; wrapper gets no border
+  const variantClass = isOutlined ? "bg-transparent border-none" : (variantBase[variant] ?? variantBase.bordered);
 
   // Dynamic layout measurement for multi-select overflow chips
   useLayoutEffect(() => {
@@ -418,7 +441,8 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
 
   // ── Render external label ──────────────────────────────────────────────────
   const renderExternalLabel = () => {
-    if (!label || isFloating) return null;
+    // For outlined, label is always rendered as the floating label inside the wrapper
+    if (!label || isFloating || isOutlined) return null;
     return (
       <label
         htmlFor={name}
@@ -455,19 +479,95 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
         <div
           ref={containerRef}
           className={`
-            relative flex w-full transition-all duration-200 ease-in-out
+            relative flex w-full transition-all duration-200 ease-in-out group
             ${isFocused ? "z-40" : "z-30"}
             ${variantClass}
             ${radiusClass}
-            ${hasError ? "!border-red-500 dark:!border-red-500" : ""}
-            ${isFocused && !hasError
+            ${hasError && !isOutlined ? "!border-red-500 dark:!border-red-500" : ""}
+            ${isFocused && !hasError && !isOutlined
               ? variant === "bordered" || variant === "faded"
                 ? "border-neutral-800 dark:border-neutral-200"
                 : ""
               : ""}
-            ${isInside ? sz.insideHeight : `${sz.outsideHeight} ${isFloating && label ? "mt-6" : ""}`}
+            ${isInside ? sz.insideHeight : `${sz.outsideHeight} ${isFloating && label && !isOutlined ? "mt-6" : ""} ${isOutlined && label ? "mt-[10px]" : ""}`}
+            ${isDisabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}
           `}
         >
+          {/* ── Outlined Fieldset Border + Legend Notch ────────────────────── */}
+          {isOutlined && (
+            <fieldset
+              className={`
+                absolute inset-0 pointer-events-none transition-all duration-200 m-0 p-0
+                ${radiusClass}
+                ${hasError
+                  ? "border-2 border-red-500 dark:border-red-500"
+                  : isFocused
+                    ? "border-2 border-[var(--color-primary,#2196f3)]"
+                    : "border border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
+                }
+              `}
+            >
+              {label && (
+                <legend
+                  className={`
+                    ml-2 font-medium transition-all duration-200 ease-out block whitespace-nowrap overflow-hidden invisible
+                    ${shouldFloat || isFocused || hasValue ? "max-w-full px-1" : "max-w-0 px-0"}
+                  `}
+                  style={{
+                    fontSize: `${size === "sm" ? 9 : size === "lg" ? 12 : 10.5}px`,
+                    height: 0,
+                  }}
+                >
+                  <span>{label}</span>
+                </legend>
+              )}
+            </fieldset>
+          )}
+
+          {/* ── Floating Label (outlined + inside + outside labelPlacements) ── */}
+          {(isFloating || isOutlined) && label && (
+            <motion.label
+              htmlFor={name}
+              initial={false}
+              animate={{
+                y: shouldFloat || (isOutlined && (isFocused || hasValue))
+                  ? isOutlined
+                    ? sz.outlinedFloatY
+                    : isInside
+                      ? sz.floatY
+                      : sz.floatYOutside
+                  : isOutlined
+                    ? sz.outlinedInitialY
+                    : "-50%",
+                x: shouldFloat || (isOutlined && (isFocused || hasValue))
+                  ? isOutlined
+                    ? 0
+                    : isInside
+                      ? sz.floatX
+                      : sz.floatXOutside
+                  : 0,
+                scale: shouldFloat || (isOutlined && (isFocused || hasValue))
+                  ? isOutlined ? 0.75 : sz.floatScale
+                  : 1,
+              }}
+              transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
+              className={`
+                absolute ${isOutlined ? "left-3" : `left-0 ${sz.px}`} font-medium select-none origin-left pointer-events-none whitespace-nowrap z-10
+                top-1/2
+                ${sz.textSize} ${labelClassName} transition-colors duration-200
+                ${(shouldFloat || (isOutlined && (isFocused || hasValue)))
+                  ? isFocused
+                    ? "text-[var(--color-primary,#2196f3)]"
+                    : "text-neutral-700 dark:text-neutral-300"
+                  : "text-neutral-400 dark:text-neutral-500"
+                }
+              `}
+              style={{ transformOrigin: isOutlined ? "left" : "top left" }}
+            >
+              {label}
+            </motion.label>
+          )}
+
           {/* Hidden measuring container for dynamic multi-select chip overflow */}
           {isMulti && Array.isArray(normalizedValue) && normalizedValue.length > 0 && (
             <div
@@ -487,43 +587,6 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
                 </div>
               ))}
             </div>
-          )}
-
-          {/* Floating label */}
-          {isFloating && label && (
-            <motion.label
-              htmlFor={name}
-              initial={false}
-              animate={{
-                top: shouldFloat
-                  ? isInside
-                    ? "0.3rem"
-                    : "50%"
-                  : "50%",
-                y: shouldFloat
-                  ? isInside
-                    ? "0%"
-                    : sz.floatY
-                  : "-50%",
-                x: shouldFloat
-                  ? isInside
-                    ? 0
-                    : sz.floatX
-                  : 0,
-                scale: shouldFloat ? sz.floatScale : 1,
-              }}
-              className={`absolute left-0 ${sz.px} font-medium select-none origin-top-left pointer-events-none whitespace-nowrap z-10 ${sz.textSize} ${labelClassName} transition-colors duration-200 ${
-                shouldFloat
-                  ? isFocused
-                    ? "text-[var(--color-primary,#2196f3)]"
-                    : "text-neutral-700 dark:text-neutral-300"
-                  : "text-neutral-400 dark:text-neutral-500"
-              }`}
-              transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
-              style={{ transformOrigin: "top left" }}
-            >
-              {label}
-            </motion.label>
           )}
 
           {/* Central Stack for Select */}
@@ -547,7 +610,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
               menuPortalTarget={typeof document !== "undefined" ? document.body : null}
               menuPosition="fixed"
               placeholder={
-                !isFloating || shouldFloat ? placeholder : ""
+                !isFloating && !isOutlined ? placeholder : shouldFloat ? placeholder : ""
               }
               onInputChange={onInputChange}
               isLoading={isLoading}

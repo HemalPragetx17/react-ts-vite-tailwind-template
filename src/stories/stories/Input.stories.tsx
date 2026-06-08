@@ -25,7 +25,7 @@ const meta: Meta<typeof Input> = {
     },
     labelPlacement: {
       control: "select",
-      options: ["inside", "outside", "outside-left", "outside-top"],
+      options: ["inside", "outside", "outside-left", "outside-top", "outlined"],
     },
     isPasswordToggle: {
       control: "boolean",
@@ -118,6 +118,10 @@ export const LabelPlacements: Story = {
       <div className="flex gap-4">
         <InputWithState {...args} labelPlacement="outside" label="Outside (Floating)" />
         <InputWithState {...args} labelPlacement="outside" label="Outside (static with placeholder)" placeholder="Enter value" />
+      </div>
+      <div className="flex gap-4">
+        <InputWithState {...args} labelPlacement="outlined" label="Outlined" />
+        <InputWithState {...args} labelPlacement="outlined" label="Outlined (static with placeholder)" placeholder="Enter value" />
       </div>
       <InputWithState {...args} labelPlacement="outside-top" label="Outside Top" placeholder="Enter value" />
       <InputWithState {...args} labelPlacement="outside-left" label="Outside Left" placeholder="Enter value" />

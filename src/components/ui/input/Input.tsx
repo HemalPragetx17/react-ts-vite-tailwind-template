@@ -23,7 +23,7 @@ interface InputProps
   size?: "sm" | "md" | "lg";
   variant?: "flat" | "bordered" | "underlined" | "faded";
   radius?: "none" | "sm" | "md" | "lg" | "full";
-  labelPlacement?: "inside" | "outside" | "outside-left" | "outside-top";
+  labelPlacement?: "inside" | "outside" | "outside-left" | "outside-top" | "outlined";
 
   // Formik integration
   field?: FieldInputProps<string>;
@@ -153,6 +153,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       floatYOutside: -41,
       floatXOutside: -14,
       floatScale: 0.83,
+      // outlined variant: y = -(wrapper_height/2 + label_height/2) to center on border line
+      // h-10=40px → center=20px; text-xs line-height=16px → label_height/2=8px → y=-(20+8)=-28
+      outlinedFloatY: -28.5,
+      outlinedInitialY: -8,
     },
     md: {
       wrapperPadding: labelPlacement === "inside" && label ? "py-1.5 px-3" : "py-2.5 px-3",
@@ -166,6 +170,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       floatYOutside: -47,
       floatXOutside: -14,
       floatScale: 0.85,
+      // h-12=48px → center=24px; text-sm line-height=20px → label_height/2=10px → y=-(24+10)=-34
+      outlinedFloatY: -35,
+      outlinedInitialY: -10,
     },
     lg: {
       wrapperPadding: labelPlacement === "inside" && label ? "py-2 px-4" : "py-3.5 px-4",
@@ -179,6 +186,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       floatYOutside: -54,
       floatXOutside: -14,
       floatScale: 0.87,
+      // h-14=56px → center=28px; text-base line-height=24px → label_height/2=12px → y=-(28+12)=-40
+      outlinedFloatY: -41,
+      outlinedInitialY: -12,
     },
   };
 
@@ -200,7 +210,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   };
 
   const currentSize = sizeConfigs[size] || sizeConfigs.md;
-  const currentVariantClass = variantConfigs[variant] || variantConfigs.flat;
+  // When labelPlacement="outlined" the fieldset draws the border; wrapper gets no border
+  const isOutlined = labelPlacement === "outlined";
+  const currentVariantClass = isOutlined
+    ? "bg-transparent border-none"
+    : (variantConfigs[variant] || variantConfigs.flat);
   const currentRadiusClass = variant === "underlined" ? "rounded-none" : (radiusConfigs[radius] || radiusConfigs.md);
 
   // Fallback map for start/end content maintaining backwards compatibility
@@ -208,11 +222,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const actualEndContent = endContent;
 
   const isFloating = labelPlacement === "inside" || labelPlacement === "outside";
-  const shouldFloat = isFocused || hasValue || (isFloating && !!placeholder);
+  const shouldFloat = isFocused || hasValue || (isFloating && !!placeholder) || (isOutlined && !!placeholder);
 
   // Render Label Helper
   const renderExternalLabel = () => {
-    if (!label || isFloating) return null;
+    if (!label || isFloating || isOutlined) return null;
     return (
       <label
         htmlFor={field?.name || props.id || props.name}
@@ -241,33 +255,71 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         {/* Input Wrapper Container */}
         <div
           className={`
-            relative flex items-center gap-2.5 w-full transition-all duration-200 ease-in-out box-border
+            relative flex items-center gap-2.5 w-full transition-all duration-200 ease-in-out box-border group
             ${currentVariantClass}
             ${currentRadiusClass}
             ${currentSize.wrapperPadding}
-            ${fieldTouched && fieldError ? "!border-red-500 dark:!border-red-500" : ""}
-            ${labelPlacement === "inside" ? currentSize.insideHeight : `${currentSize.outsideHeight} ${isFloating && label ? "mt-6" : ""}`}
+            ${fieldTouched && fieldError && !isOutlined ? "!border-red-500 dark:!border-red-500" : ""}
+            ${labelPlacement === "inside" ? currentSize.insideHeight : `${currentSize.outsideHeight} ${isFloating && label && !isOutlined ? "mt-6" : ""} ${isOutlined && label ? "mt-[10px]" : ""}`}
             ${disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}
           `}
         >
+          {/* Outlined Fieldset Border and Legend Cutout */}
+          {isOutlined && (
+            <fieldset
+              className={`
+                absolute inset-0 pointer-events-none transition-all duration-200 m-0 p-0
+                ${currentRadiusClass}
+                ${fieldTouched && fieldError
+                  ? "border-2 border-red-500 dark:border-red-500"
+                  : isFocused
+                    ? "border-2 border-[var(--color-primary,#2196f3)]"
+                    : "border border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
+                }
+              `}
+            >
+              {label && (
+                <legend
+                  className={`
+                    ml-2 font-medium transition-all duration-200 ease-out block whitespace-nowrap overflow-hidden invisible
+                    ${shouldFloat || isFocused || hasValue ? "max-w-full px-1" : "max-w-0 px-0"}
+                  `}
+                  style={{
+                    fontSize: `${size === "sm" ? 9 : size === "lg" ? 12 : 10.5}px`,
+                    height: 0,
+                  }}
+                >
+                  <span>{label}</span>
+                </legend>
+              )}
+            </fieldset>
+          )}
+
           {/* Floating Label */}
-          {isFloating && label && (
+          {(isFloating || isOutlined) && label && (
             <motion.label
               htmlFor={field?.name || props.id || props.name}
               initial={false}
               animate={{
-                y: shouldFloat
-                  ? (labelPlacement === "inside" ? currentSize.floatY : currentSize.floatYOutside)
-                  : currentSize.initialY,
-                x: shouldFloat
-                  ? (labelPlacement === "inside" ? currentSize.floatX : currentSize.floatXOutside)
+                y: shouldFloat || (isOutlined && (isFocused || hasValue))
+                  ? (isOutlined
+                      ? currentSize.outlinedFloatY
+                      : (labelPlacement === "inside" ? currentSize.floatY : currentSize.floatYOutside))
+                  : (isOutlined ? currentSize.outlinedInitialY : currentSize.initialY),
+                x: shouldFloat || (isOutlined && (isFocused || hasValue))
+                  ? (isOutlined
+                      ? 0
+                      : (labelPlacement === "inside" ? currentSize.floatX : currentSize.floatXOutside))
                   : (actualStartContent ? 32 : 0),
-                scale: shouldFloat ? currentSize.floatScale : 1,
+                scale: shouldFloat || (isOutlined && (isFocused || hasValue))
+                  ? (isOutlined ? 0.75 : currentSize.floatScale)
+                  : 1,
               }}
               transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
               className={`
                 absolute left-3 top-1/2 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
-                ${currentSize.textSize} ${labelClassName} ${shouldFloat
+                ${currentSize.textSize}
+                ${labelClassName} ${(shouldFloat || (isOutlined && (isFocused || hasValue)))
                   ? isFocused
                     ? "text-[var(--color-primary,#2196f3)]"
                     : "text-neutral-700 dark:text-neutral-300"
@@ -303,7 +355,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
               }}
               ref={ref}
               type={inputType}
-              placeholder={!isFloating || shouldFloat ? resolvedPlaceholder : ""}
+              placeholder={(!isFloating && !isOutlined) || shouldFloat ? resolvedPlaceholder : ""}
               disabled={disabled}
               className={`
                 w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0 p-0

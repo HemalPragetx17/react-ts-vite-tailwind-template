@@ -33,7 +33,7 @@ type PickerColor =
   | "success"
   | "warning"
   | "danger";
-type PickerLabelPlacement = "inside" | "outside" | "outside-left" | "outside-top";
+type PickerLabelPlacement = "inside" | "outside" | "outside-left" | "outside-top" | "outlined";
 
 export interface DateInputProps {
   label?: string;
@@ -455,9 +455,10 @@ const DateInput: React.FC<DateInputProps> = ({
     ? formatDisplayRange(startDate, endDate)
     : formatDateDisplay(startDate);
 
+  const isOutlined = labelPlacement === "outlined";
   const isFloating = labelPlacement === "inside" || labelPlacement === "outside";
-  const shouldFloat = isOpen || hasValue || (isFloating && !!placeholder);
-  const resolvedPlaceholder = placeholder || (isFloating ? "" : "Select Date");
+  const shouldFloat = isOpen || hasValue || (isFloating && !!placeholder) || (isOutlined && !!placeholder);
+  const resolvedPlaceholder = placeholder || (isFloating || isOutlined ? "" : "Select Date");
 
   const sizeConfigs = {
     sm: {
@@ -473,6 +474,8 @@ const DateInput: React.FC<DateInputProps> = ({
       floatYOutside: -41,
       floatXOutside: -14,
       floatScale: 0.83,
+      outlinedFloatY: -28.5,
+      outlinedInitialY: -8,
     },
     md: {
       wrapperPadding: labelPlacement === "inside" && label ? "py-1.5 px-3" : "py-2.5 px-3",
@@ -487,6 +490,8 @@ const DateInput: React.FC<DateInputProps> = ({
       floatYOutside: -47,
       floatXOutside: -14,
       floatScale: 0.85,
+      outlinedFloatY: -35,
+      outlinedInitialY: -10,
     },
     lg: {
       wrapperPadding: labelPlacement === "inside" && label ? "py-2 px-4" : "py-3.5 px-4",
@@ -501,6 +506,8 @@ const DateInput: React.FC<DateInputProps> = ({
       floatYOutside: -54,
       floatXOutside: -14,
       floatScale: 0.87,
+      outlinedFloatY: -41,
+      outlinedInitialY: -12,
     },
   };
 
@@ -681,14 +688,14 @@ const DateInput: React.FC<DateInputProps> = ({
     }
   };
 
-  const variantClass = variantBase[variant];
+  const variantClass = isOutlined ? "bg-transparent border-none" : variantBase[variant];
   const radiusClass =
     variant === "underlined" ? "rounded-none" : radiusMap[radius];
 
   const isOutsideLeft = labelPlacement === "outside-left";
 
   const renderOutsideLabel = () => {
-    if (!label || isFloating) return null;
+    if (!label || isFloating || isOutlined) return null;
     return (
       <label
         htmlFor={fieldName}
@@ -952,14 +959,14 @@ const DateInput: React.FC<DateInputProps> = ({
 
         <div
           className={`
-            relative flex items-center justify-between w-full transition-all duration-200 ease-in-out cursor-pointer select-none box-border
+            relative flex items-center justify-between w-full transition-all duration-200 ease-in-out cursor-pointer select-none box-border group
             ${variantClass}
             ${radiusClass}
             ${sz.wrapperPadding}
-            ${labelPlacement === "inside" ? sz.insideHeight : `${sz.outsideHeight} ${isFloating && label ? "mt-6" : ""}`}
-            ${hasError ? "!border-danger" : ""}
+            ${labelPlacement === "inside" ? sz.insideHeight : `${sz.outsideHeight} ${isFloating && label && !isOutlined ? "mt-6" : ""} ${isOutlined && label ? "mt-[10px]" : ""}`}
+            ${hasError && !isOutlined ? "!border-danger" : ""}
             ${
-              isOpen && !hasError
+              isOpen && !hasError && !isOutlined
                 ? variant === "bordered" || variant === "faded"
                   ? "border-secondary-800"
                   : ""
@@ -969,31 +976,75 @@ const DateInput: React.FC<DateInputProps> = ({
           `}
           onClick={() => !disabled && setIsOpen((prev) => !prev)}
         >
+          {/* ── Outlined Fieldset Border + Legend Notch ────────────────────── */}
+          {isOutlined && (
+            <fieldset
+              className={`
+                absolute inset-0 pointer-events-none transition-all duration-200 m-0 p-0
+                ${radiusClass}
+                ${hasError
+                  ? "border-2 border-red-500 dark:border-red-500"
+                  : isOpen
+                    ? "border-2 border-[var(--color-primary,#2196f3)]"
+                    : "border border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
+                }
+              `}
+            >
+              {label && (
+                <legend
+                  className={`
+                    ml-2 font-medium transition-all duration-200 ease-out block whitespace-nowrap overflow-hidden invisible
+                    ${shouldFloat || isOpen || hasValue ? "max-w-full px-1" : "max-w-0 px-0"}
+                  `}
+                  style={{
+                    fontSize: `${size === "sm" ? 9 : size === "lg" ? 12 : 10.5}px`,
+                    height: 0,
+                  }}
+                >
+                  <span>{label}</span>
+                </legend>
+              )}
+            </fieldset>
+          )}
+
           {/* Floating Label */}
-          {isFloating && label && (
+          {(isFloating || isOutlined) && label && (
             <motion.label
               htmlFor={fieldName}
               initial={false}
               animate={{
-                y: shouldFloat 
-                  ? (labelPlacement === "inside" ? sz.floatY : sz.floatYOutside) 
-                  : sz.initialY,
-                x: shouldFloat 
-                  ? (labelPlacement === "inside" ? sz.floatX : sz.floatXOutside) 
+                y: shouldFloat || (isOutlined && (isOpen || hasValue))
+                  ? isOutlined
+                    ? sz.outlinedFloatY
+                    : labelPlacement === "inside"
+                      ? sz.floatY
+                      : sz.floatYOutside
+                  : isOutlined
+                    ? sz.outlinedInitialY
+                    : sz.initialY,
+                x: shouldFloat || (isOutlined && (isOpen || hasValue))
+                  ? isOutlined
+                    ? 0
+                    : labelPlacement === "inside"
+                      ? sz.floatX
+                      : sz.floatXOutside
                   : sz.initialX,
-                scale: shouldFloat ? sz.floatScale : 1,
+                scale: shouldFloat || (isOutlined && (isOpen || hasValue))
+                  ? isOutlined ? 0.75 : sz.floatScale
+                  : 1,
               }}
               transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
               className={`
                 absolute left-3 top-1/2 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
                 ${sz.textSize} ${labelClassName} ${
-                  shouldFloat
+                  (shouldFloat || (isOutlined && (isOpen || hasValue)))
                     ? isOpen
                       ? "text-[var(--color-primary,#2196f3)]"
                       : "text-neutral-700 dark:text-neutral-300"
                     : "text-neutral-400 dark:text-neutral-500"
                 }
               `}
+              style={{ transformOrigin: isOutlined ? "left" : "top left" }}
             >
               {label}
             </motion.label>
@@ -1030,7 +1081,7 @@ const DateInput: React.FC<DateInputProps> = ({
                 </span>
               ) : (
                 <span
-                  className={`text-secondary-800 font-medium truncate select-none ${sz.textSize}`}
+                  className={`text-secondary-800 truncate select-none ${sz.textSize}`}
                 >
                   {displayString}
                 </span>

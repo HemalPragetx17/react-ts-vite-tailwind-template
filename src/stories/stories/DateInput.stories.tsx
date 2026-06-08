@@ -28,7 +28,7 @@ const meta: Meta<typeof DateInput> = {
     },
     labelPlacement: {
       control: "select",
-      options: ["inside", "outside", "outside-left", "outside-top"],
+      options: ["inside", "outside", "outside-left", "outside-top", "outlined"],
     },
     disabled: {
       control: "boolean",
@@ -148,6 +148,10 @@ export const LabelPlacements: Story = {
       <div className="flex gap-4 items-end">
         <DatePickerWithState label="Outside (Floating)" isClearable={true} />
         <DatePickerWithState label="Outside (static with placeholder)" isClearable={true} placeholder="Select Date" />
+      </div>
+      <div className="flex gap-4 items-end">
+        <DatePickerWithState label="Outlined" labelPlacement="outlined" isClearable={true} />
+        <DatePickerWithState label="Outlined (static with placeholder)" labelPlacement="outlined" isClearable={true} placeholder="Select Date" />
       </div>
       <div className="flex gap-4 items-end">
         <DatePickerWithState label="Outside Top" labelPlacement="outside-top" isClearable={true} />

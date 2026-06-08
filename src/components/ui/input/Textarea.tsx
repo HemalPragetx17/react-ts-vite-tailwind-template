@@ -20,7 +20,7 @@ interface TextareaProps
   size?: "sm" | "md" | "lg";
   variant?: "flat" | "bordered" | "underlined" | "faded";
   radius?: "none" | "sm" | "md" | "lg" | "full";
-  labelPlacement?: "inside" | "outside" | "outside-left" | "outside-top";
+  labelPlacement?: "inside" | "outside" | "outside-left" | "outside-top" | "outlined";
 
   // Clearable
   isClearable?: boolean;
@@ -159,6 +159,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         initialY: 14,
         initialYOutside: 8,
         floatScale: 0.83,
+        outlinedFloatY: -8.5,
+        outlinedInitialY: 8,
       },
       md: { 
         textSize: "text-sm",
@@ -173,6 +175,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         initialY: 18,
         initialYOutside: 10,
         floatScale: 0.85,
+        outlinedFloatY: -11.5,
+        outlinedInitialY: 10,
       },
       lg: { 
         textSize: "text-base",
@@ -187,6 +191,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         initialY: 22,
         initialYOutside: 12,
         floatScale: 0.87,
+        outlinedFloatY: -13,
+        outlinedInitialY: 12,
       },
     };
 
@@ -207,8 +213,11 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       full: "rounded-2xl",
     };
 
+    const isOutlined = labelPlacement === "outlined";
     const cs = sizeConfigs[size] ?? sizeConfigs.md;
-    const variantClass = variantConfigs[variant] ?? variantConfigs.bordered;
+    const variantClass = isOutlined
+      ? "bg-transparent border-none"
+      : (variantConfigs[variant] ?? variantConfigs.bordered);
     const radiusClass =
       variant === "underlined"
         ? "rounded-none"
@@ -216,8 +225,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     const hasError = !!(fieldTouched && fieldError);
 
-    const isFloating = labelPlacement === "inside" || labelPlacement === "outside";
-    const shouldFloat = isFocused || hasValue || (isFloating && !!placeholder);
+    const isFloating = labelPlacement === "inside" || labelPlacement === "outside" || labelPlacement === "outlined";
+    const shouldFloat = isFocused || hasValue || (isFloating && !!placeholder) || (isOutlined && !!placeholder);
 
     // ── Outside label ─────────────────────────────────────────────────────
     const renderExternalLabel = () => {
@@ -248,41 +257,80 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
           <div
             className={`
-              relative w-full transition-all duration-200 ease-in-out box-border
+              relative w-full transition-all duration-200 ease-in-out box-border group
               ${variantClass}
               ${radiusClass}
-              ${hasError ? "!border-red-500 dark:!border-red-500" : ""}
-              ${labelPlacement === "inside" ? "" : (isFloating && label ? "mt-6" : "")}
+              ${hasError && !isOutlined ? "!border-red-500 dark:!border-red-500" : ""}
+              ${labelPlacement === "inside" ? "" : (isFloating && label && !isOutlined ? "mt-6" : "")}
+              ${isOutlined && label ? "mt-[10px]" : ""}
               ${cs.px}
               ${disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}
             `}
             onClick={() => internalRef.current?.focus()}
           >
+            {/* Outlined Fieldset Border and Legend Notch Cutout */}
+            {isOutlined && (
+              <fieldset
+                className={`
+                  absolute inset-0 pointer-events-none transition-all duration-200 m-0 p-0
+                  ${radiusClass}
+                  ${hasError
+                    ? "border-2 border-red-500 dark:border-red-500"
+                    : isFocused
+                      ? "border-2 border-[var(--color-primary,#2196f3)]"
+                      : "border border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
+                  }
+                `}
+              >
+                {label && (
+                  <legend
+                    className={`
+                      ml-2 font-medium transition-all duration-200 ease-out block whitespace-nowrap overflow-hidden invisible
+                      ${shouldFloat || isFocused || hasValue ? "max-w-full px-1" : "max-w-0 px-0"}
+                    `}
+                    style={{
+                      fontSize: `${size === "sm" ? 9 : size === "lg" ? 12 : 10.5}px`,
+                      height: 0,
+                    }}
+                  >
+                    <span>{label}</span>
+                  </legend>
+                )}
+              </fieldset>
+            )}
+
             {/* Inside floating label */}
-            {isFloating && label && (
+            {(isFloating || isOutlined) && label && (
               <motion.label
                 htmlFor={inputId}
                 initial={false}
                 animate={{
-                  y: shouldFloat 
-                    ? (labelPlacement === "inside" ? cs.floatY : cs.floatYOutside) 
-                    : (labelPlacement === "inside" ? cs.initialY : cs.initialYOutside),
-                  x: shouldFloat 
-                    ? (labelPlacement === "inside" ? cs.floatX : cs.floatXOutside) 
+                  y: shouldFloat || (isOutlined && (isFocused || hasValue))
+                    ? (isOutlined
+                      ? cs.outlinedFloatY
+                      : (labelPlacement === "inside" ? cs.floatY : cs.floatYOutside))
+                    : (isOutlined ? cs.outlinedInitialY : (labelPlacement === "inside" ? cs.initialY : cs.initialYOutside)),
+                  x: shouldFloat || (isOutlined && (isFocused || hasValue))
+                    ? (isOutlined
+                      ? 0
+                      : (labelPlacement === "inside" ? cs.floatX : cs.floatXOutside))
                     : 0,
-                  scale: shouldFloat ? cs.floatScale : 1,
+                  scale: shouldFloat || (isOutlined && (isFocused || hasValue))
+                    ? (isOutlined ? 0.75 : cs.floatScale)
+                    : 1,
                 }}
                 transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
                 className={`
                   absolute left-3 top-0 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
                   ${cs.textSize} ${labelClassName} ${
-                    shouldFloat
+                    (shouldFloat || (isOutlined && (isFocused || hasValue)))
                       ? isFocused
                         ? "text-[var(--color-primary,#2196f3)]"
                         : "text-neutral-700 dark:text-neutral-300"
                       : "text-neutral-400 dark:text-neutral-500"
                   }
                 `}
+                style={{ transformOrigin: isOutlined ? "left" : "top left" }}
               >
                 {label}
               </motion.label>
