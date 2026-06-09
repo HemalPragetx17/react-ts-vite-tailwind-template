@@ -516,13 +516,19 @@ const TimePicker: React.FC<TimePickerProps> = ({
       position = "bottom";
     }
 
+    let left = rect.left;
+    if (left + dialogWidth > window.innerWidth) {
+      left = window.innerWidth - dialogWidth - 12;
+    }
+    if (left < 12) left = 12;
+
     setDropdownCoords({
       top,
       bottom,
-      left: rect.left,
+      left,
       position,
     });
-  }, [isMobileMode, dialogHeight]);
+  }, [isMobileMode, dialogHeight, dialogWidth]);
 
   useEffect(() => {
     checkMobileLayout();

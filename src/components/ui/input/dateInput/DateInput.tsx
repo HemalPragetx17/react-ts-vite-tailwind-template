@@ -406,10 +406,17 @@ const DateInput: React.FC<DateInputProps> = ({
       position = "bottom";
     }
 
+    const popoverWidth = 256;
+    let left = rect.left;
+    if (left + popoverWidth > window.innerWidth) {
+      left = window.innerWidth - popoverWidth - 12;
+    }
+    if (left < 12) left = 12;
+
     setDropdownCoords({
       top,
       bottom,
-      left: rect.left,
+      left,
       position,
     });
   }, []);

@@ -1161,7 +1161,13 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
     } else {
       top = rect.bottom + 6;
     }
-    setCoords({ top, bottom, left: rect.left });
+    const popoverWidth = timeMode === "clock" ? 534 : 524;
+    let left = rect.left;
+    if (left + popoverWidth > window.innerWidth) {
+      left = window.innerWidth - popoverWidth - 12;
+    }
+    if (left < 12) left = 12;
+    setCoords({ top, bottom, left });
   }, [timeMode]);
 
   useEffect(() => {
