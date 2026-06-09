@@ -24,4 +24,5 @@ export interface IFormModal {
     }[];
     imageToDelete: string[];
     birthTime?: string;
+    appointment?: string;
 }

@@ -6,6 +6,7 @@ import {
     Checkbox,
     CheckboxGroup,
     DateInput,
+    DateTimePicker,
     FileInput,
     Input,
     PhoneNumberInput,
@@ -41,6 +42,7 @@ const initialState: IFormModal = {
     images: [],
     imageToDelete: [],
     birthTime: "",
+    appointment: ""
 };
 
 const DemoFormPage: React.FC = () => {
@@ -230,6 +232,16 @@ const DemoFormPage: React.FC = () => {
                                                 component={TimePicker}
                                             />
 
+                                            {/* Appointment */}
+                                            <Field
+                                                name="appointment"
+                                                label="Appointment"
+                                                placeholder="Select appointment"
+                                                timeMode="clock"
+                                                isClearable={true}
+                                                component={DateTimePicker}
+                                            />
+
                                             {/* Gender */}
                                             <div className="md:col-span-1">
                                                 <Field
@@ -268,6 +280,7 @@ const DemoFormPage: React.FC = () => {
                                         <Field
                                             name="role"
                                             label="Role"
+                                            placeholder="Select role"
                                             component={SelectDropdown}
                                             options={roleOptions}
                                         />
@@ -289,6 +302,7 @@ const DemoFormPage: React.FC = () => {
                                                 <Field
                                                     name="technologies"
                                                     label="Technologies Stack"
+                                                    placeholder="Select technologies"
                                                     component={SelectDropdown}
                                                     options={technologyOptions}
                                                     isMulti

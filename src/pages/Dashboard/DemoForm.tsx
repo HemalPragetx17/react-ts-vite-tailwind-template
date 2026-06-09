@@ -1,6 +1,6 @@
 import { Field, Form, Formik } from "formik";
 import React from "react";
-import { Button, Checkbox, CheckboxGroup, DateInput, FileInput, Input, PhoneNumberInput, Radio, SelectDropdown, Switch, Textarea, TimePicker } from "../../components/ui";
+import { Button, Checkbox, CheckboxGroup, DateInput, DateTimePicker, FileInput, Input, PhoneNumberInput, Radio, SelectDropdown, Switch, Textarea, TimePicker } from "../../components/ui";
 import type { IFormModal } from "../../models/dashboard";
 import { FormValidationSchema } from "../../validation/dashboard";
 
@@ -31,7 +31,8 @@ const initialState: IFormModal = {
     image: "",
     images: [],
     imageToDelete: [],
-    birthTime: ""
+    birthTime: "",
+    appointment: ""
 };
 
 const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose }) => {
@@ -210,6 +211,15 @@ const DemoForm: React.FC<DemoFormProps> = ({ user, onUserAdd, handleDialogClose 
                             mode="clock"
                             isClearable={true}
                             component={TimePicker}
+                        />
+
+                        {/* Appointment */}
+                        <Field
+                            name="appointment"
+                            label="Appointment"
+                            timeMode="clock"
+                            isClearable={true}
+                            component={DateTimePicker}
                         />
                     </div>
 
