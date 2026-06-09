@@ -1,8 +1,9 @@
 import type { FieldInputProps, FormikErrors, FormikTouched } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { forwardRef, useState } from "react";
-import { FiEye, FiEyeOff } from "react-icons/fi";
 import { FaXmark } from "react-icons/fa6";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import Button from "../button/Button";
 
 interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "form" | "size"> {
@@ -63,6 +64,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     disabled = false,
     ...restProps
   } = props;
+
+  const resolvedVariant = labelPlacement === "outlined" ? "bordered" : variant;
+
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [internalValue, setInternalValue] = useState("");
@@ -195,9 +199,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   // Variant Configurations
   const variantConfigs = {
     flat: "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus-within:bg-neutral-200 dark:focus-within:bg-neutral-700 border-2 border-transparent",
-    bordered: "bg-transparent border-2 border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 focus-within:border-neutral-800 dark:focus-within:border-neutral-200",
+    bordered: "bg-transparent border-2 border-neutral-300 focus-within:border-primary",
     underlined: "bg-transparent border-b-2 border-transparent rounded-none relative",
-    faded: "bg-neutral-50 dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 focus-within:border-neutral-600",
+    faded: "bg-neutral-50 dark:bg-neutral-900 border-2 border-neutral-200 focus-within:border-primary",
   };
 
   // Radius Configurations
@@ -214,8 +218,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const isOutlined = labelPlacement === "outlined";
   const currentVariantClass = isOutlined
     ? "bg-transparent border-none"
-    : (variantConfigs[variant] || variantConfigs.flat);
-  const currentRadiusClass = variant === "underlined" ? "rounded-none" : (radiusConfigs[radius] || radiusConfigs.md);
+    : (variantConfigs[resolvedVariant] || variantConfigs.flat);
+  const currentRadiusClass = resolvedVariant === "underlined" ? "rounded-none" : (radiusConfigs[radius] || radiusConfigs.md);
 
   // Fallback map for start/end content maintaining backwards compatibility
   const actualStartContent = startContent;
@@ -273,8 +277,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
                 ${fieldTouched && fieldError
                   ? "border-2 border-red-500 dark:border-red-500"
                   : isFocused
-                    ? "border-2 border-[var(--color-primary,#2196f3)]"
-                    : "border border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
+                    ? "border-2 border-primary"
+                    : "border-2 border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
                 }
               `}
             >
@@ -303,13 +307,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
               animate={{
                 y: shouldFloat || (isOutlined && (isFocused || hasValue))
                   ? (isOutlined
-                      ? currentSize.outlinedFloatY
-                      : (labelPlacement === "inside" ? currentSize.floatY : currentSize.floatYOutside))
+                    ? currentSize.outlinedFloatY
+                    : (labelPlacement === "inside" ? currentSize.floatY : currentSize.floatYOutside))
                   : (isOutlined ? currentSize.outlinedInitialY : currentSize.initialY),
                 x: shouldFloat || (isOutlined && (isFocused || hasValue))
                   ? (isOutlined
-                      ? 0
-                      : (labelPlacement === "inside" ? currentSize.floatX : currentSize.floatXOutside))
+                    ? 0
+                    : (labelPlacement === "inside" ? currentSize.floatX : currentSize.floatXOutside))
                   : (actualStartContent ? 32 : 0),
                 scale: shouldFloat || (isOutlined && (isFocused || hasValue))
                   ? (isOutlined ? 0.75 : currentSize.floatScale)
@@ -369,15 +373,17 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
           {/* Clear Button */}
           {isClearable && hasValue && !disabled && (
-            <button
-              type="button"
-              onClick={handleClear}
+            <Button
+              color="default"
+              size="xs"
+              variant="flat"
+              radius="full"
+              isIconOnly
               tabIndex={-1}
-              aria-label="Clear value"
-              className="flex items-center justify-center shrink-0 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 transition p-0.5 rounded-full"
+              onClick={handleClear}
             >
-              <FaXmark className="w-4 h-4" aria-hidden />
-            </button>
+              <FaXmark className="w-3.5 h-3.5" aria-hidden />
+            </Button>
           )}
 
           {/* End Content / Password Toggle */}
@@ -405,9 +411,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
           )}
 
           {/* Underline Animation for Underlined Variant */}
-          {variant === "underlined" && (
+          {resolvedVariant === "underlined" && (
             <motion.div
-              className="absolute bottom-[-2px] left-0 right-0 h-[2px] bg-neutral-800 dark:bg-neutral-200 z-20"
+              className="absolute bottom-[-2px] left-0 right-0 h-[2px] bg-primary z-20"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: isFocused ? 1 : 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}

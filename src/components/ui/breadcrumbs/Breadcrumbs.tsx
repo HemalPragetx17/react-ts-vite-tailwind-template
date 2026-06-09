@@ -224,7 +224,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
     const variantClasses = {
         light: "bg-transparent p-0",
         solid: "bg-neutral-100/90 dark:bg-neutral-800/80 backdrop-blur-md shadow-[0_1px_2px_rgba(0,0,0,0.02)] inline-flex items-center",
-        bordered: "border border-neutral-200 dark:border-neutral-800 bg-transparent inline-flex items-center",
+        bordered: "border-2 border-neutral-200 dark:border-neutral-800 bg-transparent inline-flex items-center",
     }[variant];
 
     // Colors mapping for links (non-last items)

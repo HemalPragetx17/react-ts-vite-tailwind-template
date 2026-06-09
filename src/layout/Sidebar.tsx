@@ -70,7 +70,7 @@ const Sidebar = () => {
                 <Popover
                   trigger={
                     <Link
-                      className={`group w-full relative flex items-center box-border text-[15px] leading-[19px] py-2 px-[14px] gap-[10px] no-underline ${isActive || pathname?.includes(menu?.route) ? 'active text-white' : 'text-secondary-600'} ${pathname?.includes(menu?.route) ? 'bg-primary' : ''} hover:bg-primary hover:text-white transition-colors duration-100 ease-linear [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:px-0`}
+                      className={`group w-full relative flex items-center box-border text-[15px] leading-[19px] py-2 px-[14px] gap-[10px] no-underline ${isActive || pathname?.includes(menu?.route) ? 'active bg-primary text-white' : 'text-secondary-600'} hover:bg-primary hover:text-white transition-colors duration-100 ease-linear [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:px-0`}
                       to={menu?.route ? menu?.route : '/'}
                       onClick={(e) => {
                         if ((menu?.childs?.length ?? 0) > 0) e.preventDefault();

@@ -64,6 +64,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onUserAdd, handleDialogClose 
               type="tel"
               name='phone'
               label="Phone Number"
+              placeholder="Enter phone number"
               inputProps={{
                 name: 'phone',
                 required: true,

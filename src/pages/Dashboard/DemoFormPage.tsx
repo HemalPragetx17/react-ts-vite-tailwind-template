@@ -12,7 +12,8 @@ import {
     Radio,
     SelectDropdown,
     Switch,
-    Textarea
+    Textarea,
+    TimePicker
 } from "../../components/ui";
 import type { IFormModal } from "../../models/dashboard";
 import { Routing } from "../../routes/routing";
@@ -39,6 +40,7 @@ const initialState: IFormModal = {
     image: "",
     images: [],
     imageToDelete: [],
+    birthTime: "",
 };
 
 const DemoFormPage: React.FC = () => {
@@ -216,6 +218,16 @@ const DemoFormPage: React.FC = () => {
                                                 label="Age"
                                                 placeholder="Enter age"
                                                 component={Input}
+                                            />
+
+                                            {/* Birth Time */}
+                                            <Field
+                                                name="birthTime"
+                                                label="Birth Time"
+                                                placeholder="Enter birth time"
+                                                mode="clock"
+                                                isClearable={true}
+                                                component={TimePicker}
                                             />
 
                                             {/* Gender */}

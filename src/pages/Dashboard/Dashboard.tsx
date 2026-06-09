@@ -56,7 +56,8 @@ const Dashboard = () => {
           url: "https://umart-production.s3.af-south-1.amazonaws.com/category/categories/1751966524412_5390255224354014.png"
         }
       ],
-      imageToDelete: []
+      imageToDelete: [],
+      birthTime:"02:00 AM"
     })
   }, [])
 

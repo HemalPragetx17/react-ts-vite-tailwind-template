@@ -72,6 +72,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const [isFocused, setIsFocused] = useState(false);
     const internalRef = useRef<HTMLTextAreaElement | null>(null);
 
+    const resolvedVariant = labelPlacement === "outlined" ? "bordered" : variant;
+
     // Value resolution
     const inputValue = value !== undefined ? value : (field?.value ?? "");
     const hasValue = String(inputValue).length > 0;
@@ -146,11 +148,11 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     // ── Size ──────────────────────────────────────────────────────────────
     const sizeConfigs = {
-      sm: { 
+      sm: {
         textSize: "text-xs",
         labelSize: "text-[10px]",
-        px: "px-2.5", 
-        pt: label && labelPlacement === "inside" ? "pt-5" : "pt-2", 
+        px: "px-2.5",
+        pt: label && labelPlacement === "inside" ? "pt-5" : "pt-2",
         pb: "pb-2",
         floatY: 4,
         floatX: -3,
@@ -162,11 +164,11 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         outlinedFloatY: -8.5,
         outlinedInitialY: 8,
       },
-      md: { 
+      md: {
         textSize: "text-sm",
-        labelSize: "text-xs",   
-        px: "px-3",   
-        pt: label && labelPlacement === "inside" ? "pt-6" : "pt-2.5", 
+        labelSize: "text-xs",
+        px: "px-3",
+        pt: label && labelPlacement === "inside" ? "pt-6" : "pt-2.5",
         pb: "pb-2.5",
         floatY: 5,
         floatX: 0,
@@ -178,11 +180,11 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         outlinedFloatY: -11.5,
         outlinedInitialY: 10,
       },
-      lg: { 
+      lg: {
         textSize: "text-base",
-        labelSize: "text-sm",  
-        px: "px-4",   
-        pt: label && labelPlacement === "inside" ? "pt-7" : "pt-3",   
+        labelSize: "text-sm",
+        px: "px-4",
+        pt: label && labelPlacement === "inside" ? "pt-7" : "pt-3",
         pb: "pb-3",
         floatY: 6,
         floatX: 3,
@@ -198,18 +200,18 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     // ── Variant ───────────────────────────────────────────────────────────
     const variantConfigs = {
-      flat:       "bg-neutral-100 dark:bg-neutral-800 border-2 border-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700 focus-within:bg-neutral-200 dark:focus-within:bg-neutral-700",
-      bordered:   "bg-transparent border-2 border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 focus-within:border-neutral-800 dark:focus-within:border-neutral-200",
+      flat: "bg-neutral-100 dark:bg-neutral-800 border-2 border-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700 focus-within:bg-neutral-200 dark:focus-within:bg-neutral-700",
+      bordered: "bg-transparent border-2 border-neutral-300 dark:border-neutral-700 focus-within:border-primary",
       underlined: "bg-transparent border-b-2 border-transparent rounded-none relative",
-      faded:      "bg-neutral-50 dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 focus-within:border-neutral-600",
+      faded: "bg-neutral-50 dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-800 focus-within:border-primary",
     };
 
     // ── Radius ────────────────────────────────────────────────────────────
     const radiusConfigs = {
       none: "rounded-none",
-      sm:   "rounded-sm",
-      md:   "rounded-md",
-      lg:   "rounded-lg",
+      sm: "rounded-sm",
+      md: "rounded-md",
+      lg: "rounded-lg",
       full: "rounded-2xl",
     };
 
@@ -217,9 +219,9 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const cs = sizeConfigs[size] ?? sizeConfigs.md;
     const variantClass = isOutlined
       ? "bg-transparent border-none"
-      : (variantConfigs[variant] ?? variantConfigs.bordered);
+      : (variantConfigs[resolvedVariant] ?? variantConfigs.bordered);
     const radiusClass =
-      variant === "underlined"
+      resolvedVariant === "underlined"
         ? "rounded-none"
         : radiusConfigs[radius] ?? radiusConfigs.md;
 
@@ -234,13 +236,11 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       return (
         <label
           htmlFor={inputId}
-          className={`block font-medium select-none transition-colors duration-200 ${
-            labelPlacement === "outside-left" ? "shrink-0 mb-0" : "mb-1.5"
-          } ${cs.labelSize} ${labelClassName} ${
-            isFocused 
-              ? "text-[var(--color-primary,#2196f3)]" 
+          className={`block font-medium select-none transition-colors duration-200 ${labelPlacement === "outside-left" ? "shrink-0 mb-0" : "mb-1.5"
+            } ${cs.labelSize} ${labelClassName} ${isFocused
+              ? "text-primary"
               : "text-neutral-700 dark:text-neutral-300"
-          }`}
+            }`}
         >
           {label}
         </label>
@@ -277,8 +277,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                   ${hasError
                     ? "border-2 border-red-500 dark:border-red-500"
                     : isFocused
-                      ? "border-2 border-[var(--color-primary,#2196f3)]"
-                      : "border border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
+                      ? "border-2 border-primary"
+                      : "border-2 border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
                   }
                 `}
               >
@@ -322,12 +322,11 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                 transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
                 className={`
                   absolute left-3 top-0 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
-                  ${cs.textSize} ${labelClassName} ${
-                    (shouldFloat || (isOutlined && (isFocused || hasValue)))
-                      ? isFocused
-                        ? "text-[var(--color-primary,#2196f3)]"
-                        : "text-neutral-700 dark:text-neutral-300"
-                      : "text-neutral-400 dark:text-neutral-500"
+                  ${cs.textSize} ${labelClassName} ${(shouldFloat || (isOutlined && (isFocused || hasValue)))
+                    ? isFocused
+                      ? "text-primary"
+                      : "text-neutral-700 dark:text-neutral-300"
+                    : "text-neutral-400 dark:text-neutral-500"
                   }
                 `}
                 style={{ transformOrigin: isOutlined ? "left" : "top left" }}
@@ -339,16 +338,16 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             {/* Clear button */}
             {isClearable && hasValue && (
               <Button
-                isIconOnly
-                size="sm"
-                radius="full"
-                variant="light"
                 color="default"
+                size="xs"
+                variant="flat"
+                radius="full"
+                isIconOnly
                 title="Clear"
                 onClick={(e) => { e.stopPropagation(); handleClear(); }}
                 className="!absolute top-2 right-2 z-10"
               >
-                <FaXmark className="w-3 h-3" aria-hidden />
+                <FaXmark className="w-3.5 h-3.5" aria-hidden />
               </Button>
             )}
 
@@ -389,9 +388,9 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             </div>
 
             {/* Underline Animation for Underlined Variant */}
-            {variant === "underlined" && (
+            {resolvedVariant === "underlined" && (
               <motion.div
-                className="absolute bottom-[-2px] left-0 right-0 h-[2px] bg-neutral-800 dark:bg-neutral-200 z-20"
+                className="absolute bottom-[-2px] left-0 right-0 h-[2px] bg-primary z-20"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: isFocused ? 1 : 0 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}

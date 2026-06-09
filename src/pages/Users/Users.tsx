@@ -142,6 +142,7 @@ const Users = () => {
             <Switch
               size="sm"
               color="success"
+              variant="outside"
               value={isActive}
               onChange={(checked) => {
                 if (userId) {
@@ -165,7 +166,7 @@ const Users = () => {
             <Button
               isIconOnly
               size="md"
-              radius="lg"
+              radius="full"
               variant="light"
               color="primary"
               title="View"
@@ -176,7 +177,7 @@ const Users = () => {
             <Button
               isIconOnly
               size="md"
-              radius="lg"
+              radius="full"
               variant="light"
               color="warning"
               title="Edit"
@@ -187,7 +188,7 @@ const Users = () => {
             <Button
               isIconOnly
               size="md"
-              radius="lg"
+              radius="full"
               variant="light"
               color="danger"
               title="Delete"

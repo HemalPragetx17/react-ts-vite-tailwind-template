@@ -44,6 +44,7 @@ export { default as Textarea } from "./input/Textarea";
 export { default as OTPInput } from "./input/OTPInput";
 export { default as SelectDropdown } from "./input/SelectDropdown";
 export { default as DateInput } from "./input/dateInput/DateInput";
+export { default as TimePicker } from "./input/timePicker/TimePicker";
 export { default as FileInput } from "./input/fileInput/FileInput";
 export { default as PhoneNumberInput } from "./input/phoneInput/PhoneNumberInput";
 

@@ -1,22 +1,23 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import {
-  FaCalendar,
-  FaChevronLeft,
-  FaChevronRight,
-  FaChevronDown,
-} from "react-icons/fa";
-import { FaXmark } from "react-icons/fa6";
-import { createPortal } from "react-dom";
-import DatePicker from "react-datepicker";
 import type { FieldInputProps, FormikErrors, FormikTouched } from "formik";
 import {
-  motion,
   AnimatePresence,
   animate,
+  motion,
   useMotionValue,
   useTransform,
 } from "framer-motion";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { createPortal } from "react-dom";
+import {
+  FaCalendar,
+  FaChevronDown,
+  FaChevronLeft,
+  FaChevronRight,
+} from "react-icons/fa";
+import { FaXmark } from "react-icons/fa6";
+import Button from "../../button/Button";
 import "./index.css";
 
 /* -------------------------------------------------------------------------- */
@@ -167,15 +168,17 @@ function CalendarIcon() {
 
 function ClearIcon({ onClick }: { onClick: (e: React.MouseEvent) => void }) {
   return (
-    <button
-      onClick={onClick}
-      aria-label="Clear date"
+    <Button
+      color="default"
+      size="xs"
+      variant="flat"
+      radius="full"
+      isIconOnly
       tabIndex={-1}
-      type="button"
-      className="flex items-center justify-center text-secondary-400 hover:text-secondary-700 transition-colors p-1 rounded-full"
+      onClick={onClick}
     >
       <FaXmark className="w-3.5 h-3.5" aria-hidden />
-    </button>
+    </Button>
   );
 }
 
@@ -370,6 +373,8 @@ const DateInput: React.FC<DateInputProps> = ({
 
   enableMonthYearPicker = true,
 }) => {
+  const resolvedVariant = labelPlacement === "outlined" ? "bordered" : variant;
+
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const calendarRef = useRef<HTMLDivElement>(null);
@@ -383,14 +388,14 @@ const DateInput: React.FC<DateInputProps> = ({
   const updateCoords = useCallback(() => {
     if (!wrapperRef.current) return;
     const rect = wrapperRef.current.getBoundingClientRect();
-    
+
     const spaceBelow = window.innerHeight - rect.bottom;
     const dropdownHeight = 370; // standard calendar height + margin
-    
+
     let top: number | "auto" = 0;
     let bottom: number | "auto" = "auto";
     let position: "top" | "bottom" = "bottom";
-    
+
     if (spaceBelow < dropdownHeight && rect.top > spaceBelow) {
       top = "auto";
       bottom = window.innerHeight - rect.top - 16;
@@ -400,7 +405,7 @@ const DateInput: React.FC<DateInputProps> = ({
       bottom = "auto";
       position = "bottom";
     }
-    
+
     setDropdownCoords({
       top,
       bottom,
@@ -438,16 +443,16 @@ const DateInput: React.FC<DateInputProps> = ({
     ? endDateName
       ? parseDate(resolvedValue)
       : Array.isArray(resolvedValue)
-      ? parseDate(resolvedValue[0])
-      : null
+        ? parseDate(resolvedValue[0])
+        : null
     : parseDate(resolvedValue);
 
   const endDate = selectsRange
     ? endDateName
       ? parseDate(form?.values?.[endDateName])
       : Array.isArray(resolvedValue)
-      ? parseDate(resolvedValue[1])
-      : null
+        ? parseDate(resolvedValue[1])
+        : null
     : null;
 
   const hasValue = selectsRange ? !!(startDate && endDate) : !!startDate;
@@ -688,9 +693,9 @@ const DateInput: React.FC<DateInputProps> = ({
     }
   };
 
-  const variantClass = isOutlined ? "bg-transparent border-none" : variantBase[variant];
+  const variantClass = isOutlined ? "bg-transparent border-none" : variantBase[resolvedVariant];
   const radiusClass =
-    variant === "underlined" ? "rounded-none" : radiusMap[radius];
+    resolvedVariant === "underlined" ? "rounded-none" : radiusMap[radius];
 
   const isOutsideLeft = labelPlacement === "outside-left";
 
@@ -699,13 +704,11 @@ const DateInput: React.FC<DateInputProps> = ({
     return (
       <label
         htmlFor={fieldName}
-        className={`block font-medium select-none transition-colors duration-200 ${
-          isOutsideLeft ? "shrink-0 mb-0" : "mb-1.5"
-        } ${sz.labelSize} ${labelClassName} ${
-          isOpen
-            ? "text-[var(--color-primary,#2196f3)]"
+        className={`block font-medium select-none transition-colors duration-200 ${isOutsideLeft ? "shrink-0 mb-0" : "mb-1.5"
+          } ${sz.labelSize} ${labelClassName} ${isOpen
+            ? "text-primary"
             : "text-neutral-700 dark:text-neutral-300"
-        }`}
+          }`}
       >
         {label}
       </label>
@@ -791,16 +794,15 @@ const DateInput: React.FC<DateInputProps> = ({
           text-sm font-semibold
           transition-all duration-300 ease-out
 
-          ${
-            showMonthYearPicker
-              ? `
+          ${showMonthYearPicker
+                      ? `
                 rounded-full
                 border border-secondary-200
                 bg-secondary-100
                 shadow-none
                 text-secondary-900
               `
-              : `
+                      : `
                 rounded-full
                 border border-secondary-200
                 bg-secondary-50
@@ -808,7 +810,7 @@ const DateInput: React.FC<DateInputProps> = ({
                 text-secondary-900
                 hover:bg-secondary-100
               `
-          }
+                    }
         `}
                 >
                   <motion.span
@@ -965,12 +967,11 @@ const DateInput: React.FC<DateInputProps> = ({
             ${sz.wrapperPadding}
             ${labelPlacement === "inside" ? sz.insideHeight : `${sz.outsideHeight} ${isFloating && label && !isOutlined ? "mt-6" : ""} ${isOutlined && label ? "mt-[10px]" : ""}`}
             ${hasError && !isOutlined ? "!border-danger" : ""}
-            ${
-              isOpen && !hasError && !isOutlined
-                ? variant === "bordered" || variant === "faded"
-                  ? "border-secondary-800"
-                  : ""
+            ${isOpen && !hasError && !isOutlined
+              ? resolvedVariant === "bordered" || resolvedVariant === "faded"
+                ? "!border-primary"
                 : ""
+              : ""
             }
             ${disabled ? "opacity-50 cursor-not-allowed" : ""}
           `}
@@ -985,8 +986,8 @@ const DateInput: React.FC<DateInputProps> = ({
                 ${hasError
                   ? "border-2 border-red-500 dark:border-red-500"
                   : isOpen
-                    ? "border-2 border-[var(--color-primary,#2196f3)]"
-                    : "border border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
+                    ? "border-2 border-primary"
+                    : "border-2 border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
                 }
               `}
             >
@@ -1036,12 +1037,11 @@ const DateInput: React.FC<DateInputProps> = ({
               transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
               className={`
                 absolute left-3 top-1/2 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
-                ${sz.textSize} ${labelClassName} ${
-                  (shouldFloat || (isOutlined && (isOpen || hasValue)))
-                    ? isOpen
-                      ? "text-[var(--color-primary,#2196f3)]"
-                      : "text-neutral-700 dark:text-neutral-300"
-                    : "text-neutral-400 dark:text-neutral-500"
+                ${sz.textSize} ${labelClassName} ${(shouldFloat || (isOutlined && (isOpen || hasValue)))
+                  ? isOpen
+                    ? "text-primary"
+                    : "text-neutral-700 dark:text-neutral-300"
+                  : "text-neutral-400 dark:text-neutral-500"
                 }
               `}
               style={{ transformOrigin: isOutlined ? "left" : "top left" }}
@@ -1051,7 +1051,7 @@ const DateInput: React.FC<DateInputProps> = ({
           )}
 
           {/* Central Stack: Label + Value */}
-          <div 
+          <div
             className={`
               flex flex-col flex-1 min-w-0 justify-center
               ${labelPlacement === "inside" && isFloating && shouldFloat ? (size === "sm" ? "mt-3" : size === "lg" ? "mt-5" : "mt-4") : ""}
@@ -1157,11 +1157,10 @@ const DateInput: React.FC<DateInputProps> = ({
           )}
 
           {/* Underline Animation for Underlined Variant */}
-          {variant === "underlined" && (
+          {resolvedVariant === "underlined" && (
             <motion.div
-              className={`absolute bottom-[-2px] left-0 right-0 h-[2px] z-20 ${
-                hasError ? "bg-danger" : "bg-secondary-800"
-              }`}
+              className={`absolute bottom-[-2px] left-0 right-0 h-[2px] z-20 ${hasError ? "bg-danger" : "bg-primary"
+                }`}
               initial={{ scaleX: 0 }}
               animate={{ scaleX: isOpen ? 1 : 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}

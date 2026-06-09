@@ -21,7 +21,7 @@ interface PhoneNumberInputProps extends Partial<FieldProps> {
     size?: "sm" | "md" | "lg";
     variant?: "flat" | "bordered" | "underlined" | "faded";
     radius?: "none" | "sm" | "md" | "lg" | "full";
-    labelPlacement?: "inside" | "outside" | "outside-left" | "outside-top";
+    labelPlacement?: "inside" | "outside" | "outside-left" | "outside-top" | "outlined";
     dropdownPosition?: "top" | "bottom";
     countryCodeEditable?: boolean;
     value?: any;
@@ -115,6 +115,8 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
         disabled = false,
         ...rest
     } = props;
+
+    const resolvedVariant = labelPlacement === "outlined" ? "bordered" : variant;
 
     const [autoDropdownPosition, setAutoDropdownPosition] = React.useState<"top" | "bottom">("bottom");
     const containerRef = React.useRef<HTMLDivElement>(null);
@@ -336,6 +338,9 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
             initialX: singleBorder ? 100 : 110,
             top: "top-1/2",
             floatScale: 0.83,
+            outlinedFloatY: -28.5,
+            outlinedInitialY: -8,
+            paddingLeft: 12,
         },
         md: {
             textSize: "text-sm",
@@ -348,6 +353,9 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
             outsideFloatX: 0,
             top: "top-1/2",
             floatScale: 0.85,
+            outlinedFloatY: -35,
+            outlinedInitialY: -10,
+            paddingLeft: 14,
         },
         lg: {
             textSize: "text-base",
@@ -360,6 +368,9 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
             outsideFloatX: 0,
             top: "top-1/2",
             floatScale: 0.87,
+            outlinedFloatY: -41,
+            outlinedInitialY: -12,
+            paddingLeft: 16,
         },
     };
 
@@ -374,33 +385,35 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
         full: "!rounded-full",
     };
 
-    const currentRadiusClass = variant === "underlined" ? "!rounded-none" : (radiusConfigs[radius] || radiusConfigs.md);
+    const currentRadiusClass = resolvedVariant === "underlined" ? "!rounded-none" : (radiusConfigs[radius] || radiusConfigs.md);
 
     // Merge standard classes with the dynamic border-radius utility class
     const finalInputClass = `${singleBorder ? "!rounded-none" : currentRadiusClass} ${inputClassName}`.trim();
     const finalButtonClass = `${singleBorder ? "!rounded-none" : currentRadiusClass} ${buttonClassName}`.trim();
 
+    const isOutlined = labelPlacement === "outlined";
     const isOutsideLeft = labelPlacement === "outside-left";
     const isFloating = labelPlacement === "inside" || labelPlacement === "outside";
     const hasValue = String(inputValue).length > 0 && String(inputValue) !== activeDialCode;
-    const shouldFloat = isFocused || hasValue || (isFloating && !!placeholder);
+    const shouldFloat = isFocused || hasValue || (isFloating && !!placeholder) || (isOutlined && !!placeholder);
 
     // Build the dynamic container class names
     const containerClasses = `
         react-tel-input
         phone-input-size-${size}
-        phone-input-variant-${variant}
+        phone-input-variant-${resolvedVariant}
         phone-input-placement-${labelPlacement}
         phone-input-dropdown-${finalDropdownPosition}
         ${shouldFloat ? "phone-input-should-float" : ""}
         ${singleBorder ? `phone-input-single-border ${currentRadiusClass}` : ""}
+        ${isOutlined ? "h-full w-full" : ""}
         ${hasError ? "phone-input-has-error" : ""}
         ${disabled ? "opacity-50 pointer-events-none cursor-not-allowed" : ""}
         ${containerClassName}
     `.trim().replace(/\s+/g, ' ');
 
     const renderExternalLabel = () => {
-        if (!label || isFloating) return null;
+        if (!label || isFloating || isOutlined) return null;
         return (
             <label
                 htmlFor={fieldName}
@@ -421,30 +434,84 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
             <div className={`${isOutsideLeft ? "flex items-center gap-3 w-full" : "w-full"}`}>
                 {renderExternalLabel()}
 
-                <div className={`relative w-full ${labelPlacement === "inside" ? "" : (isFloating && label ? "mt-6" : "")}`}>
-                    {isFloating && label && (
+                <div 
+                    className={`
+                        relative w-full group
+                        ${isOutlined ? "bg-transparent border-none" : ""}
+                        ${isOutlined ? (size === "sm" ? "h-10" : size === "lg" ? "h-14" : "h-12") : ""}
+                        ${labelPlacement === "inside" ? "" : (isFloating && label && !isOutlined ? "mt-6" : "")}
+                        ${isOutlined && label ? "mt-[10px]" : ""}
+                    `}
+                >
+                    {/* ── Outlined Fieldset Border + Legend Notch ────────────────────── */}
+                    {isOutlined && (
+                        <fieldset
+                            className={`
+                                absolute top-0 bottom-0 right-0 pointer-events-none transition-all duration-200 m-0 p-0
+                                ${singleBorder ? "left-0" : "left-[82px]"}
+                                ${currentRadiusClass}
+                                ${hasError
+                                    ? "border-2 border-red-500 dark:border-red-500"
+                                    : isFocused
+                                        ? "border-2 border-[var(--color-primary,#2196f3)]"
+                                        : "border-2 border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
+                                }
+                            `}
+                        >
+                            {label && (
+                                <legend
+                                    className={`
+                                        ml-2 font-medium transition-all duration-200 ease-out block whitespace-nowrap overflow-hidden invisible
+                                        ${shouldFloat || isFocused || hasValue ? "max-w-full px-1" : "max-w-0 px-0"}
+                                    `}
+                                    style={{
+                                        fontSize: `${size === "sm" ? 9 : size === "lg" ? 12 : 10.5}px`,
+                                        height: 0,
+                                    }}
+                                >
+                                    <span>{label}</span>
+                                </legend>
+                            )}
+                        </fieldset>
+                    )}
+
+                    {(isFloating || isOutlined) && label && (
                         <motion.label
                             htmlFor={fieldName}
                             initial={false}
                             animate={{
-                                y: shouldFloat
-                                    ? (labelPlacement === "inside" ? currentSize.floatY : currentSize.outsideFloatY)
-                                    : currentSize.initialY,
-                                x: shouldFloat
-                                    ? (labelPlacement === "inside" ? currentSize.floatX : currentSize.outsideFloatX)
+                                y: shouldFloat || (isOutlined && (isFocused || hasValue))
+                                    ? isOutlined
+                                        ? currentSize.outlinedFloatY
+                                        : (labelPlacement === "inside" ? currentSize.floatY : currentSize.outsideFloatY)
+                                    : isOutlined
+                                        ? currentSize.outlinedInitialY
+                                        : currentSize.initialY,
+                                x: shouldFloat || (isOutlined && (isFocused || hasValue))
+                                    ? labelPlacement === "inside"
+                                        ? (singleBorder ? (58 + (currentSize.paddingLeft || 14)) : (70 + (currentSize.paddingLeft || 14)))
+                                        : labelPlacement === "outside"
+                                            ? -12
+                                            : isOutlined
+                                                ? (singleBorder ? 0 : 82)
+                                                : (singleBorder ? 0 : 70)
                                     : currentSize.initialX,
-                                scale: shouldFloat ? currentSize.floatScale : 1,
+                                scale: shouldFloat || (isOutlined && (isFocused || hasValue))
+                                    ? isOutlined ? 0.75 : currentSize.floatScale
+                                    : 1,
                             }}
+                            transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
                             className={`
-                                absolute left-0 font-medium ${currentSize.top} z-20 pointer-events-none origin-left transition-colors duration-200
+                                absolute left-3 font-medium ${currentSize.top} z-20 pointer-events-none origin-left transition-colors duration-200
                                 ${currentSize.textSize} ${labelClassName} ${
-                                    shouldFloat
+                                    (shouldFloat || (isOutlined && (isFocused || hasValue)))
                                         ? isFocused
                                             ? "text-[var(--color-primary,#2196f3)]"
                                             : "text-neutral-700 dark:text-neutral-300"
                                         : "text-neutral-400 dark:text-neutral-500"
                                 }
                             `}
+                            style={{ transformOrigin: isOutlined ? "left" : "top left" }}
                         >
                             {label}
                         </motion.label>
@@ -465,10 +532,10 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
                         buttonClass={finalButtonClass}
                     />
 
-                    {variant === "underlined" && (
+                    {resolvedVariant === "underlined" && (
                         <motion.div
                             className={`absolute bottom-[-2px] left-0 right-0 h-[2px] z-20 ${
-                                hasError ? "bg-red-500" : "bg-neutral-800 dark:bg-neutral-200"
+                                hasError ? "bg-red-500" : "bg-primary"
                             }`}
                             initial={false}
                             animate={{ scaleX: (isFocused || hasError) ? 1 : 0 }}

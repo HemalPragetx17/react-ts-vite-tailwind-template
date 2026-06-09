@@ -1,17 +1,18 @@
-import React, { useState, useLayoutEffect, useRef } from "react";
+import type { FieldProps } from "formik";
+import { AnimatePresence, motion } from "framer-motion";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { FaCheck, FaChevronDown } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
-import Select, { components } from "react-select";
 import type {
+  ClearIndicatorProps,
+  DropdownIndicatorProps,
   MultiValue,
+  MultiValueRemoveProps,
   OptionProps,
   SingleValue,
-  DropdownIndicatorProps,
-  ClearIndicatorProps,
-  MultiValueRemoveProps,
 } from "react-select";
-import type { FieldProps } from "formik";
-import { motion, AnimatePresence } from "framer-motion";
+import Select, { components } from "react-select";
+import Button from "../button/Button";
 import type { CheckboxColor } from "./Checkbox";
 
 /* -------------------------------------------------------------------------- */
@@ -73,12 +74,12 @@ const colorTokens: Record<
   SelectColor,
   { bg: string; text: string; multiValueBg: string; multiValueText: string; focusBorder: string }
 > = {
-  default:   { bg: "bg-secondary-600",   text: "text-white",      multiValueBg: "bg-secondary-600",   multiValueText: "text-white",      focusBorder: "border-secondary-600"  },
-  primary:   { bg: "bg-primary",      text: "text-white",      multiValueBg: "bg-primary",      multiValueText: "text-white",      focusBorder: "border-primary"     },
-  secondary: { bg: "bg-secondary",    text: "text-white",      multiValueBg: "bg-secondary",    multiValueText: "text-white",      focusBorder: "border-secondary"   },
-  success:   { bg: "bg-success",   text: "text-white",      multiValueBg: "bg-success",   multiValueText: "text-white",      focusBorder: "border-success"  },
-  warning:   { bg: "bg-warning",     text: "text-neutral-900",multiValueBg: "bg-warning",     multiValueText: "text-neutral-900",focusBorder: "border-warning"    },
-  danger:    { bg: "bg-danger",      text: "text-white",      multiValueBg: "bg-danger",      multiValueText: "text-white",      focusBorder: "border-danger"     },
+  default: { bg: "bg-secondary-600", text: "text-white", multiValueBg: "bg-secondary-600", multiValueText: "text-white", focusBorder: "border-secondary-600" },
+  primary: { bg: "bg-primary", text: "text-white", multiValueBg: "bg-primary", multiValueText: "text-white", focusBorder: "border-primary" },
+  secondary: { bg: "bg-secondary", text: "text-white", multiValueBg: "bg-secondary", multiValueText: "text-white", focusBorder: "border-secondary" },
+  success: { bg: "bg-success", text: "text-white", multiValueBg: "bg-success", multiValueText: "text-white", focusBorder: "border-success" },
+  warning: { bg: "bg-warning", text: "text-neutral-900", multiValueBg: "bg-warning", multiValueText: "text-neutral-900", focusBorder: "border-warning" },
+  danger: { bg: "bg-danger", text: "text-white", multiValueBg: "bg-danger", multiValueText: "text-white", focusBorder: "border-danger" },
 };
 
 /* -------------------------------------------------------------------------- */
@@ -171,17 +172,17 @@ const sizeTokens: Record<
 /* -------------------------------------------------------------------------- */
 
 const variantBase: Record<SelectVariant, string> = {
-  flat:       "bg-neutral-100 dark:bg-neutral-800 border-2 border-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700",
-  bordered:   "bg-transparent border-2 border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500",
+  flat: "bg-neutral-100 dark:bg-neutral-800 border-2 border-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700",
+  bordered: "bg-transparent border-2 border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500",
   underlined: "bg-transparent border-b-2 border-transparent rounded-none relative",
-  faded:      "bg-neutral-50 dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-800 hover:border-neutral-300",
+  faded: "bg-neutral-50 dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-800 hover:border-neutral-300",
 };
 
 const radiusMap: Record<SelectRadius, string> = {
   none: "rounded-none",
-  sm:   "rounded-sm",
-  md:   "rounded-md",
-  lg:   "rounded-lg",
+  sm: "rounded-sm",
+  md: "rounded-md",
+  lg: "rounded-lg",
   full: "rounded-full",
 };
 
@@ -210,7 +211,16 @@ const CustomDropdownIndicator = (props: DropdownIndicatorProps<SelectOption, boo
 const CustomClearIndicator = (props: ClearIndicatorProps<SelectOption, boolean>) => {
   return (
     <components.ClearIndicator {...props}>
-      <FaXmark className="w-3.5 h-3.5 text-neutral-400 hover:text-neutral-700 dark:hover:text-white transition-colors" aria-hidden />
+      <Button
+        color="default"
+        size="xs"
+        variant="flat"
+        radius="full"
+        isIconOnly
+        tabIndex={-1}
+      >
+        <FaXmark className="w-3.5 h-3.5" aria-hidden />
+      </Button>
     </components.ClearIndicator>
   );
 };
@@ -269,12 +279,12 @@ const CustomMultiValue = (props: any) => {
 
 const StaticCheckbox = ({ checked, color }: { checked: boolean; color: CheckboxColor }) => {
   const bgMap: Record<CheckboxColor, string> = {
-    default:   "bg-secondary-600",
-    primary:   "bg-primary",
+    default: "bg-secondary-600",
+    primary: "bg-primary",
     secondary: "bg-secondary",
-    success:   "bg-success",
-    warning:   "bg-warning",
-    danger:    "bg-danger",
+    success: "bg-success",
+    warning: "bg-warning",
+    danger: "bg-danger",
   };
 
   return (
@@ -352,6 +362,8 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
   labelClassName = "",
   errorClassName = "",
 }) => {
+  const resolvedVariant = labelPlacement === "outlined" ? "bordered" : variant;
+
   const [isFocused, setIsFocused] = useState(false);
   const [maxVisibleChips, setMaxVisibleChips] = useState<number>(999);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -381,9 +393,10 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
   // For outlined: show notch/float when focused OR has value OR has placeholder
   const shouldFloat = isFocused || hasValue || (isFloating && !!placeholder) || (isOutlined && !!placeholder);
 
-  const radiusClass = variant === "underlined" ? "rounded-none" : radiusMap[radius];
+  const radiusClass = resolvedVariant === "underlined" ? "rounded-none" : radiusMap[radius];
+  const menuRadiusClass = resolvedVariant === "underlined" ? "rounded-none" : (radius === "full" ? "rounded-xl" : radiusMap[radius]);
   // When labelPlacement="outlined" the fieldset draws the border; wrapper gets no border
-  const variantClass = isOutlined ? "bg-transparent border-none" : (variantBase[variant] ?? variantBase.bordered);
+  const variantClass = isOutlined ? "bg-transparent border-none" : (variantBase[resolvedVariant] ?? variantBase.bordered);
 
   // Dynamic layout measurement for multi-select overflow chips
   useLayoutEffect(() => {
@@ -446,13 +459,11 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
     return (
       <label
         htmlFor={name}
-        className={`block font-medium select-none transition-colors duration-200 ${
-          isOutsideLeft ? "shrink-0 mb-0" : "mb-1.5"
-        } ${sz.labelSize} ${labelClassName} ${
-          isFocused 
-            ? "text-[var(--color-primary,#2196f3)]" 
+        className={`block font-medium select-none transition-colors duration-200 ${isOutsideLeft ? "shrink-0 mb-0" : "mb-1.5"
+          } ${sz.labelSize} ${labelClassName} ${isFocused
+            ? "text-[var(--color-primary,#2196f3)]"
             : "text-neutral-700 dark:text-neutral-300"
-        }`}
+          }`}
       >
         {label}
       </label>
@@ -485,8 +496,8 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
             ${radiusClass}
             ${hasError && !isOutlined ? "!border-red-500 dark:!border-red-500" : ""}
             ${isFocused && !hasError && !isOutlined
-              ? variant === "bordered" || variant === "faded"
-                ? "border-neutral-800 dark:border-neutral-200"
+              ? resolvedVariant === "bordered" || resolvedVariant === "faded"
+                ? "!border-primary"
                 : ""
               : ""}
             ${isInside ? sz.insideHeight : `${sz.outsideHeight} ${isFloating && label && !isOutlined ? "mt-6" : ""} ${isOutlined && label ? "mt-[10px]" : ""}`}
@@ -502,8 +513,8 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
                 ${hasError
                   ? "border-2 border-red-500 dark:border-red-500"
                   : isFocused
-                    ? "border-2 border-[var(--color-primary,#2196f3)]"
-                    : "border border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
+                    ? "border-2 border-primary"
+                    : "border-2 border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
                 }
               `}
             >
@@ -578,9 +589,8 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
               {normalizedValue.map((opt) => (
                 <div
                   key={opt.value}
-                  className={`inline-flex items-center gap-1 ${
-                    sz.textSize === "text-xs" ? "text-xs" : "text-sm"
-                  } rounded-md px-2 py-1.5 font-medium whitespace-nowrap`}
+                  className={`inline-flex items-center gap-1 ${sz.textSize === "text-xs" ? "text-xs" : "text-sm"
+                    } rounded-md px-2 py-1.5 font-medium whitespace-nowrap`}
                 >
                   <span className="leading-normal">{opt.label}</span>
                   <div className="w-3 h-3 ml-0.5" />
@@ -644,19 +654,19 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
                 indicatorsContainer: () => "flex items-center gap-1 shrink-0 pr-1",
 
                 menu: () =>
-                  `mt-1.5 border border-neutral-200 dark:border-neutral-700 ${radiusClass} overflow-hidden shadow-xl bg-white dark:bg-neutral-900 z-50`,
+                  `mt-1.5 border border-neutral-200 dark:border-neutral-700 ${menuRadiusClass} overflow-hidden shadow-xl bg-white dark:bg-neutral-900 z-50`,
 
                 menuList: () => "py-1",
 
                 option: ({ isSelected, isFocused: optFocused, isDisabled }) =>
                   `px-3 py-2 transition-colors duration-100
-                  ${ isDisabled
-                      ? "cursor-not-allowed text-neutral-400 dark:text-neutral-600"
-                      : "cursor-pointer text-neutral-700 dark:text-neutral-200"
+                  ${isDisabled
+                    ? "cursor-not-allowed text-neutral-400 dark:text-neutral-600"
+                    : "cursor-pointer text-neutral-700 dark:text-neutral-200"
                   }
-                  ${ optFocused && !isSelected && !isDisabled
-                      ? "bg-neutral-100 dark:bg-neutral-800"
-                      : "bg-transparent"
+                  ${optFocused && !isSelected && !isDisabled
+                    ? "bg-neutral-100 dark:bg-neutral-800"
+                    : "bg-transparent"
                   }`,
 
                 noOptionsMessage: () =>
@@ -686,9 +696,9 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
           </div>
 
           {/* Underline Animation for Underlined Variant */}
-          {variant === "underlined" && (
+          {resolvedVariant === "underlined" && (
             <motion.div
-              className="absolute bottom-[-2px] left-0 right-0 h-[2px] bg-neutral-800 dark:bg-neutral-200 z-20"
+              className="absolute bottom-[-2px] left-0 right-0 h-[2px] bg-primary z-20"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: isFocused ? 1 : 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}

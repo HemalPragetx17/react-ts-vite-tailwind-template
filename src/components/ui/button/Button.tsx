@@ -9,7 +9,7 @@ interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "solid" | "bordered" | "light" | "flat" | "faded" | "shadow" | "ghost";
   color?: "default" | "primary" | "secondary" | "success" | "warning" | "danger";
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   radius?: "none" | "sm" | "md" | "lg" | "full";
   startContent?: React.ReactNode;
   endContent?: React.ReactNode;
@@ -29,6 +29,7 @@ const sizeClasses = {
 };
 
 const iconOnlySizeClasses = {
+  xs: "w-6 h-6 p-0 justify-center aspect-square",
   sm: "w-9 h-9 p-0 justify-center aspect-square",
   md: "w-10 h-10 p-0 justify-center aspect-square",
   lg: "w-12 h-12 p-0 justify-center aspect-square",

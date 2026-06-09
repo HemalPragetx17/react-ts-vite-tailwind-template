@@ -28,6 +28,7 @@
     transition: all 0.2s ease-in-out;
     box-sizing: border-box;
     padding-right: 15px;
+    flex-shrink: 0;
 }
 
 .react-tel-input input {
@@ -111,7 +112,7 @@
     border-color: #a1a1aa !important;
 }
 .phone-input-variant-bordered:not(.phone-input-has-error) input:focus {
-    border-color: #18181b !important;
+    border-color: var(--color-primary, #2196f3) !important;
 }
 .phone-input-variant-bordered .flag-dropdown {
     background-color: transparent !important;
@@ -163,7 +164,7 @@
     border-color: #d4d4d8 !important;
 }
 .phone-input-variant-faded:not(.phone-input-has-error) input:focus {
-    border-color: #52525b !important;
+    border-color: var(--color-primary, #2196f3) !important;
 }
 .phone-input-variant-faded .flag-dropdown {
     background-color: #fafafa !important;
@@ -326,7 +327,7 @@
     border-color: #3f3f46 !important;
 }
 .dark .phone-input-variant-bordered:not(.phone-input-has-error) input:focus {
-    border-color: #f4f4f5 !important;
+    border-color: var(--color-primary, #2196f3) !important;
 }
 .dark .phone-input-variant-bordered .flag-dropdown {
     border-color: #27272a !important;
@@ -361,7 +362,7 @@
     border-color: #3f3f46 !important;
 }
 .dark .phone-input-variant-faded:not(.phone-input-has-error) input:focus {
-    border-color: #a1a1aa !important;
+    border-color: var(--color-primary, #2196f3) !important;
 }
 .dark .phone-input-variant-faded .flag-dropdown {
     background-color: #18181b !important;
@@ -454,23 +455,29 @@
 
 /* Adjust size-based heights for the single-border container */
 .phone-input-size-sm.phone-input-single-border {
-    height: 32px !important;
+    height: 40px !important;
 }
 .phone-input-size-md.phone-input-single-border {
-    height: 44px !important;
+    height: 48px !important;
 }
 .phone-input-size-lg.phone-input-single-border {
     height: 56px !important;
 }
 
 /* Divider border on the right of the flag selector */
-.phone-input-variant-bordered.phone-input-single-border .flag-dropdown,
-.phone-input-variant-faded.phone-input-single-border .flag-dropdown {
-    border-right: 1px solid #e4e4e7 !important;
+.phone-input-variant-bordered.phone-input-single-border .flag-dropdown::after,
+.phone-input-variant-faded.phone-input-single-border .flag-dropdown::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background-color: #e4e4e7 !important;
 }
-.dark .phone-input-variant-bordered.phone-input-single-border .flag-dropdown,
-.dark .phone-input-variant-faded.phone-input-single-border .flag-dropdown {
-    border-right: 1px solid #27272a !important;
+.dark .phone-input-variant-bordered.phone-input-single-border .flag-dropdown::after,
+.dark .phone-input-variant-faded.phone-input-single-border .flag-dropdown::after {
+    background-color: #27272a !important;
 }
 
 /* Single Border Variant: flat */
@@ -495,7 +502,7 @@
     border-color: #a1a1aa !important;
 }
 .phone-input-variant-bordered.phone-input-single-border:not(.phone-input-has-error):focus-within {
-    border-color: #18181b !important;
+    border-color: var(--color-primary, #2196f3) !important;
 }
 
 /* Single Border Variant: faded */
@@ -507,7 +514,7 @@
     border-color: #d4d4d8 !important;
 }
 .phone-input-variant-faded.phone-input-single-border:not(.phone-input-has-error):focus-within {
-    border-color: #52525b !important;
+    border-color: var(--color-primary, #2196f3) !important;
 }
 
 /* Single Border Error State */
@@ -532,7 +539,7 @@
     border-color: #3f3f46 !important;
 }
 .dark .phone-input-variant-bordered.phone-input-single-border:not(.phone-input-has-error):focus-within {
-    border-color: #f4f4f5 !important;
+    border-color: var(--color-primary, #2196f3) !important;
 }
 
 .dark .phone-input-variant-faded.phone-input-single-border {
@@ -543,7 +550,7 @@
     border-color: #3f3f46 !important;
 }
 .dark .phone-input-variant-faded.phone-input-single-border:not(.phone-input-has-error):focus-within {
-    border-color: #a1a1aa !important;
+    border-color: var(--color-primary, #2196f3) !important;
 }
 
 /* ========================================================
@@ -605,4 +612,87 @@
     position: absolute;
     top: 50%;
     transform: translate(25%, -40%);
+}
+
+/* Ensure outlined mode removes borders and solid bg from the react-tel-input container to allow the fieldset cutout notch to show */
+.react-tel-input.phone-input-single-border.phone-input-placement-outlined {
+    border: none !important;
+    background-color: transparent !important;
+}
+
+/* For outlined placement with singleBorder=false, remove the input border so the fieldset border acts as its outline, but keep flag dropdown border */
+.react-tel-input.phone-input-placement-outlined:not(.phone-input-single-border) input {
+    border: none !important;
+    background-color: transparent !important;
+}
+
+/* Make flag dropdown border match the 2px fieldset border in outlined placement when singleBorder is false */
+.react-tel-input.phone-input-placement-outlined:not(.phone-input-single-border) .flag-dropdown {
+    border: 2px solid #d4d4d8 !important;
+}
+
+.dark .react-tel-input.phone-input-placement-outlined:not(.phone-input-single-border) .flag-dropdown {
+    border-color: #404040 !important;
+}
+
+.react-tel-input.phone-input-placement-outlined:not(.phone-input-single-border):hover .flag-dropdown {
+    border-color: #a1a1aa !important;
+}
+
+.dark .react-tel-input.phone-input-placement-outlined:not(.phone-input-single-border):hover .flag-dropdown {
+    border-color: #737373 !important;
+}
+
+.react-tel-input.phone-input-placement-outlined:not(.phone-input-single-border):focus-within .flag-dropdown {
+    border: 2px solid var(--color-primary, #2196f3) !important;
+}
+
+.react-tel-input.phone-input-has-error.phone-input-placement-outlined:not(.phone-input-single-border) .flag-dropdown {
+    border: 2px solid #ef4444 !important;
+}
+
+/* ========================================================
+   UNIFIED HOVER AND FOCUS STYLING (singleBorder false)
+   ======================================================== */
+
+/* --- Bordered Variant --- */
+.phone-input-variant-bordered:not(.phone-input-single-border):not(.phone-input-has-error):hover input,
+.phone-input-variant-bordered:not(.phone-input-single-border):not(.phone-input-has-error):hover .flag-dropdown {
+    border-color: #a1a1aa !important;
+}
+.dark .phone-input-variant-bordered:not(.phone-input-single-border):not(.phone-input-has-error):hover input,
+.dark .phone-input-variant-bordered:not(.phone-input-single-border):not(.phone-input-has-error):hover .flag-dropdown {
+    border-color: #3f3f46 !important;
+}
+
+.phone-input-variant-bordered:not(.phone-input-single-border):not(.phone-input-has-error):focus-within input,
+.phone-input-variant-bordered:not(.phone-input-single-border):not(.phone-input-has-error):focus-within .flag-dropdown {
+    border-color: var(--color-primary, #2196f3) !important;
+}
+.dark .phone-input-variant-bordered:not(.phone-input-single-border):not(.phone-input-has-error):focus-within input,
+.dark .phone-input-variant-bordered:not(.phone-input-single-border):not(.phone-input-has-error):focus-within .flag-dropdown {
+    border-color: var(--color-primary, #2196f3) !important;
+}
+
+/* --- Faded Variant --- */
+.dark .phone-input-variant-faded:not(.phone-input-single-border) .flag-dropdown {
+    border-color: #27272a !important;
+}
+
+.phone-input-variant-faded:not(.phone-input-single-border):not(.phone-input-has-error):hover input,
+.phone-input-variant-faded:not(.phone-input-single-border):not(.phone-input-has-error):hover .flag-dropdown {
+    border-color: #d4d4d8 !important;
+}
+.dark .phone-input-variant-faded:not(.phone-input-single-border):not(.phone-input-has-error):hover input,
+.dark .phone-input-variant-faded:not(.phone-input-single-border):not(.phone-input-has-error):hover .flag-dropdown {
+    border-color: #3f3f46 !important;
+}
+
+.phone-input-variant-faded:not(.phone-input-single-border):not(.phone-input-has-error):focus-within input,
+.phone-input-variant-faded:not(.phone-input-single-border):not(.phone-input-has-error):focus-within .flag-dropdown {
+    border-color: var(--color-primary, #2196f3) !important;
+}
+.dark .phone-input-variant-faded:not(.phone-input-single-border):not(.phone-input-has-error):focus-within input,
+.dark .phone-input-variant-faded:not(.phone-input-single-border):not(.phone-input-has-error):focus-within .flag-dropdown {
+    border-color: var(--color-primary, #2196f3) !important;
 }

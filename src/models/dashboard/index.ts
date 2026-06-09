@@ -23,4 +23,5 @@ export interface IFormModal {
         url: string;
     }[];
     imageToDelete: string[];
+    birthTime?: string;
 }

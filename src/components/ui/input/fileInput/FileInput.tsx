@@ -1,15 +1,14 @@
 import type { FieldInputProps, FormikErrors, FormikTouched } from "formik";
-import {
-  FaFile,
-  FaUser,
-} from "react-icons/fa";
-import { FaXmark} from "react-icons/fa6";
-import { FiUpload } from "react-icons/fi";
-import { FaRegTrashCan } from "react-icons/fa6";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useDropzone } from "react-dropzone";
+import {
+  FaFile,
+} from "react-icons/fa";
+import { FaRegTrashCan, FaUserLarge, FaXmark } from "react-icons/fa6";
+import { FiUpload } from "react-icons/fi";
+import Button from "../../button/Button";
 import PdfPreview from "./PdfPreview";
 import "./index.css";
 
@@ -189,7 +188,7 @@ const ImagePreviewItem = ({
     <div className="relative" style={{ width: `${dropzoneSizeVal}px`, height: `${dropzoneSizeVal}px` }}>
       <div
         {...(isPreviewOn && !disabled ? { onClick: handleCardClick } : {})}
-        className={`border relative w-full h-full overflow-hidden group ${isPreviewOn && !disabled ? "cursor-pointer" : ""
+        className={`border-2 relative w-full h-full overflow-hidden group ${isPreviewOn && !disabled ? "cursor-pointer" : ""
           } ${isPdf ? "form-upload-pdf" : "form-upload-img"} ${disabled ? "cursor-not-allowed opacity-60" : ""
           } ${dropzoneRadiusClass}`}
       >
@@ -345,6 +344,8 @@ const FileInput = ({
 }: FileInputProps) => {
   const isFormik = Boolean(field && form);
   const fieldName = field?.name || "";
+
+  const resolvedVariant = labelPlacement === "outlined" ? "bordered" : variant;
 
   // Single file resolutions
   const singleFile = isFormik && field ? field.value : value;
@@ -549,10 +550,10 @@ const FileInput = ({
   const variantConfigs = {
     flat: "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus-within:bg-neutral-200 dark:focus-within:bg-neutral-700 border-2 border-transparent",
     bordered:
-      "bg-transparent border-2 border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 focus-within:border-neutral-800 dark:focus-within:border-neutral-200",
+      "bg-transparent border-2 border-neutral-300 dark:border-neutral-700 focus-within:border-primary",
     underlined: "bg-transparent border-b-2 border-transparent rounded-none relative",
     faded:
-      "bg-neutral-50 dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 focus-within:border-neutral-600",
+      "bg-neutral-50 dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-800 focus-within:border-primary",
   };
 
   const radiusConfigs = {
@@ -565,8 +566,8 @@ const FileInput = ({
 
   const isOutlined = labelPlacement === "outlined";
   const sz = sizeConfigs[size] || sizeConfigs.md;
-  const variantClass = isOutlined ? "bg-transparent border-none" : (variantConfigs[variant] || variantConfigs.bordered);
-  const radiusClass = variant === "underlined" ? "rounded-none" : radiusConfigs[radius] || radiusConfigs.md;
+  const variantClass = isOutlined ? "bg-transparent border-none" : (variantConfigs[resolvedVariant] || variantConfigs.bordered);
+  const radiusClass = resolvedVariant === "underlined" ? "rounded-none" : radiusConfigs[radius] || radiusConfigs.md;
 
   const profileSizeConfigs = {
     sm: 96,
@@ -625,11 +626,10 @@ const FileInput = ({
       <label
         htmlFor={fieldName}
         className={`block font-medium select-none transition-colors duration-200 ${isOutsideLeft ? "shrink-0 mb-0" : "mb-1.5"
-          } ${sz.labelSize} ${labelClassName} ${
-          isFocused
-            ? "text-[var(--color-primary,#2196f3)]"
+          } ${sz.labelSize} ${labelClassName} ${isFocused
+            ? "text-primary"
             : "text-neutral-700 dark:text-neutral-300"
-        }`}
+          }`}
       >
         {label}
       </label>
@@ -646,11 +646,11 @@ const FileInput = ({
           {!previewUrl ? (
             <div {...getRootProps()} className="flex justify-center">
               <label
-                className={`flex flex-col items-center overflow-hidden bg-white tracking-wide uppercase border ${profileRadiusClass} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+                className={`flex flex-col items-center overflow-hidden bg-white tracking-wide uppercase border-2 ${profileRadiusClass} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-primary-400"
                   } ${hasError ? "error-red-border border-danger" : ""}`}
                 style={{ width: `${profileSizeVal}px`, height: `${profileSizeVal}px` }}
               >
-                <FaUser className="w-full h-full text-secondary" />
+                <FaUserLarge className="w-full h-full text-secondary" />
               </label>
             </div>
           ) : (
@@ -660,7 +660,7 @@ const FileInput = ({
                   {...(isPreviewOn && !disabled
                     ? { onClick: () => setIsModalOpen(true) }
                     : getRootProps())}
-                  className={`border overflow-hidden form-upload-img w-full h-full ${profileRadiusClass} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+                  className={`border-2 overflow-hidden form-upload-img w-full h-full ${profileRadiusClass} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
                     }`}
                 >
                   <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
@@ -714,7 +714,7 @@ const FileInput = ({
           {!previewUrl || !isSupported ? (
             <div {...getRootProps()} className="relative mt-2" style={{ width: `${dropzoneSizeVal}px`, height: `${dropzoneSizeVal}px` }}>
               <label
-                className={`flex flex-col items-center justify-center p-4 bg-white tracking-wide uppercase border w-full h-full ${dropzoneRadiusClass}
+                className={`flex flex-col items-center justify-center p-4 bg-white tracking-wide uppercase border-2 w-full h-full ${dropzoneRadiusClass}
                   ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-primary-400"} 
                   ${hasError ? "error-red-border border-danger" : ""}
                 `}
@@ -727,7 +727,7 @@ const FileInput = ({
             <div className="relative mt-2" style={{ width: `${dropzoneSizeVal}px`, height: `${dropzoneSizeVal}px` }}>
               <div
                 {...(isPreviewOn ? { onClick: handleSingleCardClick } : getRootProps())}
-                className={`border relative w-full h-full group ${isPdf ? "form-upload-pdf" : "form-upload-img"
+                className={`border-2 relative w-full h-full group ${isPdf ? "form-upload-pdf" : "form-upload-img"
                   } ${disabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"} ${dropzoneRadiusClass}`}
               >
                 <div className={`w-full h-full overflow-hidden ${dropzoneRadiusClass}`}>
@@ -809,7 +809,7 @@ const FileInput = ({
             <div {...getRootProps()} className="relative">
               <input {...getInputProps()} />
               <label
-                className={`flex flex-col items-center justify-center px-4 bg-white tracking-wide uppercase border ${dropzoneRadiusClass} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-primary-400"
+                className={`flex flex-col items-center justify-center px-4 bg-white tracking-wide uppercase border-2 ${dropzoneRadiusClass} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-primary-400"
                   } ${hasError ? "error-red-border border-danger" : ""}`}
                 style={{ width: `${dropzoneSizeVal}px`, height: `${dropzoneSizeVal}px` }}
               >
@@ -849,8 +849,8 @@ const FileInput = ({
                   ${hasError
                     ? "border-2 border-red-500 dark:border-red-500"
                     : isFocused
-                      ? "border-2 border-[var(--color-primary,#2196f3)]"
-                      : "border border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
+                      ? "border-2 border-primary"
+                      : "border-2 border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
                   }
                 `}
               >
@@ -900,12 +900,11 @@ const FileInput = ({
                 transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
                 className={`
                   absolute left-3 top-1/2 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
-                  ${sz.textSize} ${labelClassName} ${
-                    (shouldFloat || (isOutlined && (isFocused || hasValue)))
-                      ? isFocused
-                        ? "text-[var(--color-primary,#2196f3)]"
-                        : "text-neutral-700 dark:text-neutral-300"
-                      : "text-neutral-400 dark:text-neutral-500"
+                  ${sz.textSize} ${labelClassName} ${(shouldFloat || (isOutlined && (isFocused || hasValue)))
+                    ? isFocused
+                      ? "text-primary"
+                      : "text-neutral-700 dark:text-neutral-300"
+                    : "text-neutral-400 dark:text-neutral-500"
                   }
                 `}
                 style={{ transformOrigin: isOutlined ? "left" : "top left" }}
@@ -961,20 +960,34 @@ const FileInput = ({
             {/* Action icon: Clear or Browse */}
             <div className="flex items-center justify-center shrink-0 ml-1">
               {isClearable && singleFile && !disabled ? (
-                <button
-                  type="button"
-                  onClick={handleClearSingle}
+                <Button
+                  color="default"
+                  size="xs"
+                  variant="flat"
+                  radius="full"
+                  isIconOnly
                   tabIndex={-1}
-                  className="flex items-center justify-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 transition p-1 rounded-full cursor-pointer"
+                  onClick={handleClearSingle}
                 >
-                  <FaXmark className="w-4 h-4" aria-hidden />
-                </button>
+                  <FaXmark className="w-3.5 h-3.5" aria-hidden />
+                </Button>
               ) : (
                 <FiUpload className="w-4 h-4 text-neutral-400" aria-hidden />
               )}
             </div>
 
             <input {...getInputProps()} style={{ display: "none" }} />
+
+            {/* Underline Animation for Underlined Variant */}
+            {resolvedVariant === "underlined" && (
+              <motion.div
+                className="absolute bottom-[-2px] left-0 right-0 h-[2px] bg-primary z-20"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: isFocused ? 1 : 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                style={{ originX: 0.5 }}
+              />
+            )}
           </div>
         </div>
       )}

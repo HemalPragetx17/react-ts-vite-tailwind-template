@@ -220,12 +220,12 @@ const OTPInput = forwardRef<HTMLInputElement, OTPInputProps>((props, ref) => {
               className={`
                 ${sizeClasses[size]}
                 text-center font-semibold
-                rounded-md border border-neutral-300 dark:border-neutral-700
+                rounded-md border-2 border-neutral-300 dark:border-neutral-700
                 bg-transparent text-neutral-800 dark:text-neutral-100
                 outline-none transition
-                focus:ring-2 focus:ring-primary focus:border-primary
+                focus:border-primary focus:ring-0
                 ${fieldTouched && fieldError
-                  ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                  ? "border-red-500 focus:border-red-500"
                   : ""
                 }
                 ${inputClassName}

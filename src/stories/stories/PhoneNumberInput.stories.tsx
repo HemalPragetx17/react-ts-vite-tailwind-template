@@ -24,7 +24,7 @@ const meta: Meta<typeof PhoneNumberInput> = {
     },
     labelPlacement: {
       control: "select",
-      options: ["inside", "outside", "outside-left", "outside-top"],
+      options: ["inside", "outside", "outside-left", "outside-top", "outlined"],
     },
     dropdownPosition: {
       control: "select",
@@ -133,6 +133,14 @@ export const LabelPlacements: Story = {
       <div className="flex gap-4 items-end">
         <PhoneInputWithState {...args} labelPlacement="outside" label="Outside (Floating)" country="in" />
         <PhoneInputWithState {...args} labelPlacement="outside" label="Outside (static with placeholder)" placeholder="Enter Phone Number" country="in" />
+      </div>
+      <div className="flex gap-4 items-end">
+        <PhoneInputWithState {...args} labelPlacement="outlined" label="Outlined" country="in" />
+        <PhoneInputWithState {...args} labelPlacement="outlined" label="Outlined (static with placeholder)" placeholder="Enter Phone Number" country="in" />
+      </div>
+      <div className="flex gap-4 items-end">
+        <PhoneInputWithState {...args} singleBorder={true} labelPlacement="outlined" label="Single Border" country="in" />
+        <PhoneInputWithState {...args} singleBorder={true} labelPlacement="outlined" label="Single Border (static with placeholder)" placeholder="Enter Phone Number" country="in" />
       </div>
       <div className="flex gap-4 items-end">
         <PhoneInputWithState {...args} labelPlacement="outside-top" label="Outside Top" placeholder="Enter Phone Number" country="in" />
