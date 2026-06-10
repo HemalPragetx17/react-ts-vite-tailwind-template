@@ -74,7 +74,7 @@ const colorTokens: Record<
   SelectColor,
   { bg: string; text: string; multiValueBg: string; multiValueText: string; focusBorder: string }
 > = {
-  default: { bg: "bg-secondary-600", text: "text-white", multiValueBg: "bg-secondary-600", multiValueText: "text-white", focusBorder: "border-secondary-600" },
+  default: { bg: "bg-default-600", text: "text-white", multiValueBg: "bg-default-600", multiValueText: "text-white", focusBorder: "border-default-600" },
   primary: { bg: "bg-primary", text: "text-white", multiValueBg: "bg-primary", multiValueText: "text-white", focusBorder: "border-primary" },
   secondary: { bg: "bg-secondary", text: "text-white", multiValueBg: "bg-secondary", multiValueText: "text-white", focusBorder: "border-secondary" },
   success: { bg: "bg-success", text: "text-white", multiValueBg: "bg-success", multiValueText: "text-white", focusBorder: "border-success" },
@@ -279,7 +279,7 @@ const CustomMultiValue = (props: any) => {
 
 const StaticCheckbox = ({ checked, color }: { checked: boolean; color: CheckboxColor }) => {
   const bgMap: Record<CheckboxColor, string> = {
-    default: "bg-secondary-600",
+    default: "bg-default-600",
     primary: "bg-primary",
     secondary: "bg-secondary",
     success: "bg-success",

@@ -70,13 +70,13 @@ export interface TimePickerProps {
 /* -------------------------------------------------------------------------- */
 
 const variantBase: Record<PickerVariant, string> = {
-  flat: "bg-secondary-100 border-2 border-transparent hover:bg-secondary-200 dark:bg-neutral-800 dark:hover:bg-neutral-700",
+  flat: "bg-default-100 border-2 border-transparent hover:bg-default-200 dark:bg-neutral-800 dark:hover:bg-neutral-700",
   bordered:
-    "bg-transparent border-2 border-secondary-300 hover:border-secondary-400 dark:border-neutral-700 dark:hover:border-neutral-600",
+    "bg-transparent border-2 border-default-300 hover:border-default-400 dark:border-neutral-700 dark:hover:border-neutral-600",
   underlined:
     "bg-transparent border-b-2 border-transparent rounded-none",
   faded:
-    "bg-secondary-50 border-2 border-secondary-200 hover:border-secondary-300 dark:bg-neutral-800/40 dark:border-neutral-700",
+    "bg-default-50 border-2 border-default-200 hover:border-default-300 dark:bg-neutral-800/40 dark:border-neutral-700",
 };
 
 const radiusMap: Record<PickerRadius, string> = {
@@ -229,6 +229,12 @@ interface DrumColumnProps {
 const ITEM_HEIGHT = 40;
 const VISIBLE_ITEMS = 5;
 
+/**
+ * useDrumPicker
+ * - Trackpad: native scroll + CSS scroll-snap
+ * - Mouse wheel: exactly one item per notch (passive:false wheel handler)
+ * - Scroll-end: instant snap (no spring); spring reserved for click only
+ */
 function useDrumPicker<T extends { value: number; label: string }>(
   items: T[],
   currentValue: number,
@@ -237,6 +243,7 @@ function useDrumPicker<T extends { value: number; label: string }>(
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const programmaticRef = useRef(false);
+  const lastEmittedRef = useRef<number | null>(null);
   const scrollY = useMotionValue(0);
   const PADDING = ((VISIBLE_ITEMS - 1) / 2) * ITEM_HEIGHT;
 
@@ -246,19 +253,31 @@ function useDrumPicker<T extends { value: number; label: string }>(
     [],
   );
 
+  const snapToIndex = useCallback(
+    (idx: number) => {
+      const el = containerRef.current;
+      if (!el) return -1;
+
+      const clamped = Math.max(0, Math.min(idx, items.length - 1));
+      const target = indexToScrollTop(clamped);
+
+      programmaticRef.current = true;
+      el.scrollTop = target;
+      scrollY.set(target);
+      programmaticRef.current = false;
+
+      return clamped;
+    },
+    [indexToScrollTop, scrollY, items.length],
+  );
+
   const animateToIndex = useCallback(
-    (idx: number, instant = false) => {
+    (idx: number) => {
       const el = containerRef.current;
       if (!el) return;
+
       const target = indexToScrollTop(idx);
       programmaticRef.current = true;
-
-      if (instant) {
-        el.scrollTop = target;
-        scrollY.set(target);
-        programmaticRef.current = false;
-        return;
-      }
 
       animate(scrollY, target, {
         type: "spring",
@@ -268,9 +287,7 @@ function useDrumPicker<T extends { value: number; label: string }>(
         restDelta: 0.2,
         restSpeed: 0.2,
         onUpdate: (v) => {
-          if (el) {
-            el.scrollTop = v;
-          }
+          if (el) el.scrollTop = v;
         },
         onComplete: () => {
           programmaticRef.current = false;
@@ -280,54 +297,100 @@ function useDrumPicker<T extends { value: number; label: string }>(
     [indexToScrollTop, scrollY],
   );
 
+  const emitChange = useCallback(
+    (idx: number) => {
+      const item = items[idx];
+      if (!item || item.value === currentValue) return;
+      lastEmittedRef.current = item.value;
+      onChange(item.value);
+    },
+    [items, currentValue, onChange],
+  );
+
+  /* Sync scroll position only for external value changes (break onChange loop). */
   useEffect(() => {
-    const idx = items.findIndex((it) => it.value === currentValue);
-    if (idx !== -1) {
-      animateToIndex(idx, true);
+    if (lastEmittedRef.current === currentValue) {
+      lastEmittedRef.current = null;
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentValue]);
+
+    const idx = items.findIndex((it) => it.value === currentValue);
+    if (idx === -1) return;
+
+    const el = containerRef.current;
+    if (!el) return;
+
+    if (scrollTopToIndex(el.scrollTop) === idx) return;
+
+    programmaticRef.current = true;
+    el.scrollTop = indexToScrollTop(idx);
+    scrollY.set(indexToScrollTop(idx));
+    programmaticRef.current = false;
+  }, [currentValue, items, indexToScrollTop, scrollTopToIndex, scrollY]);
 
   const handleScroll = useCallback(() => {
     const el = containerRef.current;
     if (!el) return;
+
     scrollY.set(el.scrollTop);
     if (programmaticRef.current) return;
 
-    if (scrollTimerRef.current) {
-      clearTimeout(scrollTimerRef.current);
-    }
+    if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
 
     scrollTimerRef.current = setTimeout(() => {
+      if (programmaticRef.current) return;
+
       const idx = Math.max(
         0,
         Math.min(scrollTopToIndex(el.scrollTop), items.length - 1),
       );
-      animateToIndex(idx);
-      if (items[idx] && items[idx].value !== currentValue) {
-        onChange(items[idx].value);
-      }
-    }, 60);
-  }, [
-    scrollY,
-    scrollTopToIndex,
-    animateToIndex,
-    items,
-    currentValue,
-    onChange,
-  ]);
+
+      snapToIndex(idx);
+      emitChange(idx);
+    }, 80);
+  }, [scrollY, scrollTopToIndex, items.length, snapToIndex, emitChange]);
+
+  const handleWheel = useCallback(
+    (e: WheelEvent) => {
+      const el = containerRef.current;
+      if (!el) return;
+
+      const isLineOrPage =
+        e.deltaMode === WheelEvent.DOM_DELTA_LINE ||
+        e.deltaMode === WheelEvent.DOM_DELTA_PAGE;
+      const isLargePixelDelta =
+        e.deltaMode === WheelEvent.DOM_DELTA_PIXEL && Math.abs(e.deltaY) >= 40;
+
+      /* Trackpad: small pixel deltas — let native scroll + CSS snap handle it. */
+      if (!isLineOrPage && !isLargePixelDelta) return;
+
+      e.preventDefault();
+
+      const direction = e.deltaY > 0 ? 1 : -1;
+      const currentIdx = scrollTopToIndex(el.scrollTop);
+      const nextIdx = Math.max(
+        0,
+        Math.min(currentIdx + direction, items.length - 1),
+      );
+
+      snapToIndex(nextIdx);
+      emitChange(nextIdx);
+    },
+    [scrollTopToIndex, items.length, snapToIndex, emitChange],
+  );
 
   const handleItemClick = useCallback(
     (idx: number) => {
       animateToIndex(idx);
-      onChange(items[idx].value);
+      emitChange(idx);
     },
-    [animateToIndex, items, onChange],
+    [animateToIndex, emitChange],
   );
 
   return {
     containerRef,
     handleScroll,
+    handleWheel,
     handleItemClick,
     scrollY,
     PADDING,
@@ -338,10 +401,19 @@ const DrumColumn: React.FC<DrumColumnProps> = ({ items, value, onChange, color }
   const {
     containerRef,
     handleScroll,
+    handleWheel,
     handleItemClick,
     scrollY,
     PADDING,
   } = useDrumPicker(items, value, onChange);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, [containerRef, handleWheel]);
 
   const colorClassMap: Record<PickerColor, string> = {
     default: "time-picker-chip-default",
@@ -401,7 +473,7 @@ const DrumColumn: React.FC<DrumColumnProps> = ({ items, value, onChange, color }
                 opacity,
                 scale,
               }}
-              className="flex items-center justify-center cursor-pointer"
+              className="drp-drum-item flex items-center justify-center cursor-pointer"
             >
               <span
                 className={`flex items-center justify-center w-[54px] h-[32px] text-sm rounded-lg transition-all ${isSelected
@@ -1179,7 +1251,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
             {labelPlacement === "inside" && !isFloating && label && (
               <span
                 className={`
-                  block font-medium select-none mb-0.5 text-secondary-500
+                  block font-medium select-none mb-0.5 text-default-500
                   ${sz.labelSize} ${labelClassName}
                 `}
               >
@@ -1215,7 +1287,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
                 <FaXmark className="w-3.5 h-3.5" aria-hidden />
               </Button>
             ) : (
-              <FaClock className="w-3.5 h-3.5 text-secondary" />
+              <FaClock className="w-3.5 h-3.5 text-default-500" />
             )}
           </div>
 

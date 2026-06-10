@@ -64,7 +64,7 @@ const NotificationsMenu: React.FC = () => {
         color="default"
         radius="full"
         size='sm'
-        className="text-secondary-400 hover:text-secondary-600"
+        className="text-default-400 hover:text-default-600"
         aria-label="View notifications"
       >
         <FaBell className="h-6 w-6" aria-hidden />
@@ -84,15 +84,15 @@ const NotificationsMenu: React.FC = () => {
       className="w-[calc(100vw-90px)] sm:w-80 max-w-[20rem]"
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-secondary-100 dark:border-secondary-800 px-4 py-3">
+      <div className="flex items-center justify-between border-b border-default-100 dark:border-default-800 px-4 py-3">
         <div>
-          <p className="text-sm font-semibold text-secondary-900 dark:text-white">Notifications</p>
-          <p className="text-xs text-secondary-500 dark:text-secondary-400">{unreadCount} unread updates</p>
+          <p className="text-sm font-semibold text-default-900 dark:text-white">Notifications</p>
+          <p className="text-xs text-default-500 dark:text-default-400">{unreadCount} unread updates</p>
         </div>
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); markAllAsRead(); }}
-          className="text-xs font-medium text-primary transition hover:text-primary/80 disabled:text-secondary-400"
+          className="text-xs font-medium text-primary transition hover:text-primary/80 disabled:text-default-400"
           disabled={unreadCount === 0}
         >
           Mark all as read
@@ -100,23 +100,23 @@ const NotificationsMenu: React.FC = () => {
       </div>
 
       {/* Notification list */}
-      <div className="max-h-80 divide-y divide-secondary-100 dark:divide-secondary-800 overflow-auto">
+      <div className="max-h-80 divide-y divide-default-100 dark:divide-default-800 overflow-auto">
         {notifications.map((notification) => (
           <button
             key={notification.id}
             type="button"
             onClick={(e) => { e.stopPropagation(); handleNotificationClick(notification.id); }}
-            className={`flex w-full gap-3 px-4 py-3 text-left transition hover:bg-secondary-50 dark:hover:bg-secondary-900/50 ${notification.unread ? 'bg-primary/5 dark:bg-primary/10' : ''}`}
+            className={`flex w-full gap-3 px-4 py-3 text-left transition hover:bg-default-50 dark:hover:bg-default-900/50 ${notification.unread ? 'bg-primary/5 dark:bg-primary/10' : ''}`}
           >
-            <span className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${notification.unread ? 'bg-primary' : 'bg-secondary-300 dark:bg-secondary-600'}`} />
+            <span className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${notification.unread ? 'bg-primary' : 'bg-default-300 dark:bg-default-600'}`} />
             <span className="min-w-0 flex-1">
               <span className="flex items-center justify-between gap-2">
-                <span className={`block truncate text-sm font-medium ${notification.unread ? 'text-secondary-900 dark:text-white' : 'text-secondary-600 dark:text-secondary-400'}`}>
+                <span className={`block truncate text-sm font-medium ${notification.unread ? 'text-default-900 dark:text-white' : 'text-default-600 dark:text-default-400'}`}>
                   {notification.title}
                 </span>
-                <span className="shrink-0 text-xs text-secondary-400">{notification.time}</span>
+                <span className="shrink-0 text-xs text-default-400">{notification.time}</span>
               </span>
-              <span className="mt-1 block text-xs text-secondary-500 dark:text-secondary-400">{notification.message}</span>
+              <span className="mt-1 block text-xs text-default-500 dark:text-default-400">{notification.message}</span>
             </span>
           </button>
         ))}

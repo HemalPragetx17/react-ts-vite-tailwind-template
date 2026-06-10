@@ -235,7 +235,7 @@ export const Tabs: React.FC<TabsProps> = ({
     const getActiveTextClass = () => {
         if (variant === "underlined") {
             return {
-                default: "text-secondary-600 dark:text-secondary-900 font-semibold",
+                default: "text-default-600 dark:text-default-900 font-semibold",
                 primary: "text-primary dark:text-primary-400 font-semibold",
                 secondary: "text-secondary dark:text-secondary-400 font-semibold",
                 success: "text-success dark:text-success-400 font-semibold",
@@ -246,7 +246,7 @@ export const Tabs: React.FC<TabsProps> = ({
 
         if (variant === "bordered" || variant === "light") {
             return {
-                default: "text-secondary-600 font-semibold",
+                default: "text-default-600 font-semibold",
                 primary: "text-white font-semibold",
                 secondary: "text-white font-semibold",
                 success: "text-white font-semibold",
@@ -273,7 +273,7 @@ export const Tabs: React.FC<TabsProps> = ({
                 // If tabs are on the right (end), line is on the left edge. Otherwise, line is on the right edge.
                 const alignment = resolvedPlacement === "end" ? "left-0" : "right-0";
                 return {
-                    default: `absolute ${alignment} top-0 bottom-0 w-[2px] bg-secondary-900 dark:bg-white z-0`,
+                    default: `absolute ${alignment} top-0 bottom-0 w-[2px] bg-default-900 dark:bg-white z-0`,
                     primary: `absolute ${alignment} top-0 bottom-0 w-[2px] bg-primary dark:bg-primary-400 z-0`,
                     secondary: `absolute ${alignment} top-0 bottom-0 w-[2px] bg-secondary dark:bg-secondary-400 z-0`,
                     success: `absolute ${alignment} top-0 bottom-0 w-[2px] bg-success dark:bg-success-400 z-0`,
@@ -282,7 +282,7 @@ export const Tabs: React.FC<TabsProps> = ({
                 }[color];
             }
             return {
-                default: "absolute bottom-0 left-0 right-0 h-[2px] bg-secondary-900 dark:bg-white z-0",
+                default: "absolute bottom-0 left-0 right-0 h-[2px] bg-default-900 dark:bg-white z-0",
                 primary: "absolute bottom-0 left-0 right-0 h-[2px] bg-primary dark:bg-primary-400 z-0",
                 secondary: "absolute bottom-0 left-0 right-0 h-[2px] bg-secondary dark:bg-secondary-400 z-0",
                 success: "absolute bottom-0 left-0 right-0 h-[2px] bg-success dark:bg-success-400 z-0",
@@ -293,7 +293,7 @@ export const Tabs: React.FC<TabsProps> = ({
 
         if (variant === "light") {
             return {
-                default: "absolute inset-0 bg-secondary-200 dark:bg-secondary-700 z-0",
+                default: "absolute inset-0 bg-default-200 dark:bg-default-700 z-0",
                 primary: "absolute inset-0 bg-primary dark:bg-primary/40 z-0",
                 secondary: "absolute inset-0 bg-secondary dark:bg-secondary/40 z-0",
                 success: "absolute inset-0 bg-success dark:bg-success/40 z-0",
@@ -304,7 +304,7 @@ export const Tabs: React.FC<TabsProps> = ({
 
         if (variant === "bordered") {
             return {
-                default: "absolute inset-0 bg-secondary-200 dark:bg-secondary-800 z-0",
+                default: "absolute inset-0 bg-default-200 dark:bg-default-800 z-0",
                 primary: "absolute inset-0 bg-primary z-0",
                 secondary: "absolute inset-0 bg-secondary z-0",
                 success: "absolute inset-0 bg-success z-0",
@@ -315,7 +315,7 @@ export const Tabs: React.FC<TabsProps> = ({
 
         // Solid (default)
         return {
-            default: "absolute inset-0 bg-secondary dark:bg-seciondary-900 shadow-sm z-0",
+            default: "absolute inset-0 bg-default dark:bg-default-900 shadow-sm z-0",
             primary: "absolute inset-0 bg-primary z-0",
             secondary: "absolute inset-0 bg-secondary z-0",
             success: "absolute inset-0 bg-success z-0",
@@ -324,7 +324,7 @@ export const Tabs: React.FC<TabsProps> = ({
         }[color];
     };
 
-    const inactiveTextClass = "text-secondary hover:text-secondary-800 dark:text-secondary-400 dark:hover:text-secondary-200";
+    const inactiveTextClass = "text-default hover:text-default-800 dark:text-default-400 dark:hover:text-default-200";
     const activeTextClass = getActiveTextClass();
     const indicatorClass = getIndicatorClass();
     const isUnderlined = variant === "underlined";
@@ -342,7 +342,7 @@ export const Tabs: React.FC<TabsProps> = ({
         // On light active tabs the bg is a tinted pastel — use themed text+bg
         if (isActive && variant === "underlined") {
             return ({
-                default: "bg-secondary-400 text-white",
+                default: "bg-default-400 text-white",
                 primary: "bg-primary-400 text-white",
                 secondary: "bg-secondary-400 text-white",
                 success: "bg-success-400 text-white",
@@ -351,7 +351,7 @@ export const Tabs: React.FC<TabsProps> = ({
             } as const)[color];
         }
         // Inactive tabs (all variants) and active underlined — muted neutral
-        return "bg-secondary-300 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-300";
+        return "bg-default-300 dark:bg-default-700 text-default-600 dark:text-default-300";
     };
 
     // Set overall container flex orientation

@@ -150,7 +150,7 @@ const Dashboard = () => {
             <p className="text-2xl cursor-default select-none">Dashboard</p>
           }
         >
-          <p className="text-xs text-secondary-600 dark:text-secondary-300 leading-relaxed">
+          <p className="text-xs text-default-600 dark:text-default-300 leading-relaxed">
             Real-time overview of your application's key metrics, sessions, and reports.
           </p>
         </Popover>

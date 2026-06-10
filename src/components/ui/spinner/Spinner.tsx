@@ -34,7 +34,7 @@ export interface SpinnerProps {
 
 const colorClasses = {
   current: "text-current",
-  default: "text-secondary-600 dark:text-secondary-600",
+  default: "text-default-600 dark:text-default-600",
   primary: "text-primary",
   secondary: "text-secondary",
   success: "text-success",
@@ -44,7 +44,7 @@ const colorClasses = {
 
 const labelColorClasses = {
   current: "text-current",
-  default: "text-secondary-600 dark:text-secondary-600",
+  default: "text-default-600 dark:text-default-600",
   primary: "text-primary",
   secondary: "text-secondary",
   success: "text-success",

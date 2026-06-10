@@ -83,13 +83,13 @@ export interface DateInputProps {
 
 
 const variantBase: Record<PickerVariant, string> = {
-  flat: "bg-secondary-100 border-2 border-transparent hover:bg-secondary-200 ",
+  flat: "bg-default-100 border-2 border-transparent hover:bg-default-200 ",
   bordered:
-    "bg-transparent border-2 border-secondary-300 hover:border-secondary-400 ",
+    "bg-transparent border-2 border-default-300 hover:border-default-400 ",
   underlined:
     "bg-transparent border-b-2 border-transparent rounded-none",
   faded:
-    "bg-secondary-50 border-2 border-secondary-200 hover:border-secondary-300",
+    "bg-default-50 border-2 border-default-200 hover:border-default-300",
 };
 
 const radiusMap: Record<PickerRadius, string> = {
@@ -162,7 +162,7 @@ function formatDisplayRange(start: Date | null, end: Date | null): string {
 
 function CalendarIcon() {
   return (
-    <FaCalendar size={16} className="text-secondary shrink-0" aria-hidden />
+    <FaCalendar size={16} className="text-default-500 shrink-0" aria-hidden />
   );
 }
 
@@ -192,29 +192,20 @@ const DRUM_HEIGHT = ITEM_HEIGHT * VISIBLE_ITEMS; // 308px
 
 /**
  * useDrumPicker
- * Framer-motion powered scroll for a single drum column.
- *
- * - animate() drives scrollTop with a spring so it feels physical
- * - scrollY MotionValue tracks live scroll position for per-item transforms
- * - Native scroll still works (touch/wheel); on scroll-end we snap with spring
+ * - Trackpad: native scroll + CSS scroll-snap
+ * - Mouse wheel: exactly one item per notch (passive:false wheel handler)
+ * - Scroll-end: instant snap (no spring); spring reserved for click only
  */
-/* -------------------------------------------------------------------------- */
-/* 3. REPLACE YOUR useDrumPicker() WITH THIS */
-/* -------------------------------------------------------------------------- */
-
 function useDrumPicker<T extends { value: number; label: string }>(
   items: T[],
   currentValue: number,
   onChange: (value: number) => void,
 ) {
   const containerRef = useRef<HTMLDivElement>(null);
-
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const programmaticRef = useRef(false);
-
+  const lastEmittedRef = useRef<number | null>(null);
   const scrollY = useMotionValue(0);
-
   const PADDING = ((VISIBLE_ITEMS - 1) / 2) * ITEM_HEIGHT;
 
   const indexToScrollTop = useCallback((idx: number) => idx * ITEM_HEIGHT, []);
@@ -224,43 +215,42 @@ function useDrumPicker<T extends { value: number; label: string }>(
     [],
   );
 
-  /* ---------------------------------------------------------------------- */
-  /* SMOOTH SPRING */
-  /* ---------------------------------------------------------------------- */
+  const snapToIndex = useCallback(
+    (idx: number) => {
+      const el = containerRef.current;
+      if (!el) return -1;
+
+      const clamped = Math.max(0, Math.min(idx, items.length - 1));
+      const target = indexToScrollTop(clamped);
+
+      programmaticRef.current = true;
+      el.scrollTop = target;
+      scrollY.set(target);
+      programmaticRef.current = false;
+
+      return clamped;
+    },
+    [indexToScrollTop, scrollY, items.length],
+  );
 
   const animateToIndex = useCallback(
-    (idx: number, instant = false) => {
+    (idx: number) => {
       const el = containerRef.current;
-
       if (!el) return;
 
       const target = indexToScrollTop(idx);
-
       programmaticRef.current = true;
-
-      if (instant) {
-        el.scrollTop = target;
-        scrollY.set(target);
-        programmaticRef.current = false;
-        return;
-      }
 
       animate(scrollY, target, {
         type: "spring",
-
         stiffness: 140,
         damping: 24,
         mass: 0.8,
-
         restDelta: 0.2,
         restSpeed: 0.2,
-
         onUpdate: (v) => {
-          if (el) {
-            el.scrollTop = v;
-          }
+          if (el) el.scrollTop = v;
         },
-
         onComplete: () => {
           programmaticRef.current = false;
         },
@@ -269,73 +259,100 @@ function useDrumPicker<T extends { value: number; label: string }>(
     [indexToScrollTop, scrollY],
   );
 
-  /* ---------------------------------------------------------------------- */
-  /* INITIAL POSITION */
-  /* ---------------------------------------------------------------------- */
+  const emitChange = useCallback(
+    (idx: number) => {
+      const item = items[idx];
+      if (!item || item.value === currentValue) return;
+      lastEmittedRef.current = item.value;
+      onChange(item.value);
+    },
+    [items, currentValue, onChange],
+  );
 
+  /* Sync scroll position only for external value changes (break onChange loop). */
   useEffect(() => {
-    const idx = items.findIndex((it) => it.value === currentValue);
-
-    if (idx !== -1) {
-      animateToIndex(idx, true);
+    if (lastEmittedRef.current === currentValue) {
+      lastEmittedRef.current = null;
+      return;
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentValue]);
+    const idx = items.findIndex((it) => it.value === currentValue);
+    if (idx === -1) return;
 
-  /* ---------------------------------------------------------------------- */
-  /* SCROLL */
-  /* ---------------------------------------------------------------------- */
+    const el = containerRef.current;
+    if (!el) return;
+
+    if (scrollTopToIndex(el.scrollTop) === idx) return;
+
+    programmaticRef.current = true;
+    el.scrollTop = indexToScrollTop(idx);
+    scrollY.set(indexToScrollTop(idx));
+    programmaticRef.current = false;
+  }, [currentValue, items, indexToScrollTop, scrollTopToIndex, scrollY]);
 
   const handleScroll = useCallback(() => {
     const el = containerRef.current;
-
     if (!el) return;
 
     scrollY.set(el.scrollTop);
-
     if (programmaticRef.current) return;
 
-    if (scrollTimerRef.current) {
-      clearTimeout(scrollTimerRef.current);
-    }
+    if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
 
     scrollTimerRef.current = setTimeout(() => {
+      if (programmaticRef.current) return;
+
       const idx = Math.max(
         0,
         Math.min(scrollTopToIndex(el.scrollTop), items.length - 1),
       );
 
-      animateToIndex(idx);
+      snapToIndex(idx);
+      emitChange(idx);
+    }, 80);
+  }, [scrollY, scrollTopToIndex, items.length, snapToIndex, emitChange]);
 
-      if (items[idx] && items[idx].value !== currentValue) {
-        onChange(items[idx].value);
-      }
-    }, 60);
-  }, [
-    scrollY,
-    scrollTopToIndex,
-    animateToIndex,
-    items,
-    currentValue,
-    onChange,
-  ]);
+  const handleWheel = useCallback(
+    (e: WheelEvent) => {
+      const el = containerRef.current;
+      if (!el) return;
 
-  /* ---------------------------------------------------------------------- */
-  /* CLICK */
-  /* ---------------------------------------------------------------------- */
+      const isLineOrPage =
+        e.deltaMode === WheelEvent.DOM_DELTA_LINE ||
+        e.deltaMode === WheelEvent.DOM_DELTA_PAGE;
+      const isLargePixelDelta =
+        e.deltaMode === WheelEvent.DOM_DELTA_PIXEL && Math.abs(e.deltaY) >= 40;
+
+      /* Trackpad: small pixel deltas — let native scroll + CSS snap handle it. */
+      if (!isLineOrPage && !isLargePixelDelta) return;
+
+      e.preventDefault();
+
+      const direction = e.deltaY > 0 ? 1 : -1;
+      const currentIdx = scrollTopToIndex(el.scrollTop);
+      const nextIdx = Math.max(
+        0,
+        Math.min(currentIdx + direction, items.length - 1),
+      );
+
+      snapToIndex(nextIdx);
+      emitChange(nextIdx);
+    },
+    [scrollTopToIndex, items.length, snapToIndex, emitChange],
+  );
 
   const handleItemClick = useCallback(
     (idx: number) => {
       animateToIndex(idx);
-      onChange(items[idx].value);
+      emitChange(idx);
     },
-    [animateToIndex, items, onChange],
+    [animateToIndex, emitChange],
   );
 
   return {
     containerRef,
     handleScroll,
+    handleWheel,
     handleItemClick,
     scrollY,
     PADDING,
@@ -765,10 +782,10 @@ const DateInput: React.FC<DateInputProps> = ({
                   flex items-center justify-center
                   w-9 h-9
                   rounded-full
-                  border border-secondary-200
-                  bg-secondary-50
-                  text-secondary-600
-                  hover:bg-secondary-100
+                  border border-default-200
+                  bg-default-50
+                  text-default-600
+                  hover:bg-default-100
                   disabled:opacity-40
                   transition-colors
                 "
@@ -804,18 +821,18 @@ const DateInput: React.FC<DateInputProps> = ({
           ${showMonthYearPicker
                       ? `
                 rounded-full
-                border border-secondary-200
-                bg-secondary-100
+                border border-default-200
+                bg-default-100
                 shadow-none
-                text-secondary-900
+                text-default-900
               `
                       : `
                 rounded-full
-                border border-secondary-200
-                bg-secondary-50
+                border border-default-200
+                bg-default-50
                 shadow-sm
-                text-secondary-900
-                hover:bg-secondary-100
+                text-default-900
+                hover:bg-default-100
               `
                     }
         `}
@@ -901,9 +918,9 @@ const DateInput: React.FC<DateInputProps> = ({
         px-4 py-2
         text-sm font-semibold
         rounded-full
-        border border-secondary-200
-        bg-secondary-50
-        text-secondary-900
+        border border-default-200
+        bg-default-50
+        text-default-900
       "
               >
                 {monthYearLabel}
@@ -928,10 +945,10 @@ const DateInput: React.FC<DateInputProps> = ({
                   flex items-center justify-center
                   w-9 h-9
                   rounded-full
-                  border border-secondary-200
-                  bg-secondary-50
-                  text-secondary-600
-                  hover:bg-secondary-100
+                  border border-default-200
+                  bg-default-50
+                  text-default-600
+                  hover:bg-default-100
                   disabled:opacity-40
                   transition-colors
                 "
@@ -1067,7 +1084,7 @@ const DateInput: React.FC<DateInputProps> = ({
             {labelPlacement === "inside" && !isFloating && label && (
               <span
                 className={`
-                  block font-medium select-none mb-0.5 text-secondary-500
+                  block font-medium select-none mb-0.5 text-default-500
                   ${sz.labelSize} ${labelClassName}
                 `}
               >
@@ -1082,13 +1099,13 @@ const DateInput: React.FC<DateInputProps> = ({
             >
               {!displayString ? (
                 <span
-                  className={`text-secondary truncate select-none ${sz.textSize}`}
+                  className={`text-default-500 truncate select-none ${sz.textSize}`}
                 >
                   {((!isFloating || shouldFloat) && resolvedPlaceholder) ? resolvedPlaceholder : "\u200b"}
                 </span>
               ) : (
                 <span
-                  className={`text-secondary-800 truncate select-none ${sz.textSize}`}
+                  className={`text-default-800 truncate select-none ${sz.textSize}`}
                 >
                   {displayString}
                 </span>
@@ -1131,7 +1148,7 @@ const DateInput: React.FC<DateInputProps> = ({
                     stiffness: 400,
                     damping: 28,
                   }}
-                  className={`fixed z-[99999] bg-background border border-secondary-200 rounded-xl shadow-xl overflow-hidden drp-calendar-wrapper--${color}`}
+                  className={`fixed z-[99999] bg-background border border-default-200 rounded-xl shadow-xl overflow-hidden drp-calendar-wrapper--${color}`}
                   style={{
                     width: 256,
                     height: 325,
@@ -1230,6 +1247,7 @@ const DrumOverlay: React.FC<DrumOverlayProps> = ({
   const {
     containerRef: monthRef,
     handleScroll: handleMonthScroll,
+    handleWheel: handleMonthWheel,
     handleItemClick: handleMonthClick,
     scrollY: monthScrollY,
     PADDING,
@@ -1238,6 +1256,7 @@ const DrumOverlay: React.FC<DrumOverlayProps> = ({
   const {
     containerRef: yearRef,
     handleScroll: handleYearScroll,
+    handleWheel: handleYearWheel,
     handleItemClick: handleYearClick,
     scrollY: yearScrollY,
   } = useDrumPicker(yearOptions, currentYear, onYearChange);
@@ -1247,7 +1266,7 @@ const DrumOverlay: React.FC<DrumOverlayProps> = ({
       className="
         relative
         overflow-hidden
-        bg-secondary-100
+        bg-default-100
         border-0
         shadow-none
       "
@@ -1287,6 +1306,7 @@ const DrumOverlay: React.FC<DrumOverlayProps> = ({
           selectedValue={currentMonth}
           containerRef={monthRef}
           onScroll={handleMonthScroll}
+          onWheel={handleMonthWheel}
           onItemClick={handleMonthClick}
           scrollY={monthScrollY}
           padding={PADDING}
@@ -1299,6 +1319,7 @@ const DrumOverlay: React.FC<DrumOverlayProps> = ({
           selectedValue={currentYear}
           containerRef={yearRef}
           onScroll={handleYearScroll}
+          onWheel={handleYearWheel}
           onItemClick={handleYearClick}
           scrollY={yearScrollY}
           padding={PADDING}
@@ -1318,6 +1339,7 @@ interface DrumColumnProps {
   selectedValue: number;
   containerRef: React.RefObject<HTMLDivElement>;
   onScroll: () => void;
+  onWheel: (e: WheelEvent) => void;
   onItemClick: (idx: number) => void;
   scrollY: ReturnType<typeof useMotionValue<number>>;
   padding: number;
@@ -1329,15 +1351,24 @@ const DrumColumn: React.FC<DrumColumnProps> = ({
   selectedValue,
   containerRef,
   onScroll,
+  onWheel,
   onItemClick,
   scrollY,
   padding,
   align,
 }) => {
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [containerRef, onWheel]);
+
   return (
     /* Outer wrapper: clips content + applies fade mask via CSS class */
     <div className="relative flex-1 overflow-hidden drp-drum-fade">
-      {/* Scrollable list — no native scroll-snap; framer spring handles snapping */}
+      {/* Scrollable list — CSS scroll-snap for trackpad; wheel handler for mouse */}
       <div
         ref={containerRef}
         onScroll={onScroll}
@@ -1393,9 +1424,9 @@ const DrumColumn: React.FC<DrumColumnProps> = ({
                 scale,
               }}
               className={`
-                relative z-10 flex items-center cursor-pointer px-4 text-base
+                drp-drum-item relative z-10 flex items-center cursor-pointer px-4 text-base
                 ${align === "left" ? "justify-start" : align === "right" ? "justify-end" : "justify-center"}
-                ${isSelected ? "text-secondary-900 font-semibold" : "text-secondary-700 font-medium"}
+                ${isSelected ? "text-default-900 font-semibold" : "text-default-700 font-medium"}
               `}
             >
               {item.label}

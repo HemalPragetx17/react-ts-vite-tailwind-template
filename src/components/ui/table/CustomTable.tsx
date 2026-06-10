@@ -799,10 +799,10 @@ function CustomTable<T = any>({
                     light: "text-danger hover:bg-danger/10",
                   },
                   default: {
-                    solid: "bg-gray-600 text-white shadow-lg shadow-gray-600/30",
-                    bordered: "border-2 border-gray-600 text-gray-600 bg-transparent",
-                    flat: "bg-gray-100 text-gray-700",
-                    light: "text-gray-600 hover:bg-gray-50",
+                    solid: "bg-default-600 text-white shadow-lg shadow-default-600/30",
+                    bordered: "border-2 border-default-600 text-default-600 bg-transparent",
+                    flat: "bg-default-100 text-default-700",
+                    light: "text-default-600 hover:bg-default-50",
                   },
                 };
 

@@ -7,15 +7,113 @@ export default {
   ],
   theme: {
     extend: {
-      // Color tokens powered by CSS variables so theme (light/dark) can be switched
+      // Typography tokens powered by CSS variables — edit src/theme/typography.css
+      fontFamily: {
+        sans: ['var(--font-family-sans)'],
+        mono: ['var(--font-family-mono)'],
+        display: ['var(--font-family-display)'],
+      },
+      fontSize: {
+        xs: ['var(--font-size-xs)', { lineHeight: 'var(--line-height-normal)' }],
+        sm: ['var(--font-size-sm)', { lineHeight: 'var(--line-height-normal)' }],
+        base: ['var(--font-size-base)', { lineHeight: 'var(--line-height-normal)' }],
+        lg: ['var(--font-size-lg)', { lineHeight: 'var(--line-height-snug)' }],
+        xl: ['var(--font-size-xl)', { lineHeight: 'var(--line-height-snug)' }],
+        '2xl': ['var(--font-size-2xl)', { lineHeight: 'var(--line-height-snug)' }],
+        '3xl': ['var(--font-size-3xl)', { lineHeight: 'var(--line-height-tight)' }],
+        '4xl': ['var(--font-size-4xl)', { lineHeight: 'var(--line-height-tight)' }],
+        '5xl': ['var(--font-size-5xl)', { lineHeight: 'var(--line-height-tight)' }],
+        display: ['var(--text-display-size)', {
+          lineHeight: 'var(--text-display-line-height)',
+          fontWeight: 'var(--text-display-weight)',
+          letterSpacing: 'var(--text-display-letter-spacing)',
+          fontFamily: 'var(--font-family-display)',
+        }],
+        h1: ['var(--text-h1-size)', {
+          lineHeight: 'var(--text-h1-line-height)',
+          fontWeight: 'var(--text-h1-weight)',
+          letterSpacing: 'var(--text-h1-letter-spacing)',
+        }],
+        h2: ['var(--text-h2-size)', {
+          lineHeight: 'var(--text-h2-line-height)',
+          fontWeight: 'var(--text-h2-weight)',
+          letterSpacing: 'var(--text-h2-letter-spacing)',
+        }],
+        h3: ['var(--text-h3-size)', {
+          lineHeight: 'var(--text-h3-line-height)',
+          fontWeight: 'var(--text-h3-weight)',
+          letterSpacing: 'var(--text-h3-letter-spacing)',
+        }],
+        h4: ['var(--text-h4-size)', {
+          lineHeight: 'var(--text-h4-line-height)',
+          fontWeight: 'var(--text-h4-weight)',
+          letterSpacing: 'var(--text-h4-letter-spacing)',
+        }],
+        body: ['var(--text-body-size)', {
+          lineHeight: 'var(--text-body-line-height)',
+          fontWeight: 'var(--text-body-weight)',
+          letterSpacing: 'var(--text-body-letter-spacing)',
+        }],
+        'body-sm': ['var(--text-body-sm-size)', {
+          lineHeight: 'var(--text-body-sm-line-height)',
+          fontWeight: 'var(--text-body-sm-weight)',
+          letterSpacing: 'var(--text-body-sm-letter-spacing)',
+        }],
+        label: ['var(--text-label-size)', {
+          lineHeight: 'var(--text-label-line-height)',
+          fontWeight: 'var(--text-label-weight)',
+          letterSpacing: 'var(--text-label-letter-spacing)',
+        }],
+        caption: ['var(--text-caption-size)', {
+          lineHeight: 'var(--text-caption-line-height)',
+          fontWeight: 'var(--text-caption-weight)',
+          letterSpacing: 'var(--text-caption-letter-spacing)',
+        }],
+      },
+      fontWeight: {
+        normal: 'var(--font-weight-normal)',
+        medium: 'var(--font-weight-medium)',
+        semibold: 'var(--font-weight-semibold)',
+        bold: 'var(--font-weight-bold)',
+        extrabold: 'var(--font-weight-extrabold)',
+      },
+      lineHeight: {
+        none: 'var(--line-height-none)',
+        tight: 'var(--line-height-tight)',
+        snug: 'var(--line-height-snug)',
+        normal: 'var(--line-height-normal)',
+        relaxed: 'var(--line-height-relaxed)',
+        loose: 'var(--line-height-loose)',
+      },
+      letterSpacing: {
+        tighter: 'var(--letter-spacing-tighter)',
+        tight: 'var(--letter-spacing-tight)',
+        normal: 'var(--letter-spacing-normal)',
+        wide: 'var(--letter-spacing-wide)',
+        wider: 'var(--letter-spacing-wider)',
+        widest: 'var(--letter-spacing-widest)',
+      },
+
+      // Color tokens powered by CSS variables — edit src/theme/colors.css
       colors: {
         background: 'var(--color-background)',
+        foreground: 'var(--color-foreground)',
+        overlay: 'var(--color-overlay)',
         default: {
           50: 'var(--color-default-50)',
-          DEFAULT: 'var(--color-default)'
+          100: 'var(--color-default-100)',
+          200: 'var(--color-default-200)',
+          300: 'var(--color-default-300)',
+          400: 'var(--color-default-400)',
+          500: 'var(--color-default)',
+          600: 'var(--color-default-600)',
+          700: 'var(--color-default-700)',
+          800: 'var(--color-default-800)',
+          900: 'var(--color-default-900)',
+          DEFAULT: 'var(--color-default)',
+          foreground: 'var(--color-default-foreground)',
         },
         primary: {
-          DEFAULT: 'var(--color-primary)',
           50: 'var(--color-primary-50)',
           100: 'var(--color-primary-100)',
           200: 'var(--color-primary-200)',
@@ -26,9 +124,10 @@ export default {
           700: 'var(--color-primary-700)',
           800: 'var(--color-primary-800)',
           900: 'var(--color-primary-900)',
+          DEFAULT: 'var(--color-primary)',
+          foreground: 'var(--color-primary-foreground)',
         },
         secondary: {
-          DEFAULT: 'var(--color-secondary)',
           50: 'var(--color-secondary-50)',
           100: 'var(--color-secondary-100)',
           200: 'var(--color-secondary-200)',
@@ -39,9 +138,10 @@ export default {
           700: 'var(--color-secondary-700)',
           800: 'var(--color-secondary-800)',
           900: 'var(--color-secondary-900)',
+          DEFAULT: 'var(--color-secondary)',
+          foreground: 'var(--color-secondary-foreground)',
         },
         danger: {
-          DEFAULT: 'var(--color-danger)',
           50: 'var(--color-danger-50)',
           100: 'var(--color-danger-100)',
           200: 'var(--color-danger-200)',
@@ -52,9 +152,10 @@ export default {
           700: 'var(--color-danger-700)',
           800: 'var(--color-danger-800)',
           900: 'var(--color-danger-900)',
+          DEFAULT: 'var(--color-danger)',
+          foreground: 'var(--color-danger-foreground)',
         },
         success: {
-          DEFAULT: 'var(--color-success)',
           50: 'var(--color-success-50)',
           100: 'var(--color-success-100)',
           200: 'var(--color-success-200)',
@@ -65,9 +166,10 @@ export default {
           700: 'var(--color-success-700)',
           800: 'var(--color-success-800)',
           900: 'var(--color-success-900)',
+          DEFAULT: 'var(--color-success)',
+          foreground: 'var(--color-success-foreground)',
         },
         warning: {
-          DEFAULT: 'var(--color-warning)',
           50: 'var(--color-warning-50)',
           100: 'var(--color-warning-100)',
           200: 'var(--color-warning-200)',
@@ -78,8 +180,29 @@ export default {
           700: 'var(--color-warning-700)',
           800: 'var(--color-warning-800)',
           900: 'var(--color-warning-900)',
+          DEFAULT: 'var(--color-warning)',
+          foreground: 'var(--color-warning-foreground)',
         },
-        focus: 'var(--color-focus)'
+        content1: {
+          DEFAULT: 'var(--color-content1)',
+          foreground: 'var(--color-content1-foreground)',
+        },
+        content2: {
+          DEFAULT: 'var(--color-content2)',
+          foreground: 'var(--color-content2-foreground)',
+        },
+        content3: {
+          DEFAULT: 'var(--color-content3)',
+          foreground: 'var(--color-content3-foreground)',
+        },
+        content4: {
+          DEFAULT: 'var(--color-content4)',
+          foreground: 'var(--color-content4-foreground)',
+        },
+        focus: 'var(--color-focus)',
+      },
+      opacity: {
+        disabled: 'var(--disabled-opacity)',
       },
 
       keyframes: {

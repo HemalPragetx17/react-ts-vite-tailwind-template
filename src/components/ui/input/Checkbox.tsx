@@ -48,7 +48,7 @@ interface CheckboxProps
 // ─── Color Maps ──────────────────────────────────────────────────────────────
 
 export const bgColorMap: Record<CheckboxColor, string> = {
-  default:   "bg-secondary-600",
+  default:   "bg-default-600",
   primary:   "bg-primary",
   secondary: "bg-secondary",
   success:   "bg-success",
@@ -57,7 +57,7 @@ export const bgColorMap: Record<CheckboxColor, string> = {
 };
 
 export const borderColorMap: Record<CheckboxColor, string> = {
-  default:   "border-secondary-600",
+  default:   "border-default-600",
   primary:   "border-primary",
   secondary: "border-secondary",
   success:   "border-success",

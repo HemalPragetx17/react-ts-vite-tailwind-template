@@ -89,7 +89,7 @@ const ForgotPassword = () => {
       <div className="fixed -bottom-[500px] -left-[500px] max-w-[1000px] w-[1000px] h-[1000px] z-0 opacity-50 animate-rotate-bg"></div>
       <div className="flex justify-center items-center w-full z-10">
         <div className='max-w-[450px] w-full shadow-[0px_18px_50px_-10px_rgba(0,0,0,0.2)] border-none px-[40px] py-[50px] z-10 bg-white rounded-xl' >
-          <button type="button" className="cursor-pointer text-secondary-700 hover:text-primary" onClick={() => navigate(Routing.Login)} aria-label="Back to login">
+          <button type="button" className="cursor-pointer text-default-700 hover:text-primary" onClick={() => navigate(Routing.Login)} aria-label="Back to login">
             <FaChevronLeft className="h-[1.375em] w-[1.375em]" aria-hidden />
           </button>
           <div className="text-center">
@@ -105,7 +105,7 @@ const ForgotPassword = () => {
             {actionType === ActionType.Email && (
               <>
                 <p className='mb-2 text-center text-xl font-semibold'>Forgot password</p>
-                <p className="text-muted text-base text-center text-secondary-700">
+                <p className="text-muted text-base text-center text-default-700">
                   Enter your register E-mail id to reset your password
                 </p>
                 <Formik
@@ -143,7 +143,7 @@ const ForgotPassword = () => {
             {actionType === ActionType.Otp && (
               <>
                 <p className='mb-2 text-center text-xl font-semibold'>Forgot password</p>
-                <p className="text-muted text-base text-center text-secondary-700">
+                <p className="text-muted text-base text-center text-default-700">
                   Enter 6 digit code that you received in your mail
                 </p>
                 <Formik
@@ -167,7 +167,7 @@ const ForgotPassword = () => {
                             component={OTPInput}
                           />
                           <div className="text-right mt-5">
-                            <p className="hover:cursor-pointer text-secondary-700 text-sm inline-block" onClick={ResendOTP}>
+                            <p className="hover:cursor-pointer text-default-700 text-sm inline-block" onClick={ResendOTP}>
                               Resend Otp
                             </p>
                           </div>
@@ -185,7 +185,7 @@ const ForgotPassword = () => {
             {actionType === ActionType.Password && (
               <>
                 <p className='mb-2 text-center text-xl font-semibold'>Reset password</p>
-                <p className="text-muted text-base text-center text-secondary-700">
+                <p className="text-muted text-base text-center text-default-700">
                   Reset your password for re-login in your account
                 </p>
                 <Formik

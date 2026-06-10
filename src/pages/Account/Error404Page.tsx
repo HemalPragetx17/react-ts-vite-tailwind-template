@@ -18,7 +18,7 @@ const Error404Page = () => {
         We have lost this page
       </h3>
 
-      <div className="text-md text-secondary-800 mb-10">
+      <div className="text-md text-default-800 mb-10">
         The requested page is missing. Check the URL or&nbsp;
         <Link to="/" className="text-primary font-medium hover:text-primary-active">
           Return Home

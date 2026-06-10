@@ -75,7 +75,7 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>((props, ref) => {
   // Variant/Color combination classes
   const variantColorClasses = {
     solid: {
-      default: "bg-neutral-200 text-neutral-800 dark:bg-neutral-700 dark:text-neutral-100",
+      default: "bg-default-200 text-default-800 dark:bg-default-700 dark:text-default-100",
       primary: "bg-primary text-white",
       secondary: "bg-secondary text-white",
       success: "bg-success text-white",
@@ -83,7 +83,7 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>((props, ref) => {
       danger: "bg-danger text-white",
     },
     flat: {
-      default: "bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200",
+      default: "bg-default-100 text-default-800 dark:bg-default-800 dark:text-default-200",
       primary: "bg-primary-50 text-primary",
       secondary: "bg-secondary-50 text-secondary",
       success: "bg-success-50 text-success",
@@ -91,7 +91,7 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>((props, ref) => {
       danger: "bg-danger-50 text-danger",
     },
     faded: {
-      default: "bg-neutral-100 border border-neutral-200 text-neutral-800 dark:bg-neutral-900 dark:border-neutral-800 dark:text-neutral-200",
+      default: "bg-default-100 border border-default-200 text-default-800 dark:bg-default-900 dark:border-default-800 dark:text-default-200",
       primary: "bg-neutral-100 border border-primary/30 text-primary dark:bg-neutral-900 dark:border-primary/50",
       secondary: "bg-neutral-100 border border-secondary/30 text-secondary dark:bg-neutral-900 dark:border-secondary/50",
       success: "bg-neutral-100 border border-success/30 text-success dark:bg-neutral-900 dark:border-success/50",
@@ -99,7 +99,7 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>((props, ref) => {
       danger: "bg-neutral-100 border border-danger/30 text-danger dark:bg-neutral-900 dark:border-danger/50",
     },
     shadow: {
-      default: "bg-neutral-200 text-neutral-800 shadow-lg shadow-neutral-400/40",
+      default: "bg-default-200 text-default-800 shadow-lg shadow-default-400/40",
       primary: "bg-primary text-white shadow-lg shadow-primary/40",
       secondary: "bg-secondary text-white shadow-lg shadow-secondary/40",
       success: "bg-success text-white shadow-lg shadow-success/40",

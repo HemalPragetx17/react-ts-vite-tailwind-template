@@ -69,43 +69,43 @@ export interface PopoverProps {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const colorBorderMap: Record<PopoverColor, string> = {
-    default: "border-secondary-200 dark:border-secondary-700",
+    default: "border-default-200 dark:border-default-700",
     primary: "border-primary",
     secondary: "border-secondary",
     success: "border-success",
     warning: "border-warning",
     danger: "border-danger",
-    foreground: "border-secondary-900 dark:border-white",
+    foreground: "border-default-900 dark:border-white",
 };
 
 const colorBgMap: Record<PopoverColor, string> = {
-    default: "bg-white dark:bg-secondary-900 text-black dark:text-white",
+    default: "bg-white dark:bg-default-900 text-black dark:text-white",
     primary: "bg-primary text-white",
     secondary: "bg-secondary text-white",
     success: "bg-success text-white",
     warning: "bg-warning text-white",
     danger: "bg-danger text-white",
-    foreground: "bg-secondary-900 dark:bg-white text-white dark:text-black",
+    foreground: "bg-default-900 dark:bg-white text-white dark:text-black",
 };
 
 const colorArrowMap: Record<PopoverColor, string> = {
-    default: "border-secondary-200 dark:border-secondary-700",
+    default: "border-default-200 dark:border-default-700",
     primary: "border-primary",
     secondary: "border-secondary",
     success: "border-success",
     warning: "border-warning",
     danger: "border-danger",
-    foreground: "border-secondary-900 dark:border-white",
+    foreground: "border-default-900 dark:border-white",
 };
 
 const colorArrowBgMap: Record<PopoverColor, string> = {
-    default: "bg-white dark:bg-secondary-900",
+    default: "bg-white dark:bg-default-900",
     primary: "bg-primary",
     secondary: "bg-secondary",
     success: "bg-success",
     warning: "bg-warning",
     danger: "bg-danger",
-    foreground: "bg-secondary-900 dark:bg-white",
+    foreground: "bg-default-900 dark:bg-white",
 };
 
 const sizeClasses: Record<PopoverSize, string> = {

@@ -34,13 +34,13 @@ const Sidebar = () => {
   const menuIconClass = (isActiveRoute: boolean, hoverGroup = 'group') =>
     `w-5 h-5 shrink-0 transition-colors duration-200 ${isActiveRoute
       ? 'text-white'
-      : `text-secondary-600 ${hoverGroup === 'group' ? 'group-hover:text-white' : 'group-hover/child:text-white'}`
+      : `text-default-600 ${hoverGroup === 'group' ? 'group-hover:text-white' : 'group-hover/child:text-white'}`
     }`;
   
   const childMenuIconClass = (isActiveRoute: boolean, hoverGroup = 'group') =>
     `w-4 h-4 shrink-0 transition-colors duration-200 ${isActiveRoute
       ? 'text-white'
-      : `text-secondary-600 ${hoverGroup === 'group' ? 'group-hover:text-white' : 'group-hover/child:text-white'}`
+      : `text-default-600 ${hoverGroup === 'group' ? 'group-hover:text-white' : 'group-hover/child:text-white'}`
     }`;
 
   return (
@@ -70,7 +70,7 @@ const Sidebar = () => {
                 <Popover
                   trigger={
                     <Link
-                      className={`group w-full relative flex items-center box-border text-[15px] leading-[19px] py-2 px-[14px] gap-[10px] no-underline ${isActive || pathname?.includes(menu?.route) ? 'active bg-primary text-white' : 'text-secondary-600'} hover:bg-primary hover:text-white transition-colors duration-100 ease-linear [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:px-0`}
+                      className={`group w-full relative flex items-center box-border text-[15px] leading-[19px] py-2 px-[14px] gap-[10px] no-underline ${isActive || pathname?.includes(menu?.route) ? 'active bg-primary text-white' : 'text-default-600'} hover:bg-primary hover:text-white transition-colors duration-100 ease-linear [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:px-0`}
                       to={menu?.route ? menu?.route : '/'}
                       onClick={(e) => {
                         if ((menu?.childs?.length ?? 0) > 0) e.preventDefault();
@@ -87,7 +87,7 @@ const Sidebar = () => {
                       )}
                       <span className="text-[16px] font-medium inline-block mr-[8px] [.hide-sidebar_&]:hidden">{menu?.name}</span>
                       {(menu?.childs?.length ?? 0) > 0 && (
-                        <span className={`w-[13px] h-[13px] inline-block relative -bottom-[5px] -left-[10px] transition-all duration-500 ease-in-out mt-[2px] text-left transform rotate-45 ml-auto before:absolute before:content-[''] before:inline-block before:w-[10.5px] before:h-[2.5px] before:bg-secondary-600 before:transition-all before:duration-500 before:ease-in-out before:rounded-[2px] after:absolute after:content-[''] after:inline-block after:w-[10.5px] after:h-[2.5px] after:bg-secondary-600 after:transition-all after:duration-500 after:ease-in-out after:rounded-[2px] after:transform after:rotate-90 after:-top-[5px] after:left-[5px] aria-[label=true]:before:-rotate-90 aria-[label=true]:after:rotate-180 group-hover:before:bg-white group-hover:after:bg-white ${isActive || pathname?.includes(menu?.route) ? 'before:bg-white after:bg-white' : ''} [.hide-sidebar_&]:hidden`} aria-label={isActive ? 'true' : 'false'}></span>
+                        <span className={`w-[13px] h-[13px] inline-block relative -bottom-[5px] -left-[10px] transition-all duration-500 ease-in-out mt-[2px] text-left transform rotate-45 ml-auto before:absolute before:content-[''] before:inline-block before:w-[10.5px] before:h-[2.5px] before:bg-default-600 before:transition-all before:duration-500 before:ease-in-out before:rounded-[2px] after:absolute after:content-[''] after:inline-block after:w-[10.5px] after:h-[2.5px] after:bg-default-600 after:transition-all after:duration-500 after:ease-in-out after:rounded-[2px] after:transform after:rotate-90 after:-top-[5px] after:left-[5px] aria-[label=true]:before:-rotate-90 aria-[label=true]:after:rotate-180 group-hover:before:bg-white group-hover:after:bg-white ${isActive || pathname?.includes(menu?.route) ? 'before:bg-white after:bg-white' : ''} [.hide-sidebar_&]:hidden`} aria-label={isActive ? 'true' : 'false'}></span>
                       )}
                     </Link>
                   }
@@ -122,7 +122,7 @@ const Sidebar = () => {
                             <Popover
                               trigger={
                                 <Link
-                                  className={`group/child w-full relative flex items-center box-border text-[15px] leading-[19px] py-2 px-[10px] rounded-[10px] gap-[10px] no-underline ${pathname?.includes(childMenu?.route) ? 'active bg-primary text-white' : 'text-secondary-600'} hover:bg-primary hover:text-white transition-colors duration-100 ease-linear [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:px-0`}
+                                  className={`group/child w-full relative flex items-center box-border text-[15px] leading-[19px] py-2 px-[10px] rounded-[10px] gap-[10px] no-underline ${pathname?.includes(childMenu?.route) ? 'active bg-primary text-white' : 'text-default-600'} hover:bg-primary hover:text-white transition-colors duration-100 ease-linear [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:px-0`}
                                   to={childMenu?.route ? childMenu?.route : '/'}
                                   onClick={(e) => {
                                     if ((childMenu?.childs?.length ?? 0) > 0) e.preventDefault();

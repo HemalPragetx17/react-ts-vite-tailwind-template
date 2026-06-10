@@ -70,7 +70,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ onLogout }) => {
         className="w-[calc(100vw-90px)] sm:w-72 max-w-[18rem]"
       >
         {/* User info header */}
-        <div className="border-b border-secondary-100 dark:border-secondary-800 px-4 py-4">
+        <div className="border-b border-default-100 dark:border-default-800 px-4 py-4">
           <div className="flex items-center gap-3">
             <Avatar
               size="md"
@@ -79,12 +79,12 @@ const UserMenu: React.FC<UserMenuProps> = ({ onLogout }) => {
               isBordered
             />
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-secondary-900 dark:text-white">{displayName}</p>
-              <p className="truncate text-xs text-secondary-500 dark:text-secondary-400">{user.email || 'No email available'}</p>
+              <p className="truncate text-sm font-semibold text-default-900 dark:text-white">{displayName}</p>
+              <p className="truncate text-xs text-default-500 dark:text-default-400">{user.email || 'No email available'}</p>
             </div>
           </div>
           <div className="mt-3 flex items-center gap-2">
-            <span className="rounded-full bg-secondary-100 dark:bg-secondary-800 px-2.5 py-1 text-xs font-medium text-secondary-600 dark:text-secondary-300">
+            <span className="rounded-full bg-default-100 dark:bg-default-800 px-2.5 py-1 text-xs font-medium text-default-600 dark:text-default-300">
               {user.role || 'Member'}
             </span>
             {copied && (
@@ -98,10 +98,10 @@ const UserMenu: React.FC<UserMenuProps> = ({ onLogout }) => {
           <button
             type="button"
             onClick={handleCopyEmail}
-            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-secondary-700 dark:text-secondary-300 transition hover:bg-secondary-50 dark:hover:bg-secondary-900/50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-default-700 dark:text-default-300 transition hover:bg-default-50 dark:hover:bg-default-900/50 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={!user.email}
           >
-            <FaCopy className="h-4 w-4 text-secondary-400 shrink-0" aria-hidden />
+            <FaCopy className="h-4 w-4 text-default-400 shrink-0" aria-hidden />
             Copy email
           </button>
 
@@ -111,9 +111,9 @@ const UserMenu: React.FC<UserMenuProps> = ({ onLogout }) => {
               handleDialogOpen();
               setIsOpen(false);
             }}
-            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-secondary-700 dark:text-secondary-300 transition hover:bg-secondary-50 dark:hover:bg-secondary-900/50"
+            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-default-700 dark:text-default-300 transition hover:bg-default-50 dark:hover:bg-default-900/50"
           >
-            <FiLock className="h-4 w-4 text-secondary-400 shrink-0" aria-hidden />
+            <FiLock className="h-4 w-4 text-default-400 shrink-0" aria-hidden />
             Change password
           </button>
 

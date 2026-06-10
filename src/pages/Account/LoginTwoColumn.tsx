@@ -99,7 +99,7 @@ const LoginTwoColumn = () => {
                     </Button>
                   </div>
                   <div className="text-center mt-4">
-                    <p className="hover:cursor-pointer text-secondary-600 hover:text-primary transition-colors font-medium text-sm inline-block" onClick={() => navigate(Routing.ForgotPassword)}>
+                    <p className="hover:cursor-pointer text-default-600 hover:text-primary transition-colors font-medium text-sm inline-block" onClick={() => navigate(Routing.ForgotPassword)}>
                       Forgot password?
                     </p>
                   </div>

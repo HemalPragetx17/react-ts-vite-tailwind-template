@@ -650,7 +650,7 @@ const FileInput = ({
                   } ${hasError ? "error-red-border border-danger" : ""}`}
                 style={{ width: `${profileSizeVal}px`, height: `${profileSizeVal}px` }}
               >
-                <FaUserLarge className="w-full h-full text-secondary" />
+                <FaUserLarge className="w-full h-full text-default-500" />
               </label>
             </div>
           ) : (

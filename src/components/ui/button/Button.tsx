@@ -48,7 +48,7 @@ const baseClasses =
 
 const variantColorClasses: Record<string, Record<string, string>> = {
   solid: {
-    default: "bg-secondary-600 text-white hover:opacity-90",
+    default: "bg-default-600 text-white hover:opacity-90",
     primary: "bg-primary text-white hover:opacity-90",
     secondary: "bg-secondary text-white hover:opacity-90",
     success: "bg-success text-white hover:opacity-90",
@@ -56,7 +56,7 @@ const variantColorClasses: Record<string, Record<string, string>> = {
     danger: "bg-danger text-white hover:opacity-90",
   },
   bordered: {
-    default: "border-2 border-secondary-600 bg-transparent text-secondary-600 hover:bg-secondary-100",
+    default: "border-2 border-default-600 bg-transparent text-default-600 hover:bg-default-100",
     primary: "border-2 border-primary bg-transparent text-primary hover:bg-primary-50",
     secondary: "border-2 border-secondary bg-transparent text-secondary hover:bg-secondary-50",
     success: "border-2 border-success bg-transparent text-success hover:bg-success-50",
@@ -64,7 +64,7 @@ const variantColorClasses: Record<string, Record<string, string>> = {
     danger: "border-2 border-danger bg-transparent text-danger hover:bg-danger-50",
   },
   light: {
-    default: "bg-transparent text-secondary-600 hover:bg-secondary-300",
+    default: "bg-transparent text-default-600 hover:bg-default-300",
     primary: "bg-transparent text-primary hover:bg-primary-100",
     secondary: "bg-transparent text-secondary hover:bg-secondary-100",
     success: "bg-transparent text-success hover:bg-success-100",
@@ -72,7 +72,7 @@ const variantColorClasses: Record<string, Record<string, string>> = {
     danger: "bg-transparent text-danger hover:bg-danger-100",
   },
   flat: {
-    default: "bg-secondary-200 text-secondary-600 hover:bg-secondary-300",
+    default: "bg-default-200 text-default-600 hover:bg-default-300",
     primary: "bg-primary-50 text-primary hover:bg-primary-100",
     secondary: "bg-secondary-50 text-secondary hover:bg-secondary-100",
     success: "bg-success-50 text-success hover:bg-success-100",
@@ -80,7 +80,7 @@ const variantColorClasses: Record<string, Record<string, string>> = {
     danger: "bg-danger-50 text-danger hover:bg-danger-100",
   },
   faded: {
-    default: "border-2 border-secondary-300 bg-secondary-200 text-secondary-600 hover:border-secondary-600 hover:bg-secondary-300",
+    default: "border-2 border-default-300 bg-default-200 text-default-600 hover:border-default-600 hover:bg-default-300",
     primary: "border-2 border-primary-200 bg-primary-50 text-primary hover:border-primary hover:bg-primary-100",
     secondary: "border-2 border-secondary-200 bg-secondary-50 text-secondary hover:border-secondary hover:bg-secondary-100",
     success: "border-2 border-success-200 bg-success-50 text-success hover:border-success hover:bg-success-100",
@@ -88,7 +88,7 @@ const variantColorClasses: Record<string, Record<string, string>> = {
     danger: "border-2 border-danger-200 bg-danger-50 text-danger hover:border-danger hover:bg-danger-100",
   },
   shadow: {
-    default: "shadow-lg shadow-secondary-600/40 bg-secondary-600 text-white hover:opacity-90",
+    default: "shadow-lg shadow-default-600/40 bg-default-600 text-white hover:opacity-90",
     primary: "shadow-lg shadow-primary/40 bg-primary text-white hover:opacity-90",
     secondary: "shadow-lg shadow-secondary/40 bg-secondary text-white hover:opacity-90",
     success: "shadow-lg shadow-success/40 bg-success text-white hover:opacity-90",
@@ -96,7 +96,7 @@ const variantColorClasses: Record<string, Record<string, string>> = {
     danger: "shadow-lg shadow-danger/40 bg-danger text-white hover:opacity-90",
   },
   ghost: {
-    default: "border-2 border-secondary-600 bg-transparent text-secondary-600 hover:bg-secondary-600 hover:text-white",
+    default: "border-2 border-default-600 bg-transparent text-default-600 hover:bg-default-600 hover:text-white",
     primary: "border-2 border-primary bg-transparent text-primary hover:bg-primary hover:text-white",
     secondary: "border-2 border-secondary bg-transparent text-secondary hover:bg-secondary hover:text-white",
     success: "border-2 border-success bg-transparent text-success hover:bg-success hover:text-white",

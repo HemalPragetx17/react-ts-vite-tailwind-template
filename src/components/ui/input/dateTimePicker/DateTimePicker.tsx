@@ -85,12 +85,12 @@ export interface DateTimePickerProps {
 /* -------------------------------------------------------------------------- */
 
 const variantBase: Record<PickerVariant, string> = {
-  flat: "bg-secondary-100 border-2 border-transparent hover:bg-secondary-200 dark:bg-neutral-800 dark:hover:bg-neutral-700",
+  flat: "bg-default-100 border-2 border-transparent hover:bg-default-200 dark:bg-neutral-800 dark:hover:bg-neutral-700",
   bordered:
-    "bg-transparent border-2 border-secondary-300 hover:border-secondary-400 dark:border-neutral-700 dark:hover:border-neutral-600",
+    "bg-transparent border-2 border-default-300 hover:border-default-400 dark:border-neutral-700 dark:hover:border-neutral-600",
   underlined: "bg-transparent border-b-2 border-transparent rounded-none",
   faded:
-    "bg-secondary-50 border-2 border-secondary-200 hover:border-secondary-300 dark:bg-neutral-800/40 dark:border-neutral-700",
+    "bg-default-50 border-2 border-default-200 hover:border-default-300 dark:bg-neutral-800/40 dark:border-neutral-700",
 };
 
 const radiusMap: Record<PickerRadius, string> = {
@@ -200,6 +200,12 @@ function getFirstDayOfMonth(year: number, month: number) {
 const ITEM_H = 44;   // height of each drum item (px)
 const VISIBLE = 5;   // number of visible drum rows
 
+/**
+ * useDrumPicker
+ * - Trackpad: native scroll + CSS scroll-snap
+ * - Mouse wheel: exactly one item per notch (passive:false wheel handler)
+ * - Scroll-end: instant snap (no spring); spring reserved for click only
+ */
 function useDrumPicker<T extends { value: number; label: string }>(
   items: T[],
   currentValue: number,
@@ -208,6 +214,7 @@ function useDrumPicker<T extends { value: number; label: string }>(
   const containerRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const programmaticRef = useRef(false);
+  const lastEmittedRef = useRef<number | null>(null);
   const scrollY = useMotionValue(0);
   const PADDING = ((VISIBLE - 1) / 2) * ITEM_H;
 
@@ -217,18 +224,32 @@ function useDrumPicker<T extends { value: number; label: string }>(
     []
   );
 
+  const snapToIndex = useCallback(
+    (idx: number) => {
+      const el = containerRef.current;
+      if (!el) return -1;
+
+      const clamped = Math.max(0, Math.min(idx, items.length - 1));
+      const target = indexToScrollTop(clamped);
+
+      programmaticRef.current = true;
+      el.scrollTop = target;
+      scrollY.set(target);
+      programmaticRef.current = false;
+
+      return clamped;
+    },
+    [indexToScrollTop, scrollY, items.length]
+  );
+
   const animateToIndex = useCallback(
-    (idx: number, instant = false) => {
+    (idx: number) => {
       const el = containerRef.current;
       if (!el) return;
+
       const target = indexToScrollTop(idx);
       programmaticRef.current = true;
-      if (instant) {
-        el.scrollTop = target;
-        scrollY.set(target);
-        programmaticRef.current = false;
-        return;
-      }
+
       animate(scrollY, target, {
         type: "spring",
         stiffness: 140,
@@ -243,34 +264,88 @@ function useDrumPicker<T extends { value: number; label: string }>(
     [indexToScrollTop, scrollY]
   );
 
+  const emitChange = useCallback(
+    (idx: number) => {
+      const item = items[idx];
+      if (!item || item.value === currentValue) return;
+      lastEmittedRef.current = item.value;
+      onChange(item.value);
+    },
+    [items, currentValue, onChange]
+  );
+
   useEffect(() => {
+    if (lastEmittedRef.current === currentValue) {
+      lastEmittedRef.current = null;
+      return;
+    }
+
     const idx = items.findIndex((it) => it.value === currentValue);
-    if (idx !== -1) animateToIndex(idx, true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentValue]);
+    if (idx === -1) return;
+
+    const el = containerRef.current;
+    if (!el) return;
+
+    if (scrollTopToIndex(el.scrollTop) === idx) return;
+
+    programmaticRef.current = true;
+    el.scrollTop = indexToScrollTop(idx);
+    scrollY.set(indexToScrollTop(idx));
+    programmaticRef.current = false;
+  }, [currentValue, items, indexToScrollTop, scrollTopToIndex, scrollY]);
 
   const handleScroll = useCallback(() => {
     const el = containerRef.current;
     if (!el) return;
+
     scrollY.set(el.scrollTop);
     if (programmaticRef.current) return;
+
     if (timerRef.current) clearTimeout(timerRef.current);
+
     timerRef.current = setTimeout(() => {
+      if (programmaticRef.current) return;
+
       const idx = Math.max(0, Math.min(scrollTopToIndex(el.scrollTop), items.length - 1));
-      animateToIndex(idx);
-      if (items[idx] && items[idx].value !== currentValue) onChange(items[idx].value);
-    }, 60);
-  }, [scrollY, scrollTopToIndex, animateToIndex, items, currentValue, onChange]);
+      snapToIndex(idx);
+      emitChange(idx);
+    }, 80);
+  }, [scrollY, scrollTopToIndex, items.length, snapToIndex, emitChange]);
+
+  const handleWheel = useCallback(
+    (e: WheelEvent) => {
+      const el = containerRef.current;
+      if (!el) return;
+
+      const isLineOrPage =
+        e.deltaMode === WheelEvent.DOM_DELTA_LINE ||
+        e.deltaMode === WheelEvent.DOM_DELTA_PAGE;
+      const isLargePixelDelta =
+        e.deltaMode === WheelEvent.DOM_DELTA_PIXEL && Math.abs(e.deltaY) >= 40;
+
+      if (!isLineOrPage && !isLargePixelDelta) return;
+
+      e.preventDefault();
+
+      const direction = e.deltaY > 0 ? 1 : -1;
+      const currentIdx = scrollTopToIndex(el.scrollTop);
+      const nextIdx = Math.max(0, Math.min(currentIdx + direction, items.length - 1));
+
+      snapToIndex(nextIdx);
+      emitChange(nextIdx);
+    },
+    [scrollTopToIndex, items.length, snapToIndex, emitChange]
+  );
 
   const handleItemClick = useCallback(
     (idx: number) => {
       animateToIndex(idx);
-      onChange(items[idx].value);
+      emitChange(idx);
     },
-    [animateToIndex, items, onChange]
+    [animateToIndex, emitChange]
   );
 
-  return { containerRef, handleScroll, handleItemClick, scrollY, PADDING };
+  return { containerRef, handleScroll, handleWheel, handleItemClick, scrollY, PADDING };
 }
 
 /* -------------------------------------------------------------------------- */
@@ -285,8 +360,16 @@ interface TimeColProps {
 }
 
 const TimeColumn: React.FC<TimeColProps> = ({ items, value, onChange, color }) => {
-  const { containerRef, handleScroll, handleItemClick, scrollY, PADDING } =
+  const { containerRef, handleScroll, handleWheel, handleItemClick, scrollY, PADDING } =
     useDrumPicker(items, value, onChange);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, [containerRef, handleWheel]);
 
   return (
     <div className="relative flex-1 overflow-hidden select-none" style={{ height: ITEM_H * VISIBLE }}>
@@ -301,8 +384,7 @@ const TimeColumn: React.FC<TimeColProps> = ({ items, value, onChange, color }) =
       <div
         ref={containerRef}
         onScroll={handleScroll}
-        className="h-full overflow-y-scroll"
-        style={{ scrollbarWidth: "none" }}
+        className="drp-drum-scroll h-full overflow-y-scroll"
       >
         <div style={{ height: PADDING }} />
         {items.map((item, idx) => {
@@ -325,7 +407,7 @@ const TimeColumn: React.FC<TimeColProps> = ({ items, value, onChange, color }) =
               key={item.value}
               onClick={() => handleItemClick(idx)}
               style={{ height: ITEM_H, opacity, scale }}
-              className="flex items-center justify-center cursor-pointer"
+              className="drp-drum-item flex items-center justify-center cursor-pointer"
             >
               <span
                 className={`flex items-center justify-center w-[52px] h-[34px] text-sm font-semibold rounded-lg transition-all ${isSelected
@@ -363,6 +445,7 @@ interface DateInputDrumColProps {
   selectedValue: number;
   containerRef: React.RefObject<HTMLDivElement>;
   onScroll: () => void;
+  onWheel: (e: WheelEvent) => void;
   onItemClick: (idx: number) => void;
   scrollY: ReturnType<typeof useMotionValue<number>>;
   padding: number;
@@ -376,6 +459,7 @@ function useMYDrumPicker<T extends { value: number; label: string }>(
   const containerRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const programmaticRef = useRef(false);
+  const lastEmittedRef = useRef<number | null>(null);
   const scrollY = useMotionValue(0);
   const PADDING = ((MY_VISIBLE - 1) / 2) * MY_ITEM_H;
 
@@ -385,18 +469,32 @@ function useMYDrumPicker<T extends { value: number; label: string }>(
     []
   );
 
+  const snapToIndex = useCallback(
+    (idx: number) => {
+      const el = containerRef.current;
+      if (!el) return -1;
+
+      const clamped = Math.max(0, Math.min(idx, items.length - 1));
+      const target = indexToScrollTop(clamped);
+
+      programmaticRef.current = true;
+      el.scrollTop = target;
+      scrollY.set(target);
+      programmaticRef.current = false;
+
+      return clamped;
+    },
+    [indexToScrollTop, scrollY, items.length]
+  );
+
   const animateToIndex = useCallback(
-    (idx: number, instant = false) => {
+    (idx: number) => {
       const el = containerRef.current;
       if (!el) return;
+
       const target = indexToScrollTop(idx);
       programmaticRef.current = true;
-      if (instant) {
-        el.scrollTop = target;
-        scrollY.set(target);
-        programmaticRef.current = false;
-        return;
-      }
+
       animate(scrollY, target, {
         type: "spring", stiffness: 140, damping: 24, mass: 0.8,
         restDelta: 0.2, restSpeed: 0.2,
@@ -407,89 +505,158 @@ function useMYDrumPicker<T extends { value: number; label: string }>(
     [indexToScrollTop, scrollY]
   );
 
+  const emitChange = useCallback(
+    (idx: number) => {
+      const item = items[idx];
+      if (!item || item.value === currentValue) return;
+      lastEmittedRef.current = item.value;
+      onChange(item.value);
+    },
+    [items, currentValue, onChange]
+  );
+
   useEffect(() => {
+    if (lastEmittedRef.current === currentValue) {
+      lastEmittedRef.current = null;
+      return;
+    }
+
     const idx = items.findIndex((it) => it.value === currentValue);
-    if (idx !== -1) animateToIndex(idx, true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentValue]);
+    if (idx === -1) return;
+
+    const el = containerRef.current;
+    if (!el) return;
+
+    if (scrollTopToIndex(el.scrollTop) === idx) return;
+
+    programmaticRef.current = true;
+    el.scrollTop = indexToScrollTop(idx);
+    scrollY.set(indexToScrollTop(idx));
+    programmaticRef.current = false;
+  }, [currentValue, items, indexToScrollTop, scrollTopToIndex, scrollY]);
 
   const handleScroll = useCallback(() => {
     const el = containerRef.current;
     if (!el) return;
+
     scrollY.set(el.scrollTop);
     if (programmaticRef.current) return;
-    if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      const idx = Math.max(0, Math.min(scrollTopToIndex(el.scrollTop), items.length - 1));
-      animateToIndex(idx);
-      if (items[idx] && items[idx].value !== currentValue) onChange(items[idx].value);
-    }, 60);
-  }, [scrollY, scrollTopToIndex, animateToIndex, items, currentValue, onChange]);
 
-  const handleItemClick = useCallback(
-    (idx: number) => { animateToIndex(idx); onChange(items[idx].value); },
-    [animateToIndex, items, onChange]
+    if (timerRef.current) clearTimeout(timerRef.current);
+
+    timerRef.current = setTimeout(() => {
+      if (programmaticRef.current) return;
+
+      const idx = Math.max(0, Math.min(scrollTopToIndex(el.scrollTop), items.length - 1));
+      snapToIndex(idx);
+      emitChange(idx);
+    }, 80);
+  }, [scrollY, scrollTopToIndex, items.length, snapToIndex, emitChange]);
+
+  const handleWheel = useCallback(
+    (e: WheelEvent) => {
+      const el = containerRef.current;
+      if (!el) return;
+
+      const isLineOrPage =
+        e.deltaMode === WheelEvent.DOM_DELTA_LINE ||
+        e.deltaMode === WheelEvent.DOM_DELTA_PAGE;
+      const isLargePixelDelta =
+        e.deltaMode === WheelEvent.DOM_DELTA_PIXEL && Math.abs(e.deltaY) >= 40;
+
+      if (!isLineOrPage && !isLargePixelDelta) return;
+
+      e.preventDefault();
+
+      const direction = e.deltaY > 0 ? 1 : -1;
+      const currentIdx = scrollTopToIndex(el.scrollTop);
+      const nextIdx = Math.max(0, Math.min(currentIdx + direction, items.length - 1));
+
+      snapToIndex(nextIdx);
+      emitChange(nextIdx);
+    },
+    [scrollTopToIndex, items.length, snapToIndex, emitChange]
   );
 
-  return { containerRef, handleScroll, handleItemClick, scrollY, PADDING };
+  const handleItemClick = useCallback(
+    (idx: number) => {
+      animateToIndex(idx);
+      emitChange(idx);
+    },
+    [animateToIndex, emitChange]
+  );
+
+  return { containerRef, handleScroll, handleWheel, handleItemClick, scrollY, PADDING };
 }
 
 const DateInputDrumCol: React.FC<DateInputDrumColProps> = ({
-  items, selectedValue, containerRef, onScroll, onItemClick, scrollY, padding,
-}) => (
-  <div className="relative flex-1 overflow-hidden drp-drum-fade">
-    <div className="drp-drum-scroll h-full overflow-y-scroll" ref={containerRef} onScroll={onScroll}>
-      <div style={{ height: padding, flexShrink: 0 }} />
-      {items.map((item, idx) => {
-        const itemCenter = idx * MY_ITEM_H;
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const opacity = useTransform(
-          scrollY,
-          [itemCenter - MY_ITEM_H * 3, itemCenter - MY_ITEM_H, itemCenter, itemCenter + MY_ITEM_H, itemCenter + MY_ITEM_H * 3],
-          [0.25, 0.55, 1, 0.55, 0.25]
-        );
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const scale = useTransform(
-          scrollY,
-          [itemCenter - MY_ITEM_H * 2, itemCenter, itemCenter + MY_ITEM_H * 2],
-          [0.88, 1, 0.88]
-        );
-        const isSelected = item.value === selectedValue;
-        return (
-          <motion.div
-            key={item.value}
-            onClick={() => onItemClick(idx)}
-            style={{ height: MY_ITEM_H, opacity, scale }}
-            className={`relative z-10 flex items-center justify-center cursor-pointer text-base px-4
-              ${isSelected ? "text-neutral-900 dark:text-neutral-100 font-semibold" : "text-neutral-600 dark:text-neutral-400 font-medium"}`}
-          >
-            {item.label}
-          </motion.div>
-        );
-      })}
-      <div style={{ height: padding, flexShrink: 0 }} />
+  items, selectedValue, containerRef, onScroll, onWheel, onItemClick, scrollY, padding,
+}) => {
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [containerRef, onWheel]);
+
+  return (
+    <div className="relative flex-1 overflow-hidden drp-drum-fade">
+      <div className="drp-drum-scroll h-full overflow-y-scroll" ref={containerRef} onScroll={onScroll}>
+        <div style={{ height: padding, flexShrink: 0 }} />
+        {items.map((item, idx) => {
+          const itemCenter = idx * MY_ITEM_H;
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const opacity = useTransform(
+            scrollY,
+            [itemCenter - MY_ITEM_H * 3, itemCenter - MY_ITEM_H, itemCenter, itemCenter + MY_ITEM_H, itemCenter + MY_ITEM_H * 3],
+            [0.25, 0.55, 1, 0.55, 0.25]
+          );
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const scale = useTransform(
+            scrollY,
+            [itemCenter - MY_ITEM_H * 2, itemCenter, itemCenter + MY_ITEM_H * 2],
+            [0.88, 1, 0.88]
+          );
+          const isSelected = item.value === selectedValue;
+          return (
+            <motion.div
+              key={item.value}
+              onClick={() => onItemClick(idx)}
+              style={{ height: MY_ITEM_H, opacity, scale }}
+              className={`drp-drum-item relative z-10 flex items-center justify-center cursor-pointer text-base px-4
+                ${isSelected ? "text-neutral-900 dark:text-neutral-100 font-semibold" : "text-neutral-600 dark:text-neutral-400 font-medium"}`}
+            >
+              {item.label}
+            </motion.div>
+          );
+        })}
+        <div style={{ height: padding, flexShrink: 0 }} />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const MonthYearDrum: React.FC<MonthYearDrumProps> = ({
   currentMonth, currentYear, onMonthChange, onYearChange,
 }) => {
   const {
     containerRef: monthRef, handleScroll: handleMonthScroll,
-    handleItemClick: handleMonthClick, scrollY: monthScrollY, PADDING,
+    handleWheel: handleMonthWheel, handleItemClick: handleMonthClick,
+    scrollY: monthScrollY, PADDING,
   } = useMYDrumPicker(monthOptions, currentMonth, onMonthChange);
 
   const {
     containerRef: yearRef, handleScroll: handleYearScroll,
-    handleItemClick: handleYearClick, scrollY: yearScrollY,
+    handleWheel: handleYearWheel, handleItemClick: handleYearClick,
+    scrollY: yearScrollY,
   } = useMYDrumPicker(yearOptions, currentYear, onYearChange);
 
   const drumHeight = MY_ITEM_H * MY_VISIBLE;
 
   return (
     <div
-      className="relative overflow-hidden bg-secondary-100 dark:bg-neutral-800"
+      className="relative overflow-hidden bg-default-100 dark:bg-neutral-800"
       style={{ width: 284 }}
       onClick={(e) => e.stopPropagation()}
     >
@@ -514,6 +681,7 @@ const MonthYearDrum: React.FC<MonthYearDrumProps> = ({
           selectedValue={currentMonth}
           containerRef={monthRef}
           onScroll={handleMonthScroll}
+          onWheel={handleMonthWheel}
           onItemClick={handleMonthClick}
           scrollY={monthScrollY}
           padding={PADDING}
@@ -523,6 +691,7 @@ const MonthYearDrum: React.FC<MonthYearDrumProps> = ({
           selectedValue={currentYear}
           containerRef={yearRef}
           onScroll={handleYearScroll}
+          onWheel={handleYearWheel}
           onItemClick={handleYearClick}
           scrollY={yearScrollY}
           padding={PADDING}
@@ -618,7 +787,7 @@ const MiniCalendar: React.FC<MiniCalendarProps> = ({
                 setLocalView(nd);
                 onMonthChange(nd.getMonth());
               }}
-              className="w-9 h-9 flex items-center justify-center rounded-full border border-secondary-200 bg-secondary-50 text-secondary-600 hover:bg-secondary-100 transition-colors"
+              className="w-9 h-9 flex items-center justify-center rounded-full border border-default-200 bg-default-50 text-default-600 hover:bg-default-100 transition-colors"
             >
               <FaChevronLeft className="w-4 h-4" />
             </motion.button>
@@ -632,8 +801,8 @@ const MiniCalendar: React.FC<MiniCalendarProps> = ({
             type="button"
             whileTap={{ scale: 0.96 }}
             onClick={(e) => { e.stopPropagation(); setShowMY((v) => !v); }}
-            className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-full border border-secondary-200 transition-all
-              ${showMY ? "bg-secondary-100 text-secondary-900 shadow-none" : "bg-secondary-50 text-secondary-900 shadow-sm hover:bg-secondary-100"}`}
+            className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-full border border-default-200 transition-all
+              ${showMY ? "bg-default-100 text-default-900 shadow-none" : "bg-default-50 text-default-900 shadow-sm hover:bg-default-100"}`}
           >
             <motion.span
               key={`${MONTHS_SHORT[month]}-${year}`}
@@ -696,7 +865,7 @@ const MiniCalendar: React.FC<MiniCalendarProps> = ({
                 setLocalView(nd);
                 onMonthChange(nd.getMonth());
               }}
-              className="w-9 h-9 flex items-center justify-center rounded-full border border-secondary-200 bg-secondary-50 text-secondary-600 hover:bg-secondary-100 transition-colors"
+              className="w-9 h-9 flex items-center justify-center rounded-full border border-default-200 bg-default-50 text-default-600 hover:bg-default-100 transition-colors"
             >
               <FaChevronRight className="w-4 h-4" />
             </motion.button>
@@ -1444,7 +1613,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
                   <FaXmark className="w-3.5 h-3.5" aria-hidden />
                 </Button>
               ) : (
-                <FaCalendar className="w-4 h-4 text-secondary" />
+                <FaCalendar className="w-4 h-4 text-default-500" />
               )}
             </div>
 

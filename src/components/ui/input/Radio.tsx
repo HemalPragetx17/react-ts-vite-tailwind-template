@@ -38,7 +38,7 @@ interface RadioProps
 // ─── Color Maps ─────────────────────────────────────────────────────────────
 
 const ringColorMap: Record<RadioColor, string> = {
-  default:   "border-secondary-600 dark:border-secondary-400",
+  default:   "border-default-600 dark:border-default-400",
   primary:   "border-primary",
   secondary: "border-secondary",
   success:   "border-success",
@@ -47,7 +47,7 @@ const ringColorMap: Record<RadioColor, string> = {
 };
 
 const checkedRingColorMap: Record<RadioColor, string> = {
-  default:   "border-secondary-600 dark:border-secondary-400",
+  default:   "border-default-600 dark:border-default-400",
   primary:   "border-primary",
   secondary: "border-secondary",
   success:   "border-success",
@@ -56,7 +56,7 @@ const checkedRingColorMap: Record<RadioColor, string> = {
 };
 
 const dotColorMap: Record<RadioColor, string> = {
-  default:   "bg-secondary-600 dark:bg-secondary-400",
+  default:   "bg-default-600 dark:bg-default-400",
   primary:   "bg-primary",
   secondary: "bg-secondary",
   success:   "bg-success",

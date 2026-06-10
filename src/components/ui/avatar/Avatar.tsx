@@ -57,7 +57,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>((props, ref) => {
 
   // Color configurations for fallback backgrounds
   const colorClasses = {
-    default: "bg-neutral-200 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400",
+    default: "bg-default-200 text-default-600 dark:bg-default-800 dark:text-default-400",
     primary: "bg-primary text-white",
     secondary: "bg-secondary text-white",
     success: "bg-success text-white",
@@ -67,7 +67,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>((props, ref) => {
 
   // Ring configurations for bordered avatars
   const ringClasses = {
-    default: "ring-neutral-200 dark:ring-neutral-700",
+    default: "ring-default-200 dark:ring-default-700",
     primary: "ring-primary",
     secondary: "ring-secondary",
     success: "ring-success",

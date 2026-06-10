@@ -229,7 +229,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
 
     // Colors mapping for links (non-last items)
     const linkColorClasses = {
-        default: "text-secondary-700 dark:text-secondary-700",
+        default: "text-default-700 dark:text-default-700",
         primary: "text-primary-700 dark:text-primary-700",
         secondary: "text-secondary-700 dark:text-secondary-700",
         success: "text-success-700 dark:text-success-700",
@@ -239,7 +239,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
 
     // Colors mapping for the active page (last item)
     const activeColorClasses = {
-        default: "text-secondary-600 dark:text-secondary-800 font-bold",
+        default: "text-default-600 dark:text-default-800 font-bold",
         primary: "text-primary dark:text-primary-700 font-bold",
         secondary: "text-secondary dark:text-secondary-700 font-bold",
         success: "text-success dark:text-success-700 font-bold",
