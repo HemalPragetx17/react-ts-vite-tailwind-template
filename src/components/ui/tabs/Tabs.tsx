@@ -262,9 +262,9 @@ export const Tabs: React.FC<TabsProps> = ({
             default:   "text-neutral-900 dark:text-neutral-100 font-semibold",
             primary:   "text-white font-semibold",
             secondary: "text-white font-semibold",
-            success:   "text-neutral-950 font-semibold",
-            warning:   "text-neutral-950 font-semibold",
-            danger:    "text-white font-semibold",
+            success:   "text-success-foreground font-semibold",
+            warning:   "text-warning-foreground font-semibold",
+            danger:    "text-danger-foreground font-semibold",
         }[color];
     };
 

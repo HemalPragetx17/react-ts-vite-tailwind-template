@@ -60,9 +60,9 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>((props, ref) => {
     default: "bg-default-200 text-default-600 dark:bg-default-800 dark:text-default-400",
     primary: "bg-primary text-white",
     secondary: "bg-secondary text-white",
-    success: "bg-success text-white",
-    warning: "bg-warning text-black",
-    danger: "bg-danger text-white",
+    success: "bg-success text-success-foreground",
+    warning: "bg-warning text-warning-foreground",
+    danger: "bg-danger text-danger-foreground",
   };
 
   // Ring configurations for bordered avatars
