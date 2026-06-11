@@ -173,6 +173,7 @@ const Dashboard = () => {
           color="primary"
           size="md"
           radius="lg"
+          isFullUnderline
           selectedKey={activeTab}
           onSelectionChange={(key) => setActiveTab(key as string)}
         >

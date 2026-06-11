@@ -64,6 +64,15 @@ export const borderColorMap: Record<CheckboxColor, string> = {
   danger:    "border-danger",
 };
 
+export const textColorMap: Record<CheckboxColor, string> = {
+  default:   "text-default-foreground",
+  primary:   "text-primary-foreground",
+  secondary: "text-secondary-foreground",
+  success:   "text-success-foreground",
+  warning:   "text-warning-foreground",
+  danger:    "text-danger-foreground",
+};
+
 // ─── Size Maps ───────────────────────────────────────────────────────────────
 
 export const sizeMap: Record<CheckboxSize, { box: string; icon: number; text: string }> = {
@@ -153,7 +162,7 @@ export const CheckAtom: React.FC<CheckAtomProps> = ({
           ${sc.box}
           ${radiusMap[radius]}
           ${isActive
-            ? `${bgColorMap[color]} ${borderColorMap[color]}`
+            ? `${bgColorMap[color]} ${borderColorMap[color]} ${textColorMap[color]}`
             : `border-neutral-300 dark:border-neutral-600 bg-transparent`}
         `}
         whileTap={disabled ? {} : { scale: 0.72 }}
@@ -180,7 +189,7 @@ export const CheckAtom: React.FC<CheckAtomProps> = ({
           <svg
             viewBox="0 0 16 16"
             fill="none"
-            stroke="white"
+            stroke="currentColor"
             strokeLinecap="round"
             strokeWidth={2.8}
             style={{ width: svgDim, height: svgDim }}
@@ -198,7 +207,7 @@ export const CheckAtom: React.FC<CheckAtomProps> = ({
           <svg
             viewBox="0 0 16 16"
             fill="none"
-            stroke="white"
+            stroke="currentColor"
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={2.8}

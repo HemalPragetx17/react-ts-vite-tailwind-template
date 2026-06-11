@@ -97,6 +97,11 @@ export interface TabsProps {
      * Keys of tabs that should be disabled.
      */
     disabledKeys?: string[];
+    /**
+     * Whether the underline variant stretches to the full width of its container.
+     * @default false
+     */
+    isFullUnderline?: boolean;
 }
 
 const getCleanKey = (childKey: string | null | undefined, index: number): string => {
@@ -126,6 +131,7 @@ export const Tabs: React.FC<TabsProps> = ({
     isVertical = false,
     isDisabled = false,
     disabledKeys,
+    isFullUnderline = false,
 }) => {
     const uniqueId = useId();
 
@@ -222,7 +228,7 @@ export const Tabs: React.FC<TabsProps> = ({
                 const borderSide = resolvedPlacement === "end" ? "border-l-2" : "border-r-2";
                 return `${base} bg-transparent ${borderSide} border-neutral-200 dark:border-neutral-800 h-full w-full`;
             }
-            return `${base} bg-transparent border-b-2 border-neutral-200 dark:border-neutral-800 w-fit`;
+            return `${base} bg-transparent border-b-2 border-neutral-200 dark:border-neutral-800 ${isFullUnderline ? "w-full" : "w-fit"}`;
         }
 
         if (variant === "solid") {
@@ -259,9 +265,9 @@ export const Tabs: React.FC<TabsProps> = ({
         // As per the image, success and warning variants have dark/black text (text-neutral-950/text-neutral-900) when active.
         // Primary, Secondary, Danger have white text when active.
         return {
-            default:   "text-neutral-900 dark:text-neutral-100 font-semibold",
-            primary:   "text-white font-semibold",
-            secondary: "text-white font-semibold",
+            default:   "text-default-foreground font-semibold",
+            primary:   "text-primary-foreground font-semibold",
+            secondary: "text-secondary-foreground font-semibold",
             success:   "text-success-foreground font-semibold",
             warning:   "text-warning-foreground font-semibold",
             danger:    "text-danger-foreground font-semibold",

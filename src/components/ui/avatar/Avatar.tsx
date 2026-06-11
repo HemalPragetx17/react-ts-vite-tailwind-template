@@ -57,9 +57,9 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>((props, ref) => {
 
   // Color configurations for fallback backgrounds
   const colorClasses = {
-    default: "bg-default-200 text-default-600 dark:bg-default-800 dark:text-default-400",
-    primary: "bg-primary text-white",
-    secondary: "bg-secondary text-white",
+    default: "bg-default-200 text-default-foreground dark:bg-default-800",
+    primary: "bg-primary text-primary-foreground",
+    secondary: "bg-secondary text-secondary-foreground",
     success: "bg-success text-success-foreground",
     warning: "bg-warning text-warning-foreground",
     danger: "bg-danger text-danger-foreground",

@@ -33,9 +33,9 @@ const baseClasses =
 
 const variantColorClasses: Record<string, Record<string, string>> = {
   solid: {
-    default:   "border-2 border-default-600 bg-default-600 text-white",
-    primary:   "border-2 border-primary bg-primary text-white",
-    secondary: "border-2 border-secondary bg-secondary text-white",
+    default:   "border-2 border-default-600 bg-default-600 text-default-foreground",
+    primary:   "border-2 border-primary bg-primary text-primary-foreground",
+    secondary: "border-2 border-secondary bg-secondary text-secondary-foreground",
     success:   "border-2 border-success bg-success text-success-foreground",
     warning:   "border-2 border-warning bg-warning text-warning-foreground",
     danger:    "border-2 border-danger bg-danger text-danger-foreground",
@@ -73,9 +73,9 @@ const variantColorClasses: Record<string, Record<string, string>> = {
     danger:    "border-2 border-danger-200 bg-danger-50 text-danger",
   },
   shadow: {
-    default:   "border-2 border-default-600 shadow-lg shadow-[color-mix(in_srgb,var(--color-default-600)_40%,transparent)] bg-default-600 text-white",
-    primary:   "border-2 border-primary shadow-lg shadow-[color-mix(in_srgb,var(--color-primary)_40%,transparent)] bg-primary text-white",
-    secondary: "border-2 border-secondary shadow-lg shadow-[color-mix(in_srgb,var(--color-secondary)_40%,transparent)] bg-secondary text-white",
+    default:   "border-2 border-default-600 shadow-lg shadow-[color-mix(in_srgb,var(--color-default-600)_40%,transparent)] bg-default-600 text-default-foreground",
+    primary:   "border-2 border-primary shadow-lg shadow-[color-mix(in_srgb,var(--color-primary)_40%,transparent)] bg-primary text-primary-foreground",
+    secondary: "border-2 border-secondary shadow-lg shadow-[color-mix(in_srgb,var(--color-secondary)_40%,transparent)] bg-secondary text-secondary-foreground",
     success:   "border-2 border-success shadow-lg shadow-[color-mix(in_srgb,var(--color-success)_40%,transparent)] bg-success text-success-foreground",
     warning:   "border-2 border-warning shadow-lg shadow-[color-mix(in_srgb,var(--color-warning)_40%,transparent)] bg-warning text-warning-foreground",
     danger:    "border-2 border-danger shadow-lg shadow-[color-mix(in_srgb,var(--color-danger)_40%,transparent)] bg-danger text-danger-foreground",
