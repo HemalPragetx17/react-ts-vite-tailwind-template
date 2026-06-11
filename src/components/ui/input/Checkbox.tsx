@@ -1,5 +1,4 @@
 import React, { forwardRef, useId } from "react";
-import { FaCheck, FaMinus  } from "react-icons/fa";
 import type { FieldInputProps, FormikErrors, FormikTouched } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -81,30 +80,6 @@ export const radiusMap: Record<CheckboxRadius, string> = {
   full: "rounded-full",
 };
 
-// ─── Animated Check Icon ─────────────────────────────────────────────────────
-
-const CheckIcon = ({ size }: { size: number }) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.8 }}
-    animate={{ opacity: 1, scale: 1 }}
-    exit={{ opacity: 0, scale: 0.8 }}
-    transition={{ duration: 0.2, ease: "easeOut" }}
-  >
-    <FaCheck size={size} className="text-white" aria-hidden />
-  </motion.div>
-);
-
-// Indeterminate dash icon
-const DashIcon = ({ size }: { size: number }) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.8 }}
-    animate={{ opacity: 1, scale: 1 }}
-    exit={{ opacity: 0, scale: 0.8 }}
-    transition={{ duration: 0.15, ease: "easeOut" }}
-  >
-    <FaMinus  size={size} className="text-white" aria-hidden />
-  </motion.div>
-);
 
 // ─── Single Checkbox Atom (exported for reuse in CheckboxGroup) ───────
 
@@ -148,10 +123,15 @@ export const CheckAtom: React.FC<CheckAtomProps> = ({
   const generatedId = useId();
   const inputId = id || generatedId;
 
+  // SVG stroke width & viewbox dim stay fixed; we just scale by box size
+  const svgDim = sc.icon;
+
   return (
     <label
       htmlFor={inputId}
-      className={`relative inline-flex items-start gap-2.5 cursor-pointer group select-none ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+      className={`relative inline-flex items-start gap-2.5 cursor-pointer group select-none ${
+        disabled ? "opacity-50 cursor-not-allowed" : ""
+      }`}
     >
       {/* Hidden native input */}
       <input
@@ -165,36 +145,90 @@ export const CheckAtom: React.FC<CheckAtomProps> = ({
         className="sr-only"
       />
 
-      {/* Custom box */}
-      <span
+      {/* ── Animated box ── */}
+      <motion.span
         className={`
-          relative mt-0.5 flex items-center justify-center shrink-0 border-2 transition-colors duration-200
+          relative mt-0.5 flex items-center justify-center shrink-0 border-2
+          transition-colors duration-200 overflow-hidden
           ${sc.box}
           ${radiusMap[radius]}
-          ${isActive ? `${bgColorMap[color]} ${borderColorMap[color]}` : `border-neutral-300 dark:border-neutral-600 bg-transparent`}
+          ${isActive
+            ? `${bgColorMap[color]} ${borderColorMap[color]}`
+            : `border-neutral-300 dark:border-neutral-600 bg-transparent`}
         `}
+        whileTap={disabled ? {} : { scale: 0.72 }}
+        transition={{ type: "spring", stiffness: 600, damping: 22 }}
       >
-        <AnimatePresence mode="wait">
-          {isIndeterminate ? (
-            <motion.span key="dash" className="absolute inset-0 flex items-center justify-center">
-              {icon ?? <DashIcon size={sc.icon} />}
-            </motion.span>
-          ) : checked ? (
-            <motion.span key="check" className="absolute inset-0 flex items-center justify-center">
-              {icon ?? <CheckIcon size={sc.icon} />}
-            </motion.span>
-          ) : null}
-        </AnimatePresence>
-      </span>
+        {icon ? (
+          // ── Custom icon with fade/scale ──
+          <AnimatePresence mode="wait">
+            {isActive && (
+              <motion.span
+                key="custom-icon"
+                className="absolute inset-0 flex items-center justify-center"
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                transition={{ duration: 0.15 }}
+              >
+                {icon}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        ) : isIndeterminate ? (
+          // ── Indeterminate dash — path-draw ──
+          <svg
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="white"
+            strokeLinecap="round"
+            strokeWidth={2.8}
+            style={{ width: svgDim, height: svgDim }}
+            aria-hidden
+          >
+            <motion.path
+              d="M 3 8 L 13 8"
+              initial={false}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ pathLength: { duration: 0.2, ease: "easeOut" } }}
+            />
+          </svg>
+        ) : (
+          // ── Checkmark — self-drawing SVG path ──
+          <svg
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="white"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2.8}
+            style={{ width: svgDim, height: svgDim }}
+            aria-hidden
+          >
+            <motion.path
+              d="M 2.5 8.5 L 6.5 12 L 13.5 4.5"
+              initial={false}
+              animate={{
+                pathLength: checked ? 1 : 0,
+                opacity:    checked ? 1 : 0,
+              }}
+              transition={{
+                pathLength: { duration: 0.22, ease: [0.33, 1, 0.68, 1] },
+                opacity:    { duration: 0.12 },
+              }}
+            />
+          </svg>
+        )}
+      </motion.span>
 
       {/* Label */}
       {(label || description) && (
         <span className="flex flex-col leading-tight mt-[1.5px]">
           {label && (
             <span
-              className={`font-medium text-neutral-700 dark:text-neutral-300 transition-colors transition-opacity duration-200 ${sc.text} ${
-                lineThrough && checked ? "line-through opacity-60" : ""
-              } ${labelClassName}`}
+              className={`font-medium text-neutral-700 dark:text-neutral-300 transition-colors transition-opacity duration-200 ${
+                sc.text
+              } ${lineThrough && checked ? "line-through opacity-60" : ""} ${labelClassName}`}
             >
               {label}
             </span>
@@ -288,7 +322,7 @@ const Checkbox = forwardRef<HTMLDivElement, CheckboxProps>((props, ref) => {
   };
 
   return (
-    <div className={`w-full ${containerClassName}`} ref={ref}>
+    <div className={`${isMulti ? "w-full" : "w-fit"} ${containerClassName}`} ref={ref}>
       {/* Group label (only for multi) */}
       {label && isMulti && (
         <p className={`font-medium text-neutral-600 dark:text-neutral-400 select-none ${

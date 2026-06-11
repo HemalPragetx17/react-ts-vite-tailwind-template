@@ -127,8 +127,8 @@ export const LabelPlacements: Story = {
   render: (args) => (
     <div className="flex flex-col gap-8 w-[600px]">
       <div className="flex gap-4 items-end">
-        <PhoneInputWithState {...args} size="md" labelPlacement="inside" label="Inside (Floating)" country="in" />
-        <PhoneInputWithState {...args} size="md" labelPlacement="inside" label="Inside (static with placeholder)" placeholder="Enter Phone Number" country="in" />
+        <PhoneInputWithState {...args} labelPlacement="inside" label="Inside (Floating)" country="in" />
+        <PhoneInputWithState {...args} labelPlacement="inside" label="Inside (static with placeholder)" placeholder="Enter Phone Number" country="in" />
       </div>
       <div className="flex gap-4 items-end">
         <PhoneInputWithState {...args} labelPlacement="outside" label="Outside (Floating)" country="in" />

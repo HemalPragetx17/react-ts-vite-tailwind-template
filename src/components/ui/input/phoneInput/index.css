@@ -83,30 +83,30 @@
 
 /* Variant: flat */
 .phone-input-variant-flat input {
-    background-color: #f4f4f5 !important;
+    background-color: var(--phone-bg-light, #f4f4f5) !important;
     border: 2px solid transparent !important;
-    color: #18181b !important;
+    color: var(--phone-text-color, #18181b) !important;
 }
 .phone-input-variant-flat:not(.phone-input-has-error) input:hover {
-    background-color: #e4e4e7 !important;
+    background-color: var(--phone-bg-light-hover, #e4e4e7) !important;
 }
 .phone-input-variant-flat:not(.phone-input-has-error) input:focus {
-    background-color: #e4e4e7 !important;
+    background-color: var(--phone-bg-light-hover, #e4e4e7) !important;
     border-color: transparent !important;
 }
 .phone-input-variant-flat .flag-dropdown {
-    background-color: #f4f4f5 !important;
+    background-color: var(--phone-bg-light, #f4f4f5) !important;
     border: 2px solid transparent !important;
 }
 .phone-input-variant-flat:not(.phone-input-has-error) .flag-dropdown:hover {
-    background-color: #e4e4e7 !important;
+    background-color: var(--phone-bg-light-hover, #e4e4e7) !important;
 }
 
 /* Variant: bordered */
 .phone-input-variant-bordered input {
     background-color: transparent !important;
     border: 2px solid #e4e4e7 !important;
-    color: #18181b !important;
+    color: var(--phone-text-color, #18181b) !important;
 }
 .phone-input-variant-bordered:not(.phone-input-has-error) input:hover {
     border-color: #a1a1aa !important;
@@ -123,55 +123,44 @@
 }
 
 /* Variant: underlined */
+.phone-input-variant-underlined {
+    border-bottom: 1px solid #e4e4e7 !important;
+    border-radius: 0px !important;
+}
+.phone-input-variant-underlined:not(.phone-input-has-error):hover {
+    border-bottom-color: #a1a1aa !important;
+}
+.phone-input-variant-underlined.phone-input-has-error {
+    border-bottom-color: #ef4444 !important;
+}
 .phone-input-variant-underlined input {
     background-color: transparent !important;
-    border-top: none !important;
-    border-left: none !important;
-    border-right: none !important;
-    border-bottom: 2px solid transparent !important;
-    border-radius: 0px !important;
-    color: #18181b !important;
-}
-.phone-input-variant-underlined:not(.phone-input-has-error) input:hover {
-    border-bottom-color: transparent !important;
-}
-.phone-input-variant-underlined:not(.phone-input-has-error) input:focus {
-    border-bottom-color: transparent !important;
+    border: none !important;
+    color: var(--phone-text-color, #18181b) !important;
 }
 .phone-input-variant-underlined .flag-dropdown {
     background-color: transparent !important;
-    border-top: none !important;
-    border-left: none !important;
-    border-right: none !important;
-    border-bottom: 2px solid transparent !important;
-    border-radius: 0px !important;
-}
-.phone-input-variant-underlined:not(.phone-input-has-error) .flag-dropdown:hover {
-    border-bottom-color: transparent !important;
-}
-.phone-input-variant-underlined.phone-input-has-error input,
-.phone-input-variant-underlined.phone-input-has-error .flag-dropdown {
-    border-bottom-color: transparent !important;
+    border: none !important;
 }
 
 /* Variant: faded */
 .phone-input-variant-faded input {
-    background-color: #fafafa !important;
+    background-color: #f5f5f5 !important;
     border: 2px solid #e4e4e7 !important;
-    color: #18181b !important;
+    color: var(--phone-text-color, #18181b) !important;
 }
 .phone-input-variant-faded:not(.phone-input-has-error) input:hover {
-    border-color: #d4d4d8 !important;
+    border-color: #a1a1aa !important;
 }
 .phone-input-variant-faded:not(.phone-input-has-error) input:focus {
     border-color: var(--color-primary, #2196f3) !important;
 }
 .phone-input-variant-faded .flag-dropdown {
-    background-color: #fafafa !important;
+    background-color: #f5f5f5 !important;
     border: 2px solid #e4e4e7 !important;
 }
 .phone-input-variant-faded:not(.phone-input-has-error) .flag-dropdown:hover {
-    border-color: #d4d4d8 !important;
+    border-color: #a1a1aa !important;
 }
 
 
@@ -305,23 +294,23 @@
    ======================================================== */
 
 .dark .phone-input-variant-flat input {
-    background-color: #27272a !important;
-    color: #f4f4f5 !important;
+    background-color: var(--phone-bg-dark, #27272a) !important;
+    color: var(--phone-text-color, #f4f4f5) !important;
 }
 .dark .phone-input-variant-flat:not(.phone-input-has-error) input:hover,
 .dark .phone-input-variant-flat:not(.phone-input-has-error) input:focus {
-    background-color: #3f3f46 !important;
+    background-color: var(--phone-bg-dark-hover, #3f3f46) !important;
 }
 .dark .phone-input-variant-flat .flag-dropdown {
-    background-color: #27272a !important;
+    background-color: var(--phone-bg-dark, #27272a) !important;
 }
 .dark .phone-input-variant-flat:not(.phone-input-has-error) .flag-dropdown:hover {
-    background-color: #3f3f46 !important;
+    background-color: var(--phone-bg-dark-hover, #3f3f46) !important;
 }
 
 .dark .phone-input-variant-bordered input {
     border-color: #27272a !important;
-    color: #f4f4f5 !important;
+    color: var(--phone-text-color, #f4f4f5) !important;
 }
 .dark .phone-input-variant-bordered:not(.phone-input-has-error) input:hover {
     border-color: #3f3f46 !important;
@@ -336,27 +325,26 @@
     border-color: #3f3f46 !important;
 }
 
+.dark .phone-input-variant-underlined {
+    border-bottom-color: #27272a !important;
+}
+.dark .phone-input-variant-underlined:not(.phone-input-has-error):hover {
+    border-bottom-color: #3f3f46 !important;
+}
 .dark .phone-input-variant-underlined input {
-    border-bottom-color: transparent !important;
-    color: #f4f4f5 !important;
-}
-.dark .phone-input-variant-underlined:not(.phone-input-has-error) input:hover {
-    border-bottom-color: transparent !important;
-}
-.dark .phone-input-variant-underlined:not(.phone-input-has-error) input:focus {
-    border-bottom-color: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    color: var(--phone-text-color, #f4f4f5) !important;
 }
 .dark .phone-input-variant-underlined .flag-dropdown {
-    border-bottom-color: transparent !important;
-}
-.dark .phone-input-variant-underlined:not(.phone-input-has-error) .flag-dropdown:hover {
-    border-bottom-color: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
 }
 
 .dark .phone-input-variant-faded input {
-    background-color: #18181b !important;
+    background-color: #27272a !important;
     border-color: #27272a !important;
-    color: #f4f4f5 !important;
+    color: var(--phone-text-color, #f4f4f5) !important;
 }
 .dark .phone-input-variant-faded:not(.phone-input-has-error) input:hover {
     border-color: #3f3f46 !important;
@@ -365,7 +353,7 @@
     border-color: var(--color-primary, #2196f3) !important;
 }
 .dark .phone-input-variant-faded .flag-dropdown {
-    background-color: #18181b !important;
+    background-color: #27272a !important;
     border-color: #27272a !important;
 }
 
@@ -507,11 +495,11 @@
 
 /* Single Border Variant: faded */
 .phone-input-variant-faded.phone-input-single-border {
-    background-color: #fafafa !important;
+    background-color: #f5f5f5 !important;
     border: 2px solid #e4e4e7 !important;
 }
 .phone-input-variant-faded.phone-input-single-border:not(.phone-input-has-error):hover {
-    border-color: #d4d4d8 !important;
+    border-color: #a1a1aa !important;
 }
 .phone-input-variant-faded.phone-input-single-border:not(.phone-input-has-error):focus-within {
     border-color: var(--color-primary, #2196f3) !important;
@@ -543,7 +531,7 @@
 }
 
 .dark .phone-input-variant-faded.phone-input-single-border {
-    background-color: #18181b !important;
+    background-color: #27272a !important;
     border-color: #27272a !important;
 }
 .dark .phone-input-variant-faded.phone-input-single-border:not(.phone-input-has-error):hover {

@@ -21,6 +21,7 @@ interface PhoneNumberInputProps extends Partial<FieldProps> {
     size?: "sm" | "md" | "lg";
     variant?: "flat" | "bordered" | "underlined" | "faded";
     radius?: "none" | "sm" | "md" | "lg" | "full";
+    color?: "default" | "primary" | "secondary" | "success" | "warning" | "danger";
     labelPlacement?: "inside" | "outside" | "outside-left" | "outside-top" | "outlined";
     dropdownPosition?: "top" | "bottom";
     countryCodeEditable?: boolean;
@@ -105,6 +106,7 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
         size = "md",
         variant = "bordered",
         radius = "md",
+        color = "default",
         labelPlacement = "outside",
         dropdownPosition,
         value,
@@ -118,12 +120,98 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
 
     const resolvedVariant = labelPlacement === "outlined" ? "bordered" : variant;
 
+    const colorMap = {
+        default: "#737373", // neutral-500
+        primary: "#0072f5", // primary / blue
+        secondary: "#9b5de5", // secondary / purple
+        success: "#17c964", // success / green
+        warning: "#f5a524", // warning / yellow
+        danger: "#f31260", // danger / red
+    };
+    const primaryColorVal = colorMap[color] || colorMap.primary;
+
+    const textColorMap = {
+        default: "",
+        primary: "#0072f5",
+        secondary: "#9b5de5",
+        success: "#17c964",
+        warning: "#f5a524",
+        danger: "#f31260",
+    };
+
+    const bgMap = {
+        default: "",
+        primary: "#e6f1fe",
+        secondary: "#f4edfd",
+        success: "#e7faf0",
+        warning: "#fefce8",
+        danger: "#fee7ef",
+    };
+
+    const bgHoverMap = {
+        default: "",
+        primary: "#cce3fd",
+        secondary: "#ebdcfb",
+        success: "#cef7e2",
+        warning: "#fef9c3",
+        danger: "#fdd0df",
+    };
+
+    const darkBgMap = {
+        default: "",
+        primary: "rgba(0, 114, 245, 0.15)",
+        secondary: "rgba(155, 93, 229, 0.15)",
+        success: "rgba(23, 201, 100, 0.15)",
+        warning: "rgba(245, 165, 36, 0.15)",
+        danger: "rgba(243, 18, 96, 0.15)",
+    };
+
+    const darkBgHoverMap = {
+        default: "",
+        primary: "rgba(0, 114, 245, 0.25)",
+        secondary: "rgba(155, 93, 229, 0.25)",
+        success: "rgba(23, 201, 100, 0.25)",
+        warning: "rgba(245, 165, 36, 0.25)",
+        danger: "rgba(243, 18, 96, 0.25)",
+    };
+
+    const underlineColors = {
+        default: "bg-neutral-500",
+        primary: "bg-primary",
+        secondary: "bg-secondary",
+        success: "bg-success",
+        warning: "bg-warning",
+        danger: "bg-danger",
+    };
+
+    const focusTextColors = {
+        default: "!text-neutral-800 dark:!text-neutral-100",
+        primary: "!text-primary",
+        secondary: "!text-secondary",
+        success: "!text-success",
+        warning: "!text-warning",
+        danger: "!text-danger",
+    };
+
     const [autoDropdownPosition, setAutoDropdownPosition] = React.useState<"top" | "bottom">("bottom");
     const containerRef = React.useRef<HTMLDivElement>(null);
     const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
     const [dropdownStyles, setDropdownStyles] = React.useState<React.CSSProperties>({});
     const [isFocused, setIsFocused] = React.useState(false);
     const [activeDialCode, setActiveDialCode] = React.useState<string>("");
+
+    const inlineStyles: React.CSSProperties = {
+        ...dropdownStyles,
+        "--color-primary": primaryColorVal,
+    } as any;
+
+    if (color !== "default") {
+        if (textColorMap[color]) inlineStyles["--phone-text-color" as any] = textColorMap[color];
+        if (bgMap[color]) inlineStyles["--phone-bg-light" as any] = bgMap[color];
+        if (bgHoverMap[color]) inlineStyles["--phone-bg-light-hover" as any] = bgHoverMap[color];
+        if (darkBgMap[color]) inlineStyles["--phone-bg-dark" as any] = darkBgMap[color];
+        if (darkBgHoverMap[color]) inlineStyles["--phone-bg-dark-hover" as any] = darkBgHoverMap[color];
+    }
 
     const updateDropdownCoords = React.useCallback(() => {
         if (!containerRef.current) return;
@@ -388,7 +476,7 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
     const currentRadiusClass = resolvedVariant === "underlined" ? "!rounded-none" : (radiusConfigs[radius] || radiusConfigs.md);
 
     // Merge standard classes with the dynamic border-radius utility class
-    const finalInputClass = `${singleBorder ? "!rounded-none" : currentRadiusClass} ${inputClassName}`.trim();
+    const finalInputClass = `${singleBorder ? "!rounded-none" : currentRadiusClass} ${focusTextColors[color] || focusTextColors.default} ${inputClassName}`.trim();
     const finalButtonClass = `${singleBorder ? "!rounded-none" : currentRadiusClass} ${buttonClassName}`.trim();
 
     const isOutlined = labelPlacement === "outlined";
@@ -419,9 +507,11 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
                 htmlFor={fieldName}
                 className={`block font-medium select-none transition-colors duration-200 ${isOutsideLeft ? "mb-0 shrink-0" : "mb-1.5"
                     } ${currentSize.labelSize} ${labelClassName} ${
-                    isFocused 
-                        ? "text-[var(--color-primary,#2196f3)]" 
-                        : "text-neutral-700 dark:text-neutral-300"
+                    color !== "default"
+                        ? "text-[var(--color-primary,#2196f3)]"
+                        : isFocused
+                            ? "text-neutral-800 dark:text-neutral-200"
+                            : "text-neutral-700 dark:text-neutral-300"
                 }`}
             >
                 {label}
@@ -430,7 +520,7 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
     };
 
     return (
-        <div ref={containerRef} className="w-full flow-root" style={dropdownStyles}>
+        <div ref={containerRef} className="w-full flow-root" style={inlineStyles}>
             <div className={`${isOutsideLeft ? "flex items-center gap-3 w-full" : "w-full"}`}>
                 {renderExternalLabel()}
 
@@ -504,11 +594,13 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
                             className={`
                                 absolute left-3 font-medium ${currentSize.top} z-20 pointer-events-none origin-left transition-colors duration-200
                                 ${currentSize.textSize} ${labelClassName} ${
-                                    (shouldFloat || (isOutlined && (isFocused || hasValue)))
-                                        ? isFocused
-                                            ? "text-[var(--color-primary,#2196f3)]"
-                                            : "text-neutral-700 dark:text-neutral-300"
-                                        : "text-neutral-400 dark:text-neutral-500"
+                                    color !== "default"
+                                        ? "text-[var(--color-primary,#2196f3)]"
+                                        : (shouldFloat || (isOutlined && (isFocused || hasValue)))
+                                            ? isFocused
+                                                ? "text-neutral-800 dark:text-neutral-200"
+                                                : "text-neutral-700 dark:text-neutral-300"
+                                            : "text-neutral-400 dark:text-neutral-500"
                                 }
                             `}
                             style={{ transformOrigin: isOutlined ? "left" : "top left" }}
@@ -534,12 +626,12 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
 
                     {resolvedVariant === "underlined" && (
                         <motion.div
-                            className={`absolute bottom-[-2px] left-0 right-0 h-[2px] z-20 ${
-                                hasError ? "bg-red-500" : "bg-primary"
+                            className={`absolute bottom-0 left-0 right-0 h-[2px] z-20 ${
+                                hasError ? "bg-red-500" : (underlineColors[color] || "bg-primary")
                             }`}
                             initial={false}
                             animate={{ scaleX: (isFocused || hasError) ? 1 : 0 }}
-                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            transition={{ duration: 0.25, ease: "easeInOut" }}
                             style={{ originX: 0.5 }}
                         />
                     )}

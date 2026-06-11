@@ -110,33 +110,34 @@ export const Sizes: Story = {
   ),
 };
 
+const breadcrumbColors = ["default", "primary", "secondary", "success", "warning", "danger"] as const;
+
+const ColorMatrix = (args: Story["args"]) => (
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
+    {breadcrumbColors.map((color) => (
+      <div key={color} className="flex flex-col gap-3">
+        <span className="text-xs font-semibold text-foreground/50 capitalize">{color}</span>
+        <Breadcrumbs {...args} color={color} variant="bordered" radius="full" items={musicItems} />
+        <Breadcrumbs {...args} color={color} variant="light" items={musicItems} />
+        <Breadcrumbs {...args} color={color} variant="solid" radius="full" items={musicItems} />
+        <Breadcrumbs {...args} color={color} variant="solid" radius="full" isDisabled items={musicItems} />
+      </div>
+    ))}
+  </div>
+);
+
 export const Colors: Story = {
   render: (args) => (
-    <div className="flex flex-col gap-4">
-      <div>
-        <span className="text-xs font-semibold text-neutral-500 block mb-1">Default</span>
-        <Breadcrumbs {...args} color="default" items={staticItems} />
-      </div>
-      <div>
-        <span className="text-xs font-semibold text-neutral-500 block mb-1">Primary</span>
-        <Breadcrumbs {...args} color="primary" items={staticItems} />
-      </div>
-      <div>
-        <span className="text-xs font-semibold text-neutral-500 block mb-1">Secondary</span>
-        <Breadcrumbs {...args} color="secondary" items={staticItems} />
-      </div>
-      <div>
-        <span className="text-xs font-semibold text-neutral-500 block mb-1">Success</span>
-        <Breadcrumbs {...args} color="success" items={staticItems} />
-      </div>
-      <div>
-        <span className="text-xs font-semibold text-neutral-500 block mb-1">Warning</span>
-        <Breadcrumbs {...args} color="warning" items={staticItems} />
-      </div>
-      <div>
-        <span className="text-xs font-semibold text-neutral-500 block mb-1">Danger</span>
-        <Breadcrumbs {...args} color="danger" items={staticItems} />
-      </div>
+    <div className="p-6 bg-background rounded-xl">
+      {ColorMatrix(args)}
+    </div>
+  ),
+};
+
+export const DarkColors: Story = {
+  render: (args) => (
+    <div className="dark p-6 bg-background rounded-xl">
+      {ColorMatrix(args)}
     </div>
   ),
 };
@@ -219,11 +220,9 @@ export const StartAndEndContent: Story = {
 
 export const Disabled: Story = {
   render: (args) => (
-    <div className="flex flex-col gap-4">
-      <div>
-        <span className="text-xs font-semibold text-neutral-500 block mb-1">Disabled Breadcrumbs</span>
-        <Breadcrumbs {...args} isDisabled items={musicItems} />
-      </div>
+    <div className="flex flex-col gap-4 p-6 bg-background rounded-xl">
+      <Breadcrumbs {...args} color="primary" variant="solid" radius="full" items={musicItems} />
+      <Breadcrumbs {...args} color="primary" variant="solid" radius="full" isDisabled items={musicItems} />
     </div>
   ),
 };

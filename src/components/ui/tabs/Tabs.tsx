@@ -189,17 +189,14 @@ export const Tabs: React.FC<TabsProps> = ({
         sm: {
             container: "gap-1",
             tab: "text-xs px-3 py-1.5",
-            underlinedTab: isVerticalLayout ? "text-xs py-2 px-3 justify-start" : "text-xs pb-2 pt-1 px-3",
         },
         md: {
             container: "gap-1.5",
             tab: "text-sm px-4 py-2",
-            underlinedTab: isVerticalLayout ? "text-sm py-2.5 px-4 justify-start" : "text-sm pb-2.5 pt-1.5 px-4",
         },
         lg: {
             container: "gap-2",
             tab: "text-base px-5 py-2.5",
-            underlinedTab: isVerticalLayout ? "text-base py-3 px-5 justify-start" : "text-base pb-3 pt-2 px-5",
         },
     }[size];
 
@@ -214,55 +211,60 @@ export const Tabs: React.FC<TabsProps> = ({
     // Build the tab list container styles
     const getTabListClasses = () => {
         const base = isVerticalLayout ? "flex flex-col" : "flex items-center";
-        
-        switch (variant) {
-            case "solid":
-                return `${base} bg-neutral-100 dark:bg-neutral-800/80 p-1 w-fit`;
-            case "bordered":
-                return `${base} border-2 border-neutral-200 dark:border-neutral-800 p-1 w-fit`;
-            case "light":
-                return `${base} bg-transparent p-0 gap-1 w-fit`;
-            case "underlined":
-                if (isVerticalLayout) {
-                    const borderSide = resolvedPlacement === "end" ? "border-l" : "border-r";
-                    return `${base} bg-transparent p-0 ${borderSide} border-neutral-200 dark:border-neutral-800 h-full w-full`;
-                }
-                return `${base} bg-transparent p-0 border-b border-neutral-200 dark:border-neutral-800 w-full`;
+
+        // When disabled, the container has an opacity-like look or light background
+        // As per the image: inactive tabs / container backgrounds are identical gray/light gray across all color options.
+        // The container background is neutral-100 (light) or neutral-800 (dark) for solid, bordered, and light variants.
+        const baseContainerBg = "bg-neutral-100 dark:bg-neutral-800/80";
+
+        if (variant === "underlined") {
+            if (isVerticalLayout) {
+                const borderSide = resolvedPlacement === "end" ? "border-l-2" : "border-r-2";
+                return `${base} bg-transparent ${borderSide} border-neutral-200 dark:border-neutral-800 h-full w-full`;
+            }
+            return `${base} bg-transparent border-b-2 border-neutral-200 dark:border-neutral-800 w-fit`;
         }
+
+        if (variant === "solid") {
+            // Add a transparent 2px border to match the visual footprint and height of the bordered variant perfectly
+            return `${base} ${baseContainerBg} p-1 border-2 border-transparent w-fit`;
+        }
+
+        if (variant === "light") {
+            // Light variant has a transparent container background
+            return `${base} bg-transparent p-1 border-2 border-transparent w-fit`;
+        }
+
+        if (variant === "bordered") {
+            // Bordered variant has transparent container background with border
+            return `${base} bg-transparent border-2 border-neutral-200 dark:border-neutral-800 p-1 w-fit`;
+        }
+
+        return base;
     };
 
     // Colors mapping for active button label text color
     const getActiveTextClass = () => {
         if (variant === "underlined") {
             return {
-                default: "text-default-600 dark:text-default-900 font-semibold",
-                primary: "text-primary dark:text-primary-400 font-semibold",
+                default:   "text-neutral-900 dark:text-white font-semibold",
+                primary:   "text-primary dark:text-primary-400 font-semibold",
                 secondary: "text-secondary dark:text-secondary-400 font-semibold",
-                success: "text-success dark:text-success-400 font-semibold",
-                warning: "text-warning dark:text-warning-400 font-semibold",
-                danger: "text-danger dark:text-danger-400 font-semibold",
+                success:   "text-success dark:text-success-400 font-semibold",
+                warning:   "text-warning dark:text-warning-400 font-semibold",
+                danger:    "text-danger dark:text-danger-400 font-semibold",
             }[color];
         }
 
-        if (variant === "bordered" || variant === "light") {
-            return {
-                default: "text-default-600 font-semibold",
-                primary: "text-white font-semibold",
-                secondary: "text-white font-semibold",
-                success: "text-white font-semibold",
-                warning: "text-neutral-950 font-semibold",
-                danger: "text-white font-semibold",
-            }[color];
-        }
-
-        // Solid (default)
+        // As per the image, success and warning variants have dark/black text (text-neutral-950/text-neutral-900) when active.
+        // Primary, Secondary, Danger have white text when active.
         return {
-            default: "text-white font-semibold",
-            primary: "text-white font-semibold",
+            default:   "text-neutral-900 dark:text-neutral-100 font-semibold",
+            primary:   "text-white font-semibold",
             secondary: "text-white font-semibold",
-            success: "text-white font-semibold",
-            warning: "text-neutral-950 font-semibold",
-            danger: "text-white font-semibold",
+            success:   "text-neutral-950 font-semibold",
+            warning:   "text-neutral-950 font-semibold",
+            danger:    "text-white font-semibold",
         }[color];
     };
 
@@ -270,7 +272,6 @@ export const Tabs: React.FC<TabsProps> = ({
     const getIndicatorClass = () => {
         if (variant === "underlined") {
             if (isVerticalLayout) {
-                // If tabs are on the right (end), line is on the left edge. Otherwise, line is on the right edge.
                 const alignment = resolvedPlacement === "end" ? "left-0" : "right-0";
                 return {
                     default: `absolute ${alignment} top-0 bottom-0 w-[2px] bg-default-900 dark:bg-white z-0`,
@@ -282,52 +283,31 @@ export const Tabs: React.FC<TabsProps> = ({
                 }[color];
             }
             return {
-                default: "absolute bottom-0 left-0 right-0 h-[2px] bg-default-900 dark:bg-white z-0",
-                primary: "absolute bottom-0 left-0 right-0 h-[2px] bg-primary dark:bg-primary-400 z-0",
-                secondary: "absolute bottom-0 left-0 right-0 h-[2px] bg-secondary dark:bg-secondary-400 z-0",
-                success: "absolute bottom-0 left-0 right-0 h-[2px] bg-success dark:bg-success-400 z-0",
-                warning: "absolute bottom-0 left-0 right-0 h-[2px] bg-warning dark:bg-warning-400 z-0",
-                danger: "absolute bottom-0 left-0 right-0 h-[2px] bg-danger dark:bg-danger-400 z-0",
+                default: "absolute -bottom-[2px] left-0 right-0 h-[2px] bg-default-900 dark:bg-white z-10",
+                primary: "absolute -bottom-[2px] left-0 right-0 h-[2px] bg-primary dark:bg-primary-400 z-10",
+                secondary: "absolute -bottom-[2px] left-0 right-0 h-[2px] bg-secondary dark:bg-secondary-400 z-10",
+                success: "absolute -bottom-[2px] left-0 right-0 h-[2px] bg-success dark:bg-success-400 z-10",
+                warning: "absolute -bottom-[2px] left-0 right-0 h-[2px] bg-warning dark:bg-warning-400 z-10",
+                danger: "absolute -bottom-[2px] left-0 right-0 h-[2px] bg-danger dark:bg-danger-400 z-10",
             }[color];
         }
 
-        if (variant === "light") {
-            return {
-                default: "absolute inset-0 bg-default-200 dark:bg-default-700 z-0",
-                primary: "absolute inset-0 bg-primary dark:bg-primary/40 z-0",
-                secondary: "absolute inset-0 bg-secondary dark:bg-secondary/40 z-0",
-                success: "absolute inset-0 bg-success dark:bg-success/40 z-0",
-                warning: "absolute inset-0 bg-warning dark:bg-warning/40 z-0",
-                danger: "absolute inset-0 bg-danger dark:bg-danger/40 z-0",
-            }[color];
-        }
-
-        if (variant === "bordered") {
-            return {
-                default: "absolute inset-0 bg-default-200 dark:bg-default-800 z-0",
-                primary: "absolute inset-0 bg-primary z-0",
-                secondary: "absolute inset-0 bg-secondary z-0",
-                success: "absolute inset-0 bg-success z-0",
-                warning: "absolute inset-0 bg-warning z-0",
-                danger: "absolute inset-0 bg-danger z-0",
-            }[color];
-        }
-
-        // Solid (default)
+        // For solid, light, and bordered, the indicator determines the background color of the active tab.
         return {
-            default: "absolute inset-0 bg-default dark:bg-default-900 shadow-sm z-0",
-            primary: "absolute inset-0 bg-primary z-0",
+            default: variant === "solid"
+                ? "absolute inset-0 bg-white dark:bg-neutral-700 shadow-sm z-0"
+                : "absolute inset-0 bg-white dark:bg-neutral-700 border border-neutral-200/80 dark:border-neutral-600/80 shadow-sm z-0",
+            primary:   "absolute inset-0 bg-primary z-0",
             secondary: "absolute inset-0 bg-secondary z-0",
-            success: "absolute inset-0 bg-success z-0",
-            warning: "absolute inset-0 bg-warning z-0",
-            danger: "absolute inset-0 bg-danger z-0",
+            success:   "absolute inset-0 bg-success z-0",
+            warning:   "absolute inset-0 bg-warning z-0",
+            danger:    "absolute inset-0 bg-danger z-0",
         }[color];
     };
 
-    const inactiveTextClass = "text-default hover:text-default-800 dark:text-default-400 dark:hover:text-default-200";
+    const inactiveTextClass = "text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300";
     const activeTextClass = getActiveTextClass();
     const indicatorClass = getIndicatorClass();
-    const isUnderlined = variant === "underlined";
 
     /**
      * Badge classes change based on:
@@ -386,7 +366,7 @@ export const Tabs: React.FC<TabsProps> = ({
                                 className={`
                                     relative select-none outline-none font-medium flex items-center justify-center cursor-pointer
                                     disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-300
-                                    ${isUnderlined ? sizeClasses.underlinedTab : `${sizeClasses.tab} ${radiusClasses}`}
+                                    ${sizeClasses.tab} ${variant !== "underlined" ? radiusClasses : "rounded-none"}
                                     ${isActive ? activeTextClass : inactiveTextClass}
                                     ${isVerticalLayout ? "w-full text-left" : ""}
                                 `}

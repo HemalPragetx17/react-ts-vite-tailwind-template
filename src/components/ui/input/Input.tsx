@@ -24,6 +24,7 @@ interface InputProps
   size?: "sm" | "md" | "lg";
   variant?: "flat" | "bordered" | "underlined" | "faded";
   radius?: "none" | "sm" | "md" | "lg" | "full";
+  color?: "default" | "primary" | "secondary" | "success" | "warning" | "danger";
   labelPlacement?: "inside" | "outside" | "outside-left" | "outside-top" | "outlined";
 
   // Formik integration
@@ -52,6 +53,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     size = "md",
     variant = "bordered",
     radius = "md",
+    color = "default",
     labelPlacement = "outside",
     type = "text",
     field,
@@ -196,12 +198,85 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     },
   };
 
+  // Color-specific configurations
+  const flatColorClasses = {
+    default: "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus-within:bg-neutral-200 dark:focus-within:bg-neutral-700 text-foreground",
+    primary: "bg-primary-50 dark:bg-primary-950/20 hover:bg-primary-100 dark:hover:bg-primary-950/40 focus-within:bg-primary-100 dark:focus-within:bg-primary-950/40 text-primary",
+    secondary: "bg-secondary-50 dark:bg-secondary-950/20 hover:bg-secondary-100 dark:hover:bg-secondary-950/40 focus-within:bg-secondary-100 dark:focus-within:bg-secondary-950/40 text-secondary",
+    success: "bg-success-50 dark:bg-success-950/20 hover:bg-success-100 dark:hover:bg-success-950/40 focus-within:bg-success-100 dark:focus-within:bg-success-950/40 text-success",
+    warning: "bg-warning-50 dark:bg-warning-950/20 hover:bg-warning-100 dark:hover:bg-warning-950/40 focus-within:bg-warning-100 dark:focus-within:bg-warning-950/40 text-warning",
+    danger: "bg-danger-50 dark:bg-danger-950/20 hover:bg-danger-100 dark:hover:bg-danger-950/40 focus-within:bg-danger-100 dark:focus-within:bg-danger-950/40 text-danger",
+  };
+
+  const borderedColorClasses = {
+    default: "border-neutral-300 hover:border-neutral-400 focus-within:border-neutral-500 text-foreground",
+    primary: "border-neutral-300 hover:border-primary-300 focus-within:border-primary text-primary",
+    secondary: "border-neutral-300 hover:border-secondary-300 focus-within:border-secondary text-secondary",
+    success: "border-neutral-300 hover:border-success-300 focus-within:border-success text-success",
+    warning: "border-neutral-300 hover:border-warning-300 focus-within:border-warning text-warning",
+    danger: "border-neutral-300 hover:border-danger-300 focus-within:border-danger text-danger",
+  };
+
+  const underlinedColorClasses = {
+    default: "border-b-neutral-200 focus-within:border-b-neutral-500 text-foreground",
+    primary: "border-b-primary-200 focus-within:border-b-primary text-primary",
+    secondary: "border-b-secondary-200 focus-within:border-b-secondary text-secondary",
+    success: "border-b-success-200 focus-within:border-b-success text-success",
+    warning: "border-b-warning-200 focus-within:border-b-warning text-warning",
+    danger: "border-b-danger-200 focus-within:border-b-danger text-danger",
+  };
+
+  const fadedColorClasses = {
+    default: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-neutral-400 text-foreground",
+    primary: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-primary text-primary",
+    secondary: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-secondary text-secondary",
+    success: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-success text-success",
+    warning: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-warning text-warning",
+    danger: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-danger text-danger",
+  };
+
+  const focusTextColors = {
+    default: "text-foreground",
+    primary: "text-primary",
+    secondary: "text-secondary",
+    success: "text-success",
+    warning: "text-warning",
+    danger: "text-danger",
+  };
+
+  const underlineColors = {
+    default: "bg-neutral-500",
+    primary: "bg-primary",
+    secondary: "bg-secondary",
+    success: "bg-success",
+    warning: "bg-warning",
+    danger: "bg-danger",
+  };
+
+  const focusBorderColors = {
+    default: "border-neutral-500",
+    primary: "border-primary",
+    secondary: "border-secondary",
+    success: "border-success",
+    warning: "border-warning",
+    danger: "border-danger",
+  };
+
+  const fieldsetBorderColors = {
+    default: "border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500 focus-within:border-neutral-500",
+    primary: "border-neutral-300 dark:border-neutral-700 group-hover:border-primary-300 dark:group-hover:border-primary-800 focus-within:border-primary",
+    secondary: "border-neutral-300 dark:border-neutral-700 group-hover:border-secondary-300 dark:group-hover:border-secondary-800 focus-within:border-secondary",
+    success: "border-neutral-300 dark:border-neutral-700 group-hover:border-success-300 dark:group-hover:border-success-800 focus-within:border-success",
+    warning: "border-neutral-300 dark:border-neutral-700 group-hover:border-warning-300 dark:group-hover:border-warning-800 focus-within:border-warning",
+    danger: "border-neutral-300 dark:border-neutral-700 group-hover:border-danger-300 dark:group-hover:border-danger-800 focus-within:border-danger",
+  };
+
   // Variant Configurations
   const variantConfigs = {
-    flat: "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus-within:bg-neutral-200 dark:focus-within:bg-neutral-700 border-2 border-transparent",
-    bordered: "bg-transparent border-2 border-neutral-300 focus-within:border-primary",
-    underlined: "bg-transparent border-b-2 border-transparent rounded-none relative",
-    faded: "bg-neutral-50 dark:bg-neutral-900 border-2 border-neutral-200 focus-within:border-primary",
+    flat: `border-2 border-transparent ${flatColorClasses[color] || flatColorClasses.default}`,
+    bordered: `border-2 ${borderedColorClasses[color] || borderedColorClasses.default}`,
+    underlined: `border-b rounded-none relative ${underlinedColorClasses[color] || underlinedColorClasses.default}`,
+    faded: `border-2 ${fadedColorClasses[color] || fadedColorClasses.default}`,
   };
 
   // Radius Configurations
@@ -235,9 +310,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       <label
         htmlFor={field?.name || props.id || props.name}
         className={`block font-medium select-none transition-colors duration-200 ${labelPlacement === "outside-left" ? "mb-0 shrink-0" : "mb-1.5"
-          } ${currentSize.labelSize} ${labelClassName} ${isFocused
-            ? "text-[var(--color-primary,#2196f3)]"
-            : "text-neutral-700 dark:text-neutral-300"
+          } ${currentSize.labelSize} ${labelClassName} ${
+            color !== "default"
+              ? (focusTextColors[color] || "text-primary")
+              : isFocused
+                ? "text-neutral-800 dark:text-neutral-200"
+                : "text-neutral-700 dark:text-neutral-300"
           }`}
       >
         {label}
@@ -277,8 +355,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
                 ${fieldTouched && fieldError
                   ? "border-2 border-red-500 dark:border-red-500"
                   : isFocused
-                    ? "border-2 border-primary"
-                    : "border-2 border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
+                    ? `border-2 ${focusBorderColors[color] || "border-primary"}`
+                    : `border-2 ${fieldsetBorderColors[color] || "border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"}`
                 }
               `}
             >
@@ -323,11 +401,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
               className={`
                 absolute left-3 top-1/2 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
                 ${currentSize.textSize}
-                ${labelClassName} ${(shouldFloat || (isOutlined && (isFocused || hasValue)))
-                  ? isFocused
-                    ? "text-[var(--color-primary,#2196f3)]"
-                    : "text-neutral-700 dark:text-neutral-300"
-                  : "text-neutral-400 dark:text-neutral-500"
+                 ${labelClassName} ${
+                  color !== "default"
+                    ? (focusTextColors[color] || "text-primary")
+                    : (shouldFloat || (isOutlined && (isFocused || hasValue)))
+                      ? isFocused
+                        ? "text-neutral-800 dark:text-neutral-200"
+                        : "text-neutral-700 dark:text-neutral-300"
+                      : "text-neutral-400 dark:text-neutral-500"
                 }
               `}
             >
@@ -363,7 +444,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
               disabled={disabled}
               className={`
                 w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0 p-0
-                text-neutral-800 dark:text-neutral-100 placeholder-neutral-400
+                ${color === "default" ? "text-neutral-800 dark:text-neutral-100" : (focusTextColors[color] || "text-primary")} placeholder-neutral-400
                 ${currentSize.textSize}
                 ${labelPlacement === "inside" && isFloating && shouldFloat ? (size === "sm" ? "mt-3" : size === "lg" ? "mt-5" : "mt-4") : ""}
                 ${inputClassName}
@@ -413,10 +494,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
           {/* Underline Animation for Underlined Variant */}
           {resolvedVariant === "underlined" && (
             <motion.div
-              className="absolute bottom-[-2px] left-0 right-0 h-[2px] bg-primary z-20"
+              className={`absolute bottom-0 left-0 right-0 h-[2px] z-20 ${underlineColors[color] || "bg-primary"}`}
               initial={{ scaleX: 0 }}
               animate={{ scaleX: isFocused ? 1 : 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
               style={{ originX: 0.5 }}
             />
           )}

@@ -1,8 +1,8 @@
 /* TimePicker Custom Styles */
-
 :root {
   --time-picker-secondary-stroke: var(--color-secondary-700);
 }
+
 .dark {
   --time-picker-secondary-stroke: var(--color-secondary);
 }
@@ -23,8 +23,10 @@
 
 /* iOS Drum Scroll Styling */
 .drp-drum-scroll {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE / Edge */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE / Edge */
   overscroll-behavior: contain;
   scroll-behavior: smooth;
   scroll-snap-type: y proximity;
@@ -40,34 +42,35 @@
 }
 
 .drp-drum-fade {
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(0, 0, 0, 0.4) 5%,
-    black 20%,
-    black 80%,
-    rgba(0, 0, 0, 0.4) 95%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(0, 0, 0, 0.4) 5%,
-    black 20%,
-    black 80%,
-    rgba(0, 0, 0, 0.4) 95%,
-    transparent 100%
-  );
+  -webkit-mask-image: linear-gradient(to bottom,
+      transparent 0%,
+      rgba(0, 0, 0, 0.4) 5%,
+      black 20%,
+      black 80%,
+      rgba(0, 0, 0, 0.4) 95%,
+      transparent 100%);
+  mask-image: linear-gradient(to bottom,
+      transparent 0%,
+      rgba(0, 0, 0, 0.4) 5%,
+      black 20%,
+      black 80%,
+      rgba(0, 0, 0, 0.4) 95%,
+      transparent 100%);
 }
 
 /* Selected Item Chips Color Variants */
 .time-picker-chip-default {
   background-color: var(--color-default-50);
+  background-color: var(--color-default-100);
   color: var(--color-default-900);
+  font-weight: 600;
 }
+
 .dark .time-picker-chip-default {
   background-color: var(--color-default-50);
+  background-color: var(--color-default-200);
   color: white;
+  font-weight: 600;
 }
 
 .time-picker-chip-primary {
@@ -75,6 +78,7 @@
   color: var(--color-primary-700);
   font-weight: bold;
 }
+
 .dark .time-picker-chip-primary {
   background-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
   color: var(--color-primary);
@@ -86,6 +90,7 @@
   color: var(--color-secondary-700);
   font-weight: bold;
 }
+
 .dark .time-picker-chip-secondary {
   background-color: color-mix(in srgb, var(--color-secondary) 30%, transparent);
   color: var(--color-secondary);
@@ -97,6 +102,7 @@
   color: var(--color-success-700);
   font-weight: bold;
 }
+
 .dark .time-picker-chip-success {
   background-color: color-mix(in srgb, var(--color-success) 30%, transparent);
   color: var(--color-success);
@@ -108,6 +114,7 @@
   color: var(--color-warning-700);
   font-weight: bold;
 }
+
 .dark .time-picker-chip-warning {
   background-color: color-mix(in srgb, var(--color-warning) 30%, transparent);
   color: var(--color-warning);
@@ -119,6 +126,7 @@
   color: var(--color-danger-700);
   font-weight: bold;
 }
+
 .dark .time-picker-chip-danger {
   background-color: color-mix(in srgb, var(--color-danger) 30%, transparent);
   color: var(--color-danger);

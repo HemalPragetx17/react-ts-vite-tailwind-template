@@ -82,8 +82,8 @@ const colorBgMap: Record<PopoverColor, string> = {
     default: "bg-white dark:bg-default-900 text-black dark:text-white",
     primary: "bg-primary text-white",
     secondary: "bg-secondary text-white",
-    success: "bg-success text-white",
-    warning: "bg-warning text-white",
+    success: "bg-success text-black",
+    warning: "bg-warning text-black",
     danger: "bg-danger text-white",
     foreground: "bg-default-900 dark:bg-white text-white dark:text-black",
 };

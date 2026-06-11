@@ -4,7 +4,7 @@ import {
   FaUser,
 } from "react-icons/fa6";
 import { LuClipboardCheck } from "react-icons/lu";
-import { MdDashboard, MdOutlineAppSettingsAlt } from "react-icons/md";
+import { MdDashboard, MdOutlineAppSettingsAlt, MdPalette } from "react-icons/md";
 
 export const sidebarIcons: Record<string, IconType> = {
   dashboard: MdDashboard,
@@ -12,6 +12,7 @@ export const sidebarIcons: Record<string, IconType> = {
   setting: FaGear,
   privacyPolicy: LuClipboardCheck,
   appSetting: MdOutlineAppSettingsAlt,
+  uiKit: MdPalette,
 };
 
 interface SidebarMenuIconProps {

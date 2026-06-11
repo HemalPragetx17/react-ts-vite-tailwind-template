@@ -1,8 +1,7 @@
 import type { FieldProps } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useLayoutEffect, useRef, useState } from "react";
-import { FaCheck, FaChevronDown } from "react-icons/fa";
-import { FaXmark } from "react-icons/fa6";
+import { FaCheck, FaChevronDown, FaXmark } from "react-icons/fa6";
 import type {
   ClearIndicatorProps,
   DropdownIndicatorProps,
@@ -36,7 +35,8 @@ type SelectColor =
   | "danger";
 type SelectLabelPlacement = "inside" | "outside" | "outside-left" | "outside-top" | "outlined";
 
-interface SelectDropdownProps extends FieldProps {
+interface SelectDropdownProps extends Omit<FieldProps, 'meta'> {
+  meta?: any;
   label?: string;
   placeholder?: string;
   options: SelectOption[];
@@ -171,13 +171,6 @@ const sizeTokens: Record<
 /*                           Variant / Radius Tokens                          */
 /* -------------------------------------------------------------------------- */
 
-const variantBase: Record<SelectVariant, string> = {
-  flat: "bg-neutral-100 dark:bg-neutral-800 border-2 border-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700",
-  bordered: "bg-transparent border-2 border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500",
-  underlined: "bg-transparent border-b-2 border-transparent rounded-none relative",
-  faded: "bg-neutral-50 dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-800 hover:border-neutral-300",
-};
-
 const radiusMap: Record<SelectRadius, string> = {
   none: "rounded-none",
   sm: "rounded-sm",
@@ -198,7 +191,7 @@ const CustomDropdownIndicator = (props: DropdownIndicatorProps<SelectOption, boo
         animate={{ rotate: props.selectProps.menuIsOpen ? 180 : 0 }}
         transition={{ duration: 0.2, ease: "easeInOut" }}
       >
-        <FaChevronDown className="w-4 h-4" aria-hidden />
+        <FaChevronDown className="w-4 h-4 text-neutral-600" aria-hidden />
       </motion.div>
     </components.DropdownIndicator>
   );
@@ -325,7 +318,7 @@ const CustomOption = (props: OptionProps<SelectOption, boolean>) => {
         </div>
         {/* Checkmark for single-select */}
         {!showCheckbox && isSelected && (
-          <FaCheck className="w-4 h-4 shrink-0 text-neutral-700 dark:text-neutral-200" aria-hidden />
+          <FaCheck className="w-3.5 h-3.5 shrink-0 text-neutral-800 dark:text-neutral-200" aria-hidden />
         )}
       </div>
     </components.Option>
@@ -355,7 +348,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
   variant = "bordered",
   size = "md",
   radius = "md",
-  color = "primary",
+  color = "default",
   labelPlacement = "outside",
 
   containerClassName = "",
@@ -385,6 +378,15 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
 
   const tokens = colorTokens[color];
   const sz = sizeTokens[size];
+
+  const focusTextColors = {
+    default: "text-neutral-800 dark:text-neutral-100",
+    primary: "text-primary",
+    secondary: "text-secondary",
+    success: "text-success",
+    warning: "text-warning",
+    danger: "text-danger",
+  };
   const isInside = labelPlacement === "inside";
   const isOutsideLeft = labelPlacement === "outside-left";
 
@@ -395,8 +397,52 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
 
   const radiusClass = resolvedVariant === "underlined" ? "rounded-none" : radiusMap[radius];
   const menuRadiusClass = resolvedVariant === "underlined" ? "rounded-none" : (radius === "full" ? "rounded-xl" : radiusMap[radius]);
+
+  const flatColorClasses = {
+    default: "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus-within:bg-neutral-200 dark:focus-within:bg-neutral-700 text-foreground",
+    primary: "bg-primary-50 dark:bg-primary-950/20 hover:bg-primary-100 dark:hover:bg-primary-950/40 focus-within:bg-primary-100 dark:focus-within:bg-primary-950/40 text-primary",
+    secondary: "bg-secondary-50 dark:bg-secondary-950/20 hover:bg-secondary-100 dark:hover:bg-secondary-950/40 focus-within:bg-secondary-100 dark:focus-within:bg-secondary-950/40 text-secondary",
+    success: "bg-success-50 dark:bg-success-950/20 hover:bg-success-100 dark:hover:bg-success-950/40 focus-within:bg-success-100 dark:focus-within:bg-success-950/40 text-success",
+    warning: "bg-warning-50 dark:bg-warning-950/20 hover:bg-warning-100 dark:hover:bg-warning-950/40 focus-within:bg-warning-100 dark:focus-within:bg-warning-950/40 text-warning",
+    danger: "bg-danger-50 dark:bg-danger-950/20 hover:bg-danger-100 dark:hover:bg-danger-950/40 focus-within:bg-danger-100 dark:focus-within:bg-danger-950/40 text-danger",
+  };
+
+  const borderedColorClasses = {
+    default: "border-neutral-300 hover:border-neutral-400 focus-within:border-neutral-500 text-foreground",
+    primary: "border-neutral-300 hover:border-primary-300 focus-within:border-primary text-primary",
+    secondary: "border-neutral-300 hover:border-secondary-300 focus-within:border-secondary text-secondary",
+    success: "border-neutral-300 hover:border-success-300 focus-within:border-success text-success",
+    warning: "border-neutral-300 hover:border-warning-300 focus-within:border-warning text-warning",
+    danger: "border-neutral-300 hover:border-danger-300 focus-within:border-danger text-danger",
+  };
+
+  const underlinedColorClasses = {
+    default: "border-b-neutral-200 focus-within:border-b-neutral-500 text-foreground",
+    primary: "border-b-primary-200 focus-within:border-b-primary text-primary",
+    secondary: "border-b-secondary-200 focus-within:border-b-secondary text-secondary",
+    success: "border-b-success-200 focus-within:border-b-success text-success",
+    warning: "border-b-warning-200 focus-within:border-b-warning text-warning",
+    danger: "border-b-danger-200 focus-within:border-b-danger text-danger",
+  };
+
+  const fadedColorClasses = {
+    default: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-neutral-400 text-foreground",
+    primary: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-primary text-primary",
+    secondary: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-secondary text-secondary",
+    success: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-success text-success",
+    warning: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-warning text-warning",
+    danger: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-danger text-danger",
+  };
+
+  const variantConfigs = {
+    flat: `border-2 border-transparent ${flatColorClasses[color] || flatColorClasses.default}`,
+    bordered: `border-2 ${borderedColorClasses[color] || borderedColorClasses.default}`,
+    underlined: `border-b rounded-none relative ${underlinedColorClasses[color] || underlinedColorClasses.default}`,
+    faded: `border-2 ${fadedColorClasses[color] || fadedColorClasses.default}`,
+  };
+
   // When labelPlacement="outlined" the fieldset draws the border; wrapper gets no border
-  const variantClass = isOutlined ? "bg-transparent border-none" : (variantBase[resolvedVariant] ?? variantBase.bordered);
+  const variantClass = isOutlined ? "bg-transparent border-none" : (variantConfigs[resolvedVariant] ?? variantConfigs.flat);
 
   // Dynamic layout measurement for multi-select overflow chips
   useLayoutEffect(() => {
@@ -460,9 +506,16 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
       <label
         htmlFor={name}
         className={`block font-medium select-none transition-colors duration-200 ${isOutsideLeft ? "shrink-0 mb-0" : "mb-1.5"
-          } ${sz.labelSize} ${labelClassName} ${isFocused
-            ? "text-[var(--color-primary,#2196f3)]"
-            : "text-neutral-700 dark:text-neutral-300"
+          } ${sz.labelSize} ${labelClassName} ${
+            color !== "default"
+              ? (color === "primary" ? "text-primary" :
+                 color === "secondary" ? "text-secondary" :
+                 color === "success" ? "text-success" :
+                 color === "warning" ? "text-warning" :
+                 color === "danger" ? "text-danger" : "text-primary")
+              : isFocused
+                ? "text-neutral-800 dark:text-neutral-200"
+                : "text-neutral-700 dark:text-neutral-300"
           }`}
       >
         {label}
@@ -497,7 +550,12 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
             ${hasError && !isOutlined ? "!border-red-500 dark:!border-red-500" : ""}
             ${isFocused && !hasError && !isOutlined
               ? resolvedVariant === "bordered" || resolvedVariant === "faded"
-                ? "!border-primary"
+                ? (color === "default" ? "!border-neutral-500" :
+                   color === "primary" ? "!border-primary" :
+                   color === "secondary" ? "!border-secondary" :
+                   color === "success" ? "!border-success" :
+                   color === "warning" ? "!border-warning" :
+                   color === "danger" ? "!border-danger" : "!border-primary")
                 : ""
               : ""}
             ${isInside ? sz.insideHeight : `${sz.outsideHeight} ${isFloating && label && !isOutlined ? "mt-6" : ""} ${isOutlined && label ? "mt-[10px]" : ""}`}
@@ -513,7 +571,12 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
                 ${hasError
                   ? "border-2 border-red-500 dark:border-red-500"
                   : isFocused
-                    ? "border-2 border-primary"
+                    ? (color === "default" ? "border-2 border-neutral-500" :
+                       color === "primary" ? "border-2 border-primary" :
+                       color === "secondary" ? "border-2 border-secondary" :
+                       color === "success" ? "border-2 border-success" :
+                       color === "warning" ? "border-2 border-warning" :
+                       color === "danger" ? "border-2 border-danger" : "border-2 border-primary")
                     : "border-2 border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
                 }
               `}
@@ -566,11 +629,18 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
                 absolute ${isOutlined ? "left-3" : `left-0 ${sz.px}`} font-medium select-none origin-left pointer-events-none whitespace-nowrap z-10
                 top-1/2
                 ${sz.textSize} ${labelClassName} transition-colors duration-200
-                ${(shouldFloat || (isOutlined && (isFocused || hasValue)))
-                  ? isFocused
-                    ? "text-[var(--color-primary,#2196f3)]"
-                    : "text-neutral-700 dark:text-neutral-300"
-                  : "text-neutral-400 dark:text-neutral-500"
+                ${
+                  color !== "default"
+                    ? (color === "primary" ? "text-primary" :
+                       color === "secondary" ? "text-secondary" :
+                       color === "success" ? "text-success" :
+                       color === "warning" ? "text-warning" :
+                       color === "danger" ? "text-danger" : "text-primary")
+                    : (shouldFloat || (isOutlined && (isFocused || hasValue)))
+                      ? isFocused
+                        ? "text-neutral-800 dark:text-neutral-200"
+                        : "text-neutral-700 dark:text-neutral-300"
+                      : "text-neutral-400 dark:text-neutral-500"
                 }
               `}
               style={{ transformOrigin: isOutlined ? "left" : "top left" }}
@@ -644,28 +714,28 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
                   `${sz.textSize} text-neutral-400 dark:text-neutral-500 select-none truncate`,
 
                 singleValue: () =>
-                  `${sz.textSize} text-neutral-800 dark:text-neutral-100`,
+                  `${sz.textSize} ${focusTextColors[color] || focusTextColors.default}`,
 
                 valueContainer: () => `flex flex-nowrap items-center gap-1 flex-1 min-w-0 overflow-hidden ${isInside && isFloating && shouldFloat ? sz.ptInside : ""}`,
 
                 input: () =>
-                  `${sz.textSize} text-neutral-800 dark:text-neutral-100 outline-none`,
+                  `${sz.textSize} ${focusTextColors[color] || focusTextColors.default} outline-none`,
 
                 indicatorsContainer: () => "flex items-center gap-1 shrink-0 pr-1",
 
                 menu: () =>
                   `mt-1.5 border border-neutral-200 dark:border-neutral-700 ${menuRadiusClass} overflow-hidden shadow-xl bg-white dark:bg-neutral-900 z-50`,
 
-                menuList: () => "py-1",
+                menuList: () => "py-1 px-1 flex flex-col gap-0.5",
 
                 option: ({ isSelected, isFocused: optFocused, isDisabled }) =>
-                  `px-3 py-2 transition-colors duration-100
+                  `px-3 py-2 rounded-lg transition-colors duration-150
                   ${isDisabled
                     ? "cursor-not-allowed text-neutral-400 dark:text-neutral-600"
-                    : "cursor-pointer text-neutral-700 dark:text-neutral-200"
+                    : "cursor-pointer text-neutral-800 dark:text-neutral-200"
                   }
-                  ${optFocused && !isSelected && !isDisabled
-                    ? "bg-neutral-100 dark:bg-neutral-800"
+                  ${optFocused && !isDisabled
+                    ? "bg-neutral-200 dark:bg-neutral-800"
                     : "bg-transparent"
                   }`,
 
@@ -698,10 +768,17 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
           {/* Underline Animation for Underlined Variant */}
           {resolvedVariant === "underlined" && (
             <motion.div
-              className="absolute bottom-[-2px] left-0 right-0 h-[2px] bg-primary z-20"
+              className={`absolute bottom-0 left-0 right-0 h-[2px] z-20 ${
+                color === "default" ? "bg-neutral-500" :
+                color === "primary" ? "bg-primary" :
+                color === "secondary" ? "bg-secondary" :
+                color === "success" ? "bg-success" :
+                color === "warning" ? "bg-warning" :
+                color === "danger" ? "bg-danger" : "bg-primary"
+              }`}
               initial={{ scaleX: 0 }}
               animate={{ scaleX: isFocused ? 1 : 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
               style={{ originX: 0.5 }}
             />
           )}

@@ -69,16 +69,6 @@ export interface TimePickerProps {
 /*                              Tokens & Helpers                              */
 /* -------------------------------------------------------------------------- */
 
-const variantBase: Record<PickerVariant, string> = {
-  flat: "bg-default-100 border-2 border-transparent hover:bg-default-200 dark:bg-neutral-800 dark:hover:bg-neutral-700",
-  bordered:
-    "bg-transparent border-2 border-default-300 hover:border-default-400 dark:border-neutral-700 dark:hover:border-neutral-600",
-  underlined:
-    "bg-transparent border-b-2 border-transparent rounded-none",
-  faded:
-    "bg-default-50 border-2 border-default-200 hover:border-default-300 dark:bg-neutral-800/40 dark:border-neutral-700",
-};
-
 const radiusMap: Record<PickerRadius, string> = {
   none: "rounded-none",
   sm: "rounded-sm",
@@ -493,6 +483,20 @@ const DrumColumn: React.FC<DrumColumnProps> = ({ items, value, onChange, color }
   );
 };
 
+const applyImportant = (classes: string) => {
+  return classes
+    .split(" ")
+    .map((cls) => {
+      if (cls.includes(":")) {
+        const parts = cls.split(":");
+        const last = parts.pop();
+        return [...parts, `!${last}`].join(":");
+      }
+      return `!${cls}`;
+    })
+    .join(" ");
+};
+
 /* -------------------------------------------------------------------------- */
 /*                            TimePicker Component                            */
 /* -------------------------------------------------------------------------- */
@@ -512,7 +516,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
   variant = "bordered",
   size = "md",
   radius = "md",
-  color = "primary",
+  color = "default",
   labelPlacement = "outside",
 
   containerClassName = "",
@@ -522,6 +526,79 @@ const TimePicker: React.FC<TimePickerProps> = ({
   mode,
 }) => {
   const resolvedVariant = labelPlacement === "outlined" ? "bordered" : variant;
+
+  // Color-specific configurations
+  const flatColorClasses = {
+    default: "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus-within:bg-neutral-200 dark:focus-within:bg-neutral-700 text-foreground",
+    primary: "bg-primary-50 dark:bg-primary-950/20 hover:bg-primary-100 dark:hover:bg-primary-950/40 focus-within:bg-primary-100 dark:focus-within:bg-primary-950/40 text-primary",
+    secondary: "bg-secondary-50 dark:bg-secondary-950/20 hover:bg-secondary-100 dark:hover:bg-secondary-950/40 focus-within:bg-secondary-100 dark:focus-within:bg-secondary-950/40 text-secondary",
+    success: "bg-success-50 dark:bg-success-950/20 hover:bg-success-100 dark:hover:bg-success-950/40 focus-within:bg-success-100 dark:focus-within:bg-success-950/40 text-success",
+    warning: "bg-warning-50 dark:bg-warning-950/20 hover:bg-warning-100 dark:hover:bg-warning-950/40 focus-within:bg-warning-100 dark:focus-within:bg-warning-950/40 text-warning",
+    danger: "bg-danger-50 dark:bg-danger-950/20 hover:bg-danger-100 dark:hover:bg-danger-950/40 focus-within:bg-danger-100 dark:focus-within:bg-danger-950/40 text-danger",
+  };
+
+  const borderedColorClasses = {
+    default: "border-neutral-300 hover:border-neutral-400 focus-within:border-neutral-500 text-foreground",
+    primary: "border-neutral-300 hover:border-primary-300 focus-within:border-primary text-primary",
+    secondary: "border-neutral-300 hover:border-secondary-300 focus-within:border-secondary text-secondary",
+    success: "border-neutral-300 hover:border-success-300 focus-within:border-success text-success",
+    warning: "border-neutral-300 hover:border-warning-300 focus-within:border-warning text-warning",
+    danger: "border-neutral-300 hover:border-danger-300 focus-within:border-danger text-danger",
+  };
+
+  const underlinedColorClasses = {
+    default: "border-b-neutral-200 focus-within:border-b-neutral-500 text-foreground",
+    primary: "border-b-primary-200 focus-within:border-b-primary text-primary",
+    secondary: "border-b-secondary-200 focus-within:border-b-secondary text-secondary",
+    success: "border-b-success-200 focus-within:border-b-success text-success",
+    warning: "border-b-warning-200 focus-within:border-b-warning text-warning",
+    danger: "border-b-danger-200 focus-within:border-b-danger text-danger",
+  };
+
+  const fadedColorClasses = {
+    default: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-neutral-400 text-foreground",
+    primary: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-primary text-primary",
+    secondary: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-secondary text-secondary",
+    success: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-success text-success",
+    warning: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-warning text-warning",
+    danger: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-danger text-danger",
+  };
+
+  const focusTextColors = {
+    default: "text-foreground",
+    primary: "text-primary",
+    secondary: "text-secondary-700 dark:text-secondary",
+    success: "text-success",
+    warning: "text-warning",
+    danger: "text-danger",
+  };
+
+  const underlineColors = {
+    default: "bg-neutral-500",
+    primary: "bg-primary",
+    secondary: "bg-secondary",
+    success: "bg-success",
+    warning: "bg-warning",
+    danger: "bg-danger",
+  };
+
+  const focusBorderColors = {
+    default: "border-neutral-500",
+    primary: "border-primary",
+    secondary: "border-secondary-700 dark:border-secondary",
+    success: "border-success",
+    warning: "border-warning",
+    danger: "border-danger",
+  };
+
+  const fieldsetBorderColors = {
+    default: "border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500 focus-within:border-neutral-500",
+    primary: "border-neutral-300 dark:border-neutral-700 group-hover:border-primary-300 dark:group-hover:border-primary-800 focus-within:border-primary",
+    secondary: "border-neutral-300 dark:border-neutral-700 group-hover:border-secondary-300 dark:group-hover:border-secondary-800 focus-within:border-secondary",
+    success: "border-neutral-300 dark:border-neutral-700 group-hover:border-success-300 dark:group-hover:border-success-800 focus-within:border-success",
+    warning: "border-neutral-300 dark:border-neutral-700 group-hover:border-warning-300 dark:group-hover:border-warning-800 focus-within:border-warning",
+    danger: "border-neutral-300 dark:border-neutral-700 group-hover:border-danger-300 dark:group-hover:border-danger-800 focus-within:border-danger",
+  };
 
   const [isOpen, setIsOpen] = useState(false);
   const [isMobileMode, setIsMobileMode] = useState(false);
@@ -738,7 +815,15 @@ const TimePicker: React.FC<TimePickerProps> = ({
   const startTouched = fieldName && form?.touched?.[fieldName] ? true : touched;
   const hasError = !!(startTouched && startError);
 
-  const variantClass = isOutlined ? "bg-transparent border-none" : variantBase[resolvedVariant];
+  const variantClass = isOutlined
+    ? "bg-transparent border-none"
+    : resolvedVariant === "flat"
+      ? `border-2 border-transparent ${flatColorClasses[color] || flatColorClasses.default}`
+      : resolvedVariant === "bordered"
+        ? `border-2 ${borderedColorClasses[color] || borderedColorClasses.default}`
+        : resolvedVariant === "underlined"
+          ? `border-b rounded-none relative ${underlinedColorClasses[color] || underlinedColorClasses.default}`
+          : `border-2 ${fadedColorClasses[color] || fadedColorClasses.default}`;
   const radiusClass = resolvedVariant === "underlined" ? "rounded-none" : radiusMap[radius];
   const isOutsideLeft = labelPlacement === "outside-left";
 
@@ -841,7 +926,12 @@ const TimePicker: React.FC<TimePickerProps> = ({
       <label
         htmlFor={fieldName}
         className={`block font-medium select-none transition-colors duration-200 ${isOutsideLeft ? "shrink-0 mb-0" : "mb-1.5"
-          } ${sz.labelSize} ${labelClassName} ${isOpen ? activeColor.text : "text-neutral-700 dark:text-neutral-300"
+          } ${sz.labelSize} ${labelClassName} ${
+            color !== "default"
+              ? (focusTextColors[color] || "text-primary")
+              : isOpen
+                ? "text-neutral-800 dark:text-neutral-200"
+                : "text-neutral-700 dark:text-neutral-300"
           }`}
       >
         {label}
@@ -1144,7 +1234,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
 
         <div
           className={`
-            relative flex items-center justify-between w-full transition-all duration-200 ease-in-out cursor-pointer select-none box-border group
+            relative flex items-center justify-between w-full transition-all duration-200 ease-in-out select-none box-border group
             ${variantClass}
             ${radiusClass}
             ${sz.wrapperPadding}
@@ -1155,11 +1245,11 @@ const TimePicker: React.FC<TimePickerProps> = ({
             ${hasError && !isOutlined ? "!border-danger" : ""}
             ${isOpen && !hasError && !isOutlined
               ? resolvedVariant === "bordered" || resolvedVariant === "faded"
-                ? activeColor.border
+                ? applyImportant(focusBorderColors[color] || "border-primary")
                 : ""
               : ""
             }
-            ${disabled ? "opacity-50 cursor-not-allowed" : ""}
+            ${disabled ? "opacity-50 cursor-default" : "cursor-pointer"}
           `}
           onClick={() => !disabled && setIsOpen((prev) => !prev)}
         >
@@ -1172,8 +1262,8 @@ const TimePicker: React.FC<TimePickerProps> = ({
                 ${hasError
                   ? "border-2 border-red-500 dark:border-red-500"
                   : isOpen
-                    ? `border-2 ${activeColor.outlineBorder}`
-                    : "border-2 border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
+                    ? `border-2 ${focusBorderColors[color] || "border-primary"}`
+                    : `border-2 ${fieldsetBorderColors[color] || "border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"}`
                 }
               `}
             >
@@ -1228,11 +1318,14 @@ const TimePicker: React.FC<TimePickerProps> = ({
               transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
               className={`
                 absolute left-3 top-1/2 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
-                ${sz.textSize} ${labelClassName} ${shouldFloat || (isOutlined && (isOpen || hasValue))
-                  ? isOpen
-                    ? activeColor.text
-                    : "text-neutral-700 dark:text-neutral-300"
-                  : "text-neutral-400 dark:text-neutral-500"
+                ${sz.textSize} ${labelClassName} ${
+                  color !== "default"
+                    ? (focusTextColors[color] || "text-primary")
+                    : shouldFloat || (isOutlined && (isOpen || hasValue))
+                      ? isOpen
+                        ? "text-neutral-800 dark:text-neutral-200"
+                        : "text-neutral-700 dark:text-neutral-300"
+                      : "text-neutral-400 dark:text-neutral-500"
                 }
               `}
               style={{ transformOrigin: isOutlined ? "left" : "top left" }}
@@ -1265,7 +1358,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
                   {(!isFloating || shouldFloat) && resolvedPlaceholder ? resolvedPlaceholder : "\u200b"}
                 </span>
               ) : (
-                <span className={`text-neutral-900 dark:text-neutral-100 truncate select-none ${sz.textSize}`}>
+                <span className={`${color === "default" ? "text-neutral-900 dark:text-neutral-100" : (focusTextColors[color] || "text-primary")} truncate select-none ${sz.textSize}`}>
                   {displayString}
                 </span>
               )}
@@ -1287,18 +1380,17 @@ const TimePicker: React.FC<TimePickerProps> = ({
                 <FaXmark className="w-3.5 h-3.5" aria-hidden />
               </Button>
             ) : (
-              <FaClock className="w-3.5 h-3.5 text-default-500" />
+              <FaClock className={`w-4 h-4 transition-colors ${isOpen && color !== "default" ? (focusTextColors[color] || "text-primary") : "text-neutral-600 dark:text-neutral-350 group-hover:text-neutral-800 dark:group-hover:text-neutral-100"}`} />
             )}
           </div>
 
           {/* Underline Animation for Underlined Variant */}
           {resolvedVariant === "underlined" && (
             <motion.div
-              className={`absolute bottom-[-2px] left-0 right-0 h-[2px] z-20 ${hasError ? "bg-danger" : activeColor.bg
-                }`}
+              className={`absolute bottom-0 left-0 right-0 h-[2px] z-20 ${hasError ? "bg-danger" : (underlineColors[color] || "bg-primary")}`}
               initial={{ scaleX: 0 }}
               animate={{ scaleX: isOpen ? 1 : 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
               style={{ originX: 0.5 }}
             />
           )}

@@ -49,5 +49,11 @@ export const sidebarRoutes: ISidebarData[] = [
       },
     ],
   },
+  {
+    module: Modules.UIKit,
+    route: Routing.UIKit,
+    name: "UI Kit",
+    icon: "uiKit",
+  },
 ];
 

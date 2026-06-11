@@ -44,64 +44,64 @@ const radiusClasses = {
 };
 
 const baseClasses =
-  "z-0 group relative inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased overflow-hidden tap-highlight-transparent transform-gpu active:scale-[0.97] cursor-pointer outline-solid outline-transparent [&>svg]:max-w-[theme(spacing.8)] transition-all duration-200 motion-reduce:transition-none";
+  "z-0 group relative inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased overflow-hidden tap-highlight-transparent transform-gpu active:scale-[0.97] cursor-pointer outline-solid outline-transparent [&>svg]:max-w-[theme(spacing.8)] transition-all duration-200 motion-reduce:transition-none border-2";
 
 const variantColorClasses: Record<string, Record<string, string>> = {
   solid: {
-    default: "bg-default-600 text-white hover:opacity-90",
-    primary: "bg-primary text-white hover:opacity-90",
-    secondary: "bg-secondary text-white hover:opacity-90",
-    success: "bg-success text-white hover:opacity-90",
-    warning: "bg-warning text-white hover:opacity-90",
-    danger: "bg-danger text-white hover:opacity-90",
+    default: "border-transparent bg-default text-default-foreground hover:opacity-90",
+    primary: "border-transparent bg-primary text-primary-foreground hover:opacity-90",
+    secondary: "border-transparent bg-secondary text-secondary-foreground hover:opacity-90",
+    success: "border-transparent bg-success text-success-foreground hover:opacity-90",
+    warning: "border-transparent bg-warning text-warning-foreground hover:opacity-90",
+    danger: "border-transparent bg-danger text-danger-foreground hover:opacity-90",
   },
   bordered: {
-    default: "border-2 border-default-600 bg-transparent text-default-600 hover:bg-default-100",
-    primary: "border-2 border-primary bg-transparent text-primary hover:bg-primary-50",
-    secondary: "border-2 border-secondary bg-transparent text-secondary hover:bg-secondary-50",
-    success: "border-2 border-success bg-transparent text-success hover:bg-success-50",
-    warning: "border-2 border-warning bg-transparent text-warning hover:bg-warning-50",
-    danger: "border-2 border-danger bg-transparent text-danger hover:bg-danger-50",
+    default: "border-default-300 bg-transparent text-default-foreground hover:bg-default-100",
+    primary: "border-primary bg-transparent text-primary hover:bg-primary-50",
+    secondary: "border-secondary bg-transparent text-secondary hover:bg-secondary-50",
+    success: "border-success bg-transparent text-success hover:bg-success-50",
+    warning: "border-warning bg-transparent text-warning hover:bg-warning-50",
+    danger: "border-danger bg-transparent text-danger hover:bg-danger-50",
   },
   light: {
-    default: "bg-transparent text-default-600 hover:bg-default-300",
-    primary: "bg-transparent text-primary hover:bg-primary-100",
-    secondary: "bg-transparent text-secondary hover:bg-secondary-100",
-    success: "bg-transparent text-success hover:bg-success-100",
-    warning: "bg-transparent text-warning hover:bg-warning-100",
-    danger: "bg-transparent text-danger hover:bg-danger-100",
+    default: "border-transparent bg-transparent text-default-foreground hover:bg-default-100",
+    primary: "border-transparent bg-transparent text-primary hover:bg-primary-50",
+    secondary: "border-transparent bg-transparent text-secondary hover:bg-secondary-50",
+    success: "border-transparent bg-transparent text-success hover:bg-success-50",
+    warning: "border-transparent bg-transparent text-warning hover:bg-warning-50",
+    danger: "border-transparent bg-transparent text-danger hover:bg-danger-50",
   },
   flat: {
-    default: "bg-default-200 text-default-600 hover:bg-default-300",
-    primary: "bg-primary-50 text-primary hover:bg-primary-100",
-    secondary: "bg-secondary-50 text-secondary hover:bg-secondary-100",
-    success: "bg-success-50 text-success hover:bg-success-100",
-    warning: "bg-warning-50 text-warning hover:bg-warning-100",
-    danger: "bg-danger-50 text-danger hover:bg-danger-100",
+    default: "border-transparent bg-default-100 text-default-foreground hover:bg-default-200",
+    primary: "border-transparent bg-primary-50 text-primary hover:bg-primary-100",
+    secondary: "border-transparent bg-secondary-50 text-secondary hover:bg-secondary-100",
+    success: "border-transparent bg-success-50 text-success hover:bg-success-100",
+    warning: "border-transparent bg-warning-50 text-warning hover:bg-warning-100",
+    danger: "border-transparent bg-danger-50 text-danger hover:bg-danger-100",
   },
   faded: {
-    default: "border-2 border-default-300 bg-default-200 text-default-600 hover:border-default-600 hover:bg-default-300",
-    primary: "border-2 border-primary-200 bg-primary-50 text-primary hover:border-primary hover:bg-primary-100",
-    secondary: "border-2 border-secondary-200 bg-secondary-50 text-secondary hover:border-secondary hover:bg-secondary-100",
-    success: "border-2 border-success-200 bg-success-50 text-success hover:border-success hover:bg-success-100",
-    warning: "border-2 border-warning-200 bg-warning-50 text-warning hover:border-warning hover:bg-warning-100",
-    danger: "border-2 border-danger-200 bg-danger-50 text-danger hover:border-danger hover:bg-danger-100",
+    default: "border-default-200 bg-default-50 text-default-foreground hover:border-default-400 hover:bg-default-100",
+    primary: "border-default-200 bg-default-50 text-primary hover:border-primary hover:bg-primary-50",
+    secondary: "border-default-200 bg-default-50 text-secondary hover:border-secondary hover:bg-secondary-50",
+    success: "border-default-200 bg-default-50 text-success hover:border-success hover:bg-success-50",
+    warning: "border-default-200 bg-default-50 text-warning hover:border-warning hover:bg-warning-50",
+    danger: "border-default-200 bg-default-50 text-danger hover:border-danger hover:bg-danger-50",
   },
   shadow: {
-    default: "shadow-lg shadow-default-600/40 bg-default-600 text-white hover:opacity-90",
-    primary: "shadow-lg shadow-primary/40 bg-primary text-white hover:opacity-90",
-    secondary: "shadow-lg shadow-secondary/40 bg-secondary text-white hover:opacity-90",
-    success: "shadow-lg shadow-success/40 bg-success text-white hover:opacity-90",
-    warning: "shadow-lg shadow-warning/40 bg-warning text-white hover:opacity-90",
-    danger: "shadow-lg shadow-danger/40 bg-danger text-white hover:opacity-90",
+    default: "border-transparent shadow-lg shadow-[color-mix(in_srgb,var(--color-default)_40%,transparent)] bg-default text-default-foreground hover:opacity-90",
+    primary: "border-transparent shadow-lg shadow-[color-mix(in_srgb,var(--color-primary)_40%,transparent)] bg-primary text-primary-foreground hover:opacity-90",
+    secondary: "border-transparent shadow-lg shadow-[color-mix(in_srgb,var(--color-secondary)_40%,transparent)] bg-secondary text-secondary-foreground hover:opacity-90",
+    success: "border-transparent shadow-lg shadow-[color-mix(in_srgb,var(--color-success)_40%,transparent)] bg-success text-success-foreground hover:opacity-90",
+    warning: "border-transparent shadow-lg shadow-[color-mix(in_srgb,var(--color-warning)_40%,transparent)] bg-warning text-warning-foreground hover:opacity-90",
+    danger: "border-transparent shadow-lg shadow-[color-mix(in_srgb,var(--color-danger)_40%,transparent)] bg-danger text-danger-foreground hover:opacity-90",
   },
   ghost: {
-    default: "border-2 border-default-600 bg-transparent text-default-600 hover:bg-default-600 hover:text-white",
-    primary: "border-2 border-primary bg-transparent text-primary hover:bg-primary hover:text-white",
-    secondary: "border-2 border-secondary bg-transparent text-secondary hover:bg-secondary hover:text-white",
-    success: "border-2 border-success bg-transparent text-success hover:bg-success hover:text-white",
-    warning: "border-2 border-warning bg-transparent text-warning hover:bg-warning hover:text-white",
-    danger: "border-2 border-danger bg-transparent text-danger hover:bg-danger hover:text-white",
+    default: "border-default bg-transparent text-default-foreground hover:bg-default hover:text-default-foreground",
+    primary: "border-primary bg-transparent text-primary hover:bg-primary hover:text-primary-foreground",
+    secondary: "border-secondary bg-transparent text-secondary hover:bg-secondary hover:text-secondary-foreground",
+    success: "border-success bg-transparent text-success hover:bg-success hover:text-success-foreground",
+    warning: "border-warning bg-transparent text-warning hover:bg-warning hover:text-warning-foreground",
+    danger: "border-danger bg-transparent text-danger hover:bg-danger hover:text-danger-foreground",
   },
 };
 
@@ -120,10 +120,37 @@ const Button: React.FC<ButtonProps> = ({
   className,
   disabled,
   type = "button",
+  onClick,
   ...props
 }) => {
   const globalFormLoading = useSelector((state: IApplicationState) => state.GeneralData?.formLoading);
   const isCurrentlyLoading = isLoading || (type === "submit" && globalFormLoading);
+
+  const [ripples, setRipples] = React.useState<{ id: number; x: number; y: number; size: number }[]>([]);
+  const rippleIdRef = React.useRef(0);
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (disabled || isCurrentlyLoading) return;
+
+    const isKeyboardClick = e.clientX === 0 && e.clientY === 0;
+    if (!isKeyboardClick) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top - size / 2;
+
+      const id = rippleIdRef.current++;
+      setRipples((prev) => [...prev, { id, x, y, size }]);
+
+      setTimeout(() => {
+        setRipples((prev) => prev.filter((r) => r.id !== id));
+      }, 600);
+    }
+
+    if (onClick) {
+      onClick(e);
+    }
+  };
 
   const comboClasses = variantColorClasses[variant]?.[color] || variantColorClasses.solid.primary;
 
@@ -131,10 +158,11 @@ const Button: React.FC<ButtonProps> = ({
     <button
       type={type}
       disabled={disabled || isCurrentlyLoading}
+      onClick={handleClick}
       className={clsx(
         baseClasses,
         "inline-flex items-center gap-2 font-medium transition-all duration-200",
-        "outline-none focus:outline-none focus:ring-0",
+        "outline-none focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2",
         "disabled:pointer-events-none disabled:opacity-50",
 
         comboClasses,
@@ -157,17 +185,31 @@ const Button: React.FC<ButtonProps> = ({
             {spinner !== undefined ? spinner : (
               <Spinner size={size === "lg" ? "md" : "sm"} color="current" />
             )}
-            {children}
+            <span className="relative z-10">{children}</span>
             {endContent}
           </>
         )
       ) : (
         <>
           {startContent}
-          {children}
+          <span className="relative z-10">{children}</span>
           {endContent}
         </>
       )}
+
+      {/* Ripple Elements */}
+      {ripples.map((ripple) => (
+        <span
+          key={ripple.id}
+          className="absolute rounded-full bg-current opacity-25 pointer-events-none animate-ripple scale-0"
+          style={{
+            left: ripple.x,
+            top: ripple.y,
+            width: ripple.size,
+            height: ripple.size,
+          }}
+        />
+      ))}
     </button>
   );
 };

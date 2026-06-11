@@ -12,6 +12,7 @@ export const Routing = {
   TermsAndCondition: `${PATH_PREFIX}/settings/terms-and-condition`,
   PrivacyPolicy: `${PATH_PREFIX}/settings/privacy-policy`,
   AppSettings: `${PATH_PREFIX}/settings/app-settings`,
+  UIKit: `${PATH_PREFIX}/ui-kit`,
 
   NotFound: `${PATH_PREFIX}/not-found`,
   ErrorPage: `${PATH_PREFIX}/error`,

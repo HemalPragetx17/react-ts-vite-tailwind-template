@@ -25,6 +25,7 @@ const UserDetails = Loadable(lazy(() => import("../pages/users/UserDetails")));
 const TermsAndCondition = Loadable(lazy(() => import("../pages/settings/termsAndCondition/TermsAndCondition")));
 const PrivacyPolicy = Loadable(lazy(() => import("../pages/settings/privacyPolicy/PrivacyPolicy")));
 const AppSettings = Loadable(lazy(() => import("../pages/settings/appSettings/AppSettings")));
+const UIKit = Loadable(lazy(() => import("../pages/uikit/UIKit")));
 
 const ErrorPage = Loadable(lazy(() => import("../pages/account/ErrorPage")));
 const Error404Page = Loadable(lazy(() => import("../pages/account/Error404Page")));
@@ -73,6 +74,10 @@ const routes = createBrowserRouter([
   {
     path: Routing.AppSettings,
     element: <MainLayout>{privateRoute(AppSettings)}</MainLayout>,
+  },
+  {
+    path: Routing.UIKit,
+    element: <MainLayout>{privateRoute(UIKit)}</MainLayout>,
   },
   {
     path: Routing.ErrorPage,

@@ -238,6 +238,10 @@ export default {
         'rotate-bg': {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(359deg)' },
+        },
+        ripple: {
+          '0%': { transform: 'scale(0)', opacity: '0.35' },
+          '100%': { transform: 'scale(2.5)', opacity: '0' },
         }
       },
       animation: {
@@ -248,6 +252,7 @@ export default {
         'menu-icon-scaled': 'menu-icon-scaled 0.8s ease forwards',
         'menu-icon-scaled-2': 'menu-icon-scaled-2 0.8s ease forwards',
         'rotate-bg': 'rotate-bg 20s linear infinite',
+        ripple: 'ripple 600ms linear forwards',
       }
     },
   },

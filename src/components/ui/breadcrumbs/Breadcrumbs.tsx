@@ -221,44 +221,84 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         full: "rounded-full",
     }[radius];
 
+    type BreadcrumbColor = NonNullable<BreadcrumbsProps["color"]>;
+
+    const colorStyles: Record<BreadcrumbColor, {
+        link: string;
+        active: string;
+        separator: string;
+        bordered: string;
+        solid: string;
+    }> = {
+        default: {
+            link: "text-default-600 dark:text-default-700",
+            active: "text-foreground dark:text-background font-bold",
+            separator: "text-default-400 dark:text-default-700",
+            bordered: "border border-default-200 dark:border-default-400 bg-transparent",
+            solid: "bg-default-100 dark:bg-content1",
+        },
+        primary: {
+            link: "text-primary dark:text-primary-300",
+            active: "text-primary dark:text-primary font-bold",
+            separator: "text-primary-300 dark:text-primary-300",
+            bordered: "border border-primary-200 dark:border-primary-300 bg-transparent",
+            solid: "bg-primary-50 dark:bg-content1",
+        },
+        secondary: {
+            link: "text-secondary dark:text-secondary-300",
+            active: "text-secondary dark:text-secondary font-bold",
+            separator: "text-secondary-300 dark:text-secondary-300",
+            bordered: "border border-secondary-200 dark:border-secondary-300 bg-transparent",
+            solid: "bg-secondary-50 dark:bg-content1",
+        },
+        success: {
+            link: "text-success dark:text-success-300",
+            active: "text-success dark:text-success font-bold",
+            separator: "text-success-300 dark:text-success-300",
+            bordered: "border border-success-200 dark:border-success-300 bg-transparent",
+            solid: "bg-success-50 dark:bg-content1",
+        },
+        warning: {
+            link: "text-warning dark:text-warning-300",
+            active: "text-warning dark:text-warning font-bold",
+            separator: "text-warning-300 dark:text-warning-300",
+            bordered: "border border-warning-200 dark:border-warning-300 bg-transparent",
+            solid: "bg-warning-50 dark:bg-content1",
+        },
+        danger: {
+            link: "text-danger dark:text-danger-300",
+            active: "text-danger dark:text-danger font-bold",
+            separator: "text-danger-300 dark:text-danger-300",
+            bordered: "border border-danger-200 dark:border-danger-300 bg-transparent",
+            solid: "bg-danger-50 dark:bg-content1",
+        },
+    };
+
+    const currentColor = colorStyles[color];
+    const linkColorClasses = currentColor.link;
+    const separatorColorClasses = currentColor.separator;
+    const activeColorClasses = currentColor.active;
+
     const variantClasses = {
         light: "bg-transparent p-0",
-        solid: "bg-neutral-100/90 dark:bg-neutral-800/80 backdrop-blur-md shadow-[0_1px_2px_rgba(0,0,0,0.02)] inline-flex items-center",
-        bordered: "border-2 border-neutral-200 dark:border-neutral-800 bg-transparent inline-flex items-center",
+        solid: `${currentColor.solid} inline-flex items-center max-w-fit`,
+        bordered: `${currentColor.bordered} inline-flex items-center max-w-fit`,
     }[variant];
-
-    // Colors mapping for links (non-last items)
-    const linkColorClasses = {
-        default: "text-default-700 dark:text-default-700",
-        primary: "text-primary-700 dark:text-primary-700",
-        secondary: "text-secondary-700 dark:text-secondary-700",
-        success: "text-success-700 dark:text-success-700",
-        warning: "text-warning-700 dark:text-warning-700",
-        danger: "text-danger-700 dark:text-danger-700",
-    }[color];
-
-    // Colors mapping for the active page (last item)
-    const activeColorClasses = {
-        default: "text-default-600 dark:text-default-800 font-bold",
-        primary: "text-primary dark:text-primary-700 font-bold",
-        secondary: "text-secondary dark:text-secondary-700 font-bold",
-        success: "text-success dark:text-success-700 font-bold",
-        warning: "text-warning dark:text-warning-700 font-bold",
-        danger: "text-danger dark:text-danger-700 font-bold",
-    }[color];
 
     const underlineClasses = {
         none: "no-underline",
-        hover: "hover:underline",
-        always: "underline",
-        active: "active:underline",
-        focus: "focus:underline",
+        hover: "hover:underline underline-offset-4",
+        always: "underline underline-offset-4",
+        active: "active:underline underline-offset-4",
+        focus: "focus:underline underline-offset-4",
     }[underline];
+
+    const linkInteractionClasses = "transition-opacity hover:opacity-80 active:opacity-disabled cursor-pointer";
 
     return (
         <nav
             aria-label="Breadcrumbs"
-            className={`mb-5 select-none animate-fade-in transition-all duration-200 ${variantClasses} ${variant !== "light" ? radiusClasses : ""} ${sizeClasses.container}`}
+            className={`mb-5 select-none animate-fade-in transition-all duration-200 ${variantClasses} ${variant !== "light" ? radiusClasses : ""} ${sizeClasses.container} ${isDisabled ? "opacity-disabled pointer-events-none" : ""}`}
         >
             <ol className={`flex items-center ${sizeClasses.list}`}>
                 {startContent && (
@@ -279,10 +319,10 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                             {showSeparator && (
                                 <span className={`shrink-0 flex items-center justify-center ${sizeClasses.separatorMargin}`}>
                                     {separator !== undefined ? (
-                                        <span className="text-neutral-450 dark:text-neutral-600">{separator}</span>
+                                        <span className={separatorColorClasses}>{separator}</span>
                                     ) : (
                                         <FaChevronRight
-                                            className={`${sizeClasses.separator} text-neutral-450 dark:text-neutral-600`}
+                                            className={`${sizeClasses.separator} ${separatorColorClasses}`}
                                             aria-hidden
                                         />
                                     )}
@@ -290,7 +330,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                             )}
 
                             {isLast ? (
-                                <span className={`${activeColorClasses} flex items-center ${sizeClasses.gap}`}>
+                                <span className={`${activeColorClasses} flex items-center cursor-default ${sizeClasses.gap}`}>
                                     {item.startContent}
                                     {item.label === "Home" && !item.startContent && (
                                         <FaHome className={sizeClasses.icon} aria-hidden />
@@ -301,7 +341,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                             ) : canClick ? (
                                 <Link
                                     to={item.path}
-                                    className={`flex items-center transition-colors duration-250 ${linkColorClasses} ${underlineClasses} ${sizeClasses.gap}`}
+                                    className={`flex items-center ${linkColorClasses} ${linkInteractionClasses} ${underlineClasses} ${sizeClasses.gap}`}
                                 >
                                     {item.startContent}
                                     {item.label === "Home" && !item.startContent && (
@@ -311,7 +351,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                                     {item.endContent}
                                 </Link>
                             ) : (
-                                <span className={`flex items-center ${isItemDisabled ? "text-neutral-400/50 dark:text-neutral-500/50 cursor-not-allowed select-none" : "text-neutral-400 dark:text-neutral-500"} ${sizeClasses.gap}`}>
+                                <span className={`flex items-center ${isItemDisabled ? `${linkColorClasses} opacity-50 cursor-not-allowed select-none` : linkColorClasses} ${sizeClasses.gap}`}>
                                     {item.startContent}
                                     {item.label === "Home" && !item.startContent && (
                                         <FaHome className={sizeClasses.icon} aria-hidden />
@@ -328,10 +368,10 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                         <li className="flex items-center shrink-0">
                             <span className={`shrink-0 flex items-center justify-center ${sizeClasses.separatorMargin}`}>
                                 {separator !== undefined ? (
-                                    <span className="text-neutral-450 dark:text-neutral-600">{separator}</span>
+                                    <span className={separatorColorClasses}>{separator}</span>
                                 ) : (
                                     <FaChevronRight
-                                        className={`${sizeClasses.separator} text-neutral-450 dark:text-neutral-600`}
+                                        className={`${sizeClasses.separator} ${separatorColorClasses}`}
                                         aria-hidden
                                     />
                                 )}

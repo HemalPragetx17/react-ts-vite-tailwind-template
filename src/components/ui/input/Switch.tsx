@@ -202,6 +202,7 @@ const Switch = forwardRef<HTMLDivElement, SwitchProps>((props, ref) => {
           type="button"
           role="switch"
           aria-checked={currentValue}
+          data-selected={currentValue ? "true" : "false"}
           disabled={disabled}
           onClick={handleToggle}
           onBlur={field?.onBlur || onBlur}

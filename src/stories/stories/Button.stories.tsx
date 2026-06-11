@@ -98,14 +98,18 @@ export const Radiuses: Story = {
 
 export const Colors: Story = {
   render: (args) => (
-    <div className="flex flex-wrap gap-4 items-center">
-      <Button {...args} color="default">Default</Button>
-      <Button {...args} color="primary">Primary</Button>
-      <Button {...args} color="secondary">Secondary</Button>
-      <Button {...args} color="success">Success</Button>
-      <Button {...args} color="warning">Warning</Button>
-      <Button {...args} color="danger">Danger</Button>
-    </div>
+    <>
+    {["solid", "bordered", "light", "flat", "faded", "shadow", "ghost"].map((variant) => (
+      <div key={variant} className="flex flex-wrap gap-4 items-center mb-5">
+        <Button {...args} variant={variant} color="default">Default</Button>
+        <Button {...args} variant={variant} color="primary">Primary</Button>
+        <Button {...args} variant={variant} color="secondary">Secondary</Button>
+        <Button {...args} variant={variant} color="success">Success</Button>
+        <Button {...args} variant={variant} color="warning">Warning</Button>
+        <Button {...args} variant={variant} color="danger">Danger</Button>
+      </div>
+    ))}
+    </>
   ),
 };
 
