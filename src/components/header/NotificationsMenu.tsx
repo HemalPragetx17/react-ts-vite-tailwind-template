@@ -67,7 +67,7 @@ const NotificationsMenu: React.FC = () => {
         className="text-default-400 hover:text-default-600"
         aria-label="View notifications"
       >
-        <FaBell className="h-6 w-6" aria-hidden />
+        <FaBell className="h-6 w-6 text-default-800" aria-hidden />
       </Button>
     </Badge>
   )

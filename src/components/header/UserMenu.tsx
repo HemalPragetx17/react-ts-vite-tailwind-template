@@ -84,7 +84,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ onLogout }) => {
             </div>
           </div>
           <div className="mt-3 flex items-center gap-2">
-            <span className="rounded-full bg-default-100 dark:bg-default-800 px-2.5 py-1 text-xs font-medium text-default-600 dark:text-default-300">
+            <span className="rounded-full bg-default-300 dark:bg-default-800 px-2.5 py-1 text-xs font-medium text-default-800 dark:text-default-200">
               {user.role || 'Member'}
             </span>
             {copied && (
@@ -101,7 +101,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ onLogout }) => {
             className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-default-700 dark:text-default-300 transition hover:bg-default-50 dark:hover:bg-default-900/50 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={!user.email}
           >
-            <FaCopy className="h-4 w-4 text-default-400 shrink-0" aria-hidden />
+            <FaCopy className="h-4 w-4 text-default-800 shrink-0" aria-hidden />
             Copy email
           </button>
 
@@ -113,7 +113,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ onLogout }) => {
             }}
             className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-default-700 dark:text-default-300 transition hover:bg-default-50 dark:hover:bg-default-900/50"
           >
-            <FiLock className="h-4 w-4 text-default-400 shrink-0" aria-hidden />
+            <FiLock className="h-4 w-4 text-default-800 shrink-0" aria-hidden />
             Change password
           </button>
 
