@@ -332,7 +332,7 @@ const FileInput = ({
   variant = "bordered",
   size = "md",
   radius = "md",
-  color = "default",
+  color = "primary",
   labelPlacement = "outside",
   containerClassName = "",
   labelClassName = "",
@@ -690,7 +690,7 @@ const FileInput = ({
         htmlFor={fieldName}
         className={`block font-medium select-none transition-colors duration-200 ${isOutsideLeft ? "shrink-0 mb-0" : "mb-1.5"
           } ${sz.labelSize} ${labelClassName} ${
-            color !== "default"
+            isFocused && color !== "default"
               ? (focusTextColors[color] || "text-primary")
               : isFocused
                 ? "text-neutral-800 dark:text-neutral-200"
@@ -967,7 +967,7 @@ const FileInput = ({
                 className={`
                   absolute left-3 top-1/2 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
                   ${sz.textSize} ${labelClassName} ${
-                    color !== "default"
+                    isFocused && color !== "default"
                       ? (focusTextColors[color] || "text-primary")
                       : (shouldFloat || (isOutlined && (isFocused || hasValue)))
                         ? isFocused
@@ -1014,9 +1014,7 @@ const FileInput = ({
                   </span>
                 ) : (
                   <span
-                    className={`truncate select-none ${sz.textSize} ${
-                      color === "default" ? "text-neutral-800 dark:text-neutral-100" : (focusTextColors[color] || "text-primary")
-                    }`}
+                    className={`truncate select-none ${sz.textSize} text-neutral-800 dark:text-neutral-100`}
                   >
                     {singleFile instanceof File
                       ? singleFile.name

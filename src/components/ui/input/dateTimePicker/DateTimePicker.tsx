@@ -1271,7 +1271,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
   variant = "bordered",
   size = "md",
   radius = "md",
-  color = "default",
+  color = "primary",
   labelPlacement = "outside",
   timeMode = "normal",
   containerClassName = "",
@@ -1522,7 +1522,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
           } ${sz.labelSize} ${labelClassName} ${
             hasError
               ? "text-danger"
-              : color !== "default"
+              : isOpen && color !== "default"
                 ? (focusTextColors[color] || "text-primary")
                 : isOpen
                   ? "text-neutral-800 dark:text-neutral-200"
@@ -1555,7 +1555,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
           } ${labelClassName} ${
             hasError
               ? "text-danger"
-              : color !== "default"
+              : isOpen && color !== "default"
                 ? (focusTextColors[color] || "text-primary")
                 : shouldFloat
                   ? isOpen
@@ -1686,7 +1686,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
 
             <div className={`flex-1 flex items-center overflow-hidden ${labelPlacement === "inside" && label && shouldFloat ? (size === "sm" ? "mt-3" : size === "lg" ? "mt-5" : "mt-4") : ""}`}>
               <span className={`${sz.textSize} truncate transition-colors duration-200 ${hasValue
-                ? color === "default" ? "text-neutral-800 dark:text-neutral-100" : (focusTextColors[color] || "text-primary")
+                ? "text-neutral-800 dark:text-neutral-100"
                 : "text-neutral-400 dark:text-neutral-500"
                 }`}>
                 {hasValue ? displayValue : ((!label || labelPlacement !== "inside" || shouldFloat) ? placeholder || "\u200b" : "\u200b")}

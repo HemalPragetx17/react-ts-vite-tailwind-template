@@ -106,7 +106,7 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
         size = "md",
         variant = "bordered",
         radius = "md",
-        color = "default",
+        color = "primary",
         labelPlacement = "outside",
         dropdownPosition,
         value,
@@ -206,7 +206,6 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
     } as any;
 
     if (color !== "default") {
-        if (textColorMap[color]) inlineStyles["--phone-text-color" as any] = textColorMap[color];
         if (bgMap[color]) inlineStyles["--phone-bg-light" as any] = bgMap[color];
         if (bgHoverMap[color]) inlineStyles["--phone-bg-light-hover" as any] = bgHoverMap[color];
         if (darkBgMap[color]) inlineStyles["--phone-bg-dark" as any] = darkBgMap[color];
@@ -476,7 +475,7 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
     const currentRadiusClass = resolvedVariant === "underlined" ? "!rounded-none" : (radiusConfigs[radius] || radiusConfigs.md);
 
     // Merge standard classes with the dynamic border-radius utility class
-    const finalInputClass = `${singleBorder ? "!rounded-none" : currentRadiusClass} ${focusTextColors[color] || focusTextColors.default} ${inputClassName}`.trim();
+    const finalInputClass = `${singleBorder ? "!rounded-none" : currentRadiusClass} ${focusTextColors.default} ${inputClassName}`.trim();
     const finalButtonClass = `${singleBorder ? "!rounded-none" : currentRadiusClass} ${buttonClassName}`.trim();
 
     const isOutlined = labelPlacement === "outlined";
@@ -507,7 +506,7 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
                 htmlFor={fieldName}
                 className={`block font-medium select-none transition-colors duration-200 ${isOutsideLeft ? "mb-0 shrink-0" : "mb-1.5"
                     } ${currentSize.labelSize} ${labelClassName} ${
-                    color !== "default"
+                    isFocused && color !== "default"
                         ? "text-[var(--color-primary,#2196f3)]"
                         : isFocused
                             ? "text-neutral-800 dark:text-neutral-200"
@@ -594,7 +593,7 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
                             className={`
                                 absolute left-3 font-medium ${currentSize.top} z-20 pointer-events-none origin-left transition-colors duration-200
                                 ${currentSize.textSize} ${labelClassName} ${
-                                    color !== "default"
+                                    isFocused && color !== "default"
                                         ? "text-[var(--color-primary,#2196f3)]"
                                         : (shouldFloat || (isOutlined && (isFocused || hasValue)))
                                             ? isFocused

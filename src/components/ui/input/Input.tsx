@@ -53,7 +53,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     size = "md",
     variant = "bordered",
     radius = "md",
-    color = "default",
+    color = "primary",
     labelPlacement = "outside",
     type = "text",
     field,
@@ -311,7 +311,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         htmlFor={field?.name || props.id || props.name}
         className={`block font-medium select-none transition-colors duration-200 ${labelPlacement === "outside-left" ? "mb-0 shrink-0" : "mb-1.5"
           } ${currentSize.labelSize} ${labelClassName} ${
-            color !== "default"
+            isFocused && color !== "default"
               ? (focusTextColors[color] || "text-primary")
               : isFocused
                 ? "text-neutral-800 dark:text-neutral-200"
@@ -402,7 +402,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
                 absolute left-3 top-1/2 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
                 ${currentSize.textSize}
                  ${labelClassName} ${
-                  color !== "default"
+                  isFocused && color !== "default"
                     ? (focusTextColors[color] || "text-primary")
                     : (shouldFloat || (isOutlined && (isFocused || hasValue)))
                       ? isFocused
@@ -444,7 +444,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
               disabled={disabled}
               className={`
                 w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0 p-0
-                ${color === "default" ? "text-neutral-800 dark:text-neutral-100" : (focusTextColors[color] || "text-primary")} placeholder-neutral-400
+                 text-neutral-800 dark:text-neutral-100 placeholder-neutral-400
                 ${currentSize.textSize}
                 ${labelPlacement === "inside" && isFloating && shouldFloat ? (size === "sm" ? "mt-3" : size === "lg" ? "mt-5" : "mt-4") : ""}
                 ${inputClassName}

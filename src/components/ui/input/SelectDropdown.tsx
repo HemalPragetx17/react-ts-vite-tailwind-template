@@ -284,7 +284,10 @@ const StaticCheckbox = ({ checked, color }: { checked: boolean; color: CheckboxC
     <span
       className={`
         inline-flex items-center justify-center shrink-0 w-5 h-5 rounded-md border-2 transition-colors duration-150
-        ${checked ? `${bgMap[color]} border-transparent` : `bg-transparent}`}
+        ${checked 
+          ? `${bgMap[color]} border-transparent` 
+          : "border-neutral-300 dark:border-neutral-600 bg-transparent"
+        }
       `}
     >
       {/* SVG always in DOM — opacity toggles so box height never shifts */}
@@ -348,7 +351,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
   variant = "bordered",
   size = "md",
   radius = "md",
-  color = "default",
+  color = "primary",
   labelPlacement = "outside",
 
   containerClassName = "",
@@ -507,7 +510,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
         htmlFor={name}
         className={`block font-medium select-none transition-colors duration-200 ${isOutsideLeft ? "shrink-0 mb-0" : "mb-1.5"
           } ${sz.labelSize} ${labelClassName} ${
-            color !== "default"
+            isFocused && color !== "default"
               ? (color === "primary" ? "text-primary" :
                  color === "secondary" ? "text-secondary" :
                  color === "success" ? "text-success" :
@@ -630,7 +633,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
                 top-1/2
                 ${sz.textSize} ${labelClassName} transition-colors duration-200
                 ${
-                  color !== "default"
+                  isFocused && color !== "default"
                     ? (color === "primary" ? "text-primary" :
                        color === "secondary" ? "text-secondary" :
                        color === "success" ? "text-success" :
@@ -714,12 +717,12 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
                   `${sz.textSize} text-neutral-400 dark:text-neutral-500 select-none truncate`,
 
                 singleValue: () =>
-                  `${sz.textSize} ${focusTextColors[color] || focusTextColors.default}`,
+                  `${sz.textSize} ${focusTextColors.default}`,
 
                 valueContainer: () => `flex flex-nowrap items-center gap-1 flex-1 min-w-0 overflow-hidden ${isInside && isFloating && shouldFloat ? sz.ptInside : ""}`,
 
                 input: () =>
-                  `${sz.textSize} ${focusTextColors[color] || focusTextColors.default} outline-none`,
+                  `${sz.textSize} ${focusTextColors.default} outline-none`,
 
                 indicatorsContainer: () => "flex items-center gap-1 shrink-0 pr-1",
 

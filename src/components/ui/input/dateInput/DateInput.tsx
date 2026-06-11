@@ -383,7 +383,7 @@ const DateInput: React.FC<DateInputProps> = ({
   variant = "bordered",
   size = "md",
   radius = "md",
-  color = "default",
+  color = "primary",
   labelPlacement = "outside",
 
   containerClassName = "",
@@ -813,7 +813,7 @@ const DateInput: React.FC<DateInputProps> = ({
         htmlFor={fieldName}
         className={`block font-medium select-none transition-colors duration-200 ${isOutsideLeft ? "shrink-0 mb-0" : "mb-1.5"
           } ${sz.labelSize} ${labelClassName} ${
-            color !== "default"
+            isOpen && color !== "default"
               ? (focusTextColors[color] || "text-primary")
               : isOpen
                 ? "text-neutral-800 dark:text-neutral-200"
@@ -1148,7 +1148,7 @@ const DateInput: React.FC<DateInputProps> = ({
               className={`
                 absolute left-3 top-1/2 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
                 ${sz.textSize} ${labelClassName} ${
-                  color !== "default"
+                  isOpen && color !== "default"
                     ? (focusTextColors[color] || "text-primary")
                     : (shouldFloat || (isOutlined && (isOpen || hasValue)))
                       ? isOpen
@@ -1194,7 +1194,7 @@ const DateInput: React.FC<DateInputProps> = ({
                 </span>
               ) : (
                 <span
-                  className={`${color === "default" ? "text-default-800" : (focusTextColors[color] || "text-primary")} truncate select-none ${sz.textSize}`}
+                  className={`text-neutral-800 dark:text-neutral-200 truncate select-none ${sz.textSize}`}
                 >
                   {displayString}
                 </span>

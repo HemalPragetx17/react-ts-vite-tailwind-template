@@ -55,7 +55,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       size = "md",
       variant = "bordered",
       radius = "md",
-      color = "default",
+      color = "primary",
       labelPlacement = "outside",
       isClearable = false,
       minRows = 3,
@@ -303,7 +303,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           htmlFor={inputId}
           className={`block font-medium select-none transition-colors duration-200 ${labelPlacement === "outside-left" ? "shrink-0 mb-0" : "mb-1.5"
             } ${cs.labelSize} ${labelClassName} ${
-              color !== "default"
+              isFocused && color !== "default"
                 ? (focusTextColors[color] || "text-primary")
                 : isFocused
                   ? "text-neutral-800 dark:text-neutral-200"
@@ -391,7 +391,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                 className={`
                   absolute left-3 top-0 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
                   ${cs.textSize} ${labelClassName} ${
-                    color !== "default"
+                    isFocused && color !== "default"
                       ? (focusTextColors[color] || "text-primary")
                       : (shouldFloat || (isOutlined && (isFocused || hasValue)))
                         ? isFocused
@@ -447,7 +447,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                 }
                 className={`
                   w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0
-                  ${color === "default" ? "text-neutral-800 dark:text-neutral-100" : (focusTextColors[color] || "text-primary")} placeholder-neutral-400
+                  text-neutral-800 dark:text-neutral-100 placeholder-neutral-400
                   ${disableAutosize ? "resize-y" : "resize-none"} transition-all duration-200
                   ${cs.textSize} p-0
                   ${labelPlacement === "inside" ? (size === "sm" ? "mt-4" : size === "lg" ? "mt-6" : "mt-5") : "mt-2.5"}
