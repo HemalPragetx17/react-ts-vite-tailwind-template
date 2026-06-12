@@ -75,7 +75,7 @@ const colorBorderMap: Record<PopoverColor, string> = {
     success: "border-success",
     warning: "border-warning",
     danger: "border-danger",
-    foreground: "border-default-900 dark:border-white",
+    foreground: "border-default-foreground dark:border-default-foreground",
 };
 
 const colorBgMap: Record<PopoverColor, string> = {
@@ -84,8 +84,8 @@ const colorBgMap: Record<PopoverColor, string> = {
     secondary: "bg-secondary text-white",
     success: "bg-success text-black",
     warning: "bg-warning text-black",
-    danger: "bg-danger text-white",
-    foreground: "bg-default-900 dark:bg-white text-white dark:text-black",
+    danger: "bg-danger text-black",
+    foreground: "bg-default-foreground dark:bg-default-foreground text-white dark:text-black",
 };
 
 const colorArrowMap: Record<PopoverColor, string> = {
@@ -95,7 +95,7 @@ const colorArrowMap: Record<PopoverColor, string> = {
     success: "border-success",
     warning: "border-warning",
     danger: "border-danger",
-    foreground: "border-default-900 dark:border-white",
+    foreground: "border-default-foreground dark:border-default-foreground",
 };
 
 const colorArrowBgMap: Record<PopoverColor, string> = {
@@ -105,7 +105,7 @@ const colorArrowBgMap: Record<PopoverColor, string> = {
     success: "bg-success",
     warning: "bg-warning",
     danger: "bg-danger",
-    foreground: "bg-default-900 dark:bg-white",
+    foreground: "bg-default-foreground dark:bg-default-foreground",
 };
 
 const sizeClasses: Record<PopoverSize, string> = {
