@@ -63,7 +63,7 @@ const Header = () => {
         <button className="border-none bg-none m-0 cursor-pointer w-[32px] h-[32px] p-1 font-inherit">
           <span className={`${spanBaseClass} animate-menu-icon-top-2 [.hide-sidebar_&]:animate-menu-icon-top`}></span>
           <span className={`${spanBaseClass} mt-1 animate-menu-icon-scaled-2 [.hide-sidebar_&]:animate-menu-icon-scaled`}></span>
-          <span className={`${spanBaseClass} mt-1 animate-menu-icon-bottom-2 [.hide-sidebar_&]:animate-menu-icon-bottom [.hide-sidebar_&]:bg-black [.hide-sidebar_&]:mt-[7.5px]`}></span>
+          <span className={`${spanBaseClass} mt-1 animate-menu-icon-bottom-2 [.hide-sidebar_&]:animate-menu-icon-bottom [.hide-sidebar_&]:bg-black [.hide-sidebar_&]:mt-[8px]`}></span>
         </button>
       </div>
       <div className="flex items-center gap-3">
