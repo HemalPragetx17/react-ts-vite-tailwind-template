@@ -20,8 +20,12 @@ import {
   Tabs,
   Popover,
   Radio,
+  Slider,
+  Rating,
+  ToggleButton,
+  ToggleButtonGroup,
 } from "../../components/ui";
-import { FaHeart, FaCamera, FaUser } from "react-icons/fa6";
+import { FaHeart, FaCamera, FaUser, FaVolumeOff, FaVolumeHigh, FaFaceSmile, FaAlignLeft, FaAlignCenter, FaAlignRight, FaAlignJustify, FaBold, FaItalic, FaUnderline } from "react-icons/fa6";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type ColorOption = "default" | "primary" | "secondary" | "success" | "warning" | "danger";
@@ -70,6 +74,9 @@ const Label = ({ children }: { children: React.ReactNode }) => (
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 const UIKit: React.FC = () => {
+  const [alignment, setAlignment] = React.useState<string | null>("left");
+  const [formats, setFormats] = React.useState<string[]>(["bold", "italic"]);
+
   const [checkboxValues, setCheckboxValues] = React.useState<Record<string, boolean>>(
     () => Object.fromEntries(COLORS.map((c) => [c, true]))
   );
@@ -419,11 +426,11 @@ const UIKit: React.FC = () => {
           {COLORS.map((color) => (
             <div key={color} className="space-y-4 min-w-[200px]">
               <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
-              <SelectDropdown variant="flat" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-flat`, value: dropdownVal[`${color}-flat`], onChange: () => {}, onBlur: () => {} } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-flat`]: val })), setFieldTouched: () => {}, touched: {}, errors: {} } as any} size="sm" />
-              <SelectDropdown variant="bordered" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-bordered`, value: dropdownVal[`${color}-bordered`], onChange: () => {}, onBlur: () => {} } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-bordered`]: val })), setFieldTouched: () => {}, touched: {}, errors: {} } as any} size="sm" />
-              <SelectDropdown variant="faded" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-faded`, value: dropdownVal[`${color}-faded`], onChange: () => {}, onBlur: () => {} } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-faded`]: val })), setFieldTouched: () => {}, touched: {}, errors: {} } as any} size="sm" />
-              <SelectDropdown variant="underlined" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-underlined`, value: dropdownVal[`${color}-underlined`], onChange: () => {}, onBlur: () => {} } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-underlined`]: val })), setFieldTouched: () => {}, touched: {}, errors: {} } as any} size="sm" />
-              <SelectDropdown variant="flat" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-disabled`, value: dropdownVal[`${color}-disabled`], onChange: () => {}, onBlur: () => {} } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-disabled`]: val })), setFieldTouched: () => {}, touched: {}, errors: {} } as any} size="sm" isDisabled />
+              <SelectDropdown variant="flat" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-flat`, value: dropdownVal[`${color}-flat`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-flat`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
+              <SelectDropdown variant="bordered" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-bordered`, value: dropdownVal[`${color}-bordered`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-bordered`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
+              <SelectDropdown variant="faded" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-faded`, value: dropdownVal[`${color}-faded`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-faded`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
+              <SelectDropdown variant="underlined" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-underlined`, value: dropdownVal[`${color}-underlined`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-underlined`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
+              <SelectDropdown variant="flat" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-disabled`, value: dropdownVal[`${color}-disabled`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-disabled`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" isDisabled />
             </div>
           ))}
         </div>
@@ -646,6 +653,382 @@ const UIKit: React.FC = () => {
               </Tabs>
             </div>
           ))}
+        </div>
+      </Section>
+
+      {/* ── SLIDER ──────────────────────────────────────────────── */}
+      <Section title="Slider">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-default-200">
+          {/* Left Column: Basic, Disabled, Sizes, Radius */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-3">Usage</h3>
+              <Slider label="Temperature" defaultValue={55} getValue={(v) => `${(Number(v) / 100).toFixed(2)}`} />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-3">Disabled</h3>
+              <Slider label="Disabled Temperature" defaultValue={60} isDisabled getValue={(v) => `${(Number(v) / 100).toFixed(2)}`} />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-3">Sizes</h3>
+              <div className="space-y-4">
+                <Slider size="sm" defaultValue={30} label="Small" />
+                <Slider size="md" defaultValue={50} label="Medium" />
+                <Slider size="lg" defaultValue={70} label="Large" />
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-3">Radius</h3>
+              <div className="space-y-4">
+                <Slider radius="none" defaultValue={20} label="Radius None" />
+                <Slider radius="sm" defaultValue={40} label="Radius Small" />
+                <Slider radius="md" defaultValue={60} label="Radius Medium" />
+                <Slider radius="lg" defaultValue={80} label="Radius Large" />
+                <Slider radius="full" defaultValue={100} label="Radius Full" />
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-3">Fill Offset</h3>
+              <Slider
+                label="Exposure"
+                minValue={-3}
+                maxValue={3}
+                step={0.5}
+                defaultValue={1.5}
+                fillOffset={0}
+                color="warning"
+                getValue={(v) => `${Number(v) > 0 ? "+" : ""}${v}`}
+              />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-3">With Tooltip</h3>
+              <Slider
+                label="Select a value"
+                defaultValue={20}
+                showTooltip
+                marks={[
+                  { value: 20, label: "20%" },
+                  { value: 50, label: "50%" },
+                  { value: 80, label: "80%" },
+                ]}
+              />
+            </div>
+          </div>
+
+          {/* Right Column: Colors, Steps, Marks, Range, Vertical */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-3">Colors</h3>
+              <div className="space-y-4">
+                <Slider color="default" defaultValue={20} label="Default" />
+                <Slider color="primary" defaultValue={40} label="Primary" />
+                <Slider color="secondary" defaultValue={60} label="Secondary" />
+                <Slider color="success" defaultValue={80} label="Success" />
+                <Slider color="warning" defaultValue={50} label="Warning" />
+                <Slider color="danger" defaultValue={30} label="Danger" />
+                <Slider color="foreground" defaultValue={30} label="Foreground" />
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-3">With Visible Steps</h3>
+              <div className="space-y-4">
+                <Slider step={10} showSteps label="Step 10" defaultValue={30} size="sm" />
+                <Slider step={10} showSteps label="Step 10" defaultValue={30} size="md" />
+                <Slider step={10} showSteps label="Step 10" defaultValue={30} size="lg" />
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-3">With Marks (Clickable)</h3>
+              <Slider
+                label="Select a value"
+                defaultValue={20}
+                marks={[
+                  { value: 20, label: "20%" },
+                  { value: 50, label: "50%" },
+                  { value: 80, label: "80%" },
+                ]}
+              />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-3">Range Slider</h3>
+              <Slider
+                label="Price Range"
+                defaultValue={[100, 500]}
+                minValue={0}
+                maxValue={1000}
+                step={50}
+                formatOptions={{ style: "currency", currency: "USD" }}
+              />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-3">Start & End Content</h3>
+              <Slider
+                color="success"
+                defaultValue={40}
+                startContent={<FaVolumeOff className="text-neutral-400 w-4.5 h-4.5" />}
+                endContent={<FaVolumeHigh className="text-neutral-400 w-4.5 h-4.5" />}
+              />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-3">Vertical Slider</h3>
+              <div className="flex gap-8 h-48 justify-center pt-2">
+                <Slider orientation="vertical" color="primary" defaultValue={30} size="sm" />
+                <Slider orientation="vertical" color="secondary" defaultValue={50} size="md" />
+                <Slider orientation="vertical" color="success" defaultValue={70} size="lg" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      {/* ── RATING ──────────────────────────────────────────────── */}
+      <Section title="Rating">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-default-200">
+          {/* Left Column: Basic, Colors, Custom Icon, Disabled */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Usage</h3>
+              <div className="space-y-2">
+                <p>Default Rating:</p>
+                <Rating defaultValue={3} />
+                <p className="mt-2">Rating with Half:</p>
+                <Rating defaultValue={3} allowHalf />
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Colors</h3>
+              <div className="space-y-3">
+                <div>
+                  <span className="text-xs text-neutral-400 block mb-1">Default</span>
+                  <Rating color="default" defaultValue={4} />
+                </div>
+                <div>
+                  <span className="text-xs text-neutral-400 block mb-1">Primary</span>
+                  <Rating color="primary" defaultValue={4} />
+                </div>
+                <div>
+                  <span className="text-xs text-neutral-400 block mb-1">Secondary</span>
+                  <Rating color="secondary" defaultValue={4} />
+                </div>
+                <div>
+                  <span className="text-xs text-neutral-400 block mb-1">Success</span>
+                  <Rating color="success" defaultValue={4} />
+                </div>
+                <div>
+                  <span className="text-xs text-neutral-400 block mb-1">Warning</span>
+                  <Rating color="warning" defaultValue={4} />
+                </div>
+                <div>
+                  <span className="text-xs text-neutral-400 block mb-1">Danger</span>
+                  <Rating color="danger" defaultValue={4} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Product Review with Decimal ratings */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Custom Icon Heart</h3>
+              <Rating icon={<FaHeart />} defaultValue={3} color="warning" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Custom Smiley</h3>
+              <Rating icon={<FaFaceSmile />} defaultValue={3} color="success" />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Disabled</h3>
+              <Rating defaultValue={3} isDisabled />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-4">Product Review (Decimal / Read-only)</h3>
+              <div className="space-y-4 max-w-xs">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Quality</span>
+                  <div className="flex items-center gap-2">
+                    <Rating value={1.5} allowHalf isReadOnly />
+                    <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">1.5</span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Value for money</span>
+                  <div className="flex items-center gap-2">
+                    <Rating value={2.3} allowHalf isReadOnly />
+                    <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">2.3</span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Design</span>
+                  <div className="flex items-center gap-2">
+                    <Rating value={3.7} allowHalf isReadOnly />
+                    <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">3.7</span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Durability</span>
+                  <div className="flex items-center gap-2">
+                    <Rating value={4.2} allowHalf isReadOnly />
+                    <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">4.2</span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Overall</span>
+                  <div className="flex items-center gap-2">
+                    <Rating value={4.8} allowHalf isReadOnly />
+                    <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">4.8</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      {/* ── TOGGLE BUTTON ────────────────────────────────────────── */}
+      <Section title="Toggle Button">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-default-200">
+          {/* Left Column: Exclusive (Single), Multi-select, Sizes */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Exclusive Selection (Single Select)</h3>
+              <div className="flex flex-col gap-2">
+                <ToggleButtonGroup
+                  value={alignment}
+                  exclusive
+                  onChange={(e, val) => setAlignment(val)}
+                  color="primary"
+                >
+                  <ToggleButton value="left" aria-label="left aligned">
+                    <FaAlignLeft className="w-4 h-4" />
+                  </ToggleButton>
+                  <ToggleButton value="center" aria-label="centered">
+                    <FaAlignCenter className="w-4 h-4" />
+                  </ToggleButton>
+                  <ToggleButton value="right" aria-label="right aligned">
+                    <FaAlignRight className="w-4 h-4" />
+                  </ToggleButton>
+                  <ToggleButton value="justify" aria-label="justified">
+                    <FaAlignJustify className="w-4 h-4" />
+                  </ToggleButton>
+                </ToggleButtonGroup>
+                <span className="text-xs text-neutral-400">Selected: {alignment || "none"}</span>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Multiple Selection</h3>
+              <div className="flex flex-col gap-2">
+                <ToggleButtonGroup
+                  value={formats}
+                  onChange={(e, val) => setFormats(val)}
+                  color="secondary"
+                >
+                  <ToggleButton value="bold" aria-label="bold">
+                    <FaBold className="w-4 h-4" />
+                  </ToggleButton>
+                  <ToggleButton value="italic" aria-label="italic">
+                    <FaItalic className="w-4 h-4" />
+                  </ToggleButton>
+                  <ToggleButton value="underline" aria-label="underline">
+                    <FaUnderline className="w-4 h-4" />
+                  </ToggleButton>
+                </ToggleButtonGroup>
+                <span className="text-xs text-neutral-400">Selected: {formats.join(", ") || "none"}</span>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Sizes</h3>
+              <div className="flex flex-col gap-3">
+                <ToggleButtonGroup value="sm" exclusive onChange={() => {}} size="sm">
+                  <ToggleButton value="sm">Small</ToggleButton>
+                  <ToggleButton value="md">Button</ToggleButton>
+                  <ToggleButton value="lg">Group</ToggleButton>
+                </ToggleButtonGroup>
+
+                <ToggleButtonGroup value="md" exclusive onChange={() => {}} size="md">
+                  <ToggleButton value="sm">Medium</ToggleButton>
+                  <ToggleButton value="md">Button</ToggleButton>
+                  <ToggleButton value="lg">Group</ToggleButton>
+                </ToggleButtonGroup>
+
+                <ToggleButtonGroup value="lg" exclusive onChange={() => {}} size="lg">
+                  <ToggleButton value="sm">Large</ToggleButton>
+                  <ToggleButton value="md">Button</ToggleButton>
+                  <ToggleButton value="lg">Group</ToggleButton>
+                </ToggleButtonGroup>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Colors & Vertical */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-3">Colors</h3>
+              <div className="flex flex-col gap-3">
+                {(["default", "primary", "secondary", "success", "warning", "danger"] as const).map((color) => (
+                  <div key={color} className="flex items-center gap-4">
+                    <span className="text-xs text-neutral-400 w-20 capitalize">{color}</span>
+                    <ToggleButtonGroup value={alignment} exclusive onChange={(e, val) => setAlignment(val)} color={color} size="sm">
+                      <ToggleButton value="left">
+                        <FaAlignLeft className="w-3.5 h-3.5" />
+                      </ToggleButton>
+                      <ToggleButton value="center">
+                        <FaAlignCenter className="w-3.5 h-3.5" />
+                      </ToggleButton>
+                      <ToggleButton value="right">
+                        <FaAlignRight className="w-3.5 h-3.5" />
+                      </ToggleButton>
+                      <ToggleButton value="justify" aria-label="justified">
+                        <FaAlignJustify className="w-3.5 h-3.5" />
+                      </ToggleButton>
+                    </ToggleButtonGroup>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Vertical Orientation</h3>
+              <ToggleButtonGroup
+                value={alignment}
+                exclusive
+                onChange={(e, val) => setAlignment(val)}
+                orientation="vertical"
+                color="primary"
+              >
+                <ToggleButton value="left" aria-label="left aligned">
+                  <FaAlignLeft className="w-4 h-4" />
+                </ToggleButton>
+                <ToggleButton value="center" aria-label="centered">
+                  <FaAlignCenter className="w-4 h-4" />
+                </ToggleButton>
+                <ToggleButton value="right" aria-label="right aligned">
+                  <FaAlignRight className="w-4 h-4" />
+                </ToggleButton>
+                <ToggleButton value="justify" aria-label="justified">
+                  <FaAlignJustify className="w-4 h-4" />
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </div>
+          </div>
         </div>
       </Section>
     </div>

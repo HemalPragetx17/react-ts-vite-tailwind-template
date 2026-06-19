@@ -64,6 +64,8 @@ export interface PopoverProps {
     delay?: { open?: number; close?: number };
     /** Additional CSS classes on the popover trigger wrapper */
     triggerClassName?: string;
+    /** Dependencies that should trigger a repositioning calculation */
+    repositionDeps?: any[];
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -209,6 +211,7 @@ const Popover: React.FC<PopoverProps> = ({
     triggerClassName = "",
     triggerMode = "click",
     delay = {},
+    repositionDeps,
 }) => {
     const openDelay = delay.open ?? 0;
     const closeDelay = delay.close ?? 100;
@@ -306,7 +309,7 @@ const Popover: React.FC<PopoverProps> = ({
             window.removeEventListener("resize", recompute);
             window.removeEventListener("scroll", recompute, true);
         };
-    }, [open, recompute]);
+    }, [open, recompute, ...(repositionDeps || [])]);
 
     // Outside click
     useEffect(() => {

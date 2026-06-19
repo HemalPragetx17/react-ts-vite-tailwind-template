@@ -274,7 +274,7 @@ export const RenderCallback: Story = {
             Render Callback Pattern
           </h3>
           <p className="text-sm text-neutral-500 mb-4">
-            HeroUI v2 allows children of DrawerContent to be a render function that receives the internal `onClose` callback argument.
+            Allows children of DrawerContent to be a render function that receives the internal `onClose` callback argument.
           </p>
           <Button onClick={onOpen}>Open Callback Drawer</Button>
         </div>
