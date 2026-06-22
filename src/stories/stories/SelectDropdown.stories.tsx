@@ -36,6 +36,9 @@ const meta: Meta<typeof SelectDropdown> = {
     isSearchable: { control: "boolean" },
     showCheckbox: { control: "boolean" },
     isLoading: { control: "boolean" },
+    options: {
+      control: false,
+    },
   },
 };
 

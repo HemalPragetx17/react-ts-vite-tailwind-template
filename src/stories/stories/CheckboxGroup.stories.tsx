@@ -28,6 +28,9 @@ const meta: Meta<typeof CheckboxGroup> = {
       options: ["horizontal", "vertical"],
     },
     onChange: { action: "changed" },
+    options: {
+      control: false,
+    },
   },
 };
 

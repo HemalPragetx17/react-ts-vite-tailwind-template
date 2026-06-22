@@ -40,6 +40,9 @@ const meta: Meta<typeof Badge> = {
     isOneChar: {
       control: "boolean",
     },
+    children: {
+      control: false,
+    },
   },
 };
 

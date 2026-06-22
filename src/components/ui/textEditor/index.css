@@ -2,8 +2,8 @@
 .text-editor-container .ql-toolbar {
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
-    border-color: #e5e7eb;
-    /* border-neutral-200 */
+    border-color: var(--color-default-200);
+    background-color: var(--color-content1);
     padding: 6px 8px;
     display: flex;
     flex-wrap: wrap;
@@ -17,8 +17,8 @@
 .text-editor-container .ql-container {
     border-bottom-left-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
-    border-color: #e5e7eb;
-    /* border-neutral-200 */
+    border-color: var(--color-default-200);
+    background-color: var(--color-content1);
     font-family: inherit;
     font-size: 0.875rem;
 }
@@ -39,18 +39,18 @@
 
 /* ===== Dark mode overrides ===== */
 .dark .text-editor-container .ql-toolbar {
-    background-color: #1e293b;
-    border-color: #334155 !important;
+    background-color: var(--color-content1);
+    border-color: var(--color-default-200) !important;
 }
 
 .dark .text-editor-container .ql-container {
-    background-color: #0f172a;
-    border-color: #334155 !important;
-    color: #f1f5f9;
+    background-color: var(--color-content1);
+    border-color: var(--color-default-200) !important;
+    color: var(--color-foreground);
 }
 
 .dark .text-editor-container .ql-editor.ql-blank::before {
-    color: #64748b !important;
+    color: var(--color-default-400) !important;
 }
 
 /* SVG strokes in dark mode */
@@ -70,11 +70,11 @@
     color: #94a3b8 !important;
 }
 .dark .text-editor-container .ql-toolbar .ql-picker-label {
-    border-color: #334155 !important;
+    border-color: var(--color-default-200) !important;
 }
 .dark .text-editor-container .ql-toolbar .ql-picker-options {
-    background-color: #1e293b !important;
-    border-color: #334155 !important;
+    background-color: var(--color-content2) !important;
+    border-color: var(--color-default-200) !important;
     box-shadow: 0 4px 16px rgba(0,0,0,0.4) !important;
 }
 .dark .text-editor-container .ql-toolbar .ql-picker-item {
@@ -106,20 +106,20 @@
 
 /* Color picker swatches in dark mode */
 .dark .text-editor-container .ql-toolbar .ql-color-picker .ql-picker-options {
-    background-color: #1e293b !important;
-    border-color: #334155 !important;
+    background-color: var(--color-content2) !important;
+    border-color: var(--color-default-200) !important;
 }
 
 /* Code block styling in editor */
 .text-editor-container .ql-editor pre.ql-syntax {
-    background-color: #1e293b;
-    color: #e2e8f0;
+    background-color: var(--color-content2);
+    color: var(--color-foreground);
     border-radius: 0.375rem;
     padding: 1rem;
     font-family: 'Fira Code', 'Cascadia Code', monospace;
     font-size: 0.8rem;
 }
 .dark .text-editor-container .ql-editor pre.ql-syntax {
-    background-color: #0f172a;
-    color: #94a3b8;
+    background-color: var(--color-content2);
+    color: var(--color-foreground);
 }

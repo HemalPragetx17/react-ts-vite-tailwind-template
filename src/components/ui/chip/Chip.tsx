@@ -41,7 +41,7 @@ const variantColorClasses: Record<string, Record<string, string>> = {
     danger:    "border-2 border-danger bg-danger text-danger-foreground",
   },
   bordered: {
-    default:   "border-2 border-default-600 bg-transparent text-default-600",
+    default:   "border-2 border-default-400 dark:border-default-500 bg-transparent text-default-800 dark:text-default-800",
     primary:   "border-2 border-primary bg-transparent text-primary",
     secondary: "border-2 border-secondary bg-transparent text-secondary",
     success:   "border-2 border-success bg-transparent text-success",
@@ -49,7 +49,7 @@ const variantColorClasses: Record<string, Record<string, string>> = {
     danger:    "border-2 border-danger bg-transparent text-danger",
   },
   light: {
-    default:   "border-2 border-transparent bg-transparent text-default-600",
+    default:   "border-2 border-transparent bg-transparent text-default-800 dark:text-default-800",
     primary:   "border-2 border-transparent bg-transparent text-primary",
     secondary: "border-2 border-transparent bg-transparent text-secondary",
     success:   "border-2 border-transparent bg-transparent text-success",
@@ -57,7 +57,7 @@ const variantColorClasses: Record<string, Record<string, string>> = {
     danger:    "border-2 border-transparent bg-transparent text-danger",
   },
   flat: {
-    default:   "border-2 border-transparent bg-default-300 text-default-600",
+    default:   "border-2 border-transparent bg-default-100 dark:bg-default-200 text-default-800 dark:text-default-800",
     primary:   "border-2 border-transparent bg-primary-100 text-primary",
     secondary: "border-2 border-transparent bg-secondary-100 text-secondary",
     success:   "border-2 border-transparent bg-success-100 text-success",
@@ -65,7 +65,7 @@ const variantColorClasses: Record<string, Record<string, string>> = {
     danger:    "border-2 border-transparent bg-danger-100 text-danger",
   },
   faded: {
-    default:   "border-2 border-default-600/20 bg-default-100 text-default-600",
+    default:   "border-2 border-default-600/20 bg-default-100 text-default-800 dark:text-default-800",
     primary:   "border-2 border-primary-200 bg-primary-50 text-primary",
     secondary: "border-2 border-secondary-200 bg-secondary-50 text-secondary",
     success:   "border-2 border-success-200 bg-success-50 text-success",
@@ -81,7 +81,7 @@ const variantColorClasses: Record<string, Record<string, string>> = {
     danger:    "border-2 border-danger shadow-lg shadow-[color-mix(in_srgb,var(--color-danger)_40%,transparent)] bg-danger text-danger-foreground",
   },
   dot: {
-    default:   "border-2 border-default-600/20 bg-transparent text-default-600",
+    default:   "border-2 border-default-600/20 bg-transparent text-default-800 dark:text-default-800",
     primary:   "border-2 border-primary/20 bg-transparent text-primary",
     secondary: "border-2 border-secondary/20 bg-transparent text-secondary",
     success:   "border-2 border-success/20 bg-transparent text-success",

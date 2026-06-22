@@ -219,13 +219,12 @@ const ImagePreviewItem = ({
         </div>
       </div>
 
-      {!disabled && (
         <div
           onClick={(e) => {
             e.stopPropagation();
             onDelete();
           }}
-          className={`absolute z-50 bg-white/95 hover:bg-red-500 border border-neutral-200/80 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 shadow-md group/btn cursor-pointer ${radius === "full" ? "" : "-top-3 -right-3"
+          className={`absolute z-50 bg-white/95 dark:bg-neutral-800/90 hover:bg-red-500 border border-neutral-200/80 dark:border-neutral-700/80 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 shadow-md group/btn cursor-pointer ${radius === "full" ? "" : "-top-3 -right-3"
             }`}
           style={
             radius === "full"
@@ -240,11 +239,10 @@ const ImagePreviewItem = ({
           title="Remove File"
         >
           <FaRegTrashCan
-            className="w-3.5 h-3.5 text-neutral-700 group-hover/btn:text-white transition-colors duration-200"
+            className="w-3.5 h-3.5 text-neutral-700 dark:text-neutral-300 group-hover/btn:text-white transition-colors duration-200"
             aria-hidden
           />
         </div>
-      )}
 
       {/* Full Preview Modal */}
       {isModalOpen &&
@@ -559,12 +557,12 @@ const FileInput = ({
   };
 
   const borderedColorClasses = {
-    default: "border-neutral-300 hover:border-neutral-400 focus-within:border-neutral-500 text-foreground",
-    primary: "border-neutral-300 hover:border-primary-300 focus-within:border-primary text-primary",
-    secondary: "border-neutral-300 hover:border-secondary-300 focus-within:border-secondary text-secondary",
-    success: "border-neutral-300 hover:border-success-300 focus-within:border-success text-success",
-    warning: "border-neutral-300 hover:border-warning-300 focus-within:border-warning text-warning",
-    danger: "border-neutral-300 hover:border-danger-300 focus-within:border-danger text-danger",
+    default: "border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600 focus-within:border-neutral-500 dark:focus-within:border-neutral-500 text-foreground",
+    primary: "border-neutral-300 dark:border-neutral-700 hover:border-primary-300 dark:hover:border-primary-400 focus-within:border-primary text-primary",
+    secondary: "border-neutral-300 dark:border-neutral-700 hover:border-secondary-300 dark:hover:border-secondary-400 focus-within:border-secondary text-secondary",
+    success: "border-neutral-300 dark:border-neutral-700 hover:border-success-300 dark:hover:border-success-400 focus-within:border-success text-success",
+    warning: "border-neutral-300 dark:border-neutral-700 hover:border-warning-300 dark:hover:border-warning-400 focus-within:border-warning text-warning",
+    danger: "border-neutral-300 dark:border-neutral-700 hover:border-danger-300 dark:hover:border-danger-400 focus-within:border-danger text-danger",
   };
 
   const underlinedColorClasses = {
@@ -712,7 +710,7 @@ const FileInput = ({
           {!previewUrl ? (
             <div {...getRootProps()} className="flex justify-center">
               <label
-                className={`flex flex-col items-center overflow-hidden bg-white tracking-wide uppercase border-2 ${profileRadiusClass} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-primary-400"
+                className={`flex flex-col items-center overflow-hidden bg-white dark:bg-neutral-800 tracking-wide uppercase border-2 ${profileRadiusClass} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-primary-400"
                   } ${hasError ? "error-red-border border-danger" : ""}`}
                 style={{ width: `${profileSizeVal}px`, height: `${profileSizeVal}px` }}
               >
@@ -734,7 +732,7 @@ const FileInput = ({
                 {!disabled && (
                   <div
                     onClick={handleClearSingle}
-                    className={`absolute z-50 bg-white/95 hover:bg-red-500 border border-neutral-200/80 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-md group/btn cursor-pointer`}
+                    className={`absolute z-50 bg-white/95 dark:bg-neutral-800/90 hover:bg-red-500 border border-neutral-200/80 dark:border-neutral-700/80 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-md group/btn cursor-pointer`}
                     style={
                       radius === "full"
                         ? (
@@ -748,7 +746,7 @@ const FileInput = ({
                     title="Remove File"
                   >
                     <FaRegTrashCan
-                      className="w-4 h-4 text-neutral-700 group-hover/btn:text-white transition-colors duration-200"
+                      className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover/btn:text-white transition-colors duration-200"
                       aria-hidden
                     />
                   </div>
@@ -780,7 +778,7 @@ const FileInput = ({
           {!previewUrl || !isSupported ? (
             <div {...getRootProps()} className="relative mt-2" style={{ width: `${dropzoneSizeVal}px`, height: `${dropzoneSizeVal}px` }}>
               <label
-                className={`flex flex-col items-center justify-center p-4 bg-white tracking-wide uppercase border-2 w-full h-full ${dropzoneRadiusClass}
+                className={`flex flex-col items-center justify-center p-4 bg-white dark:bg-neutral-800 tracking-wide uppercase border-2 w-full h-full ${dropzoneRadiusClass}
                   ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-primary-400"} 
                   ${hasError ? "error-red-border border-danger" : ""}
                 `}
@@ -817,7 +815,7 @@ const FileInput = ({
               {!disabled && (
                 <div
                   onClick={handleClearSingle}
-                  className={`absolute z-50 bg-white/95 hover:bg-red-500 border border-neutral-200/80 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-md group/btn cursor-pointer ${radius === "full" ? "" : "-top-4 -right-4"
+                  className={`absolute z-50 bg-white/95 dark:bg-neutral-800/90 hover:bg-red-500 border border-neutral-200/80 dark:border-neutral-700/80 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-md group/btn cursor-pointer ${radius === "full" ? "" : "-top-4 -right-4"
                     }`}
                   style={
                     radius === "full"
@@ -832,7 +830,7 @@ const FileInput = ({
                   title="Remove File"
                 >
                   <FaRegTrashCan
-                    className="w-4 h-4 text-neutral-700 group-hover/btn:text-white transition-colors duration-200"
+                    className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover/btn:text-white transition-colors duration-200"
                     aria-hidden
                   />
                 </div>
@@ -875,7 +873,7 @@ const FileInput = ({
             <div {...getRootProps()} className="relative">
               <input {...getInputProps()} />
               <label
-                className={`flex flex-col items-center justify-center px-4 bg-white tracking-wide uppercase border-2 ${dropzoneRadiusClass} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-primary-400"
+                className={`flex flex-col items-center justify-center px-4 bg-white dark:bg-neutral-800 tracking-wide uppercase border-2 ${dropzoneRadiusClass} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-primary-400"
                   } ${hasError ? "error-red-border border-danger" : ""}`}
                 style={{ width: `${dropzoneSizeVal}px`, height: `${dropzoneSizeVal}px` }}
               >

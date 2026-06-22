@@ -4,26 +4,32 @@ import {
   Badge,
   Breadcrumbs,
   Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
   Checkbox,
   Chip,
-  Input,
   DateInput,
-  TimePicker,
   DateTimePicker,
   FileInput,
+  Input,
   PhoneNumberInput,
+  Popover,
+  Radio,
+  Rating,
   SelectDropdown,
-  Textarea,
+  Skeleton,
+  Slider,
   Spinner,
   Switch,
   Tab,
   Tabs,
-  Popover,
-  Radio,
-  Slider,
-  Rating,
+  Textarea,
+  TimePicker,
   ToggleButton,
   ToggleButtonGroup,
+  Tooltip,
 } from "../../components/ui";
 import { FaHeart, FaCamera, FaUser, FaVolumeOff, FaVolumeHigh, FaFaceSmile, FaAlignLeft, FaAlignCenter, FaAlignRight, FaAlignJustify, FaBold, FaItalic, FaUnderline } from "react-icons/fa6";
 
@@ -76,6 +82,7 @@ const Label = ({ children }: { children: React.ReactNode }) => (
 const UIKit: React.FC = () => {
   const [alignment, setAlignment] = React.useState<string | null>("left");
   const [formats, setFormats] = React.useState<string[]>(["bold", "italic"]);
+  const [isSkeletonLoaded, setIsSkeletonLoaded] = React.useState(false);
 
   const [checkboxValues, setCheckboxValues] = React.useState<Record<string, boolean>>(
     () => Object.fromEntries(COLORS.map((c) => [c, true]))
@@ -191,7 +198,7 @@ const UIKit: React.FC = () => {
         <p className="text-default-500 text-sm">Browse all components by variant and color token.</p>
       </div>
 
-      {/* ── AVATAR ──────────────────────────────────────────────── */}
+      {/* ── 1. AVATAR ────────────────────────────────────────────── */}
       <Section title="Avatar">
         <Row>
           <Label>bordered</Label>
@@ -213,7 +220,7 @@ const UIKit: React.FC = () => {
         </Row>
       </Section>
 
-      {/* ── BADGE ───────────────────────────────────────────────── */}
+      {/* ── 2. BADGE ─────────────────────────────────────────────── */}
       <Section title="Badge">
         <Row>
           <Label>colors</Label>
@@ -233,9 +240,9 @@ const UIKit: React.FC = () => {
         </Row>
       </Section>
 
-      {/* ── BREADCRUMBS ─────────────────────────────────────────── */}
+      {/* ── 3. BREADCRUMBS ───────────────────────────────────────── */}
       <Section title="Breadcrumbs">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-default-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <Breadcrumbs items={BREADCRUMB_ITEMS} color="default" variant="bordered" />
             <Breadcrumbs items={BREADCRUMB_ITEMS} color="default" variant="light" />
@@ -277,7 +284,7 @@ const UIKit: React.FC = () => {
         </div>
       </Section>
 
-      {/* ── BUTTONS ─────────────────────────────────────────────── */}
+      {/* ── 4. BUTTON ────────────────────────────────────────────── */}
       <Section title="Button">
         {BUTTON_VARIANTS.map((variant) => (
           <Row key={variant}>
@@ -313,7 +320,172 @@ const UIKit: React.FC = () => {
         </Row>
       </Section>
 
-      {/* ── CHECKBOX ────────────────────────────────────────────── */}
+      {/* ── 5. CARD ──────────────────────────────────────────────── */}
+      <Section title="Card">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card shadow="md">
+            <CardHeader className="flex gap-3">
+              <Avatar name="A" color="primary" isBordered />
+              <div className="flex flex-col">
+                <p className="text-sm font-semibold">Basic Card</p>
+                <p className="text-xs text-default-500">Card Header Description</p>
+              </div>
+            </CardHeader>
+            <CardBody>
+              <p className="text-sm">This is a standard card component with card header, body and footer elements.</p>
+            </CardBody>
+            <CardFooter>
+              <Button size="sm" color="primary">Action</Button>
+            </CardFooter>
+          </Card>
+
+          <Card shadow="md" isHoverable>
+            <CardHeader className="flex gap-3">
+              <Avatar name="H" color="secondary" isBordered />
+              <div className="flex flex-col">
+                <p className="text-sm font-semibold">Hoverable Card</p>
+                <p className="text-xs text-default-500">Card will elevate on hover</p>
+              </div>
+            </CardHeader>
+            <CardBody>
+              <p className="text-sm">Hover over this card to see a subtle zoom and shadow elevation animation.</p>
+            </CardBody>
+            <CardFooter>
+              <Chip size="sm" color="secondary" variant="flat">Hover Me</Chip>
+            </CardFooter>
+          </Card>
+
+          <Card shadow="md" isPressable onClick={() => { }}>
+            <CardHeader className="flex gap-3">
+              <Avatar name="P" color="success" isBordered />
+              <div className="flex flex-col">
+                <p className="text-sm font-semibold">Pressable Card</p>
+                <p className="text-xs text-default-500">Click anywhere on card</p>
+              </div>
+            </CardHeader>
+            <CardBody>
+              <p className="text-sm">Click on this card to trigger a ripple animation and custom click handler.</p>
+            </CardBody>
+            <CardFooter>
+              <Chip size="sm" color="success" variant="flat">Press Me</Chip>
+            </CardFooter>
+          </Card>
+        </div>
+
+        <h3 className="text-sm font-semibold text-neutral-400 mt-6 mb-3">Blur & Footer Blur Variants</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Blurred Card (Music Player style) */}
+          <div className="relative p-6 rounded-xl bg-gradient-to-tr from-orange-400 via-rose-500 to-violet-600 overflow-hidden flex items-center justify-center min-h-[220px] shadow-inner">
+            <Card
+              isBlurred
+              className="border-none bg-background/60 dark:bg-default-100/50 max-w-[420px] w-full"
+              shadow="sm"
+            >
+              <CardBody>
+                <div className="grid grid-cols-12 gap-4 items-center justify-center">
+                  <div className="relative col-span-4">
+                    <div className="w-full h-[80px] rounded-xl bg-amber-800 flex items-center justify-center shadow-lg overflow-hidden">
+                      <img
+                        src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=120&q=80"
+                        alt="Album cover"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col col-span-8 text-left">
+                    <div className="flex justify-between items-start">
+                      <div className="flex flex-col gap-0">
+                        <p className="text-xs text-foreground/60 font-medium">Daily Mix</p>
+                        <p className="text-xs text-foreground/50">12 Tracks</p>
+                        <h3 className="text-sm font-semibold mt-1 text-foreground">Frontend Radio</h3>
+                      </div>
+                      <Button
+                        isIconOnly
+                        className="text-foreground/70 hover:bg-foreground/10"
+                        radius="full"
+                        variant="light"
+                        size="sm"
+                      >
+                        <svg
+                          className="h-4 w-4"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg>
+                      </Button>
+                    </div>
+
+                    <div className="flex flex-col mt-2 gap-1">
+                      <div className="relative w-full h-1 bg-foreground/20 rounded-full">
+                        <div className="absolute left-0 top-0 h-full w-[35%] bg-foreground rounded-full" />
+                        <div className="absolute left-[35%] top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-foreground rounded-full shadow" />
+                      </div>
+                      <div className="flex justify-between text-[10px] text-foreground/60">
+                        <span>1:23</span>
+                        <span>4:32</span>
+                      </div>
+                    </div>
+
+                    <div className="flex w-full items-center justify-center gap-3 mt-1">
+                      <button className="text-foreground/60 hover:text-foreground">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                      </button>
+                      <button className="text-foreground/70 hover:text-foreground">
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M6 6h2v12H6zm3.5 6L18 6v12z" />
+                        </svg>
+                      </button>
+                      <button className="flex items-center justify-center w-8 h-8 rounded-full bg-foreground text-background hover:scale-105 transition-transform">
+                        <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                        </svg>
+                      </button>
+                      <button className="text-foreground/70 hover:text-foreground">
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M6 18V6l8.5 6L6 18zm9-12h2v12h-2z" />
+                        </svg>
+                      </button>
+                      <button className="text-foreground/60 hover:text-foreground">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+          </div>
+
+          {/* Footer Blurred Card */}
+          <div className="flex justify-center w-full">
+            <Card isFooterBlurred className="h-[220px] max-w-[420px] w-full relative overflow-hidden" shadow="lg">
+              <CardBody className="p-0">
+                <img
+                  src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=500&q=80"
+                  alt="Card background image"
+                  className="z-0 w-full h-full object-cover"
+                />
+              </CardBody>
+              <CardFooter className="justify-between absolute bottom-0 left-0 right-0 z-10 border-t border-white/20 bg-black/40 backdrop-blur-md">
+                <div className="flex flex-col text-left">
+                  <p className="text-xs text-white/60">Available now</p>
+                  <p className="text-sm text-white font-semibold">Cyberpunk City</p>
+                </div>
+                <Button className="text-xs text-white bg-white/20 hover:bg-white/30 border border-white/10" variant="flat" size="sm" radius="full">
+                  Notify Me
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
+      </Section>
+
+      {/* ── 6. CHECKBOX ──────────────────────────────────────────── */}
       <Section title="Checkbox">
         <Row className="d-flex">
           <Label>toggle</Label>
@@ -342,7 +514,7 @@ const UIKit: React.FC = () => {
         </Row>
       </Section>
 
-      {/* ── CHIP ────────────────────────────────────────────────── */}
+      {/* ── 7. CHIP ──────────────────────────────────────────────── */}
       <Section title="Chip">
         {CHIP_VARIANTS.map((variant) => (
           <Row key={variant}>
@@ -372,89 +544,9 @@ const UIKit: React.FC = () => {
         </Row>
       </Section>
 
-      {/* ── INPUT ───────────────────────────────────────────────── */}
-      <Section title="Input">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-default-200 overflow-x-auto">
-          {COLORS.map((color) => (
-            <div key={color} className="space-y-4 min-w-[200px]">
-              <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
-              <Input variant="flat" color={color} value={inputVal[`${color}-flat`]} onChange={(e) => setInputVal(prev => ({ ...prev, [`${color}-flat`]: e.target.value }))} size="sm" />
-              <Input variant="bordered" color={color} value={inputVal[`${color}-bordered`]} onChange={(e) => setInputVal(prev => ({ ...prev, [`${color}-bordered`]: e.target.value }))} size="sm" />
-              <Input variant="faded" color={color} value={inputVal[`${color}-faded`]} onChange={(e) => setInputVal(prev => ({ ...prev, [`${color}-faded`]: e.target.value }))} size="sm" />
-              <Input variant="underlined" color={color} value={inputVal[`${color}-underlined`]} onChange={(e) => setInputVal(prev => ({ ...prev, [`${color}-underlined`]: e.target.value }))} size="sm" />
-              <Input variant="flat" color={color} value={inputVal[`${color}-disabled`]} onChange={(e) => setInputVal(prev => ({ ...prev, [`${color}-disabled`]: e.target.value }))} size="sm" disabled />
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* ── FILE INPUT ───────────────────────────────────────────── */}
-      <Section title="File Input">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-default-200 overflow-x-auto">
-          {COLORS.map((color) => (
-            <div key={color} className="space-y-4 min-w-[200px]">
-              <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
-              <FileInput variant="flat" color={color} value={fileVal[`${color}-flat`]} onChange={(file) => setFileVal(prev => ({ ...prev, [`${color}-flat`]: file }))} size="sm" />
-              <FileInput variant="bordered" color={color} value={fileVal[`${color}-bordered`]} onChange={(file) => setFileVal(prev => ({ ...prev, [`${color}-bordered`]: file }))} size="sm" />
-              <FileInput variant="faded" color={color} value={fileVal[`${color}-faded`]} onChange={(file) => setFileVal(prev => ({ ...prev, [`${color}-faded`]: file }))} size="sm" />
-              <FileInput variant="underlined" color={color} value={fileVal[`${color}-underlined`]} onChange={(file) => setFileVal(prev => ({ ...prev, [`${color}-underlined`]: file }))} size="sm" />
-              <FileInput variant="flat" color={color} value={fileVal[`${color}-disabled`]} onChange={(file) => setFileVal(prev => ({ ...prev, [`${color}-disabled`]: file }))} size="sm" disabled />
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* ── PHONE NUMBER INPUT ────────────────────────────────────── */}
-      <Section title="Phone Number Input">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-default-200 overflow-x-auto">
-          {COLORS.map((color) => (
-            <div key={color} className="space-y-4 min-w-[200px]">
-              <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
-              <PhoneNumberInput variant="flat" color={color} value={phoneVal[`${color}-flat`]} onChange={(val) => setPhoneVal(prev => ({ ...prev, [`${color}-flat`]: val }))} size="sm" />
-              <PhoneNumberInput variant="bordered" color={color} value={phoneVal[`${color}-bordered`]} onChange={(val) => setPhoneVal(prev => ({ ...prev, [`${color}-bordered`]: val }))} size="sm" />
-              <PhoneNumberInput variant="faded" color={color} value={phoneVal[`${color}-faded`]} onChange={(val) => setPhoneVal(prev => ({ ...prev, [`${color}-faded`]: val }))} size="sm" />
-              <PhoneNumberInput variant="underlined" color={color} value={phoneVal[`${color}-underlined`]} onChange={(val) => setPhoneVal(prev => ({ ...prev, [`${color}-underlined`]: val }))} size="sm" />
-              <PhoneNumberInput variant="flat" color={color} value={phoneVal[`${color}-disabled`]} onChange={(val) => setPhoneVal(prev => ({ ...prev, [`${color}-disabled`]: val }))} size="sm" disabled />
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* ── SELECT DROPDOWN ───────────────────────────────────────── */}
-      <Section title="Select Dropdown">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-default-200 overflow-x-auto">
-          {COLORS.map((color) => (
-            <div key={color} className="space-y-4 min-w-[200px]">
-              <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
-              <SelectDropdown variant="flat" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-flat`, value: dropdownVal[`${color}-flat`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-flat`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
-              <SelectDropdown variant="bordered" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-bordered`, value: dropdownVal[`${color}-bordered`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-bordered`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
-              <SelectDropdown variant="faded" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-faded`, value: dropdownVal[`${color}-faded`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-faded`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
-              <SelectDropdown variant="underlined" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-underlined`, value: dropdownVal[`${color}-underlined`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-underlined`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
-              <SelectDropdown variant="flat" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-disabled`, value: dropdownVal[`${color}-disabled`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-disabled`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" isDisabled />
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* ── TEXTAREA ─────────────────────────────────────────────── */}
-      <Section title="Textarea">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-default-200 overflow-x-auto">
-          {COLORS.map((color) => (
-            <div key={color} className="space-y-4 min-w-[200px]">
-              <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
-              <Textarea variant="flat" color={color} value={textareaVal[`${color}-flat`]} onChange={(e) => setTextareaVal(prev => ({ ...prev, [`${color}-flat`]: e.target.value }))} size="sm" />
-              <Textarea variant="bordered" color={color} value={textareaVal[`${color}-bordered`]} onChange={(e) => setTextareaVal(prev => ({ ...prev, [`${color}-bordered`]: e.target.value }))} size="sm" />
-              <Textarea variant="faded" color={color} value={textareaVal[`${color}-faded`]} onChange={(e) => setTextareaVal(prev => ({ ...prev, [`${color}-faded`]: e.target.value }))} size="sm" />
-              <Textarea variant="underlined" color={color} value={textareaVal[`${color}-underlined`]} onChange={(e) => setTextareaVal(prev => ({ ...prev, [`${color}-underlined`]: e.target.value }))} size="sm" />
-              <Textarea variant="flat" color={color} value={textareaVal[`${color}-disabled`]} onChange={(e) => setTextareaVal(prev => ({ ...prev, [`${color}-disabled`]: e.target.value }))} size="sm" disabled />
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* ── DATE INPUT ───────────────────────────────────────────── */}
+      {/* ── 8. DATE INPUT ────────────────────────────────────────── */}
       <Section title="Date Input">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-default-200 overflow-x-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto">
           {COLORS.map((color) => (
             <div key={color} className="space-y-4 min-w-[200px]">
               <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
@@ -468,25 +560,9 @@ const UIKit: React.FC = () => {
         </div>
       </Section>
 
-      {/* ── TIME PICKER ──────────────────────────────────────────── */}
-      <Section title="Time Picker">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-default-200 overflow-x-auto">
-          {COLORS.map((color) => (
-            <div key={color} className="space-y-4 min-w-[200px]">
-              <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
-              <TimePicker variant="flat" color={color} value={timeVal[`${color}-flat`]} onChange={(t) => setTimeVal(prev => ({ ...prev, [`${color}-flat`]: t }))} size="sm" />
-              <TimePicker variant="bordered" color={color} value={timeVal[`${color}-bordered`]} onChange={(t) => setTimeVal(prev => ({ ...prev, [`${color}-bordered`]: t }))} size="sm" />
-              <TimePicker variant="faded" color={color} value={timeVal[`${color}-faded`]} onChange={(t) => setTimeVal(prev => ({ ...prev, [`${color}-faded`]: t }))} size="sm" />
-              <TimePicker variant="underlined" color={color} value={timeVal[`${color}-underlined`]} onChange={(t) => setTimeVal(prev => ({ ...prev, [`${color}-underlined`]: t }))} size="sm" />
-              <TimePicker variant="flat" color={color} value={timeVal[`${color}-disabled`]} onChange={(t) => setTimeVal(prev => ({ ...prev, [`${color}-disabled`]: t }))} size="sm" disabled />
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* ── DATETIME PICKER ──────────────────────────────────────── */}
+      {/* ── 9. DATE TIME PICKER ──────────────────────────────────── */}
       <Section title="Date Time Picker">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-default-200 overflow-x-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto">
           {COLORS.map((color) => (
             <div key={color} className="space-y-4 min-w-[200px]">
               <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
@@ -500,7 +576,55 @@ const UIKit: React.FC = () => {
         </div>
       </Section>
 
-      {/* ── POPOVER ─────────────────────────────────────────────── */}
+      {/* ── 10. FILE INPUT ───────────────────────────────────────── */}
+      <Section title="File Input">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto">
+          {COLORS.map((color) => (
+            <div key={color} className="space-y-4 min-w-[200px]">
+              <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
+              <FileInput variant="flat" color={color} value={fileVal[`${color}-flat`]} onChange={(file) => setFileVal(prev => ({ ...prev, [`${color}-flat`]: file }))} size="sm" />
+              <FileInput variant="bordered" color={color} value={fileVal[`${color}-bordered`]} onChange={(file) => setFileVal(prev => ({ ...prev, [`${color}-bordered`]: file }))} size="sm" />
+              <FileInput variant="faded" color={color} value={fileVal[`${color}-faded`]} onChange={(file) => setFileVal(prev => ({ ...prev, [`${color}-faded`]: file }))} size="sm" />
+              <FileInput variant="underlined" color={color} value={fileVal[`${color}-underlined`]} onChange={(file) => setFileVal(prev => ({ ...prev, [`${color}-underlined`]: file }))} size="sm" />
+              <FileInput variant="flat" color={color} value={fileVal[`${color}-disabled`]} onChange={(file) => setFileVal(prev => ({ ...prev, [`${color}-disabled`]: file }))} size="sm" disabled />
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── 11. INPUT ────────────────────────────────────────────── */}
+      <Section title="Input">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto">
+          {COLORS.map((color) => (
+            <div key={color} className="space-y-4 min-w-[200px]">
+              <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
+              <Input variant="flat" color={color} value={inputVal[`${color}-flat`]} onChange={(e) => setInputVal(prev => ({ ...prev, [`${color}-flat`]: e.target.value }))} size="sm" />
+              <Input variant="bordered" color={color} value={inputVal[`${color}-bordered`]} onChange={(e) => setInputVal(prev => ({ ...prev, [`${color}-bordered`]: e.target.value }))} size="sm" />
+              <Input variant="faded" color={color} value={inputVal[`${color}-faded`]} onChange={(e) => setInputVal(prev => ({ ...prev, [`${color}-faded`]: e.target.value }))} size="sm" />
+              <Input variant="underlined" color={color} value={inputVal[`${color}-underlined`]} onChange={(e) => setInputVal(prev => ({ ...prev, [`${color}-underlined`]: e.target.value }))} size="sm" />
+              <Input variant="flat" color={color} value={inputVal[`${color}-disabled`]} onChange={(e) => setInputVal(prev => ({ ...prev, [`${color}-disabled`]: e.target.value }))} size="sm" disabled />
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── 12. PHONE NUMBER INPUT ────────────────────────────────── */}
+      <Section title="Phone Number Input">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto">
+          {COLORS.map((color) => (
+            <div key={color} className="space-y-4 min-w-[200px]">
+              <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
+              <PhoneNumberInput variant="flat" color={color} value={phoneVal[`${color}-flat`]} onChange={(val) => setPhoneVal(prev => ({ ...prev, [`${color}-flat`]: val }))} size="sm" />
+              <PhoneNumberInput variant="bordered" color={color} value={phoneVal[`${color}-bordered`]} onChange={(val) => setPhoneVal(prev => ({ ...prev, [`${color}-bordered`]: val }))} size="sm" />
+              <PhoneNumberInput variant="faded" color={color} value={phoneVal[`${color}-faded`]} onChange={(val) => setPhoneVal(prev => ({ ...prev, [`${color}-faded`]: val }))} size="sm" />
+              <PhoneNumberInput variant="underlined" color={color} value={phoneVal[`${color}-underlined`]} onChange={(val) => setPhoneVal(prev => ({ ...prev, [`${color}-underlined`]: val }))} size="sm" />
+              <PhoneNumberInput variant="flat" color={color} value={phoneVal[`${color}-disabled`]} onChange={(val) => setPhoneVal(prev => ({ ...prev, [`${color}-disabled`]: val }))} size="sm" disabled />
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── 13. POPOVER ──────────────────────────────────────────── */}
       <Section title="Popover">
         <Row>
           {COLORS.map((color) => (
@@ -540,7 +664,7 @@ const UIKit: React.FC = () => {
         </Row>
       </Section>
 
-      {/* ── RADIO ────────────────────────────────────────────── */}
+      {/* ── 14. RADIO ────────────────────────────────────────────── */}
       <Section title="Radio">
         {COLORS.map((color) => (
           <Row key={color} className="mb-4">
@@ -569,96 +693,183 @@ const UIKit: React.FC = () => {
         </Row>
       </Section>
 
-      {/* ── SPINNER ─────────────────────────────────────────────── */}
-      <Section title="Spinner">
-        {SPINNER_VARIANTS.map((variant) => (
-          <Row key={variant}>
-            <Label>{variant}</Label>
-            {COLORS.map((color) => (
-              <Spinner key={color} variant={variant} color={color} label={color.charAt(0).toUpperCase() + color.slice(1)} />
-            ))}
-          </Row>
-        ))}
+      {/* ── 15. RATING ───────────────────────────────────────────── */}
+      <Section title="Rating">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Left Column: Basic, Colors, Custom Icon, Disabled */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Usage</h3>
+              <div className="space-y-2">
+                <p>Default Rating:</p>
+                <Rating defaultValue={3} />
+                <p className="mt-2">Rating with Half:</p>
+                <Rating defaultValue={3} allowHalf />
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Colors</h3>
+              <div className="space-y-3">
+                <div>
+                  <span className="text-xs text-neutral-400 block mb-1">Default</span>
+                  <Rating color="default" defaultValue={4} />
+                </div>
+                <div>
+                  <span className="text-xs text-neutral-400 block mb-1">Primary</span>
+                  <Rating color="primary" defaultValue={4} />
+                </div>
+                <div>
+                  <span className="text-xs text-neutral-400 block mb-1">Secondary</span>
+                  <Rating color="secondary" defaultValue={4} />
+                </div>
+                <div>
+                  <span className="text-xs text-neutral-400 block mb-1">Success</span>
+                  <Rating color="success" defaultValue={4} />
+                </div>
+                <div>
+                  <span className="text-xs text-neutral-400 block mb-1">Warning</span>
+                  <Rating color="warning" defaultValue={4} />
+                </div>
+                <div>
+                  <span className="text-xs text-neutral-400 block mb-1">Danger</span>
+                  <Rating color="danger" defaultValue={4} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Product Review with Decimal ratings */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Custom Icon Heart</h3>
+              <Rating icon={<FaHeart />} defaultValue={3} color="warning" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Custom Smiley</h3>
+              <Rating icon={<FaFaceSmile />} defaultValue={3} color="success" />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Disabled</h3>
+              <Rating defaultValue={3} isDisabled />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-4">Product Review (Decimal / Read-only)</h3>
+              <div className="space-y-4 max-w-xs">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Quality</span>
+                  <div className="flex items-center gap-2">
+                    <Rating value={1.5} allowHalf isReadOnly />
+                    <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">1.5</span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Value for money</span>
+                  <div className="flex items-center gap-2">
+                    <Rating value={2.3} allowHalf isReadOnly />
+                    <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">2.3</span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Design</span>
+                  <div className="flex items-center gap-2">
+                    <Rating value={3.7} allowHalf isReadOnly />
+                    <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">3.7</span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Durability</span>
+                  <div className="flex items-center gap-2">
+                    <Rating value={4.2} allowHalf isReadOnly />
+                    <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">4.2</span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Overall</span>
+                  <div className="flex items-center gap-2">
+                    <Rating value={4.8} allowHalf isReadOnly />
+                    <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">4.8</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </Section>
 
-      {/* ── SWITCH ──────────────────────────────────────────────── */}
-      <Section title="Switch">
-        <Row>
-          <Label>toggle</Label>
+      {/* ── 16. SELECT DROPDOWN ───────────────────────────────────── */}
+      <Section title="Select Dropdown">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto">
           {COLORS.map((color) => (
+            <div key={color} className="space-y-4 min-w-[200px]">
+              <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
+              <SelectDropdown variant="flat" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-flat`, value: dropdownVal[`${color}-flat`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-flat`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
+              <SelectDropdown variant="bordered" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-bordered`, value: dropdownVal[`${color}-bordered`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-bordered`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
+              <SelectDropdown variant="faded" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-faded`, value: dropdownVal[`${color}-faded`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-faded`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
+              <SelectDropdown variant="underlined" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-underlined`, value: dropdownVal[`${color}-underlined`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-underlined`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
+              <SelectDropdown variant="flat" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-disabled`, value: dropdownVal[`${color}-disabled`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-disabled`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" isDisabled />
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── 17. SKELETON ─────────────────────────────────────────── */}
+      <Section title="Skeleton">
+        <div className="space-y-6">
+          <div className="flex items-center gap-4">
             <Switch
-              key={color}
-              color={color}
-              value={!!switchValues[color]}
-              onChange={(val: boolean) => setSwitchValues(prev => ({ ...prev, [color]: val }))}
-              label={color.charAt(0).toUpperCase() + color.slice(1)}
+              color="primary"
+              value={isSkeletonLoaded}
+              onChange={setIsSkeletonLoaded}
+              label="Toggle skeleton loaded state"
             />
-          ))}
-        </Row>
-        <Row>
-          <Label>disabled</Label>
-          {COLORS.map((color) => (
-            <Switch key={color} color={color} value={true} onChange={() => { }} label={color.charAt(0).toUpperCase() + color.slice(1)} disabled />
-          ))}
-        </Row>
-      </Section>
+            <span className="text-xs text-default-500 font-semibold">State: {isSkeletonLoaded ? "Loaded" : "Loading"}</span>
+          </div>
 
-      {/* ── TABS ────────────────────────────────────────────────── */}
-      <Section title="Tabs">
-        {/* ── Block 1: default / primary / secondary / success ── */}
-        <div className="grid grid-cols-3 gap-x-4 gap-y-3">
-          {(["solid", "bordered", "light", "underlined"] as const).flatMap((variant) =>
-            (["default", "primary", "secondary"] as ColorOption[]).map((color) => (
-              <div key={`${variant}-${color}`}>
-                <Tabs variant={variant} color={color} defaultSelectedKey="photos">
-                  <Tab key="photos" title="Photos" />
-                  <Tab key="music" title="Music" />
-                  <Tab key="videos" title="Videos" />
-                </Tabs>
-              </div>
-            ))
-          )}
-          {/* Disabled row */}
-          {(["default", "primary", "secondary"] as ColorOption[]).map((color) => (
-            <div key={`disabled-${color}`}>
-              <Tabs color={color} defaultSelectedKey="photos" isDisabled>
-                <Tab key="photos" title="Photos" />
-                <Tab key="music" title="Music" />
-                <Tab key="videos" title="Videos" />
-              </Tabs>
+          <div className="max-w-[300px] w-full flex items-center gap-3">
+            <Skeleton className="shrink-0 !rounded-full w-14 h-14" isLoaded={isSkeletonLoaded}>
+              <Avatar name="Om" color="primary" size="lg" />
+            </Skeleton>
+            <div className="flex-1 flex flex-col gap-2">
+              <Skeleton className="h-5 w-3/5 rounded-lg" isLoaded={isSkeletonLoaded}>
+                <span className="text-sm font-semibold">Hemal Gondaliya</span>
+              </Skeleton>
+              <Skeleton className="h-4 w-4/5 rounded-lg" isLoaded={isSkeletonLoaded}>
+                <span className="text-xs text-default-500">Software Engineer</span>
+              </Skeleton>
             </div>
-          ))}
-        </div>
+          </div>
 
-        {/* ── Block 2: warning / danger ── */}
-        <div className="grid grid-cols-3 gap-x-4 gap-y-3 mt-3">
-          {(["solid", "bordered", "light", "underlined"] as const).flatMap((variant) =>
-            (["success", "warning", "danger"] as ColorOption[]).map((color) => (
-              <div key={`${variant}-${color}`}>
-                <Tabs variant={variant} color={color} defaultSelectedKey="photos">
-                  <Tab key="photos" title="Photos" />
-                  <Tab key="music" title="Music" />
-                  <Tab key="videos" title="Videos" />
-                </Tabs>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-3">Shimmer Animation</h3>
+              <div className="space-y-3">
+                <Skeleton className="h-4 w-3/4 rounded-lg" />
+                <Skeleton className="h-3 w-full rounded-lg" />
+                <Skeleton className="h-3 w-5/6 rounded-lg" />
               </div>
-            ))
-          )}
-          {/* Disabled row */}
-          {(["success", "warning", "danger"] as ColorOption[]).map((color) => (
-            <div key={`disabled-${color}`}>
-              <Tabs color={color} defaultSelectedKey="photos" isDisabled>
-                <Tab key="photos" title="Photos" />
-                <Tab key="music" title="Music" />
-                <Tab key="videos" title="Videos" />
-              </Tabs>
             </div>
-          ))}
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-400 mb-3">Pulse Animation</h3>
+              <div className="space-y-3">
+                <Skeleton className="h-4 w-3/4 rounded-lg" animation="pulse" />
+                <Skeleton className="h-3 w-full rounded-lg" animation="pulse" />
+                <Skeleton className="h-3 w-5/6 rounded-lg" animation="pulse" />
+              </div>
+            </div>
+          </div>
         </div>
       </Section>
 
-      {/* ── SLIDER ──────────────────────────────────────────────── */}
+      {/* ── 18. SLIDER ───────────────────────────────────────────── */}
       <Section title="Slider">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-default-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left Column: Basic, Disabled, Sizes, Radius */}
           <div className="space-y-6">
             <div>
@@ -791,119 +1002,128 @@ const UIKit: React.FC = () => {
         </div>
       </Section>
 
-      {/* ── RATING ──────────────────────────────────────────────── */}
-      <Section title="Rating">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-default-200">
-          {/* Left Column: Basic, Colors, Custom Icon, Disabled */}
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Usage</h3>
-              <div className="space-y-2">
-                <p>Default Rating:</p>
-                <Rating defaultValue={3} />
-                <p className="mt-2">Rating with Half:</p>
-                <Rating defaultValue={3} allowHalf />
+      {/* ── 19. SPINNER ──────────────────────────────────────────── */}
+      <Section title="Spinner">
+        {SPINNER_VARIANTS.map((variant) => (
+          <Row key={variant}>
+            <Label>{variant}</Label>
+            {COLORS.map((color) => (
+              <Spinner key={color} variant={variant} color={color} label={color.charAt(0).toUpperCase() + color.slice(1)} />
+            ))}
+          </Row>
+        ))}
+      </Section>
+
+      {/* ── 20. SWITCH ───────────────────────────────────────────── */}
+      <Section title="Switch">
+        <Row>
+          <Label>toggle</Label>
+          {COLORS.map((color) => (
+            <Switch
+              key={color}
+              color={color}
+              value={!!switchValues[color]}
+              onChange={(val: boolean) => setSwitchValues(prev => ({ ...prev, [color]: val }))}
+              label={color.charAt(0).toUpperCase() + color.slice(1)}
+            />
+          ))}
+        </Row>
+        <Row>
+          <Label>disabled</Label>
+          {COLORS.map((color) => (
+            <Switch key={color} color={color} value={true} onChange={() => { }} label={color.charAt(0).toUpperCase() + color.slice(1)} disabled />
+          ))}
+        </Row>
+      </Section>
+
+      {/* ── 21. TABS ─────────────────────────────────────────────── */}
+      <Section title="Tabs">
+        {/* ── Block 1: default / primary / secondary / success ── */}
+        <div className="grid grid-cols-3 gap-x-4 gap-y-3">
+          {(["solid", "bordered", "light", "underlined"] as const).flatMap((variant) =>
+            (["default", "primary", "secondary"] as ColorOption[]).map((color) => (
+              <div key={`${variant}-${color}`}>
+                <Tabs variant={variant} color={color} defaultSelectedKey="photos">
+                  <Tab key="photos" title="Photos" />
+                  <Tab key="music" title="Music" />
+                  <Tab key="videos" title="Videos" />
+                </Tabs>
               </div>
+            ))
+          )}
+          {/* Disabled row */}
+          {(["default", "primary", "secondary"] as ColorOption[]).map((color) => (
+            <div key={`disabled-${color}`}>
+              <Tabs color={color} defaultSelectedKey="photos" isDisabled>
+                <Tab key="photos" title="Photos" />
+                <Tab key="music" title="Music" />
+                <Tab key="videos" title="Videos" />
+              </Tabs>
             </div>
+          ))}
+        </div>
 
-            <div>
-              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Colors</h3>
-              <div className="space-y-3">
-                <div>
-                  <span className="text-xs text-neutral-400 block mb-1">Default</span>
-                  <Rating color="default" defaultValue={4} />
-                </div>
-                <div>
-                  <span className="text-xs text-neutral-400 block mb-1">Primary</span>
-                  <Rating color="primary" defaultValue={4} />
-                </div>
-                <div>
-                  <span className="text-xs text-neutral-400 block mb-1">Secondary</span>
-                  <Rating color="secondary" defaultValue={4} />
-                </div>
-                <div>
-                  <span className="text-xs text-neutral-400 block mb-1">Success</span>
-                  <Rating color="success" defaultValue={4} />
-                </div>
-                <div>
-                  <span className="text-xs text-neutral-400 block mb-1">Warning</span>
-                  <Rating color="warning" defaultValue={4} />
-                </div>
-                <div>
-                  <span className="text-xs text-neutral-400 block mb-1">Danger</span>
-                  <Rating color="danger" defaultValue={4} />
-                </div>
+        {/* ── Block 2: warning / danger ── */}
+        <div className="grid grid-cols-3 gap-x-4 gap-y-3 mt-3">
+          {(["solid", "bordered", "light", "underlined"] as const).flatMap((variant) =>
+            (["success", "warning", "danger"] as ColorOption[]).map((color) => (
+              <div key={`${variant}-${color}`}>
+                <Tabs variant={variant} color={color} defaultSelectedKey="photos">
+                  <Tab key="photos" title="Photos" />
+                  <Tab key="music" title="Music" />
+                  <Tab key="videos" title="Videos" />
+                </Tabs>
               </div>
+            ))
+          )}
+          {/* Disabled row */}
+          {(["success", "warning", "danger"] as ColorOption[]).map((color) => (
+            <div key={`disabled-${color}`}>
+              <Tabs color={color} defaultSelectedKey="photos" isDisabled>
+                <Tab key="photos" title="Photos" />
+                <Tab key="music" title="Music" />
+                <Tab key="videos" title="Videos" />
+              </Tabs>
             </div>
-          </div>
-
-          {/* Right Column: Product Review with Decimal ratings */}
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Custom Icon Heart</h3>
-              <Rating icon={<FaHeart />} defaultValue={3} color="warning" />
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Custom Smiley</h3>
-              <Rating icon={<FaFaceSmile />} defaultValue={3} color="success" />
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold text-neutral-400 mb-2">Disabled</h3>
-              <Rating defaultValue={3} isDisabled />
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold text-neutral-400 mb-4">Product Review (Decimal / Read-only)</h3>
-              <div className="space-y-4 max-w-xs">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Quality</span>
-                  <div className="flex items-center gap-2">
-                    <Rating value={1.5} allowHalf isReadOnly />
-                    <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">1.5</span>
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Value for money</span>
-                  <div className="flex items-center gap-2">
-                    <Rating value={2.3} allowHalf isReadOnly />
-                    <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">2.3</span>
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Design</span>
-                  <div className="flex items-center gap-2">
-                    <Rating value={3.7} allowHalf isReadOnly />
-                    <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">3.7</span>
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Durability</span>
-                  <div className="flex items-center gap-2">
-                    <Rating value={4.2} allowHalf isReadOnly />
-                    <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">4.2</span>
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Overall</span>
-                  <div className="flex items-center gap-2">
-                    <Rating value={4.8} allowHalf isReadOnly />
-                    <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">4.8</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </Section>
 
-      {/* ── TOGGLE BUTTON ────────────────────────────────────────── */}
+      {/* ── 22. TEXTAREA ─────────────────────────────────────────── */}
+      <Section title="Textarea">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto">
+          {COLORS.map((color) => (
+            <div key={color} className="space-y-4 min-w-[200px]">
+              <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
+              <Textarea variant="flat" color={color} value={textareaVal[`${color}-flat`]} onChange={(e) => setTextareaVal(prev => ({ ...prev, [`${color}-flat`]: e.target.value }))} size="sm" />
+              <Textarea variant="bordered" color={color} value={textareaVal[`${color}-bordered`]} onChange={(e) => setTextareaVal(prev => ({ ...prev, [`${color}-bordered`]: e.target.value }))} size="sm" />
+              <Textarea variant="faded" color={color} value={textareaVal[`${color}-faded`]} onChange={(e) => setTextareaVal(prev => ({ ...prev, [`${color}-faded`]: e.target.value }))} size="sm" />
+              <Textarea variant="underlined" color={color} value={textareaVal[`${color}-underlined`]} onChange={(e) => setTextareaVal(prev => ({ ...prev, [`${color}-underlined`]: e.target.value }))} size="sm" />
+              <Textarea variant="flat" color={color} value={textareaVal[`${color}-disabled`]} onChange={(e) => setTextareaVal(prev => ({ ...prev, [`${color}-disabled`]: e.target.value }))} size="sm" disabled />
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── 23. TIME PICKER ──────────────────────────────────────── */}
+      <Section title="Time Picker">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto">
+          {COLORS.map((color) => (
+            <div key={color} className="space-y-4 min-w-[200px]">
+              <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
+              <TimePicker variant="flat" color={color} value={timeVal[`${color}-flat`]} onChange={(t) => setTimeVal(prev => ({ ...prev, [`${color}-flat`]: t }))} size="sm" />
+              <TimePicker variant="bordered" color={color} value={timeVal[`${color}-bordered`]} onChange={(t) => setTimeVal(prev => ({ ...prev, [`${color}-bordered`]: t }))} size="sm" />
+              <TimePicker variant="faded" color={color} value={timeVal[`${color}-faded`]} onChange={(t) => setTimeVal(prev => ({ ...prev, [`${color}-faded`]: t }))} size="sm" />
+              <TimePicker variant="underlined" color={color} value={timeVal[`${color}-underlined`]} onChange={(t) => setTimeVal(prev => ({ ...prev, [`${color}-underlined`]: t }))} size="sm" />
+              <TimePicker variant="flat" color={color} value={timeVal[`${color}-disabled`]} onChange={(t) => setTimeVal(prev => ({ ...prev, [`${color}-disabled`]: t }))} size="sm" disabled />
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── 24. TOGGLE BUTTON ────────────────────────────────────── */}
       <Section title="Toggle Button">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white dark:bg-neutral-900 p-6 rounded-xl border border-default-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left Column: Exclusive (Single), Multi-select, Sizes */}
           <div className="space-y-6">
             <div>
@@ -957,19 +1177,19 @@ const UIKit: React.FC = () => {
             <div>
               <h3 className="text-sm font-semibold text-neutral-400 mb-2">Sizes</h3>
               <div className="flex flex-col gap-3">
-                <ToggleButtonGroup value="sm" exclusive onChange={() => {}} size="sm">
+                <ToggleButtonGroup value="sm" exclusive onChange={() => { }} size="sm">
                   <ToggleButton value="sm">Small</ToggleButton>
                   <ToggleButton value="md">Button</ToggleButton>
                   <ToggleButton value="lg">Group</ToggleButton>
                 </ToggleButtonGroup>
 
-                <ToggleButtonGroup value="md" exclusive onChange={() => {}} size="md">
+                <ToggleButtonGroup value="md" exclusive onChange={() => { }} size="md">
                   <ToggleButton value="sm">Medium</ToggleButton>
                   <ToggleButton value="md">Button</ToggleButton>
                   <ToggleButton value="lg">Group</ToggleButton>
                 </ToggleButtonGroup>
 
-                <ToggleButtonGroup value="lg" exclusive onChange={() => {}} size="lg">
+                <ToggleButtonGroup value="lg" exclusive onChange={() => { }} size="lg">
                   <ToggleButton value="sm">Large</ToggleButton>
                   <ToggleButton value="md">Button</ToggleButton>
                   <ToggleButton value="lg">Group</ToggleButton>
@@ -1029,6 +1249,24 @@ const UIKit: React.FC = () => {
               </ToggleButtonGroup>
             </div>
           </div>
+        </div>
+      </Section>
+
+      {/* ── 25. TOOLTIP ──────────────────────────────────────────── */}
+      <Section title="Tooltip">
+        <div className="flex flex-wrap gap-4">
+          <Tooltip content="Default Tooltip" placement="top" showArrow>
+            <Button variant="flat">Hover Me</Button>
+          </Tooltip>
+          <Tooltip content="Primary Color" color="primary" placement="bottom" showArrow>
+            <Button color="primary" variant="flat">Bottom</Button>
+          </Tooltip>
+          <Tooltip content="Danger Alert Tooltip" color="danger" placement="right" showArrow>
+            <Button color="danger" variant="flat">Right</Button>
+          </Tooltip>
+          <Tooltip content="Custom smooth animation" color="secondary" placement="left" showArrow>
+            <Button color="secondary" variant="flat">Left</Button>
+          </Tooltip>
         </div>
       </Section>
     </div>

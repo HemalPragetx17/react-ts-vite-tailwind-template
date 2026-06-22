@@ -345,7 +345,7 @@ export const DrawerContent: React.FC<DrawerContentProps> = ({
                 motionOnClick?.(e as any);
               }}
               className={clsx(
-                "relative flex flex-col bg-white dark:bg-neutral-900 pointer-events-auto text-neutral-900 dark:text-neutral-100 overflow-hidden",
+                "relative flex flex-col bg-white dark:bg-content1 pointer-events-auto text-neutral-900 dark:text-neutral-100 overflow-hidden",
                 "border border-neutral-200/80 dark:border-neutral-800/80",
                 shadowClasses[shadow],
                 getRadiusClasses(radius, placement),
@@ -441,7 +441,7 @@ export const DrawerFooter: React.FC<DrawerFooterProps> = ({
   return (
     <div
       className={clsx(
-        "px-6 py-4 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-end gap-3 shrink-0 bg-white dark:bg-neutral-900",
+        "px-6 py-4 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-end gap-3 shrink-0 bg-white dark:bg-content1",
         className
       )}
     >

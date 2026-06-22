@@ -36,6 +36,9 @@ const meta: Meta<typeof Breadcrumbs> = {
       control: "select",
       options: ["none", "sm", "md", "lg", "full"],
     },
+    items: {
+      control: false,
+    },
   },
 };
 

@@ -36,20 +36,20 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     switch (type) {
       case 'danger':
         return (
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-            <IoWarningOutline className="h-6 w-6 text-red-600" aria-hidden />
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-950/30">
+            <IoWarningOutline className="h-6 w-6 text-red-600 dark:text-red-400" aria-hidden />
           </div>
         );
       case 'warning':
         return (
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber-100">
-            <IoWarningOutline className="h-6 w-6 text-amber-600" aria-hidden />
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950/30">
+            <IoWarningOutline className="h-6 w-6 text-amber-600 dark:text-amber-400" aria-hidden />
           </div>
         );
       default:
         return (
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-            <FiInfo className="h-6 w-6 text-blue-600" aria-hidden />
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-950/30">
+            <FiInfo className="h-6 w-6 text-blue-600 dark:text-blue-400" aria-hidden />
           </div>
         );
     }
@@ -67,7 +67,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
         <div className="text-center">
           {getIcon()}
           <div className="mt-4">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-default-400">
               {message}
             </p>
           </div>

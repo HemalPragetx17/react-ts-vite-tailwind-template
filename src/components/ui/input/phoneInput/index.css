@@ -309,6 +309,7 @@
 }
 
 .dark .phone-input-variant-bordered input {
+    background-color: transparent !important;
     border-color: #27272a !important;
     color: var(--phone-text-color, #f4f4f5) !important;
 }
@@ -319,6 +320,7 @@
     border-color: var(--color-primary, #2196f3) !important;
 }
 .dark .phone-input-variant-bordered .flag-dropdown {
+    background-color: transparent !important;
     border-color: #27272a !important;
 }
 .dark .phone-input-variant-bordered:not(.phone-input-has-error) .flag-dropdown:hover {

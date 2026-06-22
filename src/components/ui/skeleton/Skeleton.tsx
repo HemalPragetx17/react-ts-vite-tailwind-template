@@ -45,10 +45,10 @@ const Skeleton: React.FC<SkeletonProps> = ({
       className={clsx(
         "relative overflow-hidden select-none pointer-events-none rounded-lg",
         // Base skeleton background color matching HeroUI's default style
-        "bg-default-300 dark:bg-default-800",
+        "bg-default-300 dark:bg-default-200",
         // Animations
         animation === "shimmer" && "animate-shimmer",
-        animation === "pulse" && "animate-pulse",
+        animation === "pulse" && "animate-pulse-custom",
         classNames?.base,
         className
       )}

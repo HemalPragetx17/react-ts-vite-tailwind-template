@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import clsx from "clsx";
-import Popover from "../popover/Popover";
+import Tooltip from "../tooltip/Tooltip";
 
 export interface SliderProps {
   label?: React.ReactNode;
@@ -475,20 +475,17 @@ const Slider: React.FC<SliderProps> = ({
                     style={isVertical ? { bottom: `${pct}%`, left: "50%" } : { left: `${pct}%`, top: "50%" }}
                   >
                     {showTooltip ? (
-                      <Popover
+                      <Tooltip
                         repositionDeps={[val]}
-                        triggerMode="hover"
                         placement={isVertical ? "right" : "top"}
                         color="foreground"
                         offset={10}
                         showArrow
                         isOpen={isDragging && activeThumbIndexRef.current === idx ? true : undefined}
-                        trigger={thumbElem}
+                        content={formatVal(val, tooltipValueFormatOptions)}
                       >
-                        <div className="px-2.5 py-1 text-xs font-semibold whitespace-nowrap">
-                          {formatVal(val, tooltipValueFormatOptions)}
-                        </div>
-                      </Popover>
+                        {thumbElem}
+                      </Tooltip>
                     ) : (
                       thumbElem
                     )}

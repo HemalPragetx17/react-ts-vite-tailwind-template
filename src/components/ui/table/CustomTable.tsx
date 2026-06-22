@@ -475,7 +475,7 @@ function CustomTable<T = any>({
   return (
     <div
       className={clsx(
-        "flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm w-full overflow-hidden mt-5",
+        "flex flex-col bg-white dark:bg-content1 border border-default-100 dark:border-transparent rounded-lg shadow-sm w-full overflow-hidden mt-5",
         className,
       )}
     >
@@ -489,10 +489,10 @@ function CustomTable<T = any>({
         )}
         style={enableInfiniteScroll ? { maxHeight: infiniteScrollMaxHeight } : undefined}
       >
-        <table className="min-w-full divide-y divide-gray-200 border-collapse m-0">
+        <table className="min-w-full divide-y divide-default-100 dark:divide-transparent border-collapse m-0">
           {!hideHeader && (
             <thead className={clsx(
-              "z-20 bg-gray-50 shadow-[0_1px_0_0_#e5e7eb]",
+              "z-20 bg-gray-50 dark:bg-neutral-900/40 shadow-[0_1px_0_0_var(--color-default-100)] dark:shadow-none",
               (enableInfiniteScroll || scrollBehavior === "inside") && "sticky top-0"
             )}>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -502,7 +502,7 @@ function CustomTable<T = any>({
                       key={header.id}
                       colSpan={header.colSpan}
                       className={clsx(
-                        "px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50 whitespace-nowrap",
+                        "px-6 py-4 text-xs font-bold text-gray-500 dark:text-neutral-400 uppercase tracking-wider bg-gray-50 dark:bg-neutral-900/30 whitespace-nowrap",
                         header.column.columnDef.meta?.align === "center" && "text-center",
                         header.column.columnDef.meta?.align === "right" && "text-right",
                         (!header.column.columnDef.meta?.align || header.column.columnDef.meta?.align === "left") && "text-left",
@@ -562,7 +562,7 @@ function CustomTable<T = any>({
               ))}
             </thead>
           )}
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white dark:bg-content1 divide-y divide-default-100 dark:divide-transparent">
             {isInitialLoading ? (
               <tr>
                 <td colSpan={colSpan} className="text-center py-8">
@@ -581,8 +581,8 @@ function CustomTable<T = any>({
                     <tr
                       className={clsx(
                         "transition-colors",
-                        isStriped && rowIndex % 2 === 1 ? "bg-gray-50" : "bg-white",
-                        isStriped ? "hover:bg-gray-100" : "hover:bg-gray-50",
+                        isStriped && rowIndex % 2 === 1 ? "bg-gray-50 dark:bg-neutral-900/20" : "bg-white dark:bg-content1",
+                        isStriped ? "hover:bg-gray-100 dark:hover:bg-default-200" : "hover:bg-gray-50 dark:hover:bg-default-200",
                         onRowClick && "cursor-pointer",
                       )}
                         onClick={() => onRowClick?.(row.original)}
@@ -591,7 +591,7 @@ function CustomTable<T = any>({
                           <td
                             key={cell.id}
                             className={clsx(
-                              "px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-medium",
+                              "px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-neutral-200 font-medium",
                               cell.column.columnDef.meta?.align === "center" && "text-center",
                               cell.column.columnDef.meta?.align === "right" && "text-right",
                               (!cell.column.columnDef.meta?.align || cell.column.columnDef.meta?.align === "left") && "text-left",
@@ -609,12 +609,12 @@ function CustomTable<T = any>({
                       {enableExpanding && row.getCanExpand() && (
                         <AnimatedExpand expanded={row.getIsExpanded()} colSpan={colSpan}>
                           <table className="w-full min-w-full border-collapse">
-                            <tbody className="divide-y divide-gray-200">
+                            <tbody className="divide-y divide-default-100 dark:divide-transparent">
                               {row.subRows?.map((subRow) => (
                                 <tr
                                   key={subRow.id}
                                   className={clsx(
-                                    "bg-gray-50 hover:bg-gray-100 transition-colors",
+                                    "bg-gray-50 hover:bg-gray-100 dark:bg-neutral-900/10 dark:hover:bg-default-200 transition-colors",
                                     onRowClick && "cursor-pointer",
                                   )}
                                   onClick={() => onRowClick?.(subRow.original)}
@@ -662,7 +662,7 @@ function CustomTable<T = any>({
       </div>
 
       {enableInfiniteScroll && (
-        <div className="flex items-center justify-center px-6 py-3 bg-white border-t border-gray-200">
+        <div className="flex items-center justify-center px-6 py-3 bg-white dark:bg-content1 border-t border-default-100 dark:border-transparent">
           {isLoadingMore ? (
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <FaSpinner className="animate-spin h-4 w-4 text-primary" aria-hidden />
@@ -680,8 +680,8 @@ function CustomTable<T = any>({
 
       {enablePagination && !enableInfiniteScroll && (
         <div className={clsx(
-          "flex flex-col md:flex-row items-center justify-between px-6 py-4 bg-white border-t border-gray-200 gap-4",
-          scrollBehavior === "inside" && "sticky bottom-0 z-20 shadow-[0_-1px_0_0_#e5e7eb]"
+          "flex flex-col md:flex-row items-center justify-between px-6 py-4 bg-white dark:bg-content1 border-t border-default-100 dark:border-transparent gap-4",
+          scrollBehavior === "inside" && "sticky bottom-0 z-20 shadow-[0_-1px_0_0_var(--color-default-100)] dark:shadow-none"
         )}>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
@@ -690,7 +690,7 @@ function CustomTable<T = any>({
                 <button
                   type="button"
                   onClick={() => setIsPageSizeOpen(!isPageSizeOpen)}
-                  className="flex items-center justify-between gap-2 min-w-[70px] bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl px-3 py-1.5 cursor-pointer transition-all hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="flex items-center justify-between gap-2 min-w-[70px] bg-gray-50 dark:bg-default-100 border border-gray-200 dark:border-default-200 text-gray-700 dark:text-neutral-300 text-sm rounded-xl px-3 py-1.5 cursor-pointer transition-all hover:bg-gray-100 dark:hover:bg-default-200 focus:outline-none focus:ring-2 focus:ring-primary/20"
                 >
                   <span>{table.getState().pagination.pageSize}</span>
                   <FaChevronDown
@@ -700,7 +700,7 @@ function CustomTable<T = any>({
                 </button>
 
                 {isPageSizeOpen && (
-                  <div className="absolute bottom-full mb-1.5 left-0 z-30 min-w-[70px] bg-white border border-gray-200 rounded-xl shadow-lg py-1 overflow-hidden">
+                  <div className="absolute bottom-full mb-1.5 left-0 z-30 min-w-[70px] bg-white dark:bg-content1 border border-gray-200 dark:border-default-100 rounded-xl shadow-lg py-1 overflow-hidden">
                     {PAGE_OPTIONS.map((size) => {
                       const isSelected = table.getState().pagination.pageSize === size;
                       return (
@@ -713,7 +713,7 @@ function CustomTable<T = any>({
                           }}
                           className={`w-full text-left px-3 py-1.5 text-sm transition-colors duration-150 ${isSelected
                             ? "bg-primary text-white font-medium"
-                            : "text-gray-700 hover:bg-primary-300 hover:text-white"
+                            : "text-gray-700 dark:text-neutral-300 hover:bg-primary-300 dark:hover:bg-primary hover:text-white"
                             }`}
                         >
                           {size}
@@ -739,7 +739,7 @@ function CustomTable<T = any>({
                   paginationSize === "sm" && "w-8 h-8",
                   paginationSize === "md" && "w-10 h-10",
                   paginationSize === "lg" && "w-12 h-12",
-                  "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  "bg-gray-100 dark:bg-default-100 text-gray-600 dark:text-neutral-400 hover:bg-gray-200 dark:hover:bg-default-200"
                 )}
               >
                 <FaChevronLeft className="w-5 h-5" aria-hidden />
@@ -818,7 +818,7 @@ function CustomTable<T = any>({
 
                       // Active State
                       isActive ? colorMap[paginationColor as keyof typeof colorMap][paginationVariant as keyof (typeof colorMap)['primary']] : [
-                        "text-gray-600 hover:bg-gray-100",
+                        "text-gray-600 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-default-100",
                       ]
                     )}
                   >
@@ -837,7 +837,7 @@ function CustomTable<T = any>({
                   paginationSize === "sm" && "w-8 h-8",
                   paginationSize === "md" && "w-10 h-10",
                   paginationSize === "lg" && "w-12 h-12",
-                  "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  "bg-gray-100 dark:bg-default-100 text-gray-600 dark:text-neutral-400 hover:bg-gray-200 dark:hover:bg-default-200"
                 )}
               >
                 <FaChevronRight className="w-5 h-5" aria-hidden />

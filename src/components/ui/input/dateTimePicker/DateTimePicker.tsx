@@ -1293,12 +1293,12 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
   };
 
   const borderedColorClasses = {
-    default: "border-neutral-300 hover:border-neutral-400 focus-within:border-neutral-500 text-foreground",
-    primary: "border-neutral-300 hover:border-primary-300 focus-within:border-primary text-primary",
-    secondary: "border-neutral-300 hover:border-secondary-300 focus-within:border-secondary text-secondary",
-    success: "border-neutral-300 hover:border-success-300 focus-within:border-success text-success",
-    warning: "border-neutral-300 hover:border-warning-300 focus-within:border-warning text-warning",
-    danger: "border-neutral-300 hover:border-danger-300 focus-within:border-danger text-danger",
+    default: "border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600 focus-within:border-neutral-500 dark:focus-within:border-neutral-500 text-foreground",
+    primary: "border-neutral-300 dark:border-neutral-700 hover:border-primary-300 dark:hover:border-primary-400 focus-within:border-primary text-primary",
+    secondary: "border-neutral-300 dark:border-neutral-700 hover:border-secondary-300 dark:hover:border-secondary-400 focus-within:border-secondary text-secondary",
+    success: "border-neutral-300 dark:border-neutral-700 hover:border-success-300 dark:hover:border-success-400 focus-within:border-success text-success",
+    warning: "border-neutral-300 dark:border-neutral-700 hover:border-warning-300 dark:hover:border-warning-400 focus-within:border-warning text-warning",
+    danger: "border-neutral-300 dark:border-neutral-700 hover:border-danger-300 dark:hover:border-danger-400 focus-within:border-danger text-danger",
   };
 
   const underlinedColorClasses = {
@@ -1562,7 +1562,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
                     ? "text-neutral-800 dark:text-neutral-200"
                     : "text-neutral-700 dark:text-neutral-300"
                   : "text-neutral-400 dark:text-neutral-500"
-          } ${isOutlined ? "bg-white dark:bg-neutral-900 px-1" : ""}`}
+          } ${isOutlined ? "bg-white dark:bg-content1 px-1" : ""}`}
       >
         {label}
       </motion.label>
@@ -1588,7 +1588,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
               left: coords.left,
               zIndex: 99999,
             }}
-            className="bg-white dark:bg-neutral-900 rounded-xl shadow-2xl border border-neutral-200 dark:border-neutral-700 overflow-hidden"
+            className="bg-white dark:bg-content1 rounded-xl shadow-2xl border border-neutral-200 dark:border-neutral-700 overflow-hidden"
           >
             <div className="flex">
               {/* Left: Calendar */}

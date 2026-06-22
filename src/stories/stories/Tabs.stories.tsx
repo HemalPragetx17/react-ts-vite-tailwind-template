@@ -41,6 +41,9 @@ const meta: Meta<typeof Tabs> = {
     disabledKeys: {
       control: "object",
     },
+    items: {
+      control: false,
+    },
   },
 };
 

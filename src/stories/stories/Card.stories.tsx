@@ -82,7 +82,7 @@ export const HoverAndPress: Story = {
       <Card
         {...args}
         isPressable
-        onClick={() => alert("Card clicked!")}
+        onClick={() => {}}
         className="w-[280px]"
       >
         <CardBody className="p-6">
@@ -139,6 +139,38 @@ export const BlurredFooter: Story = {
       </Card>
     </div>
   ),
+};
+
+export const Blurred: Story = {
+  render: (args) => (
+    <div className="relative p-8 rounded-2xl bg-gradient-to-tr from-pink-500 via-red-500 to-yellow-500 overflow-hidden flex items-center justify-center min-w-[400px] min-h-[300px]">
+      <Card
+        {...args}
+        isBlurred
+        className="max-w-[340px] w-full bg-background/60 dark:bg-default-100/50 border-none"
+        shadow="lg"
+      >
+        <CardHeader className="flex gap-3">
+          <div className="flex flex-col text-left">
+            <p className="text-md font-bold text-foreground">Blurred Glass Card</p>
+            <p className="text-xs text-foreground/60">isBlurred = true</p>
+          </div>
+        </CardHeader>
+        <CardBody className="text-left">
+          <p className="text-sm text-foreground/80">
+            This card features an active backdrop-blur frosted glass overlay. The translucent background lets the vibrant rear gradients shine through beautifully.
+          </p>
+        </CardBody>
+        <CardFooter className="flex justify-end gap-2">
+          <Button className="bg-foreground/10 text-foreground" size="sm" variant="flat">Close</Button>
+          <Button className="bg-foreground text-background" size="sm">Explore</Button>
+        </CardFooter>
+      </Card>
+    </div>
+  ),
+  args: {
+    isBlurred: true,
+  },
 };
 
 export const PrimaryAction: Story = {

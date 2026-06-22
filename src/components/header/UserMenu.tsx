@@ -80,7 +80,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ onLogout }) => {
             />
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-default-900 dark:text-white">{displayName}</p>
-              <p className="truncate text-xs text-default-500 dark:text-default-400">{user.email || 'No email available'}</p>
+              <p className="truncate text-xs text-default-700 dark:text-default-700">{user.email || 'No email available'}</p>
             </div>
           </div>
           <div className="mt-3 flex items-center gap-2">
@@ -98,10 +98,10 @@ const UserMenu: React.FC<UserMenuProps> = ({ onLogout }) => {
           <button
             type="button"
             onClick={handleCopyEmail}
-            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-default-700 dark:text-default-300 transition hover:bg-default-50 dark:hover:bg-default-900/50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-default-800 dark:text-default-800 transition hover:bg-default-50 dark:hover:bg-default-900/50 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={!user.email}
           >
-            <FaCopy className="h-4 w-4 text-default-800 shrink-0" aria-hidden />
+            <FaCopy className="h-4 w-4 text-default-700 dark:text-default-800 shrink-0" aria-hidden />
             Copy email
           </button>
 
@@ -111,9 +111,9 @@ const UserMenu: React.FC<UserMenuProps> = ({ onLogout }) => {
               handleDialogOpen();
               setIsOpen(false);
             }}
-            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-default-700 dark:text-default-300 transition hover:bg-default-50 dark:hover:bg-default-900/50"
+            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-default-800 dark:text-default-800 transition hover:bg-default-50 dark:hover:bg-default-900/50"
           >
-            <FiLock className="h-4 w-4 text-default-800 shrink-0" aria-hidden />
+            <FiLock className="h-4 w-4 text-default-700 dark:text-default-800 shrink-0" aria-hidden />
             Change password
           </button>
 

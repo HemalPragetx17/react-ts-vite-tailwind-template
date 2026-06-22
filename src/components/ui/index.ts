@@ -82,4 +82,9 @@ export type { SkeletonProps } from "./skeleton/Skeleton";
 export { Card, CardHeader, CardBody, CardFooter } from "./card/Card";
 export type { CardProps, CardHeaderProps, CardBodyProps, CardFooterProps } from "./card/Card";
 
+// ── Tooltip ──────────────────────────────────────────────────────────────────
+export { default as Tooltip } from "./tooltip/Tooltip";
+export type { TooltipProps } from "./tooltip/Tooltip";
+
+
 

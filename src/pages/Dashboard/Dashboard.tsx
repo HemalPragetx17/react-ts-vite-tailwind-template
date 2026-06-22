@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FaChartSimple, FaFileLines } from "react-icons/fa6";
 import { HiOutlineSquares2X2 } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
-import { Accordion, AccordionItem, Button, Drawer, DrawerBody, DrawerContent, DrawerHeader, Modal, Popover, Tab, Tabs } from "../../components/ui";
+import { Accordion, AccordionItem, Button, Card, CardBody, Drawer, DrawerBody, DrawerContent, DrawerHeader, Modal, Tab, Tabs, Tooltip } from "../../components/ui";
 import type { IFormModal } from "../../models/dashboard";
 import { Routing } from "../../routes/routing";
 import DemoForm from "./DemoForm";
@@ -85,21 +85,27 @@ const Dashboard = () => {
       count: 9,
       content: (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-2">
-          <div className="bg-white dark:bg-neutral-800 p-5 rounded-xl border border-neutral-200 dark:border-neutral-700/60 shadow-sm">
-            <h3 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">Total Users</h3>
-            <p className="text-3xl font-bold text-neutral-900 dark:text-white mt-2">1,254</p>
-            <span className="text-xs text-green-500 font-semibold inline-block mt-2">↑ 12% from last month</span>
-          </div>
-          <div className="bg-white dark:bg-neutral-800 p-5 rounded-xl border border-neutral-200 dark:border-neutral-700/60 shadow-sm">
-            <h3 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">Active Sessions</h3>
-            <p className="text-3xl font-bold text-neutral-900 dark:text-white mt-2">423</p>
-            <span className="text-xs text-green-500 font-semibold inline-block mt-2">↑ 5% from last hour</span>
-          </div>
-          <div className="bg-white dark:bg-neutral-800 p-5 rounded-xl border border-neutral-200 dark:border-neutral-700/60 shadow-sm">
-            <h3 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">Conversion Rate</h3>
-            <p className="text-3xl font-bold text-neutral-900 dark:text-white mt-2">3.24%</p>
-            <span className="text-xs text-red-500 font-semibold inline-block mt-2">↓ 0.4% from yesterday</span>
-          </div>
+          <Card shadow="md" fullWidth>
+            <CardBody className="p-5">
+              <h3 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">Total Users</h3>
+              <p className="text-3xl font-bold text-neutral-900 dark:text-white mt-2">1,254</p>
+              <span className="text-xs text-green-500 font-semibold inline-block mt-2">↑ 12% from last month</span>
+            </CardBody>
+          </Card>
+          <Card shadow="md" fullWidth>
+            <CardBody className="p-5">
+              <h3 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">Active Sessions</h3>
+              <p className="text-3xl font-bold text-neutral-900 dark:text-white mt-2">423</p>
+              <span className="text-xs text-green-500 font-semibold inline-block mt-2">↑ 5% from last hour</span>
+            </CardBody>
+          </Card>
+          <Card shadow="md" fullWidth>
+            <CardBody className="p-5">
+              <h3 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">Conversion Rate</h3>
+              <p className="text-3xl font-bold text-neutral-900 dark:text-white mt-2">3.24%</p>
+              <span className="text-xs text-red-500 font-semibold inline-block mt-2">↓ 0.4% from yesterday</span>
+            </CardBody>
+          </Card>
         </div>
       ),
     },
@@ -109,13 +115,15 @@ const Dashboard = () => {
       icon: analyticsIcon,
       count: 3,
       content: (
-        <div className="bg-white dark:bg-neutral-800 p-6 rounded-xl border border-neutral-200 dark:border-neutral-700/60 shadow-sm mt-2">
-          <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-2">Performance Analytics</h3>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400">Interactive charts and metric tracking would go here.</p>
-          <div className="h-40 bg-neutral-50 dark:bg-neutral-900/50 rounded-lg border border-dashed border-neutral-200 dark:border-neutral-800 flex items-center justify-center mt-4">
-            <span className="text-neutral-400 text-xs">Analytics Chart Placeholder</span>
-          </div>
-        </div>
+        <Card shadow="md" fullWidth className="mt-2">
+          <CardBody className="p-6">
+            <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-2">Performance Analytics</h3>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">Interactive charts and metric tracking would go here.</p>
+            <div className="h-40 bg-neutral-50 dark:bg-neutral-900/50 rounded-lg border border-dashed border-neutral-200 dark:border-neutral-800 flex items-center justify-center mt-4">
+              <span className="text-neutral-400 text-xs">Analytics Chart Placeholder</span>
+            </div>
+          </CardBody>
+        </Card>
       ),
     },
     {
@@ -124,14 +132,16 @@ const Dashboard = () => {
       icon: reportsIcon,
       count: 1,
       content: (
-        <div className="bg-white dark:bg-neutral-800 p-6 rounded-xl border border-neutral-200 dark:border-neutral-700/60 shadow-sm mt-2">
-          <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-2">System Reports</h3>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400">Generate, schedule, or view your automated data exports.</p>
-          <div className="flex gap-3 mt-4">
-            <Button size="md" variant="solid" color="primary">Download CSV</Button>
-            <Button size="md" variant="bordered">Download PDF</Button>
-          </div>
-        </div>
+        <Card shadow="md" fullWidth className="mt-2">
+          <CardBody className="p-6">
+            <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-2">System Reports</h3>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">Generate, schedule, or view your automated data exports.</p>
+            <div className="flex gap-3 mt-4">
+              <Button size="md" variant="solid" color="primary">Download CSV</Button>
+              <Button size="md" variant="bordered">Download PDF</Button>
+            </div>
+          </CardBody>
+        </Card>
       ),
     },
   ];
@@ -139,21 +149,20 @@ const Dashboard = () => {
   return (
     <section>
       <div className="flex justify-between items-center">
-        <Popover
-          triggerMode="hover"
+        <Tooltip
           placement="top"
           showArrow
           offset={8}
           delay={{ open: 100, close: 150 }}
           className="px-3 py-2 text-sm max-w-xs"
-          trigger={
-            <p className="text-2xl cursor-default select-none">Dashboard</p>
+          content={
+            <p className="text-xs text-default-600 dark:text-default-300 leading-relaxed">
+              Real-time overview of your application's key metrics, sessions, and reports.
+            </p>
           }
         >
-          <p className="text-xs text-default-600 dark:text-default-300 leading-relaxed">
-            Real-time overview of your application's key metrics, sessions, and reports.
-          </p>
-        </Popover>
+          <p className="text-2xl cursor-default select-none">Dashboard</p>
+        </Tooltip>
         <div className="flex gap-2">
           <Button size="lg" onClick={handleDialogOpen}>
             Demo Form
@@ -194,20 +203,22 @@ const Dashboard = () => {
         </Tabs>
       </div>
 
-      <div className="mt-12 max-w-4xl bg-white dark:bg-neutral-800 p-6 rounded-xl border border-neutral-200 dark:border-neutral-700/60 shadow-sm">
-        <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">Frequently Asked Questions (Demo Accordion)</h3>
-        <Accordion variant="bordered">
-          <AccordionItem key="faq-1" title="How do I add a new user?">
-            To add a new user, click the "Demo Form" button in the top right corner. Fill in the required details such as name, email, and roles, and click submit.
-          </AccordionItem>
-          <AccordionItem key="faq-2" title="How can I export reports?">
-            Navigate to the "Reports" tab above. From there, you can download the consolidated system data in either CSV or PDF format.
-          </AccordionItem>
-          <AccordionItem key="faq-3" title="Are these metrics updated in real-time?">
-            Yes, the sessions and conversion metrics are calculated dynamically and refreshed every hour to give you the most accurate overview.
-          </AccordionItem>
-        </Accordion>
-      </div>
+      <Card shadow="md" fullWidth className="mt-12">
+        <CardBody className="p-6">
+          <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">Frequently Asked Questions (Demo Accordion)</h3>
+          <Accordion variant="bordered">
+            <AccordionItem key="faq-1" title="How do I add a new user?">
+              To add a new user, click the "Demo Form" button in the top right corner. Fill in the required details such as name, email, and roles, and click submit.
+            </AccordionItem>
+            <AccordionItem key="faq-2" title="How can I export reports?">
+              Navigate to the "Reports" tab above. From there, you can download the consolidated system data in either CSV or PDF format.
+            </AccordionItem>
+            <AccordionItem key="faq-3" title="Are these metrics updated in real-time?">
+              Yes, the sessions and conversion metrics are calculated dynamically and refreshed every hour to give you the most accurate overview.
+            </AccordionItem>
+          </Accordion>
+        </CardBody>
+      </Card>
 
       <Modal
         openDialog={openDialog}

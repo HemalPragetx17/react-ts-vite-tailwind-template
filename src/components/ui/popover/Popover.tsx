@@ -71,7 +71,7 @@ export interface PopoverProps {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const colorBorderMap: Record<PopoverColor, string> = {
-    default: "border-default-200 dark:border-default-700",
+    default: "border-default-200 dark:border-default-800/40",
     primary: "border-primary",
     secondary: "border-secondary",
     success: "border-success",
@@ -81,7 +81,7 @@ const colorBorderMap: Record<PopoverColor, string> = {
 };
 
 const colorBgMap: Record<PopoverColor, string> = {
-    default: "bg-white dark:bg-default-900 text-black dark:text-white",
+    default: "bg-white dark:bg-content1 text-black dark:text-white",
     primary: "bg-primary text-white",
     secondary: "bg-secondary text-white",
     success: "bg-success text-black",
@@ -91,7 +91,7 @@ const colorBgMap: Record<PopoverColor, string> = {
 };
 
 const colorArrowMap: Record<PopoverColor, string> = {
-    default: "border-default-200 dark:border-default-700",
+    default: "border-default-200 dark:border-default-800/40",
     primary: "border-primary",
     secondary: "border-secondary",
     success: "border-success",
@@ -101,7 +101,7 @@ const colorArrowMap: Record<PopoverColor, string> = {
 };
 
 const colorArrowBgMap: Record<PopoverColor, string> = {
-    default: "bg-white dark:bg-default-900",
+    default: "bg-white dark:bg-content1",
     primary: "bg-primary",
     secondary: "bg-secondary",
     success: "bg-success",

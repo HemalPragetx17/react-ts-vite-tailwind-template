@@ -22,7 +22,10 @@ const meta: Meta<typeof Radio> = {
       control: "boolean",
     },
     onChange: { action: "changed" },
-  },
+    options: {
+      control: false,
+    },
+  }
 };
 
 export default meta;

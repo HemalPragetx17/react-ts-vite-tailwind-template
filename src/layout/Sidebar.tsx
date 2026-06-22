@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { Tooltip } from '../components/ui';
+import { Routing } from '../routes/routing';
 import type { ISidebarData } from '../shared/constants/sidebar-data';
 import { sidebarRoutes } from '../shared/constants/sidebar-data';
-import { SidebarMenuIcon } from '../shared/sidebar-icons';
 import { Modules } from '../shared/enums/modules';
-import { Routing } from '../routes/routing';
-import { Popover } from '../components/ui';
+import { SidebarMenuIcon } from '../shared/sidebar-icons';
 
 const Sidebar = () => {
   const { pathname } = useLocation();
@@ -44,8 +44,8 @@ const Sidebar = () => {
     }`;
 
   return (
-    <div className='w-[250px] !important h-screen fixed top-0 left-0 flex flex-col overflow-hidden transition-all duration-300 ease-linear [.hide-sidebar_&]:w-[64px] bg-black'>
-      <div className="sticky top-0 z-20 shrink-0 h-[70px] flex justify-start items-center gap-[15px] border-b border-[#7979798a] bg-black text-white transition-all duration-300 ease-linear [.hide-sidebar_&]:px-[5px] [.hide-sidebar_&]:w-full [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:gap-0">
+    <div className='w-[250px] !important h-screen fixed top-0 left-0 flex flex-col overflow-hidden transition-all duration-300 ease-linear [.hide-sidebar_&]:w-[64px] bg-black dark:border-r dark:border-content2'>
+      <div className="sticky top-0 z-20 shrink-0 h-[70px] flex justify-start items-center gap-[15px] border-b border-content3 bg-black text-white transition-all duration-300 ease-linear [.hide-sidebar_&]:px-[5px] [.hide-sidebar_&]:w-full [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:gap-0">
         <img className="w-[55px] h-[55px]" src="/favicon.svg" alt='img not found' />
         <p className='text-2xl [.hide-sidebar_&]:hidden'>Admin Portal</p>
       </div>
@@ -67,43 +67,38 @@ const Sidebar = () => {
                   (menu?.childs?.length ?? 0) > 0 ? handleMenuOpen(menu?.module) : handleMenuClose();
                 }}
               >
-                <Popover
-                  trigger={
-                    <Link
-                      className={`group w-full relative flex items-center box-border text-[15px] leading-[19px] py-2 px-[14px] gap-[10px] no-underline ${isActive || pathname?.includes(menu?.route) ? 'active bg-primary text-white' : 'text-default-600'} hover:bg-primary hover:text-white transition-colors duration-100 ease-linear [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:px-0`}
-                      to={menu?.route ? menu?.route : '/'}
-                      onClick={(e) => {
-                        if ((menu?.childs?.length ?? 0) > 0) e.preventDefault();
-                      }}
-                      tabIndex={-1}
-                      onFocus={(e) => e.preventDefault()}
-                      aria-label={isActive ? 'true' : 'false'}
-                    >
-                      {menu?.icon && (
-                        <SidebarMenuIcon
-                          name={menu.icon}
-                          className={`${menuIconClass(isActive || pathname?.includes(menu?.route))} mr-[7px] [.hide-sidebar_&]:mr-0`}
-                        />
-                      )}
-                      <span className="text-[16px] font-medium inline-block mr-[8px] [.hide-sidebar_&]:hidden">{menu?.name}</span>
-                      {(menu?.childs?.length ?? 0) > 0 && (
-                        <span className={`w-[13px] h-[13px] inline-block relative -bottom-[5px] -left-[10px] transition-all duration-500 ease-in-out mt-[2px] text-left transform rotate-45 ml-auto before:absolute before:content-[''] before:inline-block before:w-[10.5px] before:h-[2.5px] before:bg-default-600 before:transition-all before:duration-500 before:ease-in-out before:rounded-[2px] after:absolute after:content-[''] after:inline-block after:w-[10.5px] after:h-[2.5px] after:bg-default-600 after:transition-all after:duration-500 after:ease-in-out after:rounded-[2px] after:transform after:rotate-90 after:-top-[5px] after:left-[5px] aria-[label=true]:before:-rotate-90 aria-[label=true]:after:rotate-180 group-hover:before:bg-white group-hover:after:bg-white ${isActive || pathname?.includes(menu?.route) ? 'before:bg-white after:bg-white' : ''} [.hide-sidebar_&]:hidden`} aria-label={isActive ? 'true' : 'false'}></span>
-                      )}
-                    </Link>
-                  }
+                <Tooltip
                   placement="right"
                   color="primary"
-                  triggerMode="hover"
                   showArrow
                   offset={19}
-                  radius='md'
+                  radius="md"
                   triggerClassName="w-full"
                   className="hidden [.hide-sidebar_&]:block"
+                  content={menu?.name}
                 >
-                  <div className="px-2.5 py-1.5 font-semibold text-xs whitespace-nowrap">
-                    {menu?.name}
-                  </div>
-                </Popover>
+                  <Link
+                    className={`group w-full relative flex items-center box-border text-[15px] leading-[19px] py-2 px-[14px] gap-[10px] no-underline ${isActive || pathname?.includes(menu?.route) ? 'active bg-primary text-white' : 'text-default-600'} hover:bg-primary hover:text-white transition-colors duration-100 ease-linear [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:px-0`}
+                    to={menu?.route ? menu?.route : '/'}
+                    onClick={(e) => {
+                      if ((menu?.childs?.length ?? 0) > 0) e.preventDefault();
+                    }}
+                    tabIndex={-1}
+                    onFocus={(e) => e.preventDefault()}
+                    aria-label={isActive ? 'true' : 'false'}
+                  >
+                    {menu?.icon && (
+                      <SidebarMenuIcon
+                        name={menu.icon}
+                        className={`${menuIconClass(isActive || pathname?.includes(menu?.route))} mr-[7px] [.hide-sidebar_&]:mr-0`}
+                      />
+                    )}
+                    <span className="text-[16px] font-medium inline-block mr-[8px] [.hide-sidebar_&]:hidden">{menu?.name}</span>
+                    {(menu?.childs?.length ?? 0) > 0 && (
+                      <span className={`w-[13px] h-[13px] inline-block relative -bottom-[5px] -left-[10px] transition-all duration-500 ease-in-out mt-[2px] text-left transform rotate-45 ml-auto before:absolute before:content-[''] before:inline-block before:w-[10.5px] before:h-[2.5px] before:bg-default-600 before:transition-all before:duration-500 before:ease-in-out before:rounded-[2px] after:absolute after:content-[''] after:inline-block after:w-[10.5px] after:h-[2.5px] after:bg-default-600 after:transition-all after:duration-500 after:ease-in-out after:rounded-[2px] after:transform after:rotate-90 after:-top-[5px] after:left-[5px] aria-[label=true]:before:-rotate-90 aria-[label=true]:after:rotate-180 group-hover:before:bg-white group-hover:after:bg-white ${isActive || pathname?.includes(menu?.route) ? 'before:bg-white after:bg-white' : ''} [.hide-sidebar_&]:hidden`} aria-label={isActive ? 'true' : 'false'}></span>
+                    )}
+                  </Link>
+                </Tooltip>
                 {(menu?.childs?.length ?? 0) > 0 &&
                   (
                     <ul className={`flex flex-col gap-[5px] p-[5px] border-2 border-primary rounded-b-[10px] ${isActive ? 'show-child-menu' : ''}`} tabIndex={-1}
@@ -119,39 +114,34 @@ const Sidebar = () => {
                             onFocus={(e) => e.preventDefault()}
                             key={index}
                           >
-                            <Popover
-                              trigger={
-                                <Link
-                                  className={`group/child w-full relative flex items-center box-border text-[15px] leading-[19px] py-2 px-[10px] rounded-[10px] gap-[10px] no-underline ${pathname?.includes(childMenu?.route) ? 'active bg-primary text-white' : 'text-default-600'} hover:bg-primary hover:text-white transition-colors duration-100 ease-linear [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:px-0`}
-                                  to={childMenu?.route ? childMenu?.route : '/'}
-                                  onClick={(e) => {
-                                    if ((childMenu?.childs?.length ?? 0) > 0) e.preventDefault();
-                                  }}
-                                  tabIndex={-1}
-                                  onFocus={(e) => e.preventDefault()}
-                                >
-                                  {childMenu?.icon && (
-                                    <SidebarMenuIcon
-                                      name={childMenu.icon}
-                                      className={`${childMenuIconClass(pathname?.includes(childMenu?.route), 'group/child')} mr-[5px] [.hide-sidebar_&]:mr-0`}
-                                    />
-                                  )}
-                                  <span className="text-[16px] inline-block mr-[8px] [.hide-sidebar_&]:hidden">{childMenu?.name}</span>
-                                </Link>
-                              }
+                            <Tooltip
                               placement="right"
                               color="primary"
-                              triggerMode="hover"
                               showArrow
                               offset={24}
-                              radius='md'
+                              radius="md"
                               triggerClassName="w-full"
                               className="hidden [.hide-sidebar_&]:block"
+                              content={childMenu?.name}
                             >
-                              <div className="px-2.5 py-1.5 font-semibold text-xs whitespace-nowrap">
-                                {childMenu?.name}
-                              </div>
-                            </Popover>
+                              <Link
+                                className={`group/child w-full relative flex items-center box-border text-[15px] leading-[19px] py-2 px-[10px] rounded-[10px] gap-[10px] no-underline ${pathname?.includes(childMenu?.route) ? 'active bg-primary text-white' : 'text-default-600'} hover:bg-primary hover:text-white transition-colors duration-100 ease-linear [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:px-0`}
+                                to={childMenu?.route ? childMenu?.route : '/'}
+                                onClick={(e) => {
+                                  if ((childMenu?.childs?.length ?? 0) > 0) e.preventDefault();
+                                }}
+                                tabIndex={-1}
+                                onFocus={(e) => e.preventDefault()}
+                              >
+                                {childMenu?.icon && (
+                                  <SidebarMenuIcon
+                                    name={childMenu.icon}
+                                    className={`${childMenuIconClass(pathname?.includes(childMenu?.route), 'group/child')} mr-[5px] [.hide-sidebar_&]:mr-0`}
+                                  />
+                                )}
+                                <span className="text-[16px] inline-block mr-[8px] [.hide-sidebar_&]:hidden">{childMenu?.name}</span>
+                              </Link>
+                            </Tooltip>
                           </li>
                         ))
                       )}

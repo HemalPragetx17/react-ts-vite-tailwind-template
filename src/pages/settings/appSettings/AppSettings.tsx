@@ -1,6 +1,6 @@
 import { Field, Form, Formik } from "formik";
 import { toast } from "react-toastify";
-import { Button, Checkbox, Input } from "../../../components/ui";
+import { Button, Card, CardBody, Checkbox, Input } from "../../../components/ui";
 import type { IAppSettingsModel } from "../../../models/settings";
 import { AppSettingsValidationSchema } from "../../../validation/settings";
 
@@ -40,74 +40,76 @@ const AppSettings = () => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <div className="bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 my-5">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="flex flex-col gap-5">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                      Android Version
-                    </label>
-                    <Field
-                      name="androidVersion"
-                      placeholder="e.g. 1.2.3"
-                      variant="bordered"
-                      radius="md"
-                      size="md"
-                      component={Input}
-                    />
+            <Card className="my-5" shadow="md" fullWidth>
+              <CardBody className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                        Android Version
+                      </label>
+                      <Field
+                        name="androidVersion"
+                        placeholder="e.g. 1.2.3"
+                        variant="bordered"
+                        radius="md"
+                        size="md"
+                        component={Input}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                        iOS Version
+                      </label>
+                      <Field
+                        name="iosVersion"
+                        placeholder="e.g. 1.0"
+                        variant="bordered"
+                        radius="md"
+                        size="md"
+                        component={Input}
+                      />
+                    </div>
                   </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                      iOS Version
-                    </label>
+                  <div className="flex flex-col justify-center gap-5">
                     <Field
-                      name="iosVersion"
-                      placeholder="e.g. 1.0"
-                      variant="bordered"
-                      radius="md"
+                      name="androidForceUpdate"
+                      label="Android Force Update"
+                      color="primary"
                       size="md"
-                      component={Input}
+                      radius="md"
+                      component={Checkbox}
+                    />
+                    <Field
+                      name="iosForceUpdate"
+                      label="iOS Force Update"
+                      color="primary"
+                      size="md"
+                      radius="md"
+                      component={Checkbox}
+                    />
+                    <Field
+                      name="androidMaintenance"
+                      label="Android App Maintenance"
+                      color="primary"
+                      size="md"
+                      radius="md"
+                      component={Checkbox}
+                    />
+                    <Field
+                      name="iosMaintenance"
+                      label="iOS App Maintenance"
+                      color="primary"
+                      size="md"
+                      radius="md"
+                      component={Checkbox}
                     />
                   </div>
                 </div>
-
-                <div className="flex flex-col justify-center gap-5">
-                  <Field
-                    name="androidForceUpdate"
-                    label="Android Force Update"
-                    color="primary"
-                    size="md"
-                    radius="md"
-                    component={Checkbox}
-                  />
-                  <Field
-                    name="iosForceUpdate"
-                    label="iOS Force Update"
-                    color="primary"
-                    size="md"
-                    radius="md"
-                    component={Checkbox}
-                  />
-                  <Field
-                    name="androidMaintenance"
-                    label="Android App Maintenance"
-                    color="primary"
-                    size="md"
-                    radius="md"
-                    component={Checkbox}
-                  />
-                  <Field
-                    name="iosMaintenance"
-                    label="iOS App Maintenance"
-                    color="primary"
-                    size="md"
-                    radius="md"
-                    component={Checkbox}
-                  />
-                </div>
-              </div>
-            </div>
+              </CardBody>
+            </Card>
 
             <div className="mt-6">
               <Button type="submit" isLoading={isSubmitting}>

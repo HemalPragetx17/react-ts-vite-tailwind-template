@@ -538,12 +538,12 @@ const TimePicker: React.FC<TimePickerProps> = ({
   };
 
   const borderedColorClasses = {
-    default: "border-neutral-300 hover:border-neutral-400 focus-within:border-neutral-500 text-foreground",
-    primary: "border-neutral-300 hover:border-primary-300 focus-within:border-primary text-primary",
-    secondary: "border-neutral-300 hover:border-secondary-300 focus-within:border-secondary text-secondary",
-    success: "border-neutral-300 hover:border-success-300 focus-within:border-success text-success",
-    warning: "border-neutral-300 hover:border-warning-300 focus-within:border-warning text-warning",
-    danger: "border-neutral-300 hover:border-danger-300 focus-within:border-danger text-danger",
+    default: "border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600 focus-within:border-neutral-500 dark:focus-within:border-neutral-500 text-foreground",
+    primary: "border-neutral-300 dark:border-neutral-700 hover:border-primary-300 dark:hover:border-primary-400 focus-within:border-primary text-primary",
+    secondary: "border-neutral-300 dark:border-neutral-700 hover:border-secondary-300 dark:hover:border-secondary-400 focus-within:border-secondary text-secondary",
+    success: "border-neutral-300 dark:border-neutral-700 hover:border-success-300 dark:hover:border-success-400 focus-within:border-success text-success",
+    warning: "border-neutral-300 dark:border-neutral-700 hover:border-warning-300 dark:hover:border-warning-400 focus-within:border-warning text-warning",
+    danger: "border-neutral-300 dark:border-neutral-700 hover:border-danger-300 dark:hover:border-danger-400 focus-within:border-danger text-danger",
   };
 
   const underlinedColorClasses = {
@@ -945,7 +945,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
   const renderClockPicker = () => {
     return (
       <div
-        className="flex flex-col bg-white dark:bg-neutral-900 select-none font-sans border border-neutral-100 dark:border-neutral-800 shadow-xl rounded-2xl overflow-hidden"
+        className="flex flex-col bg-white dark:bg-content1 select-none font-sans border border-neutral-100 dark:border-neutral-800 shadow-xl rounded-2xl overflow-hidden"
         style={{ width: 290, height: 415 }}
       >
         {/* Header Display (Light-First colors) */}
@@ -1002,7 +1002,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
         </div>
 
         {/* Dial Face */}
-        <div className="relative flex-1 flex items-center justify-center p-3 bg-white dark:bg-neutral-900">
+        <div className="relative flex-1 flex items-center justify-center p-3 bg-white dark:bg-content1">
           {/* View Toggle Arrows inside dial face */}
           <div className="absolute top-2 right-4 flex items-center gap-1.5 z-10">
             <Button
@@ -1180,11 +1180,11 @@ const TimePicker: React.FC<TimePickerProps> = ({
   const renderNormalPicker = () => {
     return (
       <div
-        className="flex flex-col bg-white dark:bg-neutral-900 select-none font-sans border border-neutral-100 dark:border-neutral-800 shadow-xl rounded-xl overflow-hidden"
+        className="flex flex-col bg-white dark:bg-content1 select-none font-sans border border-neutral-100 dark:border-neutral-800 shadow-xl rounded-xl overflow-hidden"
         style={{ width: 260, height: 264 }}
       >
         {/* Core Drum Selector Columns */}
-        <div className="relative h-[200px] shrink-0 flex justify-center bg-white dark:bg-neutral-900 px-3 py-0">
+        <div className="relative h-[200px] shrink-0 flex justify-center bg-white dark:bg-content1 px-3 py-0">
           {/* Centered Pointer block overlay across all columns */}
           <div className="pointer-events-none absolute left-3 right-3 h-[36px] top-[82px] border-y border-neutral-200 dark:border-neutral-800" />
 
@@ -1442,7 +1442,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
                       stiffness: 420,
                       damping: 28,
                     }}
-                    className="fixed z-[99999] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-2xl overflow-hidden"
+                    className="fixed z-[99999] bg-white dark:bg-content1 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-2xl overflow-hidden"
                     style={{
                       width: dialogWidth,
                       height: dialogHeight,

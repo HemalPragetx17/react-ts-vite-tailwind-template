@@ -112,7 +112,7 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>((props, ref)
   // Base container classes depending on variant
   const containerClasses = {
     light: "w-full flex flex-col",
-    shadow: "w-full flex flex-col bg-white dark:bg-neutral-900 shadow-lg border border-neutral-100 dark:border-neutral-800/50 rounded-2xl px-6 py-2",
+    shadow: "w-full flex flex-col bg-white dark:bg-content1 shadow-lg border border-neutral-100 dark:border-neutral-800/50 rounded-2xl px-6 py-2",
     bordered: "w-full flex flex-col border-2 border-neutral-200 dark:border-neutral-800 rounded-2xl px-6 py-2",
     splitted: "w-full flex flex-col gap-3",
   };
@@ -197,7 +197,7 @@ export const AccordionItem = forwardRef<HTMLDivElement, AccordionItemProps>((pro
 
   // Splitted card background
   const splittedClass = variant === "splitted"
-    ? "bg-white dark:bg-neutral-900 shadow-md border border-neutral-100 dark:border-neutral-800/50 rounded-2xl px-6 py-2"
+    ? "bg-white dark:bg-content1 shadow-md border border-neutral-100 dark:border-neutral-800/50 rounded-2xl px-6 py-2"
     : "";
 
   // Divider lines

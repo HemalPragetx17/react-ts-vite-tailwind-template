@@ -24,6 +24,9 @@ const meta: Meta<typeof Checkbox> = {
       options: ["none", "sm", "md", "lg", "full"],
     },
     onChange: { action: "changed" },
+    options: {
+      control: false,
+    },
   },
 };
 

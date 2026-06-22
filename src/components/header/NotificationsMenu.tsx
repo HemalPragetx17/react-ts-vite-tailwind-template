@@ -87,7 +87,7 @@ const NotificationsMenu: React.FC = () => {
       <div className="flex items-center justify-between border-b border-default-100 dark:border-default-800 px-4 py-3">
         <div>
           <p className="text-sm font-semibold text-default-900 dark:text-white">Notifications</p>
-          <p className="text-xs text-default-500 dark:text-default-400">{unreadCount} unread updates</p>
+          <p className="text-xs text-default-700 dark:text-default-700">{unreadCount} unread updates</p>
         </div>
         <button
           type="button"
@@ -111,12 +111,12 @@ const NotificationsMenu: React.FC = () => {
             <span className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${notification.unread ? 'bg-primary' : 'bg-default-300 dark:bg-default-600'}`} />
             <span className="min-w-0 flex-1">
               <span className="flex items-center justify-between gap-2">
-                <span className={`block truncate text-sm font-medium ${notification.unread ? 'text-default-900 dark:text-white' : 'text-default-600 dark:text-default-400'}`}>
+                <span className={`block truncate text-sm font-medium ${notification.unread ? 'text-default-900 dark:text-white' : 'text-default-700 dark:text-default-700'}`}>
                   {notification.title}
                 </span>
-                <span className="shrink-0 text-xs text-default-400">{notification.time}</span>
+                <span className="shrink-0 text-xs text-default-600 dark:text-default-700">{notification.time}</span>
               </span>
-              <span className="mt-1 block text-xs text-default-500 dark:text-default-400">{notification.message}</span>
+              <span className="mt-1 block text-xs text-default-700 dark:text-default-700">{notification.message}</span>
             </span>
           </button>
         ))}

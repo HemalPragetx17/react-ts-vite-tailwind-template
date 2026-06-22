@@ -3,6 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
     Button,
+    Card,
     Checkbox,
     CheckboxGroup,
     DateInput,
@@ -135,7 +136,7 @@ const DemoFormPage: React.FC = () => {
             </div>
 
             {/* Form Container */}
-            <div className="mt-10 w-full mx-auto bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-800 overflow-hidden">
+            <Card className="mt-10 w-full mx-auto overflow-hidden" shadow="md" fullWidth>
                 <Formik
                     initialValues={initialState}
                     validationSchema={FormValidationSchema}
@@ -386,7 +387,7 @@ const DemoFormPage: React.FC = () => {
                             </div>
 
                             {/* Sticky Footer */}
-                            <div className="sticky bottom-0 left-0 right-0 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800 px-6 py-4 md:px-8 flex justify-end gap-3 z-30 shadow-[0_-4px_12px_rgba(0,0,0,0.03)] dark:shadow-[0_-4px_12px_rgba(0,0,0,0.2)]">
+                            <div className="sticky bottom-0 left-0 right-0 bg-white dark:bg-content1 bg-opacity-90 dark:bg-opacity-90 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800 px-6 py-4 md:px-8 flex justify-end gap-3 z-30 shadow-[0_-4px_12px_rgba(0,0,0,0.03)] dark:shadow-[0_-4px_12px_rgba(0,0,0,0.2)]">
                                 <Button type="button" variant="bordered" color="danger" onClick={handleBack} className="shadow-sm">
                                     Cancel
                                 </Button>
@@ -397,7 +398,7 @@ const DemoFormPage: React.FC = () => {
                         </Form>
                     )}
                 </Formik>
-            </div>
+            </Card>
         </section>
     );
 };

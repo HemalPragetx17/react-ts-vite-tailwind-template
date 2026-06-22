@@ -227,7 +227,7 @@ const Modal: React.FC<ModalProps> = ({
             transition: isDragging ? 'none' : 'transform 0.2s ease-out'
           }}
           className={`
-            relative w-full flex flex-col bg-white pointer-events-auto
+            relative w-full flex flex-col bg-white dark:bg-content1 text-foreground pointer-events-auto
             ${shadowClasses[shadow]}
             ${size === 'full' ? 'rounded-none min-h-screen' : radiusClasses[radius]}
             ${sizeClasses[size]}
@@ -241,7 +241,7 @@ const Modal: React.FC<ModalProps> = ({
           {closeButton && (
             <button 
               onClick={handleDialogClose}
-              className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors z-30"
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-default-100 text-gray-400 hover:text-gray-600 dark:text-default-400 dark:hover:text-default-600 transition-colors z-30"
             >
               <FaXmark className="w-5 h-5" aria-hidden />
             </button>
@@ -249,8 +249,8 @@ const Modal: React.FC<ModalProps> = ({
 
           {/* Modal Header */}
           {title && (
-            <div className={`modal-header px-6 py-4 border-b border-gray-100 shrink-0 ${isDraggable ? 'cursor-move select-none' : ''}`}>
-              <h3 className="text-xl font-semibold text-gray-900 pr-8">
+            <div className={`modal-header px-6 py-4 border-b border-gray-100 dark:border-default-100/50 shrink-0 ${isDraggable ? 'cursor-move select-none' : ''}`}>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white pr-8">
                 {title}
               </h3>
             </div>
@@ -266,7 +266,7 @@ const Modal: React.FC<ModalProps> = ({
 
           {/* Modal Footer Slot */}
           {(footer || primaryActionText || secondaryActionText) && (
-            <div className={`modal-footer px-6 py-4 border-t border-gray-100 shrink-0 bg-white ${size === 'full' ? 'rounded-none' : footerRadiusClasses[radius]}`}>
+            <div className={`modal-footer px-6 py-4 border-t border-gray-100 dark:border-default-100/50 shrink-0 bg-white dark:bg-content1 ${size === 'full' ? 'rounded-none' : footerRadiusClasses[radius]}`}>
               {renderFooter()}
             </div>
           )}

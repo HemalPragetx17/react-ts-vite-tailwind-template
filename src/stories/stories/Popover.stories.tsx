@@ -42,6 +42,12 @@ const meta: Meta<typeof Popover> = {
       control: "select",
       options: ["click", "hover"],
     },
+    trigger: {
+      control: false,
+    },
+    children: {
+      control: false,
+    }
   },
 };
 

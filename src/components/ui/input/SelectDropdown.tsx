@@ -411,12 +411,12 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
   };
 
   const borderedColorClasses = {
-    default: "border-neutral-300 hover:border-neutral-400 focus-within:border-neutral-500 text-foreground",
-    primary: "border-neutral-300 hover:border-primary-300 focus-within:border-primary text-primary",
-    secondary: "border-neutral-300 hover:border-secondary-300 focus-within:border-secondary text-secondary",
-    success: "border-neutral-300 hover:border-success-300 focus-within:border-success text-success",
-    warning: "border-neutral-300 hover:border-warning-300 focus-within:border-warning text-warning",
-    danger: "border-neutral-300 hover:border-danger-300 focus-within:border-danger text-danger",
+    default: "border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600 focus-within:border-neutral-500 dark:focus-within:border-neutral-500 text-foreground",
+    primary: "border-neutral-300 dark:border-neutral-700 hover:border-primary-300 dark:hover:border-primary-400 focus-within:border-primary text-primary",
+    secondary: "border-neutral-300 dark:border-neutral-700 hover:border-secondary-300 dark:hover:border-secondary-400 focus-within:border-secondary text-secondary",
+    success: "border-neutral-300 dark:border-neutral-700 hover:border-success-300 dark:hover:border-success-400 focus-within:border-success text-success",
+    warning: "border-neutral-300 dark:border-neutral-700 hover:border-warning-300 dark:hover:border-warning-400 focus-within:border-warning text-warning",
+    danger: "border-neutral-300 dark:border-neutral-700 hover:border-danger-300 dark:hover:border-danger-400 focus-within:border-danger text-danger",
   };
 
   const underlinedColorClasses = {
@@ -727,7 +727,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
                 indicatorsContainer: () => "flex items-center gap-1 shrink-0 pr-1",
 
                 menu: () =>
-                  `mt-1.5 border border-neutral-200 dark:border-neutral-700 ${menuRadiusClass} overflow-hidden shadow-xl bg-white dark:bg-neutral-900 z-50`,
+                  `mt-1.5 border border-neutral-200 dark:border-neutral-700 ${menuRadiusClass} overflow-hidden shadow-xl bg-white dark:bg-content1 z-50`,
 
                 menuList: () => "py-1 px-1 flex flex-col gap-0.5",
 

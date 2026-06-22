@@ -31,6 +31,9 @@ const meta: MetaType<typeof Avatar> = {
     showFallback: {
       control: "boolean",
     },
+    src: {
+      control: false,
+    },
   },
 };
 
