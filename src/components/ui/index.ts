@@ -86,5 +86,10 @@ export type { CardProps, CardHeaderProps, CardBodyProps, CardFooterProps } from 
 export { default as Tooltip } from "./tooltip/Tooltip";
 export type { TooltipProps } from "./tooltip/Tooltip";
 
+// ── Dropdown ─────────────────────────────────────────────────────────────────
+export { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection } from "./dropdown/Dropdown";
+export type { DropdownProps, DropdownTriggerProps, DropdownMenuProps, DropdownItemProps, DropdownSectionProps } from "./dropdown/Dropdown";
+
+
 
 

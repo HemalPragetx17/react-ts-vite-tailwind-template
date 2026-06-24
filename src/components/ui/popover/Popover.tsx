@@ -66,6 +66,8 @@ export interface PopoverProps {
     triggerClassName?: string;
     /** Dependencies that should trigger a repositioning calculation */
     repositionDeps?: any[];
+    /** Whether to disable entry/exit animations */
+    disableAnimation?: boolean;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -184,11 +186,33 @@ function computePosition(
     return { top, left };
 }
 
-const motionVariants = {
-    initial: { opacity: 0, scale: 0.94, y: -4 },
-    animate: { opacity: 1, scale: 1, y: 0, transition: { type: "spring" as const, stiffness: 400, damping: 28 } },
-    exit: { opacity: 0, scale: 0.94, y: -4, transition: { duration: 0.15 } },
-};
+const getMotionVariants = (disableAnimation: boolean) => ({
+    initial: disableAnimation ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.90, y: -4 },
+    animate: disableAnimation
+        ? { opacity: 1, scale: 1, y: 0, transition: { duration: 0 } }
+        : {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            transition: {
+                opacity: { duration: 0.2, ease: "easeOut" },
+                scale: { duration: 0.2, ease: "easeOut" },
+                y: { type: "spring", stiffness: 400, damping: 28 }
+            }
+        },
+    exit: disableAnimation
+        ? { opacity: 1, scale: 1, y: 0, transition: { duration: 0 } }
+        : {
+            opacity: 0,
+            scale: 0.95,
+            y: -4,
+            transition: {
+                opacity: { duration: 0.15, ease: "easeIn" },
+                scale: { duration: 0.15, ease: "easeIn" },
+                y: { duration: 0.15, ease: "easeIn" }
+            }
+        },
+});
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
@@ -212,7 +236,11 @@ const Popover: React.FC<PopoverProps> = ({
     triggerMode = "click",
     delay = {},
     repositionDeps,
+    disableAnimation = false,
 }) => {
+    const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const shouldDisable = disableAnimation || prefersReducedMotion;
+    const motionVariants = getMotionVariants(shouldDisable);
     const openDelay = delay.open ?? 0;
     const closeDelay = delay.close ?? 100;
     const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);

@@ -346,7 +346,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
   closeMenuOnSelect,
   onInputChange,
   isLoading = false,
-  isApiSearch = true,
+  isApiSearch = false,
 
   variant = "bordered",
   size = "md",

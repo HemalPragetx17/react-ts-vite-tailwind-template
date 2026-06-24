@@ -12,6 +12,11 @@ import {
   Chip,
   DateInput,
   DateTimePicker,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownSection,
+  DropdownTrigger,
   FileInput,
   Input,
   PhoneNumberInput,
@@ -31,7 +36,7 @@ import {
   ToggleButtonGroup,
   Tooltip,
 } from "../../components/ui";
-import { FaHeart, FaCamera, FaUser, FaVolumeOff, FaVolumeHigh, FaFaceSmile, FaAlignLeft, FaAlignCenter, FaAlignRight, FaAlignJustify, FaBold, FaItalic, FaUnderline } from "react-icons/fa6";
+import { FaHeart, FaCamera, FaUser, FaVolumeOff, FaVolumeHigh, FaFaceSmile, FaAlignLeft, FaAlignCenter, FaAlignRight, FaAlignJustify, FaBold, FaItalic, FaUnderline, FaGear, FaTrash, FaShare, FaPen, FaCopy, FaArrowRightFromBracket } from "react-icons/fa6";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type ColorOption = "default" | "primary" | "secondary" | "success" | "warning" | "danger";
@@ -83,6 +88,8 @@ const UIKit: React.FC = () => {
   const [alignment, setAlignment] = React.useState<string | null>("left");
   const [formats, setFormats] = React.useState<string[]>(["bold", "italic"]);
   const [isSkeletonLoaded, setIsSkeletonLoaded] = React.useState(false);
+  const [dropdownSingle, setDropdownSingle] = React.useState<Set<string>>(new Set(["text"]));
+  const [dropdownMulti, setDropdownMulti] = React.useState<Set<string>>(new Set(["text", "pdf"]));
 
   const [checkboxValues, setCheckboxValues] = React.useState<Record<string, boolean>>(
     () => Object.fromEntries(COLORS.map((c) => [c, true]))
@@ -575,8 +582,183 @@ const UIKit: React.FC = () => {
           ))}
         </div>
       </Section>
+      
+      {/* ── 10. DROPDOWN ─────────────────────────────────────────── */}
+      <Section title="Dropdown">
+        <div className="space-y-8">
+          {/* Variants and Colors Showcase */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold text-neutral-400">Variants & Colors</h3>
+            <div className="overflow-x-auto pb-4">
+              <div className="min-w-[840px] space-y-3.5">
+                {(["solid", "shadow", "bordered", "flat", "faded", "light"] as const).map((variant) => (
+                  <div key={variant} className="grid grid-cols-7 items-center gap-4">
+                    <span className="text-xs font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider w-24">
+                      {variant}
+                    </span>
+                    {(["default", "primary", "secondary", "success", "warning", "danger"] as const).map((color) => {
+                      let btnVariant: any = variant;
+                      let btnClassName = "";
+                      if (variant === "shadow") {
+                        btnVariant = "solid";
+                        const shadowMap = {
+                          default: "shadow-lg shadow-neutral-500/20",
+                          primary: "shadow-lg shadow-primary/30",
+                          secondary: "shadow-lg shadow-secondary/30",
+                          success: "shadow-lg shadow-success/30",
+                          warning: "shadow-lg shadow-warning/30",
+                          danger: "shadow-lg shadow-danger/30",
+                        };
+                        btnClassName = shadowMap[color];
+                      }
 
-      {/* ── 10. FILE INPUT ───────────────────────────────────────── */}
+                      return (
+                        <Dropdown key={color}>
+                          <DropdownTrigger>
+                            <Button
+                              variant={btnVariant}
+                              color={color}
+                              className={`w-full capitalize ${btnClassName}`}
+                              size="md"
+                            >
+                              {color}
+                            </Button>
+                          </DropdownTrigger>
+                          <DropdownMenu variant={variant} color={color} ariaLabel={`${variant} ${color} menu`}>
+                            <DropdownItem key="new">New file</DropdownItem>
+                            <DropdownItem key="copy">Copy link</DropdownItem>
+                            <DropdownItem key="edit">Edit file</DropdownItem>
+                            <DropdownItem key="delete" color="danger" className="text-danger">Delete file</DropdownItem>
+                          </DropdownMenu>
+                        </Dropdown>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-neutral-150 dark:border-neutral-800">
+            {/* Custom Trigger (Avatar) */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-neutral-400">Custom Trigger</h3>
+              <div className="flex items-center gap-4">
+                <Dropdown placement="bottom-end">
+                  <DropdownTrigger>
+                    <Avatar
+                      src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                      isBordered
+                      color="primary"
+                      className="cursor-pointer hover:opacity-85 transition-opacity"
+                    />
+                  </DropdownTrigger>
+                  <DropdownMenu variant="flat" color="primary" ariaLabel="Profile Actions" className="w-[240px]">
+                    <DropdownSection title="Signed in as" showDivider>
+                      <DropdownItem key="user-info" description="zoey@example.com" className="h-14 gap-2">
+                        Zoey Lang
+                      </DropdownItem>
+                    </DropdownSection>
+                    <DropdownSection title="Options" showDivider>
+                      <DropdownItem key="settings" startContent={<FaGear className="w-3.5 h-3.5" />}>
+                        My Settings
+                      </DropdownItem>
+                      <DropdownItem key="team_settings">Team Settings</DropdownItem>
+                      <DropdownItem key="analytics">Analytics</DropdownItem>
+                    </DropdownSection>
+                    <DropdownSection title="Danger Zone">
+                      <DropdownItem
+                        key="logout"
+                        color="danger"
+                        className="text-danger"
+                        startContent={<FaArrowRightFromBracket className="w-3.5 h-3.5" />}
+                      >
+                        Log Out
+                      </DropdownItem>
+                    </DropdownSection>
+                  </DropdownMenu>
+                </Dropdown>
+                <span className="text-xs text-neutral-400 font-medium">Click Avatar to trigger actions menu</span>
+              </div>
+            </div>
+
+            <div className="space-y-4 col-span-1 md:col-span-2">
+              <h3 className="text-sm font-semibold text-neutral-400">Selections & Sections</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                {/* Single Selection */}
+                <div className="flex flex-col gap-2">
+                  <span className="text-xs text-neutral-500 font-medium">Single Selection</span>
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button variant="bordered" className="capitalize w-full">
+                        Single: {Array.from(dropdownSingle).join(", ")}
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                      variant="flat"
+                      selectionMode="single"
+                      selectedKeys={dropdownSingle}
+                      onSelectionChange={setDropdownSingle}
+                    >
+                      <DropdownItem key="text">Text file</DropdownItem>
+                      <DropdownItem key="pdf">PDF document</DropdownItem>
+                      <DropdownItem key="image">Image graphic</DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </div>
+
+                {/* Multiple Selection */}
+                <div className="flex flex-col gap-2">
+                  <span className="text-xs text-neutral-500 font-medium">Multiple Selection</span>
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button variant="bordered" className="capitalize w-full">
+                        Filter ({dropdownMulti.size}): {Array.from(dropdownMulti).join(", ") || "none"}
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                      variant="flat"
+                      selectionMode="multiple"
+                      selectedKeys={dropdownMulti}
+                      onSelectionChange={setDropdownMulti}
+                    >
+                      <DropdownItem key="text">Text file</DropdownItem>
+                      <DropdownItem key="pdf">PDF document</DropdownItem>
+                      <DropdownItem key="image">Image graphic</DropdownItem>
+                      <DropdownItem key="video">Video compilation</DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </div>
+
+                {/* Sections Variant */}
+                <div className="flex flex-col gap-2">
+                  <span className="text-xs text-neutral-500 font-medium">Section Categories</span>
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button variant="bordered" className="capitalize w-full">
+                        Actions Menu
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu variant="flat" ariaLabel="Sectioned Actions">
+                      <DropdownSection title="Actions" showDivider>
+                        <DropdownItem key="new">New file</DropdownItem>
+                        <DropdownItem key="copy">Copy link</DropdownItem>
+                      </DropdownSection>
+                      <DropdownSection title="Danger Zone">
+                        <DropdownItem key="delete" color="danger" className="text-danger">
+                          Delete file
+                        </DropdownItem>
+                      </DropdownSection>
+                    </DropdownMenu>
+                  </Dropdown>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      {/* ── 11. FILE INPUT ───────────────────────────────────────── */}
       <Section title="File Input">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto">
           {COLORS.map((color) => (
@@ -592,7 +774,7 @@ const UIKit: React.FC = () => {
         </div>
       </Section>
 
-      {/* ── 11. INPUT ────────────────────────────────────────────── */}
+      {/* ── 12. INPUT ────────────────────────────────────────────── */}
       <Section title="Input">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto">
           {COLORS.map((color) => (
@@ -608,7 +790,7 @@ const UIKit: React.FC = () => {
         </div>
       </Section>
 
-      {/* ── 12. PHONE NUMBER INPUT ────────────────────────────────── */}
+      {/* ── 13. PHONE NUMBER INPUT ────────────────────────────────── */}
       <Section title="Phone Number Input">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto">
           {COLORS.map((color) => (
@@ -624,7 +806,7 @@ const UIKit: React.FC = () => {
         </div>
       </Section>
 
-      {/* ── 13. POPOVER ──────────────────────────────────────────── */}
+      {/* ── 14. POPOVER ──────────────────────────────────────────── */}
       <Section title="Popover">
         <Row>
           {COLORS.map((color) => (
@@ -664,7 +846,7 @@ const UIKit: React.FC = () => {
         </Row>
       </Section>
 
-      {/* ── 14. RADIO ────────────────────────────────────────────── */}
+      {/* ── 15. RADIO ────────────────────────────────────────────── */}
       <Section title="Radio">
         {COLORS.map((color) => (
           <Row key={color} className="mb-4">
@@ -693,7 +875,7 @@ const UIKit: React.FC = () => {
         </Row>
       </Section>
 
-      {/* ── 15. RATING ───────────────────────────────────────────── */}
+      {/* ── 16. RATING ───────────────────────────────────────────── */}
       <Section title="Rating">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left Column: Basic, Colors, Custom Icon, Disabled */}
@@ -803,7 +985,7 @@ const UIKit: React.FC = () => {
         </div>
       </Section>
 
-      {/* ── 16. SELECT DROPDOWN ───────────────────────────────────── */}
+      {/* ── 17. SELECT DROPDOWN ───────────────────────────────────── */}
       <Section title="Select Dropdown">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto">
           {COLORS.map((color) => (
@@ -819,7 +1001,7 @@ const UIKit: React.FC = () => {
         </div>
       </Section>
 
-      {/* ── 17. SKELETON ─────────────────────────────────────────── */}
+      {/* ── 18. SKELETON ─────────────────────────────────────────── */}
       <Section title="Skeleton">
         <div className="space-y-6">
           <div className="flex items-center gap-4">
@@ -867,7 +1049,7 @@ const UIKit: React.FC = () => {
         </div>
       </Section>
 
-      {/* ── 18. SLIDER ───────────────────────────────────────────── */}
+      {/* ── 19. SLIDER ───────────────────────────────────────────── */}
       <Section title="Slider">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left Column: Basic, Disabled, Sizes, Radius */}
@@ -1002,7 +1184,7 @@ const UIKit: React.FC = () => {
         </div>
       </Section>
 
-      {/* ── 19. SPINNER ──────────────────────────────────────────── */}
+      {/* ── 20. SPINNER ──────────────────────────────────────────── */}
       <Section title="Spinner">
         {SPINNER_VARIANTS.map((variant) => (
           <Row key={variant}>
@@ -1014,7 +1196,7 @@ const UIKit: React.FC = () => {
         ))}
       </Section>
 
-      {/* ── 20. SWITCH ───────────────────────────────────────────── */}
+      {/* ── 21. SWITCH ───────────────────────────────────────────── */}
       <Section title="Switch">
         <Row>
           <Label>toggle</Label>
@@ -1036,7 +1218,7 @@ const UIKit: React.FC = () => {
         </Row>
       </Section>
 
-      {/* ── 21. TABS ─────────────────────────────────────────────── */}
+      {/* ── 22. TABS ─────────────────────────────────────────────── */}
       <Section title="Tabs">
         {/* ── Block 1: default / primary / secondary / success ── */}
         <div className="grid grid-cols-3 gap-x-4 gap-y-3">
@@ -1089,7 +1271,7 @@ const UIKit: React.FC = () => {
         </div>
       </Section>
 
-      {/* ── 22. TEXTAREA ─────────────────────────────────────────── */}
+      {/* ── 23. TEXTAREA ─────────────────────────────────────────── */}
       <Section title="Textarea">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto">
           {COLORS.map((color) => (
@@ -1105,7 +1287,7 @@ const UIKit: React.FC = () => {
         </div>
       </Section>
 
-      {/* ── 23. TIME PICKER ──────────────────────────────────────── */}
+      {/* ── 24. TIME PICKER ──────────────────────────────────────── */}
       <Section title="Time Picker">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto">
           {COLORS.map((color) => (
@@ -1121,7 +1303,7 @@ const UIKit: React.FC = () => {
         </div>
       </Section>
 
-      {/* ── 24. TOGGLE BUTTON ────────────────────────────────────── */}
+      {/* ── 25. TOGGLE BUTTON ────────────────────────────────────── */}
       <Section title="Toggle Button">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left Column: Exclusive (Single), Multi-select, Sizes */}
@@ -1252,7 +1434,7 @@ const UIKit: React.FC = () => {
         </div>
       </Section>
 
-      {/* ── 25. TOOLTIP ──────────────────────────────────────────── */}
+      {/* ── 26. TOOLTIP ──────────────────────────────────────────── */}
       <Section title="Tooltip">
         <div className="flex flex-wrap gap-4">
           <Tooltip content="Default Tooltip" placement="top" showArrow>
