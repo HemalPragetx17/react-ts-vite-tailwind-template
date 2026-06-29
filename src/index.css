@@ -130,5 +130,40 @@ input[type="number"] {
 }
 
 body {
-  @apply bg-background text-foreground transition-colors duration-200;
+  @apply bg-background text-foreground;
+}
+
+/* Smooth surface & layout transitions for theme switching */
+body,
+header,
+main,
+aside,
+nav,
+section,
+article,
+footer,
+table,
+tr,
+td,
+th,
+ul,
+li,
+form,
+input,
+select,
+textarea,
+button,
+a,
+.bg-background,
+.bg-content1,
+.bg-content2,
+.bg-default-50,
+.bg-default-100,
+.bg-default-200,
+.border-default-100,
+.border-default-200,
+.text-foreground {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
 }
