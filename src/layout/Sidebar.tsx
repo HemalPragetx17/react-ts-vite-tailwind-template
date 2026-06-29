@@ -78,7 +78,7 @@ const Sidebar = () => {
                   content={menu?.name}
                 >
                   <Link
-                    className={`group w-full relative flex items-center box-border text-[15px] leading-[19px] py-2 px-[14px] gap-[10px] no-underline ${isActive || pathname?.includes(menu?.route) ? 'active bg-primary text-white' : 'text-default-600'} hover:bg-primary hover:text-white transition-colors duration-100 ease-linear [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:px-0`}
+                    className={`group w-full relative flex items-center box-border text-[15px] leading-[19px] py-2 px-[14px] gap-[10px] no-underline ${isActive || pathname?.includes(menu?.route) ? 'active bg-primary ' : ''} hover:bg-primary text-white transition-colors duration-100 ease-linear [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:px-0`}
                     to={menu?.route ? menu?.route : '/'}
                     onClick={(e) => {
                       if ((menu?.childs?.length ?? 0) > 0) e.preventDefault();
@@ -125,7 +125,7 @@ const Sidebar = () => {
                               content={childMenu?.name}
                             >
                               <Link
-                                className={`group/child w-full relative flex items-center box-border text-[15px] leading-[19px] py-2 px-[10px] rounded-[10px] gap-[10px] no-underline ${pathname?.includes(childMenu?.route) ? 'active bg-primary text-white' : 'text-default-600'} hover:bg-primary hover:text-white transition-colors duration-100 ease-linear [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:px-0`}
+                                className={`group/child w-full relative flex items-center box-border text-[15px] leading-[19px] py-2 px-[10px] rounded-[10px] gap-[10px] no-underline ${pathname?.includes(childMenu?.route) ? 'active bg-primary' : ''} hover:bg-primary text-white transition-colors duration-100 ease-linear [.hide-sidebar_&]:justify-center [.hide-sidebar_&]:px-0`}
                                 to={childMenu?.route ? childMenu?.route : '/'}
                                 onClick={(e) => {
                                   if ((childMenu?.childs?.length ?? 0) > 0) e.preventDefault();
