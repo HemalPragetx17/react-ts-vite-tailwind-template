@@ -90,6 +90,11 @@ export type { TooltipProps } from "./tooltip/Tooltip";
 export { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection } from "./dropdown/Dropdown";
 export type { DropdownProps, DropdownTriggerProps, DropdownMenuProps, DropdownItemProps, DropdownSectionProps } from "./dropdown/Dropdown";
 
+// ── Navbar ───────────────────────────────────────────────────────────────────
+export { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem } from "./navbar/Navbar";
+export type { NavbarProps, NavbarBrandProps, NavbarContentProps, NavbarItemProps, NavbarMenuToggleProps, NavbarMenuProps, NavbarMenuItemProps, NavbarMaxWidth, NavbarPosition, NavbarJustify, NavbarClassNames } from "./navbar/Navbar";
+
+
 
 
 
