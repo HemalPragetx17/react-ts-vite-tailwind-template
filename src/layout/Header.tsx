@@ -99,7 +99,7 @@ const Header: React.FC<HeaderProps> = ({ withSidebar = true }) => {
 
   return (
     <Navbar
-      height="64px"
+      height="70px"
       position={withSidebar ? 'sticky' : 'static'}
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}

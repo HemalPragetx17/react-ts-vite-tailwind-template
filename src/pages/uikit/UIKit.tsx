@@ -199,7 +199,7 @@ const UIKit: React.FC = () => {
   });
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-4">
+    <div className="p-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-1">UI Kit</h1>
         <p className="text-default-500 text-sm">Browse all components by variant and color token.</p>

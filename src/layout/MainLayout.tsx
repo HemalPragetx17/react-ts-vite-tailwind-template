@@ -8,7 +8,7 @@ interface IMainLayoutProps {
     withSidebar?: boolean;
 }
 
-const MainLayout: React.FC<IMainLayoutProps> = ({ children, withSidebar = false }) => {
+const MainLayout: React.FC<IMainLayoutProps> = ({ children, withSidebar = true }) => {
     if (!withSidebar) {
         return (
             <div className="w-full min-h-screen flex flex-col bg-background text-foreground overflow-x-hidden relative">
