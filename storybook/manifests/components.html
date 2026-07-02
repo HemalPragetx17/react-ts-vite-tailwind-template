@@ -594,7 +594,7 @@
 <main>
   <div class="wrap">
     <div class="note info" style="margin-bottom: 16px;">
-            <strong>Tip:</strong> You are using <code>react-docgen</code> (the default). Generation took <strong>4.0s</strong>. For higher quality prop types, consider switching to <code>react-docgen-typescript</code> in your <code>main.ts</code>:
+            <strong>Tip:</strong> You are using <code>react-docgen</code> (the default). Generation took <strong>3.9s</strong>. For higher quality prop types, consider switching to <code>react-docgen-typescript</code> in your <code>main.ts</code>:
             <pre><code>typescript: {
   reactDocgen: 'react-docgen-typescript',
 }</code></pre>
@@ -10703,7 +10703,7 @@ size?: any = &quot;md&quot;</code></pre>
         &lt;p&gt;Download the complete project workspace directly. Use this to bypass manual cloning and bootstrap your development workflow instantly.&lt;/p&gt;
       &lt;/div&gt;
       &lt;a 
-        href=&quot;https://github.com/HemalPragetx17/react-ts-vite-tailwind-template/archive/refs/heads/main.zip&quot; 
+        href=&quot;https://github.com/HemalPragetx17/react-template/archive/refs/heads/master.zip&quot; 
         className=&quot;download-btn&quot; 
         target=&quot;_blank&quot;
         rel=&quot;noopener noreferrer&quot;
@@ -10729,7 +10729,7 @@ size?: any = &quot;md&quot;</code></pre>
         &lt;div className=&quot;step-content&quot;&gt;
           &lt;h4&gt;Clone the Codebase&lt;/h4&gt;
           &lt;p&gt;Clone the repository and enter the workspace folder:&lt;/p&gt;
-          &lt;pre&gt;&lt;code&gt;git clone https://github.com/HemalPragetx17/react-ts-vite-tailwind-template.git{&quot;\n&quot;}cd react-ts-vite-tailwind-template&lt;/code&gt;&lt;/pre&gt;
+          &lt;pre&gt;&lt;code&gt;git clone https://github.com/HemalPragetx17/react-template.git{&quot;\n&quot;}cd react-template&lt;/code&gt;&lt;/pre&gt;
         &lt;/div&gt;
       &lt;/div&gt;
 
@@ -10751,14 +10751,6 @@ size?: any = &quot;md&quot;</code></pre>
         &lt;/div&gt;
       &lt;/div&gt;
 
-      &lt;div className=&quot;step-item&quot;&gt;
-        &lt;div className=&quot;step-badge&quot;&gt;4&lt;/div&gt;
-        &lt;div className=&quot;step-content&quot;&gt;
-          &lt;h4&gt;Launch Storybook sandbox&lt;/h4&gt;
-          &lt;p&gt;Start the component documentation dev environment (available at &lt;code&gt;http://localhost:6006&lt;/code&gt;):&lt;/p&gt;
-          &lt;pre&gt;&lt;code&gt;npm run storybook&lt;/code&gt;&lt;/pre&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 
@@ -10886,21 +10878,31 @@ size?: any = &quot;md&quot;</code></pre>
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 24px;
-    border-radius: 9999px;
-    background-color: #7c3aed;
-    color: white !important;
+    padding: 0px 20px !important;
+    border-radius: 10px;
+    background-color: #006fee;
+    color: #ffffff !important;
     font-size: 14px;
     font-weight: 600;
     text-decoration: none !important;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.2);
+    box-shadow: 0 10px 20px -5px rgba(0, 111, 238, 0.4), 0 4px 6px -2px rgba(0, 111, 238, 0.4);
+  }
+
+  .download-btn p {
+    color: #ffffff;
+  }
+
+  .download-btn,
+  .download-btn:link,
+  .download-btn:visited,
+  .download-btn:hover,
+  .download-btn:active {
+    color: #ffffff !important;
   }
 
   .download-btn:hover {
-    background-color: #6d28d9;
-    transform: translateY(-1px);
-    box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.3);
+    opacity: 0.9;
   }
 
   .setup-section h2 {
