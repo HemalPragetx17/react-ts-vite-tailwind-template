@@ -11,7 +11,7 @@ const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(file
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
-  base: process.env.GITHUB_ACTIONS === 'true' ? '/react-template/' : '/',
+  base: process.env.GITHUB_ACTIONS === 'true' ? '/react-ts-vite-tailwind-template/' : '/',
   plugins: [react()],
   assetsInclude: ["**/*.avif", "**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.svg"],
   server: {
