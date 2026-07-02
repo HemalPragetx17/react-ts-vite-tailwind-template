@@ -130,14 +130,6 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
     };
     const primaryColorVal = colorMap[color] || colorMap.primary;
 
-    const textColorMap = {
-        default: "",
-        primary: "#0072f5",
-        secondary: "#9b5de5",
-        success: "#17c964",
-        warning: "#f5a524",
-        danger: "#f31260",
-    };
 
     const bgMap = {
         default: "",
@@ -200,16 +192,16 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
     const [isFocused, setIsFocused] = React.useState(false);
     const [activeDialCode, setActiveDialCode] = React.useState<string>("");
 
-    const inlineStyles: React.CSSProperties = {
+    const inlineStyles: React.CSSProperties & Record<string, string> = {
         ...dropdownStyles,
         "--color-primary": primaryColorVal,
     } as any;
 
     if (color !== "default") {
-        if (bgMap[color]) inlineStyles["--phone-bg-light" as any] = bgMap[color];
-        if (bgHoverMap[color]) inlineStyles["--phone-bg-light-hover" as any] = bgHoverMap[color];
-        if (darkBgMap[color]) inlineStyles["--phone-bg-dark" as any] = darkBgMap[color];
-        if (darkBgHoverMap[color]) inlineStyles["--phone-bg-dark-hover" as any] = darkBgHoverMap[color];
+        if (bgMap[color]) inlineStyles["--phone-bg-light"] = bgMap[color];
+        if (bgHoverMap[color]) inlineStyles["--phone-bg-light-hover"] = bgHoverMap[color];
+        if (darkBgMap[color]) inlineStyles["--phone-bg-dark"] = darkBgMap[color];
+        if (darkBgHoverMap[color]) inlineStyles["--phone-bg-dark-hover"] = darkBgHoverMap[color];
     }
 
     const updateDropdownCoords = React.useCallback(() => {

@@ -54,7 +54,7 @@ export const ExclusiveSelection: Story = {
         {...args}
         value={alignment}
         exclusive
-        onChange={(e, val) => setAlignment(val)}
+        onChange={(_e, val) => setAlignment(val)}
       >
         <ToggleButton value="left" aria-label="align left">
           <FaAlignLeft className="w-4 h-4" />
@@ -84,7 +84,7 @@ export const MultipleSelection: Story = {
       <ToggleButtonGroup
         {...args}
         value={formats}
-        onChange={(e, val) => setFormats(val)}
+        onChange={(_e, val) => setFormats(val)}
       >
         <ToggleButton value="bold" aria-label="bold">
           <FaBold className="w-4 h-4" />
@@ -117,7 +117,7 @@ export const Colors: Story = {
               color={color}
               value={val}
               exclusive
-              onChange={(e, v) => setVal(v)}
+              onChange={(_e, v) => setVal(v)}
             >
               <ToggleButton value="left">Left</ToggleButton>
               <ToggleButton value="center">Center</ToggleButton>
@@ -143,7 +143,7 @@ export const Sizes: Story = {
               size={size}
               value={val}
               exclusive
-              onChange={(e, v) => setVal(v)}
+              onChange={(_e, v) => setVal(v)}
             >
               <ToggleButton value="left">Left</ToggleButton>
               <ToggleButton value="center">Center</ToggleButton>
@@ -165,7 +165,7 @@ export const VerticalOrientation: Story = {
         value={alignment}
         exclusive
         orientation="vertical"
-        onChange={(e, val) => setAlignment(val)}
+        onChange={(_e, val) => setAlignment(val)}
       >
         <ToggleButton value="left" aria-label="align left">
           <FaAlignLeft className="w-4 h-4" />

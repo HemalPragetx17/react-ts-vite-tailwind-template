@@ -557,11 +557,11 @@ const UIKit: React.FC = () => {
           {COLORS.map((color) => (
             <div key={color} className="space-y-4 min-w-[200px]">
               <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
-              <DateInput variant="flat" color={color} value={dateVal[`${color}-flat`]} onChange={(d) => setDateVal(prev => ({ ...prev, [`${color}-flat`]: d }))} size="sm" />
-              <DateInput variant="bordered" color={color} value={dateVal[`${color}-bordered`]} onChange={(d) => setDateVal(prev => ({ ...prev, [`${color}-bordered`]: d }))} size="sm" />
-              <DateInput variant="faded" color={color} value={dateVal[`${color}-faded`]} onChange={(d) => setDateVal(prev => ({ ...prev, [`${color}-faded`]: d }))} size="sm" />
-              <DateInput variant="underlined" color={color} value={dateVal[`${color}-underlined`]} onChange={(d) => setDateVal(prev => ({ ...prev, [`${color}-underlined`]: d }))} size="sm" />
-              <DateInput variant="flat" color={color} value={dateVal[`${color}-disabled`]} onChange={(d) => setDateVal(prev => ({ ...prev, [`${color}-disabled`]: d }))} size="sm" disabled />
+              <DateInput variant="flat" color={color} value={dateVal[`${color}-flat`]} onChange={(d: any) => setDateVal(prev => ({ ...prev, [`${color}-flat`]: d }))} size="sm" />
+              <DateInput variant="bordered" color={color} value={dateVal[`${color}-bordered`]} onChange={(d: any) => setDateVal(prev => ({ ...prev, [`${color}-bordered`]: d }))} size="sm" />
+              <DateInput variant="faded" color={color} value={dateVal[`${color}-faded`]} onChange={(d: any) => setDateVal(prev => ({ ...prev, [`${color}-faded`]: d }))} size="sm" />
+              <DateInput variant="underlined" color={color} value={dateVal[`${color}-underlined`]} onChange={(d: any) => setDateVal(prev => ({ ...prev, [`${color}-underlined`]: d }))} size="sm" />
+              <DateInput variant="flat" color={color} value={dateVal[`${color}-disabled`]} onChange={(d: any) => setDateVal(prev => ({ ...prev, [`${color}-disabled`]: d }))} size="sm" disabled />
             </div>
           ))}
         </div>
@@ -991,11 +991,11 @@ const UIKit: React.FC = () => {
           {COLORS.map((color) => (
             <div key={color} className="space-y-4 min-w-[200px]">
               <div className="text-xs font-bold text-neutral-400 capitalize mb-1">{color}</div>
-              <SelectDropdown variant="flat" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-flat`, value: dropdownVal[`${color}-flat`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-flat`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
-              <SelectDropdown variant="bordered" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-bordered`, value: dropdownVal[`${color}-bordered`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-bordered`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
-              <SelectDropdown variant="faded" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-faded`, value: dropdownVal[`${color}-faded`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-faded`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
-              <SelectDropdown variant="underlined" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-underlined`, value: dropdownVal[`${color}-underlined`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-underlined`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
-              <SelectDropdown variant="flat" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-disabled`, value: dropdownVal[`${color}-disabled`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-disabled`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" isDisabled />
+              <SelectDropdown variant="flat" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-flat`, value: dropdownVal[`${color}-flat`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (_name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-flat`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
+              <SelectDropdown variant="bordered" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-bordered`, value: dropdownVal[`${color}-bordered`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (_name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-bordered`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
+              <SelectDropdown variant="faded" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-faded`, value: dropdownVal[`${color}-faded`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (_name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-faded`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
+              <SelectDropdown variant="underlined" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-underlined`, value: dropdownVal[`${color}-underlined`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (_name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-underlined`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" />
+              <SelectDropdown variant="flat" color={color} options={RADIO_OPTIONS} field={{ name: `dropdown-${color}-disabled`, value: dropdownVal[`${color}-disabled`], onChange: () => { }, onBlur: () => { } } as any} form={{ setFieldValue: (_name: string, val: string) => setDropdownVal(prev => ({ ...prev, [`${color}-disabled`]: val })), setFieldTouched: () => { }, touched: {}, errors: {} } as any} size="sm" isDisabled />
             </div>
           ))}
         </div>
@@ -1314,7 +1314,7 @@ const UIKit: React.FC = () => {
                 <ToggleButtonGroup
                   value={alignment}
                   exclusive
-                  onChange={(e, val) => setAlignment(val)}
+                  onChange={(_e, val) => setAlignment(val)}
                   color="primary"
                 >
                   <ToggleButton value="left" aria-label="left aligned">
@@ -1339,7 +1339,7 @@ const UIKit: React.FC = () => {
               <div className="flex flex-col gap-2">
                 <ToggleButtonGroup
                   value={formats}
-                  onChange={(e, val) => setFormats(val)}
+                  onChange={(_e, val) => setFormats(val)}
                   color="secondary"
                 >
                   <ToggleButton value="bold" aria-label="bold">
@@ -1388,7 +1388,7 @@ const UIKit: React.FC = () => {
                 {(["default", "primary", "secondary", "success", "warning", "danger"] as const).map((color) => (
                   <div key={color} className="flex items-center gap-4">
                     <span className="text-xs text-neutral-400 w-20 capitalize">{color}</span>
-                    <ToggleButtonGroup value={alignment} exclusive onChange={(e, val) => setAlignment(val)} color={color} size="sm">
+                    <ToggleButtonGroup value={alignment} exclusive onChange={(_e, val) => setAlignment(val)} color={color} size="sm">
                       <ToggleButton value="left">
                         <FaAlignLeft className="w-3.5 h-3.5" />
                       </ToggleButton>
@@ -1412,7 +1412,7 @@ const UIKit: React.FC = () => {
               <ToggleButtonGroup
                 value={alignment}
                 exclusive
-                onChange={(e, val) => setAlignment(val)}
+                onChange={(_e, val) => setAlignment(val)}
                 orientation="vertical"
                 color="primary"
               >

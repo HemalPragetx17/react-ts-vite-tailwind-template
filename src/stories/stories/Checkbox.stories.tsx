@@ -40,7 +40,7 @@ export const Default: Story = {
       <Checkbox
         {...args}
         checked={checked}
-        onChange={(val) => {
+        onChange={(val: boolean) => {
           setChecked(val);
           args.onChange?.(val);
         }}
@@ -62,7 +62,7 @@ export const WithDescription: Story = {
       <Checkbox
         {...args}
         value={value}
-        onChange={(val) => {
+        onChange={(val: any) => {
           setValue(val);
           args.onChange?.(val);
         }}
@@ -159,7 +159,7 @@ export const Indeterminate: Story = {
       <Checkbox
         {...args}
         checked={checked}
-        onChange={(val) => setChecked(val)}
+        onChange={(val: boolean) => setChecked(val)}
       />
     );
   },
@@ -176,7 +176,7 @@ export const LineThrough: Story = {
       <Checkbox
         {...args}
         checked={checked}
-        onChange={(val) => setChecked(val)}
+        onChange={(val: boolean) => setChecked(val)}
       />
     );
   },
@@ -198,7 +198,7 @@ export const Icon: Story = {
           label="Option"
           color="primary"
           checked={checked1}
-          onChange={(val) => setChecked1(val)}
+          onChange={(val: boolean) => setChecked1(val)}
           icon={<FaHeart className="w-3.5 h-3.5" aria-hidden />}
         />
         <Checkbox
@@ -206,7 +206,7 @@ export const Icon: Story = {
           label="Option"
           color="warning"
           checked={checked2}
-          onChange={(val) => setChecked2(val)}
+          onChange={(val: boolean) => setChecked2(val)}
           icon={<FaPlus className="w-3.5 h-3.5" aria-hidden />}
         />
       </div>
@@ -221,7 +221,7 @@ export const Disabled: Story = {
       <Checkbox
         {...args}
         checked={checked}
-        onChange={(val) => setChecked(val)}
+        onChange={(val: boolean) => setChecked(val)}
       />
     );
   },
@@ -238,7 +238,7 @@ export const Error: Story = {
       <Checkbox
         {...args}
         checked={checked}
-        onChange={(val) => setChecked(val)}
+        onChange={(val: boolean) => setChecked(val)}
       />
     );
   },

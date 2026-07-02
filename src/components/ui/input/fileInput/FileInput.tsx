@@ -373,8 +373,8 @@ const FileInput = ({
 
   const handleSingleFileChange = (file: File | null) => {
     if (isFormik && form && field) {
-      form.setFieldValue(field.name, file);
-      form.setFieldTouched(field.name, true, false);
+      form.setFieldValue?.(field?.name, file);
+      form.setFieldTouched?.(field?.name, true, false);
     }
     if (onChange) {
       onChange(file);
@@ -394,7 +394,7 @@ const FileInput = ({
     if (imageArray && imageArray.length > 0) {
       if (isFormik && form && field) {
         if (!field.value || field.value.length === 0) {
-          form.setFieldValue(field.name, imageArray);
+          form.setFieldValue?.(field?.name, imageArray);
         }
       } else if (manualSetImages) {
         const isDifferent =
@@ -423,8 +423,8 @@ const FileInput = ({
 
     const updated = [...images, ...newImages];
     if (isFormik && form && field) {
-      form.setFieldValue(field.name, updated);
-      form.setFieldTouched(field.name, true, false);
+      form.setFieldValue?.(field?.name, updated);
+      form.setFieldTouched?.(field?.name, true, false);
     } else if (manualSetImages) {
       manualSetImages(updated);
     }
@@ -436,15 +436,15 @@ const FileInput = ({
     if (typeof deleteImage?.url === "string") {
       const updatedDeleted = [...deleteImages, deleteImage];
       if (isFormik && form) {
-        form.setFieldValue(deleteName, updatedDeleted);
+        form.setFieldValue?.(deleteName, updatedDeleted);
       } else if (manualSetDeleteImages) {
         manualSetDeleteImages(updatedDeleted);
       }
     }
 
     if (isFormik && form && field) {
-      form.setFieldValue(field.name, updated);
-      form.setFieldTouched(field.name, true, false);
+      form.setFieldValue?.(field?.name, updated);
+      form.setFieldTouched?.(field?.name, true, false);
     } else if (manualSetImages) {
       manualSetImages(updated);
     }

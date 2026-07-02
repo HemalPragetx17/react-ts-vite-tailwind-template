@@ -1,7 +1,6 @@
 import { Field, Form, Formik } from 'formik';
 import React from 'react';
 import { FaChevronLeft } from "react-icons/fa";
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, OTPInput } from '../../components/ui';
 import type { IForgotPasswordEmailModel, IForgotPasswordOTPModel, IForgotPasswordPasswordModel } from '../../models/account';
@@ -18,7 +17,6 @@ type ActionType = typeof ActionType[keyof typeof ActionType];
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const [actionType, setActionType] = React.useState<ActionType>(ActionType.Email);
 

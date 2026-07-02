@@ -315,7 +315,7 @@ export interface NavbarMenuToggleProps {
 export const NavbarMenuToggle: React.FC<NavbarMenuToggleProps> = ({
   icon,
   isSelected,
-  defaultSelected = false,
+  defaultSelected: _defaultSelected = false,
   srOnlyText = 'open/close navigation menu',
   onChange,
   className = '',

@@ -50,7 +50,7 @@ export const StandaloneLayout: Story = {
 };
 
 export const CardLoadingState: Story = {
-  render: (args) => {
+  render: (_args) => {
     const [isLoaded, setIsLoaded] = React.useState(false);
 
     return (

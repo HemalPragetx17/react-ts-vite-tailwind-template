@@ -731,7 +731,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
 
                 menuList: () => "py-1 px-1 flex flex-col gap-0.5",
 
-                option: ({ isSelected, isFocused: optFocused, isDisabled }) =>
+                option: ({ isFocused: optFocused, isDisabled }) =>
                   `px-3 py-2 rounded-lg transition-colors duration-150
                   ${isDisabled
                     ? "cursor-not-allowed text-neutral-400 dark:text-neutral-600"

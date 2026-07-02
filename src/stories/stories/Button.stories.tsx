@@ -99,7 +99,7 @@ export const Radiuses: Story = {
 export const Colors: Story = {
   render: (args) => (
     <>
-    {["solid", "bordered", "light", "flat", "faded", "shadow", "ghost"].map((variant) => (
+    {(["solid", "bordered", "light", "flat", "faded", "shadow", "ghost"] as const).map((variant) => (
       <div key={variant} className="flex flex-wrap gap-4 items-center mb-5">
         <Button {...args} variant={variant} color="default">Default</Button>
         <Button {...args} variant={variant} color="primary">Primary</Button>
