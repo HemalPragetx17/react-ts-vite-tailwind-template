@@ -14,6 +14,7 @@ const Loadable = (Component: React.ComponentType) => () => {
 
 const PublicLayout = lazy(() => import("../layout/PublicLayout"));
 const MainLayout = lazy(() => import("../layout/MainLayout"));
+const Homepage = Loadable(lazy(() => import("../pages/homepage/Homepage")));
 
 const LoginLayout = lazy(() => import("../pages/account/LoginLayout"));
 const ForgotPassword = Loadable(lazy(() => import("../pages/account/ForgotPassword")));
@@ -37,7 +38,7 @@ const privateRoute = (Element: any, props?: any) => {
 const routes = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to={Routing.Login} />,
+    element: <Homepage />,
   },
   {
     path: Routing.Login,
@@ -87,7 +88,9 @@ const routes = createBrowserRouter([
     path: "*",
     element: (<PublicLayout><Error404Page /></PublicLayout>),
   },
-]);
+], {
+  basename: import.meta.env.BASE_URL
+});
 
 const AppRouting = () => {
   return <RouterProvider router={routes} />;

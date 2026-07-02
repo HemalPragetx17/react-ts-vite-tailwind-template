@@ -1,4 +1,5 @@
 import React from "react";
+import { FaAlignCenter, FaAlignJustify, FaAlignLeft, FaAlignRight, FaArrowRightFromBracket, FaBold, FaCamera, FaFaceSmile, FaGear, FaHeart, FaItalic, FaUnderline, FaUser, FaVolumeHigh, FaVolumeOff } from "react-icons/fa6";
 import {
   Avatar,
   Badge,
@@ -36,7 +37,6 @@ import {
   ToggleButtonGroup,
   Tooltip,
 } from "../../components/ui";
-import { FaHeart, FaCamera, FaUser, FaVolumeOff, FaVolumeHigh, FaFaceSmile, FaAlignLeft, FaAlignCenter, FaAlignRight, FaAlignJustify, FaBold, FaItalic, FaUnderline, FaGear, FaTrash, FaShare, FaPen, FaCopy, FaArrowRightFromBracket } from "react-icons/fa6";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type ColorOption = "default" | "primary" | "secondary" | "success" | "warning" | "danger";

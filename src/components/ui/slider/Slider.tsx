@@ -468,7 +468,7 @@ const Slider: React.FC<SliderProps> = ({
                   <div
                     key={idx}
                     className={clsx(
-                      "absolute -translate-x-1/2",
+                      "absolute -translate-x-1/2 flex items-center justify-center",
                       isVertical ? "translate-y-1/2" : "-translate-y-1/2",
                       "focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2"
                     )}
@@ -481,6 +481,7 @@ const Slider: React.FC<SliderProps> = ({
                         color="foreground"
                         offset={10}
                         showArrow
+                        triggerClassName="flex items-center justify-center"
                         isOpen={isDragging && activeThumbIndexRef.current === idx ? true : undefined}
                         content={formatVal(val, tooltipValueFormatOptions)}
                       >

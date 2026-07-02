@@ -453,18 +453,23 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
           </div>
 
           {/* Clear Button */}
-          {isClearable && hasValue && !disabled && (
-            <Button
-              color="default"
-              size="xs"
-              variant="flat"
-              radius="full"
-              isIconOnly
-              tabIndex={-1}
-              onClick={handleClear}
-            >
-              <FaXmark className="w-3.5 h-3.5" aria-hidden />
-            </Button>
+          {isClearable && !disabled && (
+            <div className="w-7 h-7 flex items-center justify-center shrink-0">
+              {hasValue && (
+                <Button
+                  color="default"
+                  size="xs"
+                  variant="flat"
+                  radius="full"
+                  isIconOnly
+                  tabIndex={-1}
+                  onClick={handleClear}
+                  className="w-7 h-7 min-w-7 min-h-7"
+                >
+                  <FaXmark className="w-3.5 h-3.5" aria-hidden />
+                </Button>
+              )}
+            </div>
           )}
 
           {/* End Content / Password Toggle */}
