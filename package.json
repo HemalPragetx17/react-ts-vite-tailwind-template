@@ -14,8 +14,6 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
     "@tanstack/react-table": "^8.21.3",
-    "axios": "^1.16.0",
-    "crypto-js": "^4.2.0",
     "formik": "^2.4.9",
     "framer-motion": "^12.38.0",
     "libphonenumber-js": "^1.13.2",
@@ -31,10 +29,7 @@
     "react-phone-input-2": "^2.15.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.15.0",
-    "react-select": "^5.10.2",
-    "react-toastify": "^11.1.0",
-    "redux-state-sync": "^3.1.4",
-    "yup": "^1.7.1"
+    "react-select": "^5.10.2"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.2.1",
@@ -44,13 +39,11 @@
     "@storybook/addon-mcp": "^0.6.0",
     "@storybook/addon-vitest": "^10.4.1",
     "@storybook/react-vite": "^10.4.1",
-    "@types/crypto-js": "^4.2.2",
     "@types/lodash": "^4.17.24",
     "@types/node": "^24.12.3",
     "@types/react": "^18.3.28",
     "@types/react-datepicker": "^6.2.0",
     "@types/react-dom": "^18.3.7",
-    "@types/redux-state-sync": "^3.1.10",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/browser-playwright": "^4.1.7",
     "@vitest/coverage-v8": "^4.1.7",
