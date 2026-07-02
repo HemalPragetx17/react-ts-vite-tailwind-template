@@ -12,7 +12,6 @@
     "build-storybook": "storybook build -o dist/storybook"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^2.11.2",
     "@tanstack/react-table": "^8.21.3",
     "formik": "^2.4.9",
     "framer-motion": "^12.38.0",
@@ -27,7 +26,6 @@
     "react-icons": "^5.6.0",
     "react-pdf": "^10.4.1",
     "react-phone-input-2": "^2.15.1",
-    "react-redux": "^9.2.0",
     "react-router-dom": "^7.15.0",
     "react-select": "^5.10.2"
   },
