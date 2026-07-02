@@ -32,9 +32,7 @@ import {
   FaChevronUp,
   FaSpinner,
 } from "react-icons/fa";
-import { useSelector } from "react-redux";
 import { PAGE_OPTIONS } from "../../../shared/constants/pagination";
-import type { IApplicationState } from "../../../store/state/app-state";
 import { Checkbox } from "../input";
 import AnimatedExpand from "./AnimatedExpand";
 import "./index.css";
@@ -155,7 +153,7 @@ function CustomTable<T = any>({
   infiniteScrollMaxHeight = "24rem",
   hasMore,
 }: CustomTableProps<T>) {
-  const globalTableLoading = useSelector((state: IApplicationState) => state.GeneralData?.tableLoading);
+  const globalTableLoading = false;
   const isLoading = loading || globalTableLoading;
 
   const [expanded, setExpanded] = useState<ExpandedState>({});

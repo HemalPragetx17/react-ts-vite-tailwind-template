@@ -1,12 +1,25 @@
 import React from "react";
 import { FaChevronRight, FaHome } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
-import { Routing } from "../../../routes/routing";
-import { sidebarRoutes } from "../../../shared/constants/sidebar-data";
 
 // Global config toggle for the breadcrumbs system
 // To disable breadcrumbs throughout the app, simply set this to false
 export const SHOW_SYSTEM_BREADCRUMBS = true;
+
+const SIDEBAR_ROUTES: any[] = [
+    {
+        name: "Dashbaord",
+        route: "",
+    },
+    {
+        name: "User Management",
+        route: "/user",
+    },
+    {
+        name: "Roles",
+        route: "/user/roles",
+    },
+]
 
 export interface BreadcrumbsProps {
     /**
@@ -86,7 +99,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
     }
 
     // Do not show breadcrumbs on auth pages (if they somehow use MainLayout) or home root
-    if (!staticItems && (pathname === Routing.Login || pathname === Routing.ForgotPassword || pathname === "/")) {
+    if (!staticItems && (pathname === "/" || pathname === "/")) {
         return null;
     }
 
@@ -97,9 +110,9 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         // Always start with "Home" linking to Dashboard
         items.push({
             label: "Home",
-            path: Routing.Dashboard,
-            isLast: pathname === Routing.Dashboard,
-            isClickable: pathname !== Routing.Dashboard,
+            path: "/",
+            isLast: pathname === "/",
+            isClickable: pathname !== "/",
         });
 
         // Helper to format string to Clean Title Case (e.g. "sub-category" -> "Sub Category")
@@ -113,9 +126,9 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         // Find the current route in sidebarRoutes dynamically to build hierarchy
         let foundInSidebar = false;
 
-        for (const menu of sidebarRoutes) {
+        for (const menu of SIDEBAR_ROUTES) {
             if (menu.route === pathname) {
-                if (menu.route !== Routing.Dashboard) {
+                if (menu.route !== "/") {
                     items.push({
                         label: menu.name,
                         path: menu.route,
@@ -128,7 +141,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
             }
 
             if (menu.childs) {
-                const child = menu.childs.find((c) => c.route === pathname);
+                const child = menu.childs.find((c: any) => c.route === pathname);
                 if (child) {
                     // Found as a child under menu (e.g. Master)
                     items.push({
@@ -151,7 +164,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
 
         // Fallback: Dynamically generate from path segments if not registered in sidebar (e.g. /dashboard/demo-form)
         if (!foundInSidebar) {
-            const prefix = import.meta.env.VITE_PATH_PREFIX || "";
+            const prefix = import.meta.env.VITE_PATH_PREFIX || "/admin"
             const cleanPrefix = prefix.replace(/^\/|\/$/g, "");
             const segments = pathname
                 .split("/")

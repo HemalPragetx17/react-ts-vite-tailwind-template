@@ -119,7 +119,6 @@ const Homepage: React.FC = () => {
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-neutral-800 hover:text-black dark:text-neutral-200 dark:hover:text-white">
             <a href="./storybook/" className="hover:text-primary transition-colors">Docs</a>
             <a href="./storybook/?path=/docs/components-accordion--docs" className="hover:text-primary transition-colors">Components</a>
-            <a href="./storybook/" className="hover:text-primary transition-colors">Storybook</a>
             <a
               href="https://github.com/HemalPragetx17/react-template"
               target="_blank"

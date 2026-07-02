@@ -1,7 +1,5 @@
 import React from "react";
 import clsx from "clsx";
-import { useSelector } from "react-redux";
-import type { IApplicationState } from "../../../store/state/app-state";
 import Spinner from "../spinner/Spinner";
 
 
@@ -124,7 +122,7 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   ...props
 }) => {
-  const globalFormLoading = useSelector((state: IApplicationState) => state.GeneralData?.formLoading);
+  const globalFormLoading = false;
   const isCurrentlyLoading = isLoading || (type === "submit" && globalFormLoading);
 
   const [ripples, setRipples] = React.useState<{ id: number; x: number; y: number; size: number }[]>([]);
