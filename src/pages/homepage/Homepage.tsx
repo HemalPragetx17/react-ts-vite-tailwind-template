@@ -75,11 +75,11 @@ const Homepage: React.FC = () => {
   const getTerminalCommand = () => {
     switch (activeTab) {
       case "npm":
-        return `# Clone the developer template branch\ngit clone -b template https://github.com/HemalPragetx17/react-ts-vite-tailwind-template.git\n\n# Navigate to project directory\ncd react-ts-vite-tailwind-template\n\n# Install dependencies\nnpm install\n\n# Run development server\nnpm run dev`;
+        return `# Clone the repository\ngit clone https://github.com/HemalPragetx17/react-template.git\n\n# Navigate to project directory\ncd react-template\n\n# Install dependencies\nnpm install\n\n# Run development server\nnpm run dev`;
       case "yarn":
-        return `# Clone the developer template branch\ngit clone -b template https://github.com/HemalPragetx17/react-ts-vite-tailwind-template.git\n\n# Navigate to project directory\ncd react-ts-vite-tailwind-template\n\n# Install dependencies\nyarn install\n\n# Run development server\nyarn dev`;
+        return `# Clone the repository\ngit clone https://github.com/HemalPragetx17/react-template.git\n\n# Navigate to project directory\ncd react-template\n\n# Install dependencies\nyarn install\n\n# Run development server\nyarn dev`;
       case "pnpm":
-        return `# Clone the developer template branch\ngit clone -b template https://github.com/HemalPragetx17/react-ts-vite-tailwind-template.git\n\n# Navigate to project directory\ncd react-ts-vite-tailwind-template\n\n# Install dependencies\npnpm install\n\n# Run development server\npnpm dev`;
+        return `# Clone the repository\ngit clone https://github.com/HemalPragetx17/react-template.git\n\n# Navigate to project directory\ncd react-template\n\n# Install dependencies\npnpm install\n\n# Run development server\npnpm dev`;
     }
   };
 
@@ -118,10 +118,10 @@ const Homepage: React.FC = () => {
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-neutral-800 hover:text-black dark:text-neutral-200 dark:hover:text-white">
             <a href="./storybook/" className="hover:text-primary transition-colors">Docs</a>
-            <a href="./storybook/?path=/docs/configure-your-project--docs" className="hover:text-primary transition-colors">Components</a>
+            <a href="./storybook/?path=/docs/components-accordion--docs" className="hover:text-primary transition-colors">Components</a>
             <a href="./storybook/" className="hover:text-primary transition-colors">Storybook</a>
             <a
-              href="https://github.com/HemalPragetx17/react-ts-vite-tailwind-template"
+              href="https://github.com/HemalPragetx17/react-template"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-primary transition-colors flex items-center gap-1"
@@ -140,7 +140,7 @@ const Homepage: React.FC = () => {
               startContent={<FiDownload />}
               onClick={() =>
                 window.open(
-                  "https://github.com/HemalPragetx17/react-ts-vite-tailwind-template/archive/refs/heads/template.zip",
+                  "https://github.com/HemalPragetx17/react-template/archive/refs/heads/master.zip",
                   "_blank"
                 )
               }
@@ -203,7 +203,7 @@ const Homepage: React.FC = () => {
                 className="px-6 h-12 text-base font-semibold w-full sm:w-auto hover:bg-white/5 backdrop-blur-md border-white/20 dark:border-white/10 text-foreground shadow-sm"
                 onClick={() =>
                   window.open(
-                    "https://github.com/HemalPragetx17/react-ts-vite-tailwind-template/archive/refs/heads/template.zip",
+                    "https://github.com/HemalPragetx17/react-template/archive/refs/heads/master.zip",
                     "_blank"
                   )
                 }
@@ -218,7 +218,7 @@ const Homepage: React.FC = () => {
                 isIconOnly
                 onClick={() =>
                   window.open(
-                    "https://github.com/HemalPragetx17/react-ts-vite-tailwind-template",
+                    "https://github.com/HemalPragetx17/react-template",
                     "_blank"
                   )
                 }
@@ -757,12 +757,12 @@ const Homepage: React.FC = () => {
           <div className="flex items-center gap-6">
             <a href="./storybook/" className="hover:text-primary transition-colors">Documentation</a>
             <a
-              href="https://github.com/HemalPragetx17/react-ts-vite-tailwind-template"
+              href="https://github.com/HemalPragetx17/react-template"
               className="hover:text-primary transition-colors"
             >
               GitHub
             </a>
-            <a href="./storybook/?path=/docs/configure-your-project--docs" className="hover:text-primary transition-colors">
+            <a href="./storybook/?path=/docs/components-accordion--docs" className="hover:text-primary transition-colors">
               Components
             </a>
           </div>

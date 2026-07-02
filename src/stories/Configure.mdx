@@ -19,7 +19,7 @@ import { Meta } from "@storybook/addon-docs/blocks";
         <p>Download the complete project workspace directly. Use this to bypass manual cloning and bootstrap your development workflow instantly.</p>
       </div>
       <a 
-        href="https://github.com/HemalPragetx17/react-ts-vite-tailwind-template/archive/refs/heads/main.zip" 
+        href="https://github.com/HemalPragetx17/react-template/archive/refs/heads/master.zip" 
         className="download-btn" 
         target="_blank"
         rel="noopener noreferrer"
@@ -45,7 +45,7 @@ import { Meta } from "@storybook/addon-docs/blocks";
         <div className="step-content">
           <h4>Clone the Codebase</h4>
           <p>Clone the repository and enter the workspace folder:</p>
-          <pre><code>git clone https://github.com/HemalPragetx17/react-ts-vite-tailwind-template.git{"\n"}cd react-ts-vite-tailwind-template</code></pre>
+          <pre><code>git clone https://github.com/HemalPragetx17/react-template.git{"\n"}cd react-template</code></pre>
         </div>
       </div>
 
@@ -67,14 +67,6 @@ import { Meta } from "@storybook/addon-docs/blocks";
         </div>
       </div>
 
-      <div className="step-item">
-        <div className="step-badge">4</div>
-        <div className="step-content">
-          <h4>Launch Storybook sandbox</h4>
-          <p>Start the component documentation dev environment (available at <code>http://localhost:6006</code>):</p>
-          <pre><code>npm run storybook</code></pre>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -202,21 +194,31 @@ import { Meta } from "@storybook/addon-docs/blocks";
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 24px;
-    border-radius: 9999px;
-    background-color: #7c3aed;
-    color: white !important;
+    padding: 0px 20px !important;
+    border-radius: 10px;
+    background-color: #006fee;
+    color: #ffffff !important;
     font-size: 14px;
     font-weight: 600;
     text-decoration: none !important;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.2);
+    box-shadow: 0 10px 20px -5px rgba(0, 111, 238, 0.4), 0 4px 6px -2px rgba(0, 111, 238, 0.4);
+  }
+
+  .download-btn p {
+    color: #ffffff;
+  }
+
+  .download-btn,
+  .download-btn:link,
+  .download-btn:visited,
+  .download-btn:hover,
+  .download-btn:active {
+    color: #ffffff !important;
   }
 
   .download-btn:hover {
-    background-color: #6d28d9;
-    transform: translateY(-1px);
-    box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.3);
+    opacity: 0.9;
   }
 
   .setup-section h2 {
