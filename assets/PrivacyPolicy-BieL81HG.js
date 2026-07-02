@@ -1,4 +1,4 @@
-import{c as e,n as t,t as n}from"./jsx-runtime-BwKKo4Iw.js";import{C as r,Ht as i}from"./ui-BdVgXGBv.js";import{o as a}from"./index-qYtRfohR.js";var o=e(t(),1),s=n(),c=`<h1>Privacy Policy</h1>
+import{c as e,n as t,t as n}from"./jsx-runtime-BwKKo4Iw.js";import{C as r,Ht as i}from"./ui-MNdXoXDb.js";import{o as a}from"./index-C7m__HlY.js";var o=e(t(),1),s=n(),c=`<h1>Privacy Policy</h1>
 <p>We respect your privacy. This policy explains what personal data we collect, why we use it, and how we protect it.</p>
 <h3>1. Information We Collect</h3>
 <p>We may collect information you provide directly, such as names, email addresses, phone numbers, and company names. We also collect usage statistics like IP addresses and device information automatically.</p>

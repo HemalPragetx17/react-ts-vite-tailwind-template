@@ -1,4 +1,4 @@
-import{c as e,n as t,t as n}from"./jsx-runtime-BwKKo4Iw.js";import{C as r,Ht as i}from"./ui-BdVgXGBv.js";import{o as a}from"./index-qYtRfohR.js";var o=e(t(),1),s=n(),c=`<h1>Terms & Conditions</h1>
+import{c as e,n as t,t as n}from"./jsx-runtime-BwKKo4Iw.js";import{C as r,Ht as i}from"./ui-MNdXoXDb.js";import{o as a}from"./index-C7m__HlY.js";var o=e(t(),1),s=n(),c=`<h1>Terms & Conditions</h1>
 <p>Welcome to our platform. Please read these Terms & Conditions carefully before using our services.</p>
 <h3>1. Acceptance of Terms</h3>
 <p>By accessing or using our services, you agree to be bound by these terms. If you do not agree, you must not use our platform.</p>

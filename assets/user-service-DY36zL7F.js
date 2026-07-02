@@ -1,0 +1,1 @@
+import{n as e,t}from"./http-service-D0SUw_Pl.js";var n=`admin`,r={getAllUsers:async r=>t.get(`${n}/hcp/list${e(r)}`),getAllAppointments:async r=>await t.get(`${n}/appointment-list${e(r)}`),addUser:async e=>t.post(`${n}/addHcp`,e),toggleUserStatus:async(e,r)=>t.post(`${n}/hcp/approve/${e}`,r)};export{r as t};
