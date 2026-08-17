@@ -1,7 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import type { ColumnDef } from "@tanstack/react-table";
-import { useState } from "react";
-import { Avatar, Chip, CustomTable } from "../../components/ui";
+import { useState, useMemo } from "react";
+import {
+  Avatar,
+  Chip,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Pagination,
+  type SortDescriptor,
+} from "../../components/ui";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -46,8 +56,8 @@ const orders: Order[] = [
   {
     id: "ORD-001", product: "MacBook Pro 14\"", customer: "Alice Johnson", amount: 1999, status: "delivered", date: "2024-01-10",
     subRows: [
-      { id: "ORD-001-A", product: "↳ AppleCare+", customer: "Alice Johnson", amount: 299, status: "delivered", date: "2024-01-10" },
-      { id: "ORD-001-B", product: "↳ USB-C Hub", customer: "Alice Johnson", amount: 49, status: "delivered", date: "2024-01-10" },
+      { id: "ORD-001-A", product: "AppleCare+", customer: "Alice Johnson", amount: 299, status: "delivered", date: "2024-01-10" },
+      { id: "ORD-001-B", product: "USB-C Hub", customer: "Alice Johnson", amount: 49, status: "delivered", date: "2024-01-10" },
     ],
   },
   { id: "ORD-002", product: "iPad Air", customer: "Bob Smith", amount: 749, status: "shipped", date: "2024-01-18" },
@@ -55,14 +65,14 @@ const orders: Order[] = [
   {
     id: "ORD-004", product: "iPhone 15 Pro", customer: "David Brown", amount: 1099, status: "delivered", date: "2024-02-01",
     subRows: [
-      { id: "ORD-004-A", product: "↳ MagSafe Case", customer: "David Brown", amount: 59, status: "delivered", date: "2024-02-01" },
+      { id: "ORD-004-A", product: "MagSafe Case", customer: "David Brown", amount: 59, status: "delivered", date: "2024-02-01" },
     ],
   },
   { id: "ORD-005", product: "Apple Watch S9", customer: "Eva Martinez", amount: 399, status: "cancelled", date: "2024-02-05" },
   { id: "ORD-006", product: "Mac mini M4", customer: "Frank Lee", amount: 599, status: "shipped", date: "2024-02-10" },
 ];
 
-// ─── Column Definitions ───────────────────────────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const statusBadge = (status: User["status"]) => {
   const colorMap: Record<User["status"], "success" | "danger" | "warning"> = {
@@ -91,166 +101,181 @@ const orderStatusBadge = (status: Order["status"]) => {
   );
 };
 
-const userColumns: ColumnDef<User>[] = [
-  {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-3">
-        <Avatar name={row.original.name} size="sm" color="primary" />
-        <span className="font-semibold text-gray-800">{row.original.name}</span>
-      </div>
-    ),
-    enableSorting: true,
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-    enableSorting: true,
-  },
-  {
-    accessorKey: "role",
-    header: "Role",
-    enableSorting: true,
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ getValue }) => statusBadge(getValue() as User["status"]),
-    enableSorting: true,
-  },
-  {
-    accessorKey: "joined",
-    header: "Joined",
-    enableSorting: true,
-  },
-  {
-    accessorKey: "salary",
-    header: "Salary",
-    cell: ({ getValue }) => `$${(getValue() as number).toLocaleString()}`,
-    enableSorting: true,
-  },
-];
-
-const orderColumns: ColumnDef<Order>[] = [
-  {
-    accessorKey: "id",
-    header: "Order ID",
-    cell: ({ getValue }) => (
-      <span className="font-mono text-xs text-primary font-semibold">{getValue() as string}</span>
-    ),
-  },
-  { accessorKey: "product", header: "Product" },
-  { accessorKey: "customer", header: "Customer" },
-  {
-    accessorKey: "amount",
-    header: "Amount",
-    cell: ({ getValue }) => `$${(getValue() as number).toLocaleString()}`,
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ getValue }) => orderStatusBadge(getValue() as Order["status"]),
-  },
-  { accessorKey: "date", header: "Date" },
-];
-
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const meta: Meta<any> = {
+const meta: Meta<typeof Table> = {
   title: "Components/Table",
-  component: CustomTable,
+  component: Table,
   parameters: {
     layout: "padded",
   },
   tags: ["autodocs"],
   argTypes: {
-    enablePagination: { control: "boolean" },
-    enableSorting: { control: "boolean" },
-    enableFiltering: { control: "boolean" },
-    enableCheckbox: { control: "boolean" },
-    enableExpanding: { control: "boolean" },
+    color: {
+      control: "select",
+      options: ["default", "primary", "secondary", "success", "warning", "danger"],
+    },
+    radius: {
+      control: "select",
+      options: ["none", "sm", "md", "lg"],
+    },
+    shadow: {
+      control: "select",
+      options: ["none", "sm", "md", "lg"],
+    },
     isStriped: { control: "boolean" },
-    enableInfiniteScroll: { control: "boolean" },
+    isCompact: { control: "boolean" },
     hideHeader: { control: "boolean" },
-    loading: { control: "boolean" },
-    scrollBehavior: { control: "select", options: ["inside", "outside"] },
-    paginationSize: { control: "select", options: ["sm", "md", "lg"] },
-    paginationColor: { control: "select", options: ["primary", "secondary", "success", "warning", "danger", "default"] },
-    paginationVariant: { control: "select", options: ["solid", "bordered", "light", "flat"] },
-    showPaginationControls: { control: "boolean" },
-    data: { control: false },
-    columns: { control: false },
+    isHeaderSticky: { control: "boolean" },
+    selectionMode: {
+      control: "select",
+      options: ["none", "single", "multiple"],
+    },
   },
 };
 
 export default meta;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Story = StoryObj<any>;
+type Story = StoryObj<typeof Table>;
 
 // ─── Default ─────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  render: (args) => <CustomTable {...args} data={users} columns={userColumns} />,
-  args: {
-    enablePagination: false,
-    enableSorting: false,
-    enableFiltering: false,
-    enableCheckbox: false,
-    enableExpanding: false,
-    hideHeader: false,
-    loading: false,
-    scrollBehavior: "outside",
-  },
+  render: (args) => (
+    <Table aria-label="Users table" {...args}>
+      <TableHeader>
+        <TableColumn>NAME</TableColumn>
+        <TableColumn>EMAIL</TableColumn>
+        <TableColumn>ROLE</TableColumn>
+        <TableColumn>STATUS</TableColumn>
+        <TableColumn>JOINED</TableColumn>
+        <TableColumn>SALARY</TableColumn>
+      </TableHeader>
+      <TableBody>
+        {users.map((user) => (
+          <TableRow key={user.id}>
+            <TableCell>
+              <div className="flex items-center gap-3">
+                <Avatar name={user.name} size="sm" color="primary" />
+                <span className="font-semibold text-neutral-800 dark:text-neutral-200">{user.name}</span>
+              </div>
+            </TableCell>
+            <TableCell>{user.email}</TableCell>
+            <TableCell>{user.role}</TableCell>
+            <TableCell>{statusBadge(user.status)}</TableCell>
+            <TableCell>{user.joined}</TableCell>
+            <TableCell>${user.salary.toLocaleString()}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  ),
 };
 
 // ─── With Pagination ─────────────────────────────────────────────────────────
 
 export const WithPagination: Story = {
   render: (args) => {
-    const [pagination, setPagination] = useState({ page: 1, limit: 5 });
+    const [page, setPage] = useState(1);
+    const rowsPerPage = 4;
+    const pages = Math.ceil(users.length / rowsPerPage);
+
+    const items = useMemo(() => {
+      const start = (page - 1) * rowsPerPage;
+      return users.slice(start, start + rowsPerPage);
+    }, [page]);
+
     return (
-      <CustomTable
+      <Table
+        aria-label="Table with pagination"
         {...args}
-        data={users}
-        columns={userColumns}
-        enablePagination
-        manualPagination={false}
-        pagination={pagination}
-        onPaginationChange={setPagination}
-        totalCount={users.length}
-        pageSize={5}
-        scrollBehavior="outside"
-      />
+        bottomContent={
+          <div className="flex w-full justify-center p-2">
+            <Pagination
+              isCompact
+              showControls
+              showShadow
+              color="primary"
+              page={page}
+              total={pages}
+              onChange={(p) => setPage(p)}
+            />
+          </div>
+        }
+        bottomContentPlacement="outside"
+      >
+        <TableHeader>
+          <TableColumn>NAME</TableColumn>
+          <TableColumn>EMAIL</TableColumn>
+          <TableColumn>ROLE</TableColumn>
+          <TableColumn>STATUS</TableColumn>
+        </TableHeader>
+        <TableBody>
+          {items.map((user) => (
+            <TableRow key={user.id}>
+              <TableCell>
+                <div className="flex items-center gap-3">
+                  <Avatar name={user.name} size="sm" color="primary" />
+                  <span className="font-semibold text-neutral-800 dark:text-neutral-200">{user.name}</span>
+                </div>
+              </TableCell>
+              <TableCell>{user.email}</TableCell>
+              <TableCell>{user.role}</TableCell>
+              <TableCell>{statusBadge(user.status)}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     );
-  },
-  args: {
-    paginationSize: "md",
-    paginationColor: "primary",
-    paginationVariant: "solid",
-    showPaginationControls: true,
   },
 };
 
 // ─── With Sorting ─────────────────────────────────────────────────────────────
 
 export const WithSorting: Story = {
-  render: (args) => (
-    <div>
-      <p className="text-sm text-gray-500 mb-2">Click on a column header to sort. Columns with sorting enabled: Name, Email, Role, Status, Joined, Salary.</p>
-      <CustomTable
+  render: (args) => {
+    const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+      column: "name",
+      direction: "ascending",
+    });
+
+    const sortedItems = useMemo(() => {
+      return [...users].sort((a, b) => {
+        const col = sortDescriptor.column as keyof User;
+        const first = a[col];
+        const second = b[col];
+        let cmp = first < second ? -1 : first > second ? 1 : 0;
+        if (sortDescriptor.direction === "descending") cmp *= -1;
+        return cmp;
+      });
+    }, [sortDescriptor]);
+
+    return (
+      <Table
+        aria-label="Table with sorting"
         {...args}
-        data={users}
-        columns={userColumns}
-        enableSorting
-        scrollBehavior="outside"
-      />
-    </div>
-  ),
-  args: {
-    defaultSortKey: "name",
-    defaultSortOrder: "asc",
+        sortDescriptor={sortDescriptor}
+        onSortChange={setSortDescriptor}
+      >
+        <TableHeader>
+          <TableColumn key="name" allowsSorting>NAME</TableColumn>
+          <TableColumn key="email" allowsSorting>EMAIL</TableColumn>
+          <TableColumn key="role" allowsSorting>ROLE</TableColumn>
+          <TableColumn key="status" allowsSorting>STATUS</TableColumn>
+          <TableColumn key="salary" allowsSorting>SALARY</TableColumn>
+        </TableHeader>
+        <TableBody>
+          {sortedItems.map((user) => (
+            <TableRow key={user.id}>
+              <TableCell>{user.name}</TableCell>
+              <TableCell>{user.email}</TableCell>
+              <TableCell>{user.role}</TableCell>
+              <TableCell>{statusBadge(user.status)}</TableCell>
+              <TableCell>${user.salary.toLocaleString()}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    );
   },
 };
 
@@ -258,45 +283,107 @@ export const WithSorting: Story = {
 
 export const WithCheckboxSelection: Story = {
   render: (args) => (
-    <CustomTable
+    <Table
+      aria-label="Table with selection"
+      selectionMode="multiple"
+      defaultSelectedKeys={new Set(["1", "3"])}
       {...args}
-      data={users}
-      columns={userColumns}
-      enableCheckbox
-      scrollBehavior="outside"
-    />
+    >
+      <TableHeader>
+        <TableColumn>NAME</TableColumn>
+        <TableColumn>EMAIL</TableColumn>
+        <TableColumn>ROLE</TableColumn>
+        <TableColumn>STATUS</TableColumn>
+      </TableHeader>
+      <TableBody>
+        {users.slice(0, 6).map((user) => (
+          <TableRow key={user.id}>
+            <TableCell>
+              <div className="flex items-center gap-3">
+                <Avatar name={user.name} size="sm" color="primary" />
+                <span className="font-semibold text-neutral-800 dark:text-neutral-200">{user.name}</span>
+              </div>
+            </TableCell>
+            <TableCell>{user.email}</TableCell>
+            <TableCell>{user.role}</TableCell>
+            <TableCell>{statusBadge(user.status)}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   ),
-  args: {},
 };
 
-// ─── With All Features ───────────────────────────────────────────────────────
+// ─── All Features Combined ───────────────────────────────────────────────────
 
 export const AllFeatures: Story = {
   name: "All Features Combined",
   render: (args) => {
-    const [pagination, setPagination] = useState({ page: 1, limit: 5 });
+    const [page, setPage] = useState(1);
+    const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+      column: "name",
+      direction: "ascending",
+    });
+    const rowsPerPage = 4;
+
+    const sortedItems = useMemo(() => {
+      return [...users].sort((a, b) => {
+        const col = sortDescriptor.column as keyof User;
+        const first = a[col];
+        const second = b[col];
+        let cmp = first < second ? -1 : first > second ? 1 : 0;
+        if (sortDescriptor.direction === "descending") cmp *= -1;
+        return cmp;
+      });
+    }, [sortDescriptor]);
+
+    const items = useMemo(() => {
+      const start = (page - 1) * rowsPerPage;
+      return sortedItems.slice(start, start + rowsPerPage);
+    }, [page, sortedItems]);
+
     return (
-      <CustomTable
+      <Table
+        aria-label="Table with all features"
+        selectionMode="multiple"
+        sortDescriptor={sortDescriptor}
+        onSortChange={setSortDescriptor}
         {...args}
-        data={users}
-        columns={userColumns}
-        enablePagination
-        enableSorting
-        enableCheckbox
-        manualPagination={false}
-        pagination={pagination}
-        onPaginationChange={setPagination}
-        totalCount={users.length}
-        pageSize={5}
-        scrollBehavior="outside"
-        paginationColor="primary"
-        paginationVariant="solid"
-      />
+        bottomContent={
+          <div className="flex w-full justify-center p-2">
+            <Pagination
+              isCompact
+              showControls
+              showShadow
+              color="primary"
+              page={page}
+              total={Math.ceil(users.length / rowsPerPage)}
+              onChange={(p) => setPage(p)}
+            />
+          </div>
+        }
+        bottomContentPlacement="outside"
+      >
+        <TableHeader>
+          <TableColumn key="name" allowsSorting>NAME</TableColumn>
+          <TableColumn key="email" allowsSorting>EMAIL</TableColumn>
+          <TableColumn key="role" allowsSorting>ROLE</TableColumn>
+          <TableColumn key="status" allowsSorting>STATUS</TableColumn>
+          <TableColumn key="salary" allowsSorting>SALARY</TableColumn>
+        </TableHeader>
+        <TableBody>
+          {items.map((user) => (
+            <TableRow key={user.id}>
+              <TableCell>{user.name}</TableCell>
+              <TableCell>{user.email}</TableCell>
+              <TableCell>{user.role}</TableCell>
+              <TableCell>{statusBadge(user.status)}</TableCell>
+              <TableCell>${user.salary.toLocaleString()}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     );
-  },
-  args: {
-    defaultSortKey: "salary",
-    defaultSortOrder: "desc",
   },
 };
 
@@ -304,63 +391,106 @@ export const AllFeatures: Story = {
 
 export const WithExpandableRows: Story = {
   render: (args) => (
-    <div>
-      <p className="text-sm text-gray-500 mb-2">Click the arrow icon on rows with sub-rows (ORD-001, ORD-004) to expand them.</p>
-      <CustomTable
-        {...args}
-        data={orders}
-        columns={orderColumns}
-        enableExpanding
-        getSubRows={(row: Order) => row.subRows}
-        scrollBehavior="outside"
-      />
-    </div>
+    <Table
+      aria-label="Expandable rows table"
+      {...args}
+      renderExpandedContent={(item: Order) => (
+        <div className="p-4 bg-neutral-50 dark:bg-neutral-800/40 rounded-lg space-y-2">
+          <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Sub Items for {item.id}</p>
+          {item.subRows && item.subRows.length > 0 ? (
+            item.subRows.map((sub) => (
+              <div key={sub.id} className="flex items-center gap-6 text-sm text-neutral-700 dark:text-neutral-300">
+                <span className="font-mono text-primary font-medium">{sub.id}</span>
+                <span>{sub.product}</span>
+                <span>${sub.amount}</span>
+                <span>{orderStatusBadge(sub.status)}</span>
+              </div>
+            ))
+          ) : (
+            <p className="text-xs text-neutral-400">No sub-items available</p>
+          )}
+        </div>
+      )}
+    >
+      <TableHeader>
+        <TableColumn>ORDER ID</TableColumn>
+        <TableColumn>PRODUCT</TableColumn>
+        <TableColumn>CUSTOMER</TableColumn>
+        <TableColumn>AMOUNT</TableColumn>
+        <TableColumn>STATUS</TableColumn>
+        <TableColumn>DATE</TableColumn>
+      </TableHeader>
+      <TableBody items={orders}>
+        {(order) => (
+          <TableRow key={order.id}>
+            <TableCell><span className="font-mono text-xs text-primary font-semibold">{order.id}</span></TableCell>
+            <TableCell>{order.product}</TableCell>
+            <TableCell>{order.customer}</TableCell>
+            <TableCell>${order.amount}</TableCell>
+            <TableCell>{orderStatusBadge(order.status)}</TableCell>
+            <TableCell>{order.date}</TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   ),
-  args: {},
 };
 
 // ─── Loading State ────────────────────────────────────────────────────────────
 
 export const LoadingState: Story = {
   render: (args) => (
-    <CustomTable
-      {...args}
-      data={[]}
-      columns={userColumns}
-      loading
-      scrollBehavior="outside"
-    />
+    <Table aria-label="Loading state table" {...args}>
+      <TableHeader>
+        <TableColumn>NAME</TableColumn>
+        <TableColumn>EMAIL</TableColumn>
+        <TableColumn>ROLE</TableColumn>
+      </TableHeader>
+      <TableBody isLoading loadingState="loading" emptyContent="Loading data...">
+        {[]}
+      </TableBody>
+    </Table>
   ),
-  args: {},
 };
 
 // ─── Empty State ──────────────────────────────────────────────────────────────
 
 export const EmptyState: Story = {
   render: (args) => (
-    <CustomTable
-      {...args}
-      data={[]}
-      columns={userColumns}
-      scrollBehavior="outside"
-    />
+    <Table aria-label="Empty state table" {...args}>
+      <TableHeader>
+        <TableColumn>NAME</TableColumn>
+        <TableColumn>EMAIL</TableColumn>
+        <TableColumn>ROLE</TableColumn>
+      </TableHeader>
+      <TableBody emptyContent="No rows available.">
+        {[]}
+      </TableBody>
+    </Table>
   ),
-  args: {},
 };
 
 // ─── Hidden Header ────────────────────────────────────────────────────────────
 
 export const HiddenHeader: Story = {
   render: (args) => (
-    <CustomTable
-      {...args}
-      data={users.slice(0, 5)}
-      columns={userColumns}
-      hideHeader
-      scrollBehavior="outside"
-    />
+    <Table aria-label="Hidden header table" hideHeader {...args}>
+      <TableHeader>
+        <TableColumn>NAME</TableColumn>
+        <TableColumn>EMAIL</TableColumn>
+        <TableColumn>ROLE</TableColumn>
+      </TableHeader>
+      <TableBody>
+        {users.slice(0, 4).map((user) => (
+          <TableRow key={user.id}>
+            <TableCell>{user.name}</TableCell>
+            <TableCell>{user.email}</TableCell>
+            <TableCell>{user.role}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   ),
-  args: {},
 };
 
 // ─── Pagination Variants ──────────────────────────────────────────────────────
@@ -369,24 +499,30 @@ export const PaginationVariants: Story = {
   name: "Pagination Color & Variant",
   render: () => {
     const [color, setColor] = useState<"primary" | "secondary" | "success" | "warning" | "danger" | "default">("primary");
-    const [variant, setVariant] = useState<"solid" | "bordered" | "light" | "flat">("solid");
-    const [pagination, setPagination] = useState({ page: 1, limit: 4 });
+    const [variant, setVariant] = useState<"flat" | "bordered" | "light" | "faded">("flat");
+    const [page, setPage] = useState(1);
+    const rowsPerPage = 3;
+    const pages = Math.ceil(users.length / rowsPerPage);
+
+    const items = useMemo(() => {
+      const start = (page - 1) * rowsPerPage;
+      return users.slice(start, start + rowsPerPage);
+    }, [page]);
 
     const colors = ["primary", "secondary", "success", "warning", "danger", "default"] as const;
-    const variants = ["solid", "bordered", "light", "flat"] as const;
+    const variants = ["flat", "bordered", "light", "faded"] as const;
 
     return (
       <div className="flex flex-col gap-4">
         <div className="flex flex-wrap gap-4">
           <div className="flex flex-col gap-1">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Color</span>
+            <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Color</span>
             <div className="flex flex-wrap gap-2">
               {colors.map((c) => (
                 <button
                   key={c}
                   onClick={() => setColor(c)}
-                  className={`px-3 py-1 text-sm rounded-lg border transition-all ${color === c ? "bg-gray-800 text-white border-gray-800" : "border-gray-200 text-gray-600 hover:border-gray-400"
-                    }`}
+                  className={`px-3 py-1 text-sm rounded-lg border transition-all ${color === c ? "bg-neutral-800 text-white border-neutral-800" : "border-neutral-200 text-neutral-600 hover:border-neutral-400"}`}
                 >
                   {c}
                 </button>
@@ -394,14 +530,13 @@ export const PaginationVariants: Story = {
             </div>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Variant</span>
+            <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Variant</span>
             <div className="flex flex-wrap gap-2">
               {variants.map((v) => (
                 <button
                   key={v}
                   onClick={() => setVariant(v)}
-                  className={`px-3 py-1 text-sm rounded-lg border transition-all ${variant === v ? "bg-gray-800 text-white border-gray-800" : "border-gray-200 text-gray-600 hover:border-gray-400"
-                    }`}
+                  className={`px-3 py-1 text-sm rounded-lg border transition-all ${variant === v ? "bg-neutral-800 text-white border-neutral-800" : "border-neutral-200 text-neutral-600 hover:border-neutral-400"}`}
                 >
                   {v}
                 </button>
@@ -409,20 +544,37 @@ export const PaginationVariants: Story = {
             </div>
           </div>
         </div>
-        <CustomTable
-          data={users}
-          columns={userColumns}
-          enablePagination
-          manualPagination={false}
-          pagination={pagination}
-          onPaginationChange={setPagination}
-          totalCount={users.length}
-          pageSize={4}
-          paginationColor={color}
-          paginationVariant={variant}
-          paginationSize="md"
-          scrollBehavior="outside"
-        />
+        <Table
+          aria-label="Table with pagination options"
+          bottomContent={
+            <div className="flex w-full justify-center p-2">
+              <Pagination
+                showControls
+                color={color}
+                variant={variant}
+                page={page}
+                total={pages}
+                onChange={(p) => setPage(p)}
+              />
+            </div>
+          }
+          bottomContentPlacement="outside"
+        >
+          <TableHeader>
+            <TableColumn>NAME</TableColumn>
+            <TableColumn>EMAIL</TableColumn>
+            <TableColumn>ROLE</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {items.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell>{user.name}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.role}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     );
   },
@@ -435,87 +587,62 @@ export const ClickableRows: Story = {
     const [selected, setSelected] = useState<User | null>(null);
     return (
       <div className="flex flex-col gap-4">
-        <p className="text-sm text-gray-500">Click any row to select it.</p>
+        <p className="text-sm text-neutral-500">Click any row to trigger action.</p>
         {selected && (
-          <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl text-sm">
+          <div className="p-4 bg-primary/10 border border-primary/20 rounded-xl text-sm">
             <span className="font-semibold text-primary">Selected:</span>{" "}
             {selected.name} — {selected.email} — {selected.role}
           </div>
         )}
-        <CustomTable
+        <Table
+          aria-label="Clickable rows table"
+          onRowAction={(key) => {
+            const u = users.find((x) => x.id === key);
+            if (u) setSelected(u);
+          }}
           {...args}
-          data={users}
-          columns={userColumns}
-          onRowClick={(row) => setSelected(row as User)}
-          scrollBehavior="outside"
-        />
+        >
+          <TableHeader>
+            <TableColumn>NAME</TableColumn>
+            <TableColumn>EMAIL</TableColumn>
+            <TableColumn>ROLE</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {users.slice(0, 5).map((user) => (
+              <TableRow key={user.id}>
+                <TableCell>{user.name}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.role}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     );
   },
-  args: {},
 };
 
 // ─── Striped Rows ─────────────────────────────────────────────────────────────
 
 export const StripedRows: Story = {
   render: (args) => (
-    <CustomTable
-      {...args}
-      data={users.slice(0, 6)}
-      columns={userColumns}
-      isStriped
-      scrollBehavior="outside"
-    />
+    <Table aria-label="Striped table" isStriped {...args}>
+      <TableHeader>
+        <TableColumn>NAME</TableColumn>
+        <TableColumn>EMAIL</TableColumn>
+        <TableColumn>ROLE</TableColumn>
+      </TableHeader>
+      <TableBody>
+        {users.slice(0, 6).map((user) => (
+          <TableRow key={user.id}>
+            <TableCell>{user.name}</TableCell>
+            <TableCell>{user.email}</TableCell>
+            <TableCell>{user.role}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   ),
-  args: {},
-};
-
-// ─── Infinite Scroll ──────────────────────────────────────────────────────────
-
-export const InfiniteScroll: Story = {
-  render: (args) => {
-    const [pagination, setPagination] = useState({ page: 1, limit: 5 });
-    const [loading, setLoading] = useState(false);
-
-    const allUsers = Array.from({ length: 30 }, (_, i) => {
-      const base = users[i % users.length];
-      return { ...base, id: String(i + 1), name: `${base.name} #${i + 1}` };
-    });
-
-    const visibleData = allUsers.slice(0, pagination.limit);
-
-    const handlePaginationChange = (next: { page: number; limit: number }) => {
-      setLoading(true);
-      setTimeout(() => {
-        setPagination({ page: 1, limit: next.limit });
-        setLoading(false);
-      }, 600);
-    };
-
-    return (
-      <div>
-        <p className="text-sm text-gray-500 mb-2">
-          Scroll inside the table to load more rows. Page stays at 1; limit increases by 5 each time.
-        </p>
-        <CustomTable
-          {...args}
-          data={visibleData}
-          columns={userColumns}
-          enablePagination
-          enableInfiniteScroll
-          manualPagination
-          pagination={pagination}
-          onPaginationChange={handlePaginationChange}
-          totalCount={allUsers.length}
-          infiniteScrollStep={5}
-          infiniteScrollMaxHeight="20rem"
-          loading={loading}
-          isStriped
-        />
-      </div>
-    );
-  },
-  args: {},
 };
 
 // ─── Orders Table ─────────────────────────────────────────────────────────────
@@ -523,25 +650,54 @@ export const InfiniteScroll: Story = {
 export const OrdersTable: Story = {
   name: "Real-world: Orders",
   render: (args) => {
-    const [pagination, setPagination] = useState({ page: 1, limit: 5 });
+    const [page, setPage] = useState(1);
+    const rowsPerPage = 4;
+    const pages = Math.ceil(orders.length / rowsPerPage);
+
+    const items = useMemo(() => {
+      const start = (page - 1) * rowsPerPage;
+      return orders.slice(start, start + rowsPerPage);
+    }, [page]);
+
     return (
-      <CustomTable
+      <Table
+        aria-label="Orders table"
+        selectionMode="multiple"
         {...args}
-        data={orders}
-        columns={orderColumns}
-        enablePagination
-        enableSorting
-        enableCheckbox
-        manualPagination={false}
-        pagination={pagination}
-        onPaginationChange={setPagination}
-        totalCount={orders.length}
-        pageSize={5}
-        scrollBehavior="outside"
-        paginationColor="primary"
-        paginationVariant="solid"
-      />
+        bottomContent={
+          <div className="flex w-full justify-center p-2">
+            <Pagination
+              showControls
+              color="primary"
+              page={page}
+              total={pages}
+              onChange={(p) => setPage(p)}
+            />
+          </div>
+        }
+        bottomContentPlacement="outside"
+      >
+        <TableHeader>
+          <TableColumn>ORDER ID</TableColumn>
+          <TableColumn>PRODUCT</TableColumn>
+          <TableColumn>CUSTOMER</TableColumn>
+          <TableColumn>AMOUNT</TableColumn>
+          <TableColumn>STATUS</TableColumn>
+          <TableColumn>DATE</TableColumn>
+        </TableHeader>
+        <TableBody>
+          {items.map((order) => (
+            <TableRow key={order.id}>
+              <TableCell><span className="font-mono text-xs text-primary font-semibold">{order.id}</span></TableCell>
+              <TableCell>{order.product}</TableCell>
+              <TableCell>{order.customer}</TableCell>
+              <TableCell>${order.amount}</TableCell>
+              <TableCell>{orderStatusBadge(order.status)}</TableCell>
+              <TableCell>{order.date}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     );
   },
-  args: {},
 };

@@ -7,6 +7,8 @@ import {
   type CheckboxSize,
   type CheckboxRadius,
 } from "./Checkbox";
+import { errorClasses, labelClasses } from "../shared/fieldStyles";
+import { FieldLabelContent } from "../shared/FieldLabelContent";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -55,6 +57,7 @@ interface CheckboxGroupProps
   containerClassName?: string;
   labelClassName?: string;
   errorClassName?: string;
+  isRequired?: boolean;
 
   // Formik integration
   field?: FieldInputProps<any>;
@@ -86,6 +89,7 @@ const CheckboxGroup = forwardRef<HTMLDivElement, CheckboxGroupProps>(
       containerClassName = "",
       labelClassName = "",
       errorClassName = "",
+      isRequired = false,
       field,
       form,
       disabled = false,
@@ -131,9 +135,6 @@ const CheckboxGroup = forwardRef<HTMLDivElement, CheckboxGroupProps>(
 
     const isHorizontal = orientation === "horizontal";
 
-    const labelSizeClass =
-      size === "sm" ? "text-[10px] mb-1.5" : size === "lg" ? "text-sm mb-1.5" : "text-xs mb-1.5";
-
     const gapClass = isHorizontal
       ? size === "sm" ? "gap-x-4 gap-y-2" : size === "lg" ? "gap-x-8 gap-y-4" : "gap-x-6 gap-y-3"
       : size === "sm" ? "gap-1.5" : size === "lg" ? "gap-2.5" : "gap-2";
@@ -149,9 +150,9 @@ const CheckboxGroup = forwardRef<HTMLDivElement, CheckboxGroupProps>(
         {label && (
           <p
             id={`${fieldName}-group-label`}
-            className={`font-medium text-neutral-600 dark:text-neutral-400 select-none ${labelSizeClass} ${labelClassName}`}
+            className={`${labelClasses} mb-2 ${labelClassName}`}
           >
-            {label}
+            <FieldLabelContent label={label} isRequired={isRequired} />
           </p>
         )}
 
@@ -197,7 +198,7 @@ const CheckboxGroup = forwardRef<HTMLDivElement, CheckboxGroupProps>(
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.15 }}
-              className={`mt-1.5 text-sm text-red-500 ${errorClassName}`}
+              className={`${errorClasses} ${errorClassName}`}
             >
               {fieldError}
             </motion.p>

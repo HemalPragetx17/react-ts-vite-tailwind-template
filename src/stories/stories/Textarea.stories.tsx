@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Textarea } from "../../components/ui";
+import { Textarea as TextareaComponent } from "../../components/ui";
 
-const meta: Meta<typeof Textarea> = {
+const meta: Meta<typeof TextareaComponent> = {
   title: "Components/Textarea",
-  component: Textarea,
+  component: TextareaComponent,
   parameters: {
     layout: "centered",
   },
@@ -39,12 +39,12 @@ const meta: Meta<typeof Textarea> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Textarea>;
+type Story = StoryObj<typeof TextareaComponent>;
 
-const TextareaWithState = (args: any) => {
+const Textarea = (args: any) => {
   const [value, setValue] = useState(args.value ?? "");
   return (
-    <Textarea
+    <TextareaComponent
       {...args}
       value={value}
       onChange={(e) => {
@@ -58,7 +58,7 @@ const TextareaWithState = (args: any) => {
 export const Default: Story = {
   render: (args) => (
     <div className="w-[600px]">
-      <TextareaWithState {...args} />
+      <Textarea {...args} />
     </div>
   ),
   args: {
@@ -71,12 +71,12 @@ export const Variants: Story = {
   render: (args) => (
     <div className="flex flex-col gap-8 w-[800px]">
       <div className="flex gap-4">
-        <TextareaWithState {...args} variant="flat" label="Flat" />
-        <TextareaWithState {...args} variant="bordered" label="Bordered" />
+        <Textarea {...args} variant="flat" label="Flat" />
+        <Textarea {...args} variant="bordered" label="Bordered" />
       </div>
       <div className="flex gap-4">
-        <TextareaWithState {...args} variant="underlined" label="Underlined" />
-        <TextareaWithState {...args} variant="faded" label="Faded" />
+        <Textarea {...args} variant="underlined" label="Underlined" />
+        <Textarea {...args} variant="faded" label="Faded" />
       </div>
     </div>
   ),
@@ -89,9 +89,9 @@ export const Variants: Story = {
 export const Sizes: Story = {
   render: (args) => (
     <div className="flex gap-4 w-[800px]">
-      <TextareaWithState {...args} size="sm" label="Small" placeholder="Small size" />
-      <TextareaWithState {...args} size="md" label="Medium" placeholder="Medium size" />
-      <TextareaWithState {...args} size="lg" label="Large" placeholder="Large size" />
+      <Textarea {...args} size="sm" label="Small" placeholder="Small size" />
+      <Textarea {...args} size="md" label="Medium" placeholder="Medium size" />
+      <Textarea {...args} size="lg" label="Large" placeholder="Large size" />
     </div>
   ),
 };
@@ -99,11 +99,11 @@ export const Sizes: Story = {
 export const Radiuses: Story = {
   render: (args) => (
     <div className="flex gap-4 w-[800px]">
-      <TextareaWithState {...args} radius="none" label="Radius None" placeholder="No radius" />
-      <TextareaWithState {...args} radius="sm" label="Radius Small" placeholder="Small radius" />
-      <TextareaWithState {...args} radius="md" label="Radius Medium" placeholder="Medium radius" />
-      <TextareaWithState {...args} radius="lg" label="Radius Large" placeholder="Large radius" />
-      <TextareaWithState {...args} radius="full" label="Radius Full" placeholder="Full radius" />
+      <Textarea {...args} radius="none" label="Radius None" placeholder="No radius" />
+      <Textarea {...args} radius="sm" label="Radius Small" placeholder="Small radius" />
+      <Textarea {...args} radius="md" label="Radius Medium" placeholder="Medium radius" />
+      <Textarea {...args} radius="lg" label="Radius Large" placeholder="Large radius" />
+      <Textarea {...args} radius="full" label="Radius Full" placeholder="Full radius" />
     </div>
   ),
   args: {
@@ -115,19 +115,19 @@ export const LabelPlacements: Story = {
   render: (args) => (
     <div className="flex flex-col gap-8 w-[800px]">
       <div className="flex gap-4">
-        <TextareaWithState {...args} labelPlacement="inside" label="Inside (Floating)" />
-        <TextareaWithState {...args} labelPlacement="inside" label="Inside (Static with Placeholder)" placeholder="Enter text" />
+        <Textarea {...args} labelPlacement="inside" label="Inside (Floating)" />
+        <Textarea {...args} labelPlacement="inside" label="Inside (Static with Placeholder)" placeholder="Enter text" />
       </div>
       <div className="flex gap-4">
-        <TextareaWithState {...args} labelPlacement="outside" label="Outside (Floating)" />
-        <TextareaWithState {...args} labelPlacement="outside" label="Outside (Static with Placeholder)" placeholder="Enter text" />
+        <Textarea {...args} labelPlacement="outside" label="Outside (Floating)" />
+        <Textarea {...args} labelPlacement="outside" label="Outside (Static with Placeholder)" placeholder="Enter text" />
       </div>
       <div className="flex gap-4">
-        <TextareaWithState {...args} labelPlacement="outlined" label="Outlined (Floating)" />
-        <TextareaWithState {...args} labelPlacement="outlined" label="Outlined (Static with Placeholder)" placeholder="Enter text" />
+        <Textarea {...args} labelPlacement="outlined" label="Outlined (Floating)" />
+        <Textarea {...args} labelPlacement="outlined" label="Outlined (Static with Placeholder)" placeholder="Enter text" />
       </div>
-      <TextareaWithState {...args} labelPlacement="outside-top" label="Outside Top (Static)" placeholder="Enter text" />
-      <TextareaWithState {...args} labelPlacement="outside-left" label="Outside Left (Static)" placeholder="Enter text" />
+      <Textarea {...args} labelPlacement="outside-top" label="Outside Top (Static)" placeholder="Enter text" />
+      <Textarea {...args} labelPlacement="outside-left" label="Outside Left (Static)" placeholder="Enter text" />
     </div>
   ),
   args: {
@@ -138,7 +138,7 @@ export const LabelPlacements: Story = {
 export const Clearable: Story = {
   render: (args) => (
     <div className="w-[600px]">
-      <TextareaWithState {...args} />
+      <Textarea {...args} />
     </div>
   ),
   args: {
@@ -151,8 +151,8 @@ export const Clearable: Story = {
 export const Autosize: Story = {
   render: (args) => (
     <div className="flex gap-4 w-[800px]">
-      <TextareaWithState {...args} label="Autosizing Textarea" />
-      <TextareaWithState {...args} label="Fixed Textarea (Autosize Disabled)" disableAutosize={true} />
+      <Textarea {...args} label="Autosizing Textarea" />
+      <Textarea {...args} label="Fixed Textarea (Autosize Disabled)" disableAutosize={true} />
     </div>
   ),
   args: {
@@ -165,7 +165,7 @@ export const Autosize: Story = {
 export const Disabled: Story = {
   render: (args) => (
     <div className="w-[600px]">
-      <TextareaWithState {...args} />
+      <Textarea {...args} />
     </div>
   ),
   args: {
@@ -178,7 +178,7 @@ export const Disabled: Story = {
 export const ErrorState: Story = {
   render: (args) => (
     <div className="w-[600px]">
-      <TextareaWithState {...args} />
+      <Textarea {...args} />
     </div>
   ),
   args: {

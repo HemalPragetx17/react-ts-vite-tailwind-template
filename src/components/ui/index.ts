@@ -1,6 +1,51 @@
 // ── Accordion ────────────────────────────────────────────────────────────────
 export { Accordion, AccordionItem } from "./accordion/Accordion";
 
+// ── Shared tokens ────────────────────────────────────────────────────────────
+export type { Radius } from "./shared/radius";
+export {
+  DEFAULT_RADIUS,
+  DEFAULT_RADIUS_CSS_VAR,
+  getCornerRadiusClass,
+  getRadiusCssVar,
+  getRadiusClass,
+  radiusCssVars,
+  syncDefaultRadiusCssVariable,
+} from "./shared/radius";
+export {
+  borderedColorClasses,
+  CALENDAR_RADIUS_CSS_VAR,
+  DEFAULT_CALENDAR_RADIUS,
+  errorClasses,
+  fadedColorClasses,
+  flatColorClasses,
+  getFlatSurfaceClasses,
+  getFloatingLabelColorClass,
+  getOutlinedLegendFontSize,
+  getShowOutlinedFloated,
+  outlinedFieldsetClasses,
+  outlinedFloatLabelClasses,
+  outlinedLegendClasses,
+  focusBorderColors,
+  focusTextColors,
+  getCalendarRadiusClass,
+  getCalendarRadiusCssVar,
+  getFlatFloatingLabelClass,
+  getInputDisabledClasses,
+  getInputVariantClasses,
+  stripInteractiveFieldClasses,
+  inputDisabledClasses,
+  inputDisabledOpacityClass,
+  inputDisabledWrapperClasses,
+  labelClasses,
+  labelFloatingClasses,
+  labelGroupClasses,
+  requiredIndicatorClasses,
+  syncCalendarRadiusCssVariable,
+  underlinedColorClasses,
+} from "./shared/fieldStyles";
+export { FieldLabelContent } from "./shared/FieldLabelContent";
+
 // ── Avatar ───────────────────────────────────────────────────────────────────
 export { default as Avatar } from "./avatar/Avatar";
 
@@ -33,7 +78,7 @@ export { default as DateTimePicker } from "./input/dateTimePicker/DateTimePicker
 export { default as FileInput } from "./input/fileInput/FileInput";
 export { default as Input } from "./input/Input";
 export { default as OTPInput } from "./input/OTPInput";
-export { default as PhoneNumberInput } from "./input/phoneInput/PhoneNumberInput";
+export { default as PhoneInput } from "./input/phone-input/PhoneInput";
 export { default as Radio } from "./input/Radio";
 export { default as SelectDropdown } from "./input/SelectDropdown";
 export { default as Switch } from "./input/Switch";
@@ -51,8 +96,25 @@ export { default as Popover } from "./popover/Popover";
 export { default as Spinner } from "./spinner/Spinner";
 
 // ── Table ────────────────────────────────────────────────────────────────────
-export { default as AnimatedExpand } from "./table/AnimatedExpand";
-export { CustomTable } from "./table/CustomTable";
+export {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell
+} from "./table";
+export type {
+  SortDescriptor,
+  Selection,
+  LoadingState,
+  TableProps,
+  TableHeaderProps,
+  TableColumnProps,
+  TableBodyProps,
+  TableRowProps,
+  TableCellProps
+} from "./table";
 
 // ── Tabs ─────────────────────────────────────────────────────────────────────
 export { Tab, Tabs } from "./tabs/Tabs";
@@ -85,6 +147,10 @@ export type { CardProps, CardHeaderProps, CardBodyProps, CardFooterProps } from 
 // ── Tooltip ──────────────────────────────────────────────────────────────────
 export { default as Tooltip } from "./tooltip/Tooltip";
 export type { TooltipProps } from "./tooltip/Tooltip";
+
+// ── Pagination ───────────────────────────────────────────────────────────────
+export { Pagination } from "./pagination";
+export type { PaginationProps, PaginationItemValue, PaginationItemRenderProps } from "./pagination";
 
 // ── Dropdown ─────────────────────────────────────────────────────────────────
 export { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection } from "./dropdown/Dropdown";

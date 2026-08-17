@@ -1,6 +1,7 @@
 import React from "react";
 import { FaChevronRight, FaHome } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
+import { DEFAULT_RADIUS, radiusClasses, type Radius } from "../shared/radius";
 
 // Global config toggle for the breadcrumbs system
 // To disable breadcrumbs throughout the app, simply set this to false
@@ -46,7 +47,7 @@ export interface BreadcrumbsProps {
      * The border radius of the breadcrumbs container (applicable to solid and bordered variants).
      * @default "md"
      */
-    radius?: "none" | "sm" | "md" | "lg" | "full";
+    radius?: Radius;
     /**
      * Optional static items to display. If provided, dynamic generation from path is skipped.
      */
@@ -68,6 +69,7 @@ export interface BreadcrumbsProps {
      * Content to render at the end of the breadcrumbs container.
      */
     endContent?: React.ReactNode;
+    wrapperClassName?: string;
 }
 
 export interface BreadcrumbItem {
@@ -84,12 +86,13 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
     color = "default",
     variant = "light",
     underline = "hover",
-    radius = "md",
+    radius = DEFAULT_RADIUS,
     items: staticItems,
     separator,
     isDisabled = false,
     startContent,
     endContent,
+    wrapperClassName = "",
 }) => {
     const { pathname } = useLocation();
 
@@ -164,7 +167,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
 
         // Fallback: Dynamically generate from path segments if not registered in sidebar (e.g. /dashboard/demo-form)
         if (!foundInSidebar) {
-            const prefix = import.meta.env.VITE_PATH_PREFIX || "/admin"
+            const prefix = import.meta.env.VITE_PATH_PREFIX || "/admin";
             const cleanPrefix = prefix.replace(/^\/|\/$/g, "");
             const segments = pathname
                 .split("/")
@@ -226,13 +229,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         },
     }[size];
 
-    const radiusClasses = {
-        none: "rounded-none",
-        sm: "rounded-sm",
-        md: "rounded-md",
-        lg: "rounded-lg",
-        full: "rounded-full",
-    }[radius];
+    const currentRadiusClass = radiusClasses[radius] ?? radiusClasses[DEFAULT_RADIUS];
 
     type BreadcrumbColor = NonNullable<BreadcrumbsProps["color"]>;
 
@@ -311,7 +308,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
     return (
         <nav
             aria-label="Breadcrumbs"
-            className={`mb-5 select-none animate-fade-in transition-all duration-200 ${variantClasses} ${variant !== "light" ? radiusClasses : ""} ${sizeClasses.container} ${isDisabled ? "opacity-disabled pointer-events-none" : ""}`}
+            className={`mb-5 select-none animate-fade-in transition-all duration-200 ${variantClasses} ${variant !== "light" ? currentRadiusClass : ""} ${sizeClasses.container} ${isDisabled ? "opacity-disabled pointer-events-none" : ""} ${wrapperClassName}`}
         >
             <ol className={`flex items-center ${sizeClasses.list}`}>
                 {startContent && (

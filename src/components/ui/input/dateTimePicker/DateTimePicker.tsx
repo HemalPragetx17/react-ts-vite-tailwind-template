@@ -22,6 +22,10 @@ import {
 } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
 import Button from "../../button/Button";
+import { DEFAULT_RADIUS, getRadiusClass, type Radius } from "../../shared/radius";
+import { errorClasses, fieldPlaceholderClasses, fieldValueClasses, focusBorderColors, focusTextColors, fieldsetBorderColors, getCalendarRadiusClass, getFloatingLabelColorClass, getInputVariantClasses, getInteractiveBorderClass, getShowOutlinedFloated, getWrapperBaseClasses, inputDisabledWrapperClasses, labelClasses, labelFloatingClasses, stripInteractiveFieldClasses, underlineColors, type FieldColor } from "../../shared/fieldStyles";
+import { FieldLabelContent } from "../../shared/FieldLabelContent";
+import { OutlinedFieldset, OutlinedMotionLabel } from "../../shared/OutlinedFieldLabel";
 import "../timePicker/index.css";
 
 const applyImportant = (classes: string) => {
@@ -44,7 +48,6 @@ const applyImportant = (classes: string) => {
 
 type PickerVariant = "flat" | "bordered" | "underlined" | "faded";
 type PickerSize = "sm" | "md" | "lg";
-type PickerRadius = "none" | "sm" | "md" | "lg" | "full";
 type PickerColor =
   | "default"
   | "primary"
@@ -73,15 +76,17 @@ export interface DateTimePickerProps {
 
   variant?: PickerVariant;
   size?: PickerSize;
-  radius?: PickerRadius;
+  radius?: Radius;
   color?: PickerColor;
   labelPlacement?: PickerLabelPlacement;
   /** "normal" = drum scroll (default) | "clock" = analog clock dial */
   timeMode?: "normal" | "clock";
 
   containerClassName?: string;
+  wrapperClassName?: string;
   labelClassName?: string;
   errorClassName?: string;
+  isRequired?: boolean;
 
   // Formik
   field?: FieldInputProps<any>;
@@ -97,14 +102,6 @@ export interface DateTimePickerProps {
 /* -------------------------------------------------------------------------- */
 /*                               Tokens & Helpers                             */
 /* -------------------------------------------------------------------------- */
-
-const radiusMap: Record<PickerRadius, string> = {
-  none: "rounded-none",
-  sm: "rounded-sm",
-  md: "rounded-md",
-  lg: "rounded-lg",
-  full: "rounded-full",
-};
 
 const colorMap: Record<
   PickerColor,
@@ -415,9 +412,9 @@ const TimeColumn: React.FC<TimeColProps> = ({ items, value, onChange, color }) =
               className="drp-drum-item flex items-center justify-center cursor-pointer"
             >
               <span
-                className={`flex items-center justify-center w-[52px] h-[34px] text-sm font-semibold rounded-lg transition-all ${isSelected
+                className={`flex items-center justify-center w-[52px] h-[34px] ${fieldValueClasses} ${getRadiusClass()} transition-all ${isSelected
                   ? colorMap[color].chip
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
+                  : "text-neutral-700 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-neutral-100"
                   }`}
               >
                 {item.label}
@@ -629,8 +626,9 @@ const DateInputDrumCol: React.FC<DateInputDrumColProps> = ({
               key={item.value}
               onClick={() => onItemClick(idx)}
               style={{ height: MY_ITEM_H, opacity, scale }}
-              className={`drp-drum-item relative z-10 flex items-center justify-center cursor-pointer text-base px-4
-                ${isSelected ? "text-neutral-900 dark:text-neutral-100 font-semibold" : "text-neutral-600 dark:text-neutral-400 font-medium"}`}
+              className={`drp-drum-item relative z-10 flex items-center justify-center cursor-pointer px-4
+                ${fieldValueClasses}
+                ${isSelected ? "text-neutral-900 dark:text-neutral-100" : "text-neutral-700 dark:text-neutral-200"}`}
             >
               {item.label}
             </motion.div>
@@ -673,7 +671,7 @@ const MonthYearDrum: React.FC<MonthYearDrumProps> = ({
           top: "50%",
           height: MY_ITEM_H - 4,
           transform: "translateY(-50%)",
-          borderRadius: 16,
+          borderRadius: "var(--radius)",
           background: "color-mix(in srgb, var(--color-background, white) 85%, transparent)",
           backdropFilter: "blur(10px)",
           border: "1px solid color-mix(in srgb, var(--color-background, white) 75%, transparent)",
@@ -806,14 +804,15 @@ const MiniCalendar: React.FC<MiniCalendarProps> = ({
             type="button"
             whileTap={{ scale: 0.96 }}
             onClick={(e) => { e.stopPropagation(); setShowMY((v) => !v); }}
-            className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-full border border-default-200 transition-all
-              ${showMY ? "bg-default-100 text-default-900 shadow-none" : "bg-default-50 text-default-900 shadow-sm hover:bg-default-100"}`}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border border-default-200 transition-all
+              ${showMY ? "bg-default-100 shadow-none" : "bg-default-50 shadow-sm hover:bg-default-100"}`}
           >
             <motion.span
               key={`${MONTHS_SHORT[month]}-${year}`}
               initial={{ opacity: 0, y: -5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 380, damping: 26 }}
+              className={fieldValueClasses}
             >
               {MONTHS_SHORT[month]} {year}
             </motion.span>
@@ -898,7 +897,7 @@ const MiniCalendar: React.FC<MiniCalendarProps> = ({
                   key={`d-${day}`}
                   type="button"
                   onClick={() => onSelectDate(new Date(year, month, day))}
-                  className={`flex items-center justify-center h-9 w-full rounded-full text-sm font-medium transition-all
+                  className={`flex items-center justify-center h-9 w-full ${getCalendarRadiusClass()} ${fieldValueClasses} transition-all
                     ${sel
                       ? `${activeColor.bg} text-white`
                       : tod
@@ -1261,7 +1260,7 @@ const DRUM_AMPM = [{ value: 0, label: "AM" }, { value: 1, label: "PM" }];
 
 const DateTimePicker: React.FC<DateTimePickerProps> = ({
   label,
-  placeholder = "",
+  placeholder = "Select Date & Time",
   isClearable = false,
   disabled = false,
   value,
@@ -1270,90 +1269,20 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
   touched,
   variant = "bordered",
   size = "md",
-  radius = "md",
+  radius = DEFAULT_RADIUS,
   color = "primary",
-  labelPlacement = "outside",
+  labelPlacement = "outside-top",
   timeMode = "normal",
   containerClassName = "",
+  wrapperClassName = "",
   labelClassName = "",
   errorClassName = "",
+  isRequired = false,
   field,
   form,
 }) => {
   const resolvedVariant = labelPlacement === "outlined" ? "bordered" : variant;
 
-  // Color-specific configurations
-  const flatColorClasses = {
-    default: "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus-within:bg-neutral-200 dark:focus-within:bg-neutral-700 text-foreground",
-    primary: "bg-primary-50 dark:bg-primary-950/20 hover:bg-primary-100 dark:hover:bg-primary-950/40 focus-within:bg-primary-100 dark:focus-within:bg-primary-950/40 text-primary",
-    secondary: "bg-secondary-50 dark:bg-secondary-950/20 hover:bg-secondary-100 dark:hover:bg-secondary-950/40 focus-within:bg-secondary-100 dark:focus-within:bg-secondary-950/40 text-secondary",
-    success: "bg-success-50 dark:bg-success-950/20 hover:bg-success-100 dark:hover:bg-success-950/40 focus-within:bg-success-100 dark:focus-within:bg-success-950/40 text-success",
-    warning: "bg-warning-50 dark:bg-warning-950/20 hover:bg-warning-100 dark:hover:bg-warning-950/40 focus-within:bg-warning-100 dark:focus-within:bg-warning-950/40 text-warning",
-    danger: "bg-danger-50 dark:bg-danger-950/20 hover:bg-danger-100 dark:hover:bg-danger-950/40 focus-within:bg-danger-100 dark:focus-within:bg-danger-950/40 text-danger",
-  };
-
-  const borderedColorClasses = {
-    default: "border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600 focus-within:border-neutral-500 dark:focus-within:border-neutral-500 text-foreground",
-    primary: "border-neutral-300 dark:border-neutral-700 hover:border-primary-300 dark:hover:border-primary-400 focus-within:border-primary text-primary",
-    secondary: "border-neutral-300 dark:border-neutral-700 hover:border-secondary-300 dark:hover:border-secondary-400 focus-within:border-secondary text-secondary",
-    success: "border-neutral-300 dark:border-neutral-700 hover:border-success-300 dark:hover:border-success-400 focus-within:border-success text-success",
-    warning: "border-neutral-300 dark:border-neutral-700 hover:border-warning-300 dark:hover:border-warning-400 focus-within:border-warning text-warning",
-    danger: "border-neutral-300 dark:border-neutral-700 hover:border-danger-300 dark:hover:border-danger-400 focus-within:border-danger text-danger",
-  };
-
-  const underlinedColorClasses = {
-    default: "border-b-neutral-200 focus-within:border-b-neutral-500 text-foreground",
-    primary: "border-b-primary-200 focus-within:border-b-primary text-primary",
-    secondary: "border-b-secondary-200 focus-within:border-b-secondary text-secondary",
-    success: "border-b-success-200 focus-within:border-b-success text-success",
-    warning: "border-b-warning-200 focus-within:border-b-warning text-warning",
-    danger: "border-b-danger-200 focus-within:border-b-danger text-danger",
-  };
-
-  const fadedColorClasses = {
-    default: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-neutral-400 text-foreground",
-    primary: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-primary text-primary",
-    secondary: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-secondary text-secondary",
-    success: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-success text-success",
-    warning: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-warning text-warning",
-    danger: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-danger text-danger",
-  };
-
-  const focusTextColors = {
-    default: "text-foreground",
-    primary: "text-primary",
-    secondary: "text-secondary-700 dark:text-secondary",
-    success: "text-success",
-    warning: "text-warning",
-    danger: "text-danger",
-  };
-
-  const underlineColors = {
-    default: "bg-neutral-500",
-    primary: "bg-primary",
-    secondary: "bg-secondary",
-    success: "bg-success",
-    warning: "bg-warning",
-    danger: "bg-danger",
-  };
-
-  const focusBorderColors = {
-    default: "border-neutral-500",
-    primary: "border-primary",
-    secondary: "border-secondary-700 dark:border-secondary",
-    success: "border-success",
-    warning: "border-warning",
-    danger: "border-danger",
-  };
-
-  const fieldsetBorderColors = {
-    default: "border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500 focus-within:border-neutral-500",
-    primary: "border-neutral-300 dark:border-neutral-700 group-hover:border-primary-300 dark:group-hover:border-primary-800 focus-within:border-primary",
-    secondary: "border-neutral-300 dark:border-neutral-700 group-hover:border-secondary-300 dark:group-hover:border-secondary-800 focus-within:border-secondary",
-    success: "border-neutral-300 dark:border-neutral-700 group-hover:border-success-300 dark:group-hover:border-success-800 focus-within:border-success",
-    warning: "border-neutral-300 dark:border-neutral-700 group-hover:border-warning-300 dark:group-hover:border-warning-800 focus-within:border-warning",
-    danger: "border-neutral-300 dark:border-neutral-700 group-hover:border-danger-300 dark:group-hover:border-danger-800 focus-within:border-danger",
-  };
   const fieldName = field?.name || "";
   const rawValue = value !== undefined ? value : field?.value;
   const parsedValue = useMemo(() => parseInput(rawValue), [rawValue]);
@@ -1490,21 +1419,42 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
   const startError = fieldName && form?.errors?.[fieldName] ? String(form.errors[fieldName]) : error;
   const startTouched = fieldName && form?.touched?.[fieldName] ? true : touched;
   const hasError = !!(startTouched && startError);
-  const radiusClass = resolvedVariant === "underlined" ? "rounded-none" : radiusMap[radius];
+  const radiusClass = resolvedVariant === "underlined" ? "rounded-none" : getRadiusClass(radius);
   const isOutlined = labelPlacement === "outlined";
   const isFloating = labelPlacement === "inside" || labelPlacement === "outside";
   const isOutsideLeft = labelPlacement === "outside-left";
   const shouldFloat = isOpen || hasValue || (isFloating && !!placeholder) || (isOutlined && !!placeholder);
+  const showOutlinedFloated = getShowOutlinedFloated(isOutlined, label, shouldFloat, isOpen, hasValue);
 
   const variantClass = isOutlined
     ? "bg-transparent border-none"
-    : resolvedVariant === "flat"
-      ? `border-2 border-transparent ${flatColorClasses[color] || flatColorClasses.default}`
-      : resolvedVariant === "bordered"
-        ? `border-2 ${borderedColorClasses[color] || borderedColorClasses.default}`
-        : resolvedVariant === "underlined"
-          ? `border-b rounded-none relative ${underlinedColorClasses[color] || underlinedColorClasses.default}`
-          : `border-2 ${fadedColorClasses[color] || fadedColorClasses.default}`;
+    : disabled
+      ? stripInteractiveFieldClasses(getInputVariantClasses(resolvedVariant, color as FieldColor))
+      : getInputVariantClasses(resolvedVariant, color as FieldColor);
+
+  const wrapperBaseClasses = disabled
+    ? stripInteractiveFieldClasses(getWrapperBaseClasses({
+        wrapperClassName,
+        variant: resolvedVariant,
+        isOutlined,
+        isActive: isOpen,
+        hasError,
+      }))
+    : getWrapperBaseClasses({
+        wrapperClassName,
+        variant: resolvedVariant,
+        isOutlined,
+        isActive: isOpen,
+        hasError,
+      });
+
+  const interactiveBorderClass = getInteractiveBorderClass({
+    variant: resolvedVariant,
+    isOutlined,
+    isActive: isOpen,
+    hasError,
+    color: color as FieldColor,
+  });
 
   const sizeConfigs = {
     sm: { wrapperPadding: labelPlacement === "inside" && label ? "py-1 px-2.5" : "py-1.5 px-2.5", textSize: "text-xs", labelSize: "text-[10px]", insideHeight: "h-12", outsideHeight: "h-10", floatY: -20, floatX: -2, initialY: -8, initialX: 0, floatYOutside: -41, floatXOutside: -14, floatScale: 0.83, outlinedFloatY: -28.5, outlinedInitialY: -8 },
@@ -1515,31 +1465,21 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
 
   const renderOutsideLabel = () => {
     if (!label || isFloating || isOutlined) return null;
+
     return (
       <label
         htmlFor={fieldName}
-        className={`block font-medium select-none transition-colors duration-200 ${isOutsideLeft ? "shrink-0 mb-0 mr-3 self-center" : "mb-1.5"
-          } ${sz.labelSize} ${labelClassName} ${
-            hasError
-              ? "text-danger"
-              : isOpen && color !== "default"
-                ? (focusTextColors[color] || "text-primary")
-                : isOpen
-                  ? "text-neutral-800 dark:text-neutral-200"
-                  : "text-neutral-700 dark:text-neutral-300"
-          }`}
+        className={`${labelClasses} ${isOutsideLeft ? "mb-0 shrink-0 mr-3 self-center" : "mb-2"} ${labelClassName} ${hasError ? "text-danger" : ""}`}
       >
-        {label}
+        <FieldLabelContent label={label} isRequired={isRequired} />
       </label>
     );
   };
 
   const renderFloatingLabel = () => {
-    if (!label || (!isFloating && !isOutlined)) return null;
-    let animateProps: any;
-    if (isOutlined) {
-      animateProps = shouldFloat ? { y: sz.outlinedFloatY, x: 0, scale: 0.75 } : { y: sz.outlinedInitialY, x: 0, scale: 1 };
-    } else if (labelPlacement === "outside") {
+    if (!label || !isFloating || isOutlined) return null;
+    let animateProps: { y: number; x: number; scale: number };
+    if (labelPlacement === "outside") {
       animateProps = shouldFloat ? { y: sz.floatYOutside, x: sz.floatXOutside, scale: sz.floatScale } : { y: sz.initialY, x: sz.initialX, scale: 1 };
     } else {
       animateProps = shouldFloat ? { y: sz.floatY, x: sz.floatX, scale: sz.floatScale } : { y: sz.initialY, x: sz.initialX, scale: 1 };
@@ -1550,8 +1490,8 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
         initial={false}
         animate={animateProps}
         transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
-        style={{ transformOrigin: isOutlined ? "left" : "top left" }}
-        className={`absolute left-3 top-1/2 z-10 font-medium pointer-events-none transition-colors duration-200 ${sz.textSize
+        style={{ transformOrigin: "top left" }}
+        className={`absolute left-3 top-1/2 z-10 ${labelFloatingClasses} transition-colors duration-200 ${sz.textSize
           } ${labelClassName} ${
             hasError
               ? "text-danger"
@@ -1562,9 +1502,9 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
                     ? "text-neutral-800 dark:text-neutral-200"
                     : "text-neutral-700 dark:text-neutral-300"
                   : "text-neutral-400 dark:text-neutral-500"
-          } ${isOutlined ? "bg-white dark:bg-content1 px-1" : ""}`}
+          }`}
       >
-        {label}
+        <FieldLabelContent label={label} isRequired={isRequired} />
       </motion.label>
     );
   };
@@ -1666,15 +1606,15 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
             id={fieldName || undefined}
             onClick={() => { if (!disabled) setIsOpen((o) => !o); }}
             className={`
-              relative flex items-center w-full
-              ${sz.wrapperPadding}
-              ${labelPlacement === "inside" ? sz.insideHeight : `${sz.outsideHeight} ${isFloating && label && !isOutlined ? "mt-6" : ""} ${isOutlined && label ? "mt-[10px]" : ""}`}
+              relative flex items-center w-full ${disabled ? "" : "group"}
               ${variantClass}
               ${radiusClass}
+              ${wrapperBaseClasses}
+              ${sz.wrapperPadding}
+              ${labelPlacement === "inside" ? sz.insideHeight : `${sz.outsideHeight} ${isFloating && label && !isOutlined ? "mt-6" : ""} ${isOutlined && label ? "mt-[10px]" : ""}`}
               transition-all duration-200
-              ${disabled ? "opacity-50 cursor-default" : "cursor-pointer"}
-              ${isOpen && !hasError && (resolvedVariant === "bordered" || resolvedVariant === "faded") ? applyImportant(focusBorderColors[color] || "border-primary") : ""}
-              ${hasError ? "!border-danger" : ""}
+              ${interactiveBorderClass}
+              ${disabled ? inputDisabledWrapperClasses : "cursor-pointer"}
             `}
             role="button"
             tabIndex={disabled ? -1 : 0}
@@ -1682,15 +1622,32 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
             aria-expanded={isOpen}
             aria-haspopup="dialog"
           >
+            {isOutlined && label && (
+              <OutlinedMotionLabel
+                htmlFor={fieldName}
+                label={label}
+                isRequired={isRequired}
+                size={size}
+                showFloated={showOutlinedFloated}
+                outlinedFloatY={sz.outlinedFloatY}
+                outlinedInitialY={sz.outlinedInitialY}
+                textSizeClass={sz.textSize}
+                labelClassName={labelClassName}
+                colorClassName={getFloatingLabelColorClass(resolvedVariant, color as FieldColor, showOutlinedFloated, isOpen, hasError)}
+              />
+            )}
             {renderFloatingLabel()}
 
             <div className={`flex-1 flex items-center overflow-hidden ${labelPlacement === "inside" && label && shouldFloat ? (size === "sm" ? "mt-3" : size === "lg" ? "mt-5" : "mt-4") : ""}`}>
-              <span className={`${sz.textSize} truncate transition-colors duration-200 ${hasValue
-                ? "text-neutral-800 dark:text-neutral-100"
-                : "text-neutral-400 dark:text-neutral-500"
-                }`}>
-                {hasValue ? displayValue : ((!label || labelPlacement !== "inside" || shouldFloat) ? placeholder || "\u200b" : "\u200b")}
-              </span>
+              {!hasValue ? (
+                <span className={`${fieldPlaceholderClasses} truncate select-none`}>
+                  {((!label || labelPlacement !== "inside" || shouldFloat) ? placeholder || "\u200b" : "\u200b")}
+                </span>
+              ) : (
+                <span className={`text-neutral-800 dark:text-neutral-200 truncate select-none ${fieldValueClasses}`}>
+                  {displayValue}
+                </span>
+              )}
             </div>
 
             <div className="flex items-center gap-1.5 ml-2 flex-shrink-0">
@@ -1707,26 +1664,19 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
                   <FaXmark className="w-3.5 h-3.5" aria-hidden />
                 </Button>
               ) : (
-                <FaCalendar className={`w-4 h-4 transition-colors ${isOpen && color !== "default" ? (focusTextColors[color] || "text-primary") : "text-neutral-600 dark:text-neutral-350 group-hover:text-neutral-800 dark:group-hover:text-neutral-100"}`} />
+                <FaCalendar className={`w-4 h-4 transition-colors ${isOpen && color !== "default" ? (focusTextColors[color] || "text-primary") : disabled ? "text-neutral-600 dark:text-neutral-350" : "text-neutral-600 dark:text-neutral-350 group-hover:text-neutral-800 dark:group-hover:text-neutral-100"}`} />
               )}
             </div>
 
             {isOutlined && (
-              <fieldset className={`absolute inset-0 pointer-events-none border-2 transition-colors duration-200 m-0 p-0 ${radiusClass} ${isOpen && !hasError ? applyImportant(focusBorderColors[color] || "border-primary") : hasError ? "border-danger" : (fieldsetBorderColors[color] || "border-neutral-300 dark:border-neutral-700")
-                }`}>
-                {label && (
-                  <legend
-                    className={`ml-2 font-medium select-none transition-all duration-200 block whitespace-nowrap overflow-hidden invisible ${shouldFloat ? "max-w-full px-1" : "max-w-0 px-0"
-                      }`}
-                    style={{
-                      fontSize: `${size === "sm" ? 9 : size === "lg" ? 12 : 10.5}px`,
-                      height: 0,
-                    }}
-                  >
-                    <span>{label}</span>
-                  </legend>
-                )}
-              </fieldset>
+              <OutlinedFieldset
+                showFloated={showOutlinedFloated}
+                radiusClass={radiusClass}
+                borderClassName={`border-2 ${isOpen && !hasError ? applyImportant(focusBorderColors[color] || "border-primary") : hasError ? "border-danger" : applyImportant(disabled ? stripInteractiveFieldClasses(fieldsetBorderColors[color] || "border-neutral-300 dark:border-neutral-700") : (fieldsetBorderColors[color] || "border-neutral-300 dark:border-neutral-700"))}`}
+                label={label}
+                isRequired={isRequired}
+                size={size}
+              />
             )}
             {resolvedVariant === "underlined" && (
               <motion.div
@@ -1747,7 +1697,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
-          className={`mt-1.5 text-xs text-danger font-medium ${errorClassName}`}
+          className={`${errorClasses} ${errorClassName}`}
         >
           {startError}
         </motion.p>

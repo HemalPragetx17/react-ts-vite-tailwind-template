@@ -1,12 +1,15 @@
 import React from "react";
 import { FaXmark } from "react-icons/fa6";
 import clsx from "clsx";
+import { DEFAULT_RADIUS, radiusClasses, type Radius } from "../shared/radius";
 
 export interface ChipProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: "solid" | "bordered" | "light" | "flat" | "faded" | "shadow" | "dot";
   color?: "default" | "primary" | "secondary" | "success" | "warning" | "danger";
+  /** Custom background/text classes; overrides variant color tokens when provided */
+  toneClassName?: string;
   size?: "sm" | "md" | "lg";
-  radius?: "none" | "sm" | "md" | "lg" | "full";
+  radius?: Radius;
   startContent?: React.ReactNode;
   endContent?: React.ReactNode;
   onClose?: () => void;
@@ -18,14 +21,6 @@ const sizeClasses = {
   sm: "px-2 h-6 text-[10px]",
   md: "px-3 h-7 text-xs",
   lg: "px-4 h-8 text-sm",
-};
-
-const radiusClasses = {
-  none: "rounded-none",
-  sm: "rounded-sm",
-  md: "rounded-md",
-  lg: "rounded-lg",
-  full: "rounded-full",
 };
 
 const baseClasses =
@@ -102,8 +97,9 @@ const dotColorClasses: Record<string, string> = {
 const Chip: React.FC<ChipProps> = ({
   variant = "solid",
   color = "primary",
+  toneClassName,
   size = "md",
-  radius = "full",
+  radius = DEFAULT_RADIUS,
   startContent,
   endContent,
   onClose,
@@ -112,7 +108,9 @@ const Chip: React.FC<ChipProps> = ({
   className,
   ...props
 }) => {
-  const comboClasses = variantColorClasses[variant]?.[color] || variantColorClasses.solid.default;
+  const comboClasses = toneClassName
+    ? `border-2 border-transparent ${toneClassName}`
+    : variantColorClasses[variant]?.[color] || variantColorClasses.solid.default;
 
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -125,7 +123,7 @@ const Chip: React.FC<ChipProps> = ({
         baseClasses,
         comboClasses,
         sizeClasses[size],
-        radiusClasses[radius],
+        radiusClasses[radius] ?? radiusClasses[DEFAULT_RADIUS],
         isDisabled && "opacity-50 pointer-events-none",
         className
       )}
@@ -142,7 +140,7 @@ const Chip: React.FC<ChipProps> = ({
           </span>
         )}
         
-        <span className="flex-1 font-medium">
+        <span className="flex-1">
           {children}
         </span>
         

@@ -9,6 +9,28 @@ import {
 } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
 import Button from "../../button/Button";
+import { DEFAULT_RADIUS, getRadiusClass, type Radius } from "../../shared/radius";
+import {
+  fieldPlaceholderClasses,
+  fieldValueClasses,
+  errorClasses,
+  focusBorderColors,
+  focusTextColors,
+  fieldsetBorderColors,
+  getFloatingLabelColorClass,
+  getInputVariantClasses,
+  getInteractiveBorderClass,
+  getShowOutlinedFloated,
+  getWrapperBaseClasses,
+  labelClasses,
+  labelFloatingClasses,
+  inputDisabledWrapperClasses,
+  stripInteractiveFieldClasses,
+  underlineColors,
+  type FieldColor,
+} from "../../shared/fieldStyles";
+import { FieldLabelContent } from "../../shared/FieldLabelContent";
+import { OutlinedFieldset, OutlinedMotionLabel } from "../../shared/OutlinedFieldLabel";
 import "./index.css";
 
 /* -------------------------------------------------------------------------- */
@@ -17,7 +39,6 @@ import "./index.css";
 
 type PickerVariant = "flat" | "bordered" | "underlined" | "faded";
 type PickerSize = "sm" | "md" | "lg";
-type PickerRadius = "none" | "sm" | "md" | "lg" | "full";
 type PickerColor =
   | "default"
   | "primary"
@@ -32,6 +53,8 @@ export interface TimePickerProps {
   placeholder?: string;
   isClearable?: boolean;
   disabled?: boolean;
+  is24Format?: boolean;
+  isInputable?: boolean;
 
   // Custom static props if not using Formik
   value?: string; // e.g., "03:30 PM"
@@ -43,13 +66,15 @@ export interface TimePickerProps {
   // Design Tokens
   variant?: PickerVariant;
   size?: PickerSize;
-  radius?: PickerRadius;
+  radius?: Radius;
   color?: PickerColor;
   labelPlacement?: PickerLabelPlacement;
 
   containerClassName?: string;
+  wrapperClassName?: string;
   labelClassName?: string;
   errorClassName?: string;
+  isRequired?: boolean;
 
   // Pick Mode: "normal" (scroll columns) | "clock" (dial face)
   mode?: "normal" | "clock";
@@ -69,35 +94,41 @@ export interface TimePickerProps {
 /*                              Tokens & Helpers                              */
 /* -------------------------------------------------------------------------- */
 
-const radiusMap: Record<PickerRadius, string> = {
-  none: "rounded-none",
-  sm: "rounded-sm",
-  md: "rounded-md",
-  lg: "rounded-lg",
-  full: "rounded-full",
-};
-
-const parseTime = (timeStr?: string) => {
+const parseTime = (timeStr?: string, is24Format = false) => {
   if (!timeStr) {
     const now = new Date();
     let hours = now.getHours();
     const minutes = now.getMinutes();
+    if (is24Format) {
+      return { hour: hours, minute: minutes, ampm: "" };
+    }
     const ampm = hours >= 12 ? "PM" : "AM";
     hours = hours % 12;
     hours = hours ? hours : 12; // 0 becomes 12
     return { hour: hours, minute: minutes, ampm };
   }
 
-  const match = timeStr.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
-  if (match) {
-    return {
-      hour: parseInt(match[1], 10),
-      minute: parseInt(match[2], 10),
-      ampm: match[3].toUpperCase(),
-    };
+  if (is24Format) {
+    const match = timeStr.trim().match(/^(\d{1,2}):(\d{2})$/i);
+    if (match) {
+      return {
+        hour: parseInt(match[1], 10),
+        minute: parseInt(match[2], 10),
+        ampm: "",
+      };
+    }
+  } else {
+    const match = timeStr.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+    if (match) {
+      return {
+        hour: parseInt(match[1], 10),
+        minute: parseInt(match[2], 10),
+        ampm: match[3].toUpperCase(),
+      };
+    }
   }
 
-  return { hour: 12, minute: 0, ampm: "AM" };
+  return { hour: is24Format ? 0 : 12, minute: 0, ampm: is24Format ? "" : "AM" };
 };
 
 // Color mapper for design tokens (specifically stroke, fill, and text colors)
@@ -178,11 +209,18 @@ const CENTER_Y = 110;
 const DIAL_RADIUS = 82;
 
 const HOURS_LIST = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+const HOURS_LIST_24_OUTER = [0, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+const HOURS_LIST_24_INNER = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 const MINUTES_LIST = ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"];
 
 const DRUM_HOURS = Array.from({ length: 12 }, (_, i) => ({
   value: i + 1,
   label: String(i + 1).padStart(2, "0"),
+}));
+
+const DRUM_HOURS_24 = Array.from({ length: 24 }, (_, i) => ({
+  value: i,
+  label: String(i).padStart(2, "0"),
 }));
 
 const DRUM_MINUTES = Array.from({ length: 60 }, (_, i) => ({
@@ -466,9 +504,9 @@ const DrumColumn: React.FC<DrumColumnProps> = ({ items, value, onChange, color }
               className="drp-drum-item flex items-center justify-center cursor-pointer"
             >
               <span
-                className={`flex items-center justify-center w-[54px] h-[32px] text-sm rounded-lg transition-all ${isSelected
+                className={`flex items-center justify-center w-[54px] h-[32px] ${fieldValueClasses} ${getRadiusClass()} transition-all ${isSelected
                   ? colorClassMap[color]
-                  : "text-neutral-500 dark:text-neutral-400 font-medium hover:text-neutral-700 dark:hover:text-neutral-200"
+                  : "text-neutral-700 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-neutral-100"
                   }`}
               >
                 {item.label}
@@ -481,20 +519,6 @@ const DrumColumn: React.FC<DrumColumnProps> = ({ items, value, onChange, color }
       </div>
     </div>
   );
-};
-
-const applyImportant = (classes: string) => {
-  return classes
-    .split(" ")
-    .map((cls) => {
-      if (cls.includes(":")) {
-        const parts = cls.split(":");
-        const last = parts.pop();
-        return [...parts, `!${last}`].join(":");
-      }
-      return `!${cls}`;
-    })
-    .join(" ");
 };
 
 /* -------------------------------------------------------------------------- */
@@ -515,90 +539,21 @@ const TimePicker: React.FC<TimePickerProps> = ({
 
   variant = "bordered",
   size = "md",
-  radius = "md",
+  radius = DEFAULT_RADIUS,
   color = "primary",
-  labelPlacement = "outside",
+  labelPlacement = "outside-top",
 
   containerClassName = "",
+  wrapperClassName = "",
   labelClassName = "",
   errorClassName = "",
+  isRequired = false,
+  is24Format = false,
+  isInputable = false,
 
-  mode,
+  mode = "normal",
 }) => {
   const resolvedVariant = labelPlacement === "outlined" ? "bordered" : variant;
-
-  // Color-specific configurations
-  const flatColorClasses = {
-    default: "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus-within:bg-neutral-200 dark:focus-within:bg-neutral-700 text-foreground",
-    primary: "bg-primary-50 dark:bg-primary-950/20 hover:bg-primary-100 dark:hover:bg-primary-950/40 focus-within:bg-primary-100 dark:focus-within:bg-primary-950/40 text-primary",
-    secondary: "bg-secondary-50 dark:bg-secondary-950/20 hover:bg-secondary-100 dark:hover:bg-secondary-950/40 focus-within:bg-secondary-100 dark:focus-within:bg-secondary-950/40 text-secondary",
-    success: "bg-success-50 dark:bg-success-950/20 hover:bg-success-100 dark:hover:bg-success-950/40 focus-within:bg-success-100 dark:focus-within:bg-success-950/40 text-success",
-    warning: "bg-warning-50 dark:bg-warning-950/20 hover:bg-warning-100 dark:hover:bg-warning-950/40 focus-within:bg-warning-100 dark:focus-within:bg-warning-950/40 text-warning",
-    danger: "bg-danger-50 dark:bg-danger-950/20 hover:bg-danger-100 dark:hover:bg-danger-950/40 focus-within:bg-danger-100 dark:focus-within:bg-danger-950/40 text-danger",
-  };
-
-  const borderedColorClasses = {
-    default: "border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600 focus-within:border-neutral-500 dark:focus-within:border-neutral-500 text-foreground",
-    primary: "border-neutral-300 dark:border-neutral-700 hover:border-primary-300 dark:hover:border-primary-400 focus-within:border-primary text-primary",
-    secondary: "border-neutral-300 dark:border-neutral-700 hover:border-secondary-300 dark:hover:border-secondary-400 focus-within:border-secondary text-secondary",
-    success: "border-neutral-300 dark:border-neutral-700 hover:border-success-300 dark:hover:border-success-400 focus-within:border-success text-success",
-    warning: "border-neutral-300 dark:border-neutral-700 hover:border-warning-300 dark:hover:border-warning-400 focus-within:border-warning text-warning",
-    danger: "border-neutral-300 dark:border-neutral-700 hover:border-danger-300 dark:hover:border-danger-400 focus-within:border-danger text-danger",
-  };
-
-  const underlinedColorClasses = {
-    default: "border-b-neutral-200 focus-within:border-b-neutral-500 text-foreground",
-    primary: "border-b-primary-200 focus-within:border-b-primary text-primary",
-    secondary: "border-b-secondary-200 focus-within:border-b-secondary text-secondary",
-    success: "border-b-success-200 focus-within:border-b-success text-success",
-    warning: "border-b-warning-200 focus-within:border-b-warning text-warning",
-    danger: "border-b-danger-200 focus-within:border-b-danger text-danger",
-  };
-
-  const fadedColorClasses = {
-    default: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-neutral-400 text-foreground",
-    primary: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-primary text-primary",
-    secondary: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-secondary text-secondary",
-    success: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-success text-success",
-    warning: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-warning text-warning",
-    danger: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-danger text-danger",
-  };
-
-  const focusTextColors = {
-    default: "text-foreground",
-    primary: "text-primary",
-    secondary: "text-secondary-700 dark:text-secondary",
-    success: "text-success",
-    warning: "text-warning",
-    danger: "text-danger",
-  };
-
-  const underlineColors = {
-    default: "bg-neutral-500",
-    primary: "bg-primary",
-    secondary: "bg-secondary",
-    success: "bg-success",
-    warning: "bg-warning",
-    danger: "bg-danger",
-  };
-
-  const focusBorderColors = {
-    default: "border-neutral-500",
-    primary: "border-primary",
-    secondary: "border-secondary-700 dark:border-secondary",
-    success: "border-success",
-    warning: "border-warning",
-    danger: "border-danger",
-  };
-
-  const fieldsetBorderColors = {
-    default: "border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500 focus-within:border-neutral-500",
-    primary: "border-neutral-300 dark:border-neutral-700 group-hover:border-primary-300 dark:group-hover:border-primary-800 focus-within:border-primary",
-    secondary: "border-neutral-300 dark:border-neutral-700 group-hover:border-secondary-300 dark:group-hover:border-secondary-800 focus-within:border-secondary",
-    success: "border-neutral-300 dark:border-neutral-700 group-hover:border-success-300 dark:group-hover:border-success-800 focus-within:border-success",
-    warning: "border-neutral-300 dark:border-neutral-700 group-hover:border-warning-300 dark:group-hover:border-warning-800 focus-within:border-warning",
-    danger: "border-neutral-300 dark:border-neutral-700 group-hover:border-danger-300 dark:group-hover:border-danger-800 focus-within:border-danger",
-  };
 
   const [isOpen, setIsOpen] = useState(false);
   const [isMobileMode, setIsMobileMode] = useState(false);
@@ -626,13 +581,13 @@ const TimePicker: React.FC<TimePickerProps> = ({
   // Sync temp state with value when opening
   useEffect(() => {
     if (isOpen) {
-      const parsed = parseTime(rawValue);
+      const parsed = parseTime(rawValue, is24Format);
       setTempHour(parsed.hour);
       setTempMinute(parsed.minute);
       setTempAmpm(parsed.ampm);
       setViewMode("hours");
     }
-  }, [isOpen, rawValue]);
+  }, [isOpen, rawValue, is24Format]);
 
   // Determine if mobile layout should be active
   const checkMobileLayout = useCallback(() => {
@@ -722,6 +677,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
     if (isOpen) {
       wasOpenedRef.current = true;
     } else if (wasOpenedRef.current) {
+      wasOpenedRef.current = false;
       if (form?.setFieldTouched && fieldName) {
         form.setFieldTouched(fieldName, true);
       }
@@ -729,7 +685,9 @@ const TimePicker: React.FC<TimePickerProps> = ({
   }, [isOpen, fieldName, form]);
 
   const handleSave = () => {
-    const formatted = `${String(tempHour).padStart(2, "0")}:${String(tempMinute).padStart(2, "0")} ${tempAmpm}`;
+    const formatted = is24Format 
+      ? `${String(tempHour).padStart(2, "0")}:${String(tempMinute).padStart(2, "0")}`
+      : `${String(tempHour).padStart(2, "0")}:${String(tempMinute).padStart(2, "0")} ${tempAmpm}`;
     if (form?.setFieldValue && fieldName) {
       form.setFieldValue(fieldName, formatted);
     } else if (onChange) {
@@ -756,6 +714,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
   const isOutlined = labelPlacement === "outlined";
   const isFloating = labelPlacement === "inside" || labelPlacement === "outside";
   const shouldFloat = isOpen || hasValue || (isFloating && !!placeholder) || (isOutlined && !!placeholder);
+  const showOutlinedFloated = getShowOutlinedFloated(isOutlined, label, shouldFloat, isOpen, hasValue);
   const resolvedPlaceholder = placeholder || (isFloating || isOutlined ? "" : "Select Time");
 
   const sizeConfigs = {
@@ -817,15 +776,35 @@ const TimePicker: React.FC<TimePickerProps> = ({
 
   const variantClass = isOutlined
     ? "bg-transparent border-none"
-    : resolvedVariant === "flat"
-      ? `border-2 border-transparent ${flatColorClasses[color] || flatColorClasses.default}`
-      : resolvedVariant === "bordered"
-        ? `border-2 ${borderedColorClasses[color] || borderedColorClasses.default}`
-        : resolvedVariant === "underlined"
-          ? `border-b rounded-none relative ${underlinedColorClasses[color] || underlinedColorClasses.default}`
-          : `border-2 ${fadedColorClasses[color] || fadedColorClasses.default}`;
-  const radiusClass = resolvedVariant === "underlined" ? "rounded-none" : radiusMap[radius];
+    : disabled
+      ? stripInteractiveFieldClasses(getInputVariantClasses(resolvedVariant, color as FieldColor))
+      : getInputVariantClasses(resolvedVariant, color as FieldColor);
+  const radiusClass = resolvedVariant === "underlined" ? "rounded-none" : getRadiusClass(radius);
   const isOutsideLeft = labelPlacement === "outside-left";
+
+  const wrapperBaseClasses = disabled
+    ? stripInteractiveFieldClasses(getWrapperBaseClasses({
+        wrapperClassName,
+        variant: resolvedVariant,
+        isOutlined,
+        isActive: isOpen,
+        hasError,
+      }))
+    : getWrapperBaseClasses({
+        wrapperClassName,
+        variant: resolvedVariant,
+        isOutlined,
+        isActive: isOpen,
+        hasError,
+      });
+
+  const interactiveBorderClass = getInteractiveBorderClass({
+    variant: resolvedVariant,
+    isOutlined,
+    isActive: isOpen,
+    hasError,
+    color: color as FieldColor,
+  });
 
   // Clock Dial logic
   const dialRef = useRef<HTMLDivElement>(null);
@@ -848,7 +827,17 @@ const TimePicker: React.FC<TimePickerProps> = ({
       if (viewMode === "hours") {
         let hour = Math.round(angleFromTop / 30);
         if (hour === 0) hour = 12;
-        if (hour > 12) hour = 12;
+        
+        if (is24Format) {
+          const dist = Math.sqrt(clickX * clickX + clickY * clickY);
+          if (dist < DIAL_RADIUS - 15) {
+            hour = hour === 12 ? 12 : hour;
+          } else {
+            hour = hour === 12 ? 0 : hour + 12;
+          }
+        } else {
+          if (hour > 12) hour = 12;
+        }
         setTempHour(hour);
       } else {
         let minute = Math.round(angleFromTop / 6);
@@ -911,10 +900,18 @@ const TimePicker: React.FC<TimePickerProps> = ({
   }, [isDragging, handleInteraction, viewMode]);
 
   // Hand math (Calculated exactly relative to dial CENTER_X/CENTER_Y)
-  const handAngle = viewMode === "hours" ? tempHour * 30 - 90 : tempMinute * 6 - 90;
+  let currentHandRadius = DIAL_RADIUS;
+  if (viewMode === "hours" && is24Format) {
+     if (tempHour >= 1 && tempHour <= 12) {
+       currentHandRadius = DIAL_RADIUS - 30;
+     } else {
+       currentHandRadius = DIAL_RADIUS;
+     }
+  }
+  const handAngle = viewMode === "hours" ? (tempHour % 12) * 30 - 90 : tempMinute * 6 - 90;
   const handRad = (handAngle * Math.PI) / 180;
-  const handX = CENTER_X + DIAL_RADIUS * Math.cos(handRad);
-  const handY = CENTER_Y + DIAL_RADIUS * Math.sin(handRad);
+  const handX = CENTER_X + currentHandRadius * Math.cos(handRad);
+  const handY = CENTER_Y + currentHandRadius * Math.sin(handRad);
   const isMultipleOfFive = viewMode === "minutes" ? tempMinute % 5 === 0 : true;
 
   // Active stroke details
@@ -922,19 +919,13 @@ const TimePicker: React.FC<TimePickerProps> = ({
 
   const renderOutsideLabel = () => {
     if (!label || isFloating || isOutlined) return null;
+
     return (
       <label
         htmlFor={fieldName}
-        className={`block font-medium select-none transition-colors duration-200 ${isOutsideLeft ? "shrink-0 mb-0" : "mb-1.5"
-          } ${sz.labelSize} ${labelClassName} ${
-            isOpen && color !== "default"
-              ? (focusTextColors[color] || "text-primary")
-              : isOpen
-                ? "text-neutral-800 dark:text-neutral-200"
-                : "text-neutral-700 dark:text-neutral-300"
-          }`}
+        className={`${labelClasses} ${isOutsideLeft ? "mb-0 shrink-0" : "mb-2"} ${labelClassName}`}
       >
-        {label}
+        <FieldLabelContent label={label} isRequired={isRequired} />
       </label>
     );
   };
@@ -978,26 +969,28 @@ const TimePicker: React.FC<TimePickerProps> = ({
             </div>
 
             {/* AM/PM Toggle */}
-            <div className="flex flex-col justify-center select-none text-[13px] leading-tight font-bold border-l border-neutral-200 dark:border-neutral-800 pl-3.5 ml-1.5">
-              <span
-                onClick={() => setTempAmpm("AM")}
-                className={`cursor-pointer py-0.5 transition-colors ${tempAmpm === "AM"
-                  ? `${activeColor.text} dark:${activeColor.darkText} font-bold scale-105`
-                  : "text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300"
-                  }`}
-              >
-                AM
-              </span>
-              <span
-                onClick={() => setTempAmpm("PM")}
-                className={`cursor-pointer py-0.5 transition-colors ${tempAmpm === "PM"
-                  ? `${activeColor.text} dark:${activeColor.darkText} font-bold scale-105`
-                  : "text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300"
-                  }`}
-              >
-                PM
-              </span>
-            </div>
+            {!is24Format && (
+              <div className="flex flex-col justify-center select-none text-[13px] leading-tight font-bold border-l border-neutral-200 dark:border-neutral-800 pl-3.5 ml-1.5">
+                <span
+                  onClick={() => setTempAmpm("AM")}
+                  className={`cursor-pointer py-0.5 transition-colors ${tempAmpm === "AM"
+                    ? `${activeColor.text} dark:${activeColor.darkText} font-bold scale-105`
+                    : "text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300"
+                    }`}
+                >
+                  AM
+                </span>
+                <span
+                  onClick={() => setTempAmpm("PM")}
+                  className={`cursor-pointer py-0.5 transition-colors ${tempAmpm === "PM"
+                    ? `${activeColor.text} dark:${activeColor.darkText} font-bold scale-105`
+                    : "text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300"
+                    }`}
+                >
+                  PM
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -1095,26 +1088,72 @@ const TimePicker: React.FC<TimePickerProps> = ({
                     transition={{ duration: 0.16 }}
                     className="absolute inset-0"
                   >
-                    {HOURS_LIST.map((hr, idx) => {
-                      const coords = getNumberCoords(idx);
-                      const isSelected = tempHour === hr;
-                      return (
-                        <span
-                          key={`hr-${hr}`}
-                          className={`absolute text-xs font-semibold select-none flex items-center justify-center w-6 h-6 transition-colors duration-100 ${isSelected
-                            ? "text-white z-20 font-bold"
-                            : "text-neutral-700 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
-                            }`}
-                          style={{
-                            left: `${coords.x}px`,
-                            top: `${coords.y}px`,
-                            transform: "translate(-50%, -50%)",
-                          }}
-                        >
-                          {hr}
-                        </span>
-                      );
-                    })}
+                    {is24Format ? (
+                      <>
+                        {HOURS_LIST_24_OUTER.map((hr, idx) => {
+                          const coords = getNumberCoords(idx, DIAL_RADIUS);
+                          const isSelected = tempHour === hr;
+                          return (
+                            <span
+                              key={`hr-${hr}`}
+                              className={`absolute ${fieldValueClasses} select-none flex items-center justify-center w-6 h-6 transition-colors duration-100 ${isSelected
+                                ? "!text-white z-20"
+                                : "text-neutral-700 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
+                                }`}
+                              style={{
+                                left: `${coords.x}px`,
+                                top: `${coords.y}px`,
+                                transform: "translate(-50%, -50%)",
+                              }}
+                            >
+                              {hr}
+                            </span>
+                          );
+                        })}
+                        {HOURS_LIST_24_INNER.map((hr, idx) => {
+                          const coords = getNumberCoords(idx, DIAL_RADIUS - 30);
+                          const isSelected = tempHour === hr;
+                          return (
+                            <span
+                              key={`hr-${hr}`}
+                              className={`absolute ${fieldValueClasses} select-none flex items-center justify-center w-6 h-6 transition-colors duration-100 ${isSelected
+                                ? "!text-white z-20"
+                                : "text-neutral-700 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
+                                }`}
+                              style={{
+                                left: `${coords.x}px`,
+                                top: `${coords.y}px`,
+                                transform: "translate(-50%, -50%)",
+                                fontSize: "12px",
+                              }}
+                            >
+                              {hr}
+                            </span>
+                          );
+                        })}
+                      </>
+                    ) : (
+                      HOURS_LIST.map((hr, idx) => {
+                        const coords = getNumberCoords(idx, DIAL_RADIUS);
+                        const isSelected = tempHour === hr;
+                        return (
+                          <span
+                            key={`hr-${hr}`}
+                            className={`absolute ${fieldValueClasses} select-none flex items-center justify-center w-6 h-6 transition-colors duration-100 ${isSelected
+                              ? "!text-white z-20"
+                              : "text-neutral-700 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
+                              }`}
+                            style={{
+                              left: `${coords.x}px`,
+                              top: `${coords.y}px`,
+                              transform: "translate(-50%, -50%)",
+                            }}
+                          >
+                            {hr}
+                          </span>
+                        );
+                      })
+                    )}
                   </motion.div>
                 ) : (
                   <motion.div
@@ -1131,8 +1170,8 @@ const TimePicker: React.FC<TimePickerProps> = ({
                       return (
                         <span
                           key={`min-${min}`}
-                          className={`absolute text-[11px] font-semibold select-none flex items-center justify-center w-6 h-6 transition-colors duration-100 ${isSelected
-                            ? "text-white z-20 font-bold"
+                          className={`absolute ${fieldValueClasses} select-none flex items-center justify-center w-6 h-6 transition-colors duration-100 ${isSelected
+                            ? "!text-white z-20"
                             : "text-neutral-700 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
                             }`}
                           style={{
@@ -1189,20 +1228,25 @@ const TimePicker: React.FC<TimePickerProps> = ({
           <div className="pointer-events-none absolute left-3 right-3 h-[36px] top-[82px] border-y border-neutral-200 dark:border-neutral-800" />
 
           {/* Hours Column */}
-          <DrumColumn items={DRUM_HOURS} value={tempHour} onChange={setTempHour} color={color} />
+          <DrumColumn items={is24Format ? DRUM_HOURS_24 : DRUM_HOURS} value={tempHour} onChange={setTempHour} color={color} />
           {/* Divider */}
           <div className="w-[1px] h-full bg-neutral-100 dark:bg-neutral-800 shrink-0 pointer-events-none" />
           {/* Minutes Column */}
           <DrumColumn items={DRUM_MINUTES} value={tempMinute} onChange={setTempMinute} color={color} />
-          {/* Divider */}
-          <div className="w-[1px] h-full bg-neutral-100 dark:bg-neutral-800 shrink-0 pointer-events-none" />
-          {/* AM/PM Column */}
-          <DrumColumn
-            items={DRUM_AMPM}
-            value={tempAmpm === "AM" ? 0 : 1}
-            onChange={(val) => setTempAmpm(val === 0 ? "AM" : "PM")}
-            color={color}
-          />
+          
+          {!is24Format && (
+            <>
+              {/* Divider */}
+              <div className="w-[1px] h-full bg-neutral-100 dark:bg-neutral-800 shrink-0 pointer-events-none" />
+              {/* AM/PM Column */}
+              <DrumColumn
+                items={DRUM_AMPM}
+                value={tempAmpm === "AM" ? 0 : 1}
+                onChange={(val) => setTempAmpm(val === 0 ? "AM" : "PM")}
+                color={color}
+              />
+            </>
+          )}
         </div>
 
         {/* Footer Actions */}
@@ -1234,7 +1278,8 @@ const TimePicker: React.FC<TimePickerProps> = ({
 
         <div
           className={`
-            relative flex items-center justify-between w-full transition-all duration-200 ease-in-out select-none box-border group
+            relative flex items-center justify-between w-full transition-all duration-200 ease-in-out select-none box-border ${disabled ? "" : "group"}
+            ${wrapperBaseClasses}
             ${variantClass}
             ${radiusClass}
             ${sz.wrapperPadding}
@@ -1242,95 +1287,92 @@ const TimePicker: React.FC<TimePickerProps> = ({
               ? sz.insideHeight
               : `${sz.outsideHeight} ${isFloating && label && !isOutlined ? "mt-6" : ""} ${isOutlined && label ? "mt-[10px]" : ""}`
             }
+            ${interactiveBorderClass}
             ${hasError && !isOutlined ? "!border-danger" : ""}
-            ${isOpen && !hasError && !isOutlined
-              ? resolvedVariant === "bordered" || resolvedVariant === "faded"
-                ? applyImportant(focusBorderColors[color] || "border-primary")
-                : ""
-              : ""
-            }
-            ${disabled ? "opacity-50 cursor-default" : "cursor-pointer"}
+            ${disabled ? inputDisabledWrapperClasses : "cursor-pointer"}
           `}
-          onClick={() => !disabled && setIsOpen((prev) => !prev)}
+          onClick={(e) => {
+            if (disabled) return;
+            if (isInputable && (e.target as HTMLElement).tagName === 'INPUT') {
+              setIsOpen(true);
+              return;
+            }
+            setIsOpen((prev) => !prev);
+          }}
         >
-          {/* Outlined Fieldset Border + Legend Notch */}
           {isOutlined && (
-            <fieldset
-              className={`
-                absolute inset-0 pointer-events-none transition-all duration-200 m-0 p-0
-                ${radiusClass}
-                ${hasError
+            <OutlinedFieldset
+              showFloated={showOutlinedFloated}
+              radiusClass={radiusClass}
+              borderClassName={
+                hasError
                   ? "border-2 border-red-500 dark:border-red-500"
                   : isOpen
                     ? `border-2 ${focusBorderColors[color] || "border-primary"}`
-                    : `border-2 ${fieldsetBorderColors[color] || "border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"}`
-                }
-              `}
-            >
-              {label && (
-                <legend
-                  className={`
-                    ml-2 font-medium transition-all duration-200 ease-out block whitespace-nowrap overflow-hidden invisible
-                    ${shouldFloat || isOpen || hasValue ? "max-w-full px-1" : "max-w-0 px-0"}
-                  `}
-                  style={{
-                    fontSize: `${size === "sm" ? 9 : size === "lg" ? 12 : 10.5}px`,
-                    height: 0,
-                  }}
-                >
-                  <span>{label}</span>
-                </legend>
-              )}
-            </fieldset>
+                    : `border-2 ${disabled
+                        ? stripInteractiveFieldClasses(fieldsetBorderColors[color] || "border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500")
+                        : fieldsetBorderColors[color] || "border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"}`
+              }
+              label={label}
+              isRequired={isRequired}
+              size={size}
+            />
+          )}
+
+          {isOutlined && label && (
+            <OutlinedMotionLabel
+              htmlFor={fieldName}
+              label={label}
+              isRequired={isRequired}
+              size={size}
+              showFloated={showOutlinedFloated}
+              outlinedFloatY={sz.outlinedFloatY}
+              outlinedInitialY={sz.outlinedInitialY}
+              textSizeClass={sz.textSize}
+              labelClassName={labelClassName}
+              colorClassName={getFloatingLabelColorClass(resolvedVariant, color as FieldColor, showOutlinedFloated, isOpen, hasError)}
+            />
           )}
 
           {/* Floating Label */}
-          {(isFloating || isOutlined) && label && (
+          {isFloating && !isOutlined && label && (
             <motion.label
               htmlFor={fieldName}
               initial={false}
               animate={{
                 y:
-                  shouldFloat || (isOutlined && (isOpen || hasValue))
-                    ? isOutlined
-                      ? sz.outlinedFloatY
-                      : labelPlacement === "inside"
-                        ? sz.floatY
-                        : sz.floatYOutside
-                    : isOutlined
-                      ? sz.outlinedInitialY
-                      : sz.initialY,
+                  shouldFloat
+                    ? labelPlacement === "inside"
+                      ? sz.floatY
+                      : sz.floatYOutside
+                    : sz.initialY,
                 x:
-                  shouldFloat || (isOutlined && (isOpen || hasValue))
-                    ? isOutlined
-                      ? 0
-                      : labelPlacement === "inside"
-                        ? sz.floatX
-                        : sz.floatXOutside
+                  shouldFloat
+                    ? labelPlacement === "inside"
+                      ? sz.floatX
+                      : sz.floatXOutside
                     : sz.initialX,
                 scale:
-                  shouldFloat || (isOutlined && (isOpen || hasValue))
-                    ? isOutlined
-                      ? 0.75
-                      : sz.floatScale
+                  shouldFloat
+                    ? sz.floatScale
                     : 1,
               }}
               transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
               className={`
-                absolute left-3 top-1/2 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
+                absolute left-3 top-1/2 z-10 ${labelFloatingClasses} transition-colors duration-200
                 ${sz.textSize} ${labelClassName} ${
                   isOpen && color !== "default"
                     ? (focusTextColors[color] || "text-primary")
-                    : shouldFloat || (isOutlined && (isOpen || hasValue))
+                    : shouldFloat
                       ? isOpen
                         ? "text-neutral-800 dark:text-neutral-200"
                         : "text-neutral-700 dark:text-neutral-300"
                       : "text-neutral-400 dark:text-neutral-500"
                 }
               `}
-              style={{ transformOrigin: isOutlined ? "left" : "top left" }}
+              style={{ transformOrigin: "top left" }}
             >
-              {label}
+              <FieldLabelContent label={label} isRequired={isRequired} />
             </motion.label>
           )}
 
@@ -1344,23 +1386,46 @@ const TimePicker: React.FC<TimePickerProps> = ({
             {labelPlacement === "inside" && !isFloating && label && (
               <span
                 className={`
-                  block font-medium select-none mb-0.5 text-default-500
+                  ${labelFloatingClasses} mb-0.5 text-default-500
                   ${sz.labelSize} ${labelClassName}
                 `}
               >
-                {label}
+                <FieldLabelContent label={label} isRequired={isRequired} />
               </span>
             )}
 
             <div className="flex-1 min-w-0 truncate pr-2">
-              {!displayString ? (
-                <span className={`text-neutral-400 truncate select-none ${sz.textSize}`}>
-                  {(!isFloating || shouldFloat) && resolvedPlaceholder ? resolvedPlaceholder : "\u200b"}
-                </span>
+              {isInputable ? (
+                <input
+                  type="text"
+                  value={displayString}
+                  placeholder={(!isFloating || shouldFloat) && resolvedPlaceholder ? resolvedPlaceholder : ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (form?.setFieldValue && fieldName) {
+                      form.setFieldValue(fieldName, val);
+                    } else if (onChange) {
+                      onChange(val);
+                    }
+                  }}
+                  onBlur={() => {
+                     if (form?.setFieldTouched && fieldName) {
+                       form.setFieldTouched(fieldName, true);
+                     }
+                  }}
+                  className={`w-full bg-transparent outline-none ${fieldValueClasses} text-neutral-800 dark:text-neutral-100 placeholder:text-neutral-400`}
+                  disabled={disabled}
+                />
               ) : (
-                <span className={`text-neutral-800 dark:text-neutral-100 truncate select-none ${sz.textSize}`}>
-                  {displayString}
-                </span>
+                !displayString ? (
+                  <span className={`${fieldPlaceholderClasses} truncate select-none`}>
+                    {(!isFloating || shouldFloat) && resolvedPlaceholder ? resolvedPlaceholder : "\u200b"}
+                  </span>
+                ) : (
+                  <span className={`text-neutral-800 dark:text-neutral-100 truncate select-none ${fieldValueClasses}`}>
+                    {displayString}
+                  </span>
+                )
               )}
             </div>
           </div>
@@ -1380,7 +1445,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
                 <FaXmark className="w-3.5 h-3.5" aria-hidden />
               </Button>
             ) : (
-              <FaClock className={`w-4 h-4 transition-colors ${isOpen && color !== "default" ? (focusTextColors[color] || "text-primary") : "text-neutral-600 dark:text-neutral-350 group-hover:text-neutral-800 dark:group-hover:text-neutral-100"}`} />
+              <FaClock className={`w-4 h-4 transition-colors ${isOpen && color !== "default" ? (focusTextColors[color] || "text-primary") : disabled ? "text-neutral-600 dark:text-neutral-350" : "text-neutral-600 dark:text-neutral-350 group-hover:text-neutral-800 dark:group-hover:text-neutral-100"}`} />
             )}
           </div>
 
@@ -1468,7 +1533,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className={`mt-1.5 text-sm text-red-500 ${errorClassName}`}
+            className={`${errorClasses} ${errorClassName}`}
           >
             {startError}
           </motion.p>

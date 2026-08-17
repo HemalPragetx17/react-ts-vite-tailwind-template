@@ -1,5 +1,7 @@
 @import "./theme/typography.css";
 @import "./theme/colors.css";
+@import "./theme/radius.css";
+@import "./theme/fieldStyles.css";
 
 @tailwind base;
 @tailwind components;
@@ -31,14 +33,14 @@
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	margin: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
 }
 
 input[type="number"] {
-	-moz-appearance: textfield;
+  -moz-appearance: textfield;
 }
 
 @keyframes ripple {
@@ -46,6 +48,7 @@ input[type="number"] {
     transform: scale(0);
     opacity: 0.35;
   }
+
   100% {
     transform: scale(2.5);
     opacity: 0;
@@ -70,30 +73,29 @@ input[type="number"] {
   bottom: 0;
   left: 0;
   transform: translateX(-100%);
-  background-image: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.2) 20%,
-    rgba(255, 255, 255, 0.6) 60%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background-image: linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.2) 20%,
+      rgba(255, 255, 255, 0.6) 60%,
+      rgba(255, 255, 255, 0) 100%);
   animation: heroui-shimmer 2s infinite;
 }
 
 .dark .animate-shimmer::after {
-  background-image: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.05) 20%,
-    rgba(255, 255, 255, 0.15) 60%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background-image: linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.05) 20%,
+      rgba(255, 255, 255, 0.15) 60%,
+      rgba(255, 255, 255, 0) 100%);
 }
 
 @keyframes heroui-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0;
   }
+
   50% {
     opacity: 1;
   }
@@ -119,6 +121,7 @@ input[type="number"] {
     transform: scale(0);
     opacity: 0.25;
   }
+
   100% {
     transform: scale(2.2);
     opacity: 0;
@@ -166,4 +169,15 @@ a,
   transition-property: background-color, border-color, color, box-shadow;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 200ms;
+}
+
+/* Limit max-height and add scrollbar for Storybook "Show code" blocks */
+.docblock-source,
+div[class*="docblock-source"],
+pre[class*="prismjs"],
+.prismjs,
+.sb-story-code {
+  max-height: 380px !important;
+  overflow-y: auto !important;
+  overflow-x: auto !important;
 }

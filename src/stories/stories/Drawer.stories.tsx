@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
-  Drawer,
+  Drawer as DrawerComponent,
   DrawerBody,
   DrawerContent,
   DrawerFooter,
@@ -10,9 +10,9 @@ import {
   useDisclosure,
 } from "../../components/ui";
 
-const meta: Meta<typeof Drawer> = {
+const meta: Meta<typeof DrawerComponent> = {
   title: "Components/Drawer",
-  component: Drawer,
+  component: DrawerComponent,
   parameters: {
     layout: "fullscreen",
   },
@@ -55,42 +55,56 @@ const meta: Meta<typeof Drawer> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Drawer>;
+type Story = StoryObj<typeof DrawerComponent>;
 
 // ─── Basic Story Helper ──────────────────────────────────────────────────────
 
-const DrawerWithTrigger = (args: any) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+const Drawer = (args: any) => {
+  const disclosure = useDisclosure();
+  const isOpen = args.isOpen !== undefined ? args.isOpen : disclosure.isOpen;
+  const onClose = args.onClose !== undefined ? args.onClose : disclosure.onClose;
+  const onOpen = disclosure.onOpen;
+
+  const hasChildren = React.Children.count(args.children) > 0;
+
   return (
-    <div className="p-10 flex flex-col items-center justify-center min-h-[300px]">
-      <Button onClick={onOpen}>Open Drawer</Button>
-      <Drawer {...args} isOpen={isOpen} onClose={onClose}>
-        <DrawerContent>
-          <DrawerHeader>Basic Drawer</DrawerHeader>
-          <DrawerBody>
-            <p className="text-neutral-600 dark:text-neutral-400">
-              This is the standard content of the drawer. You can customize the slide direction, size, backdrop, shadows, and click-to-dismiss behavior.
-            </p>
-            <p className="mt-4 text-neutral-600 dark:text-neutral-400">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </DrawerBody>
-          <DrawerFooter>
-            <Button variant="light" color="danger" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button onClick={onClose}>
-              Confirm
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    </div>
+    <>
+      {args.isOpen === undefined && (
+        <div className="p-10 flex flex-col items-center justify-center min-h-[300px]">
+          <Button onClick={onOpen}>Open Drawer</Button>
+        </div>
+      )}
+      <DrawerComponent {...args} isOpen={isOpen} onClose={onClose}>
+        {hasChildren ? (
+          args.children
+        ) : (
+          <DrawerContent>
+            <DrawerHeader>Basic Drawer</DrawerHeader>
+            <DrawerBody>
+              <p className="text-neutral-600 dark:text-neutral-400">
+                This is the standard content of the drawer. You can customize the slide direction, size, backdrop, shadows, and click-to-dismiss behavior.
+              </p>
+              <p className="mt-4 text-neutral-600 dark:text-neutral-400">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+            </DrawerBody>
+            <DrawerFooter>
+              <Button variant="light" color="danger" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button onClick={onClose}>
+                Confirm
+              </Button>
+            </DrawerFooter>
+          </DrawerContent>
+        )}
+      </DrawerComponent>
+    </>
   );
 };
 
 export const Default: Story = {
-  render: (args) => <DrawerWithTrigger {...args} />,
+  render: (args) => <Drawer {...args} />,
   args: {
     placement: "right",
     size: "md",
@@ -172,11 +186,16 @@ export const Sizes: Story = {
             Horizontal Sizes (sliding left/right)
           </h3>
           <div className="flex flex-wrap gap-3">
-            {sizes.map((sz) => (
-              <Button key={sz} variant="bordered" onClick={() => openSize(sz, "right")}>
-                Size {sz.toUpperCase()}
-              </Button>
-            ))}
+            <Button variant="bordered" onClick={() => openSize("xs", "right")}>Size XS</Button>
+            <Button variant="bordered" onClick={() => openSize("sm", "right")}>Size SM</Button>
+            <Button variant="bordered" onClick={() => openSize("md", "right")}>Size MD</Button>
+            <Button variant="bordered" onClick={() => openSize("lg", "right")}>Size LG</Button>
+            <Button variant="bordered" onClick={() => openSize("xl", "right")}>Size XL</Button>
+            <Button variant="bordered" onClick={() => openSize("2xl", "right")}>Size 2XL</Button>
+            <Button variant="bordered" onClick={() => openSize("3xl", "right")}>Size 3XL</Button>
+            <Button variant="bordered" onClick={() => openSize("4xl", "right")}>Size 4XL</Button>
+            <Button variant="bordered" onClick={() => openSize("5xl", "right")}>Size 5XL</Button>
+            <Button variant="bordered" onClick={() => openSize("full", "right")}>Size FULL</Button>
           </div>
         </div>
 
@@ -185,14 +204,12 @@ export const Sizes: Story = {
             Vertical Sizes (sliding top/bottom)
           </h3>
           <div className="flex flex-wrap gap-3">
-            {sizes.slice(0, 5).map((sz) => (
-              <Button key={sz} variant="flat" color="secondary" onClick={() => openSize(sz, "bottom")}>
-                Size {sz.toUpperCase()} (Bottom)
-              </Button>
-            ))}
-            <Button variant="flat" color="secondary" onClick={() => openSize("full", "bottom")}>
-              Size FULL (Bottom)
-            </Button>
+            <Button variant="flat" color="secondary" onClick={() => openSize("xs", "bottom")}>Size XS (Bottom)</Button>
+            <Button variant="flat" color="secondary" onClick={() => openSize("sm", "bottom")}>Size SM (Bottom)</Button>
+            <Button variant="flat" color="secondary" onClick={() => openSize("md", "bottom")}>Size MD (Bottom)</Button>
+            <Button variant="flat" color="secondary" onClick={() => openSize("lg", "bottom")}>Size LG (Bottom)</Button>
+            <Button variant="flat" color="secondary" onClick={() => openSize("xl", "bottom")}>Size XL (Bottom)</Button>
+            <Button variant="flat" color="secondary" onClick={() => openSize("full", "bottom")}>Size FULL (Bottom)</Button>
           </div>
         </div>
 

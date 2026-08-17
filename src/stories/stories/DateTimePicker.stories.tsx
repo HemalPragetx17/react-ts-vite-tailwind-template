@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { DateTimePicker } from "../../components/ui";
+import { DateTimePicker as DateTimePickerComponent } from "../../components/ui";
 
-const meta: Meta<typeof DateTimePicker> = {
+const meta: Meta<typeof DateTimePickerComponent> = {
   title: "Components/DateTimePicker",
-  component: DateTimePicker,
+  component: DateTimePickerComponent,
   parameters: {
     layout: "centered",
   },
@@ -40,14 +40,14 @@ const meta: Meta<typeof DateTimePicker> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof DateTimePicker>;
+type Story = StoryObj<typeof DateTimePickerComponent>;
 
-const DateTimePickerWithState = (args: any) => {
+const DateTimePicker = (args: any) => {
   const [value, setValue] = useState<Date | null>(args.value ?? null);
 
   return (
     <div className="w-[380px]">
-      <DateTimePicker
+      <DateTimePickerComponent
         {...args}
         value={value}
         onChange={(val) => {
@@ -55,17 +55,16 @@ const DateTimePickerWithState = (args: any) => {
           args.onChange?.(val);
         }}
       />
-      {value && (
-        <p className="mt-3 text-xs text-neutral-500 font-mono bg-neutral-100 dark:bg-neutral-800 rounded px-3 py-2">
-          Value: {value.toLocaleString()}
-        </p>
-      )}
     </div>
   );
 };
 
 export const Default: Story = {
-  render: (args) => <DateTimePickerWithState {...args} />,
+  render: (args) => (
+    <div className="w-[380px]">
+      <DateTimePicker {...args} />
+    </div>
+  ),
   args: {
     label: "Date & Time",
     placeholder: "Select date & time",
@@ -74,7 +73,11 @@ export const Default: Story = {
 };
 
 export const WithValue: Story = {
-  render: (args) => <DateTimePickerWithState {...args} />,
+  render: (args) => (
+    <div className="w-[380px]">
+      <DateTimePicker {...args} />
+    </div>
+  ),
   args: {
     label: "Appointment",
     isClearable: true,
@@ -85,10 +88,10 @@ export const WithValue: Story = {
 export const Variants: Story = {
   render: () => (
     <div className="flex flex-col gap-8 w-[380px]">
-      <DateTimePickerWithState label="Flat" variant="flat" isClearable />
-      <DateTimePickerWithState label="Bordered" variant="bordered" isClearable />
-      <DateTimePickerWithState label="Underlined" variant="underlined" isClearable />
-      <DateTimePickerWithState label="Faded" variant="faded" isClearable />
+      <DateTimePicker label="Flat" variant="flat" isClearable />
+      <DateTimePicker label="Bordered" variant="bordered" isClearable />
+      <DateTimePicker label="Underlined" variant="underlined" isClearable />
+      <DateTimePicker label="Faded" variant="faded" isClearable />
     </div>
   ),
 };
@@ -96,14 +99,9 @@ export const Variants: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="flex flex-col gap-8 w-[380px]">
-      {(["sm", "md", "lg"] as const).map((size) => (
-        <DateTimePickerWithState
-          key={size}
-          label={`Size ${size.toUpperCase()}`}
-          size={size}
-          isClearable
-        />
-      ))}
+      <DateTimePicker label="Size SM" size="sm" isClearable />
+      <DateTimePicker label="Size MD" size="md" isClearable />
+      <DateTimePicker label="Size LG" size="lg" isClearable />
     </div>
   ),
 };
@@ -111,14 +109,12 @@ export const Sizes: Story = {
 export const Colors: Story = {
   render: () => (
     <div className="flex flex-col gap-8 w-[380px]">
-      {(["default", "primary", "secondary", "success", "warning", "danger"] as const).map((color) => (
-        <DateTimePickerWithState
-          key={color}
-          label={color.charAt(0).toUpperCase() + color.slice(1)}
-          color={color}
-          isClearable
-        />
-      ))}
+      <DateTimePicker label="Default" color="default" isClearable />
+      <DateTimePicker label="Primary" color="primary" isClearable />
+      <DateTimePicker label="Secondary" color="secondary" isClearable />
+      <DateTimePicker label="Success" color="success" isClearable />
+      <DateTimePicker label="Warning" color="warning" isClearable />
+      <DateTimePicker label="Danger" color="danger" isClearable />
     </div>
   ),
 };
@@ -126,23 +122,27 @@ export const Colors: Story = {
 export const LabelPlacements: Story = {
   render: () => (
     <div className="grid grid-cols-2 gap-x-10 items-end gap-y-6 w-[800px]">
-      <DateTimePickerWithState label="Inside (Floating)" labelPlacement="inside" isClearable />
-      <DateTimePickerWithState label="Inside (static with placeholder)" labelPlacement="inside" placeholder="Select Time" isClearable />
+      <DateTimePicker label="Inside (Floating)" labelPlacement="inside" isClearable />
+      <DateTimePicker label="Inside (static with placeholder)" labelPlacement="inside" placeholder="Select Time" isClearable />
 
-      <DateTimePickerWithState label="Outside (Floating)" labelPlacement="outside" isClearable />
-      <DateTimePickerWithState label="Outside (static with placeholder)" labelPlacement="outside" placeholder="Select Time" isClearable />
+      <DateTimePicker label="Outside (Floating)" labelPlacement="outside" isClearable />
+      <DateTimePicker label="Outside (static with placeholder)" labelPlacement="outside" placeholder="Select Time" isClearable />
 
-      <DateTimePickerWithState label="Outlined" labelPlacement="outlined" isClearable />
-      <DateTimePickerWithState label="Outlined (static with placeholder)" labelPlacement="outlined" placeholder="Select Time" isClearable />
+      <DateTimePicker label="Outlined" labelPlacement="outlined" isClearable />
+      <DateTimePicker label="Outlined (static with placeholder)" labelPlacement="outlined" placeholder="Select Time" isClearable />
 
-      <DateTimePickerWithState label="Outside Top" labelPlacement="outside-top" placeholder="Select Time" isClearable />
-      <DateTimePickerWithState label="Outside Left" labelPlacement="outside-left" placeholder="Select Time" isClearable />
+      <DateTimePicker label="Outside Top" labelPlacement="outside-top" placeholder="Select Time" isClearable />
+      <DateTimePicker label="Outside Left" labelPlacement="outside-left" placeholder="Select Time" isClearable />
     </div>
   ),
 };
 
 export const ClockMode: Story = {
-  render: (args) => <DateTimePickerWithState {...args} />,
+  render: (args) => (
+    <div className="w-[380px]">
+      <DateTimePicker {...args} />
+    </div>
+  ),
   args: {
     label: "Date & Time (Clock)",
     timeMode: "clock",
@@ -151,7 +151,11 @@ export const ClockMode: Story = {
 };
 
 export const Disabled: Story = {
-  render: (args) => <DateTimePickerWithState {...args} />,
+  render: (args) => (
+    <div className="w-[380px]">
+      <DateTimePicker {...args} />
+    </div>
+  ),
   args: {
     label: "Disabled Date & Time",
     disabled: true,
@@ -159,9 +163,12 @@ export const Disabled: Story = {
   },
 };
 
-
 export const ErrorState: Story = {
-  render: (args) => <DateTimePickerWithState {...args} />,
+  render: (args) => (
+    <div className="w-[380px]">
+      <DateTimePicker {...args} />
+    </div>
+  ),
   args: {
     label: "Appointment",
     error: "Please select a valid date and time",

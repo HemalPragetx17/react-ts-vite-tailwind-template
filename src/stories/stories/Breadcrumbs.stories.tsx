@@ -120,10 +120,10 @@ const ColorMatrix = (args: Story["args"]) => (
     {breadcrumbColors.map((color) => (
       <div key={color} className="flex flex-col gap-3">
         <span className="text-xs font-semibold text-foreground/50 capitalize">{color}</span>
-        <Breadcrumbs {...args} color={color} variant="bordered" radius="full" items={musicItems} />
+        <Breadcrumbs {...args} color={color} variant="bordered" items={musicItems} />
         <Breadcrumbs {...args} color={color} variant="light" items={musicItems} />
-        <Breadcrumbs {...args} color={color} variant="solid" radius="full" items={musicItems} />
-        <Breadcrumbs {...args} color={color} variant="solid" radius="full" isDisabled items={musicItems} />
+        <Breadcrumbs {...args} color={color} variant="solid" items={musicItems} />
+        <Breadcrumbs {...args} color={color} variant="solid" isDisabled items={musicItems} />
       </div>
     ))}
   </div>
@@ -132,14 +132,6 @@ const ColorMatrix = (args: Story["args"]) => (
 export const Colors: Story = {
   render: (args) => (
     <div className="p-6 bg-background rounded-xl">
-      {ColorMatrix(args)}
-    </div>
-  ),
-};
-
-export const DarkColors: Story = {
-  render: (args) => (
-    <div className="dark p-6 bg-background rounded-xl">
       {ColorMatrix(args)}
     </div>
   ),
@@ -224,8 +216,7 @@ export const StartAndEndContent: Story = {
 export const Disabled: Story = {
   render: (args) => (
     <div className="flex flex-col gap-4 p-6 bg-background rounded-xl">
-      <Breadcrumbs {...args} color="primary" variant="solid" radius="full" items={musicItems} />
-      <Breadcrumbs {...args} color="primary" variant="solid" radius="full" isDisabled items={musicItems} />
+      <Breadcrumbs {...args} color="primary" variant="solid" isDisabled items={musicItems} />
     </div>
   ),
 };

@@ -1,6 +1,6 @@
 import type { FieldInputProps, FormikErrors, FormikTouched } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useDropzone } from "react-dropzone";
 import {
@@ -9,8 +9,31 @@ import {
 import { FaRegTrashCan, FaUserLarge, FaXmark } from "react-icons/fa6";
 import { FiUpload } from "react-icons/fi";
 import Button from "../../button/Button";
-import PdfPreview from "./PdfPreview";
+import { DEFAULT_RADIUS, getRadiusClass, type Radius } from "../../shared/radius";
+import {
+  fieldPlaceholderClasses,
+  fieldValueClasses,
+  errorClasses,
+  focusBorderColors,
+  focusTextColors,
+  fieldsetBorderColors,
+  getFloatingLabelColorClass,
+  getInputVariantClasses,
+  getInteractiveBorderClass,
+  getShowOutlinedFloated,
+  getWrapperBaseClasses,
+  inputDisabledOpacityClass,
+  inputDisabledWrapperClasses,
+  labelClasses,
+  labelFloatingClasses,
+  underlineColors,
+  type FieldColor,
+} from "../../shared/fieldStyles";
+import { FieldLabelContent } from "../../shared/FieldLabelContent";
+import { OutlinedFieldset, OutlinedMotionLabel } from "../../shared/OutlinedFieldLabel";
 import "./index.css";
+
+const PdfPreview = React.lazy(() => import("./PdfPreview"));
 
 /* -------------------------------------------------------------------------- */
 /*                                   Types                                    */
@@ -47,12 +70,14 @@ export interface FileInputProps {
   // Styling / Theme variants (for "normal" mode)
   variant?: "flat" | "bordered" | "underlined" | "faded";
   size?: "sm" | "md" | "lg";
-  radius?: "none" | "sm" | "md" | "lg" | "full";
+  radius?: Radius;
   color?: "default" | "primary" | "secondary" | "success" | "warning" | "danger";
   labelPlacement?: "inside" | "outside" | "outside-left" | "outside-top" | "outlined";
   containerClassName?: string;
+  wrapperClassName?: string;
   labelClassName?: string;
   errorClassName?: string;
+  isRequired?: boolean;
   inputClassName?: string;
 
   // Formik integration
@@ -119,14 +144,14 @@ const ImagePreviewItem = ({
   isPreviewOn,
   disabled,
   size = "md",
-  radius = "lg",
+  radius = DEFAULT_RADIUS,
 }: {
   image: Image;
   onDelete: () => void;
   isPreviewOn?: boolean;
   disabled?: boolean;
   size?: "sm" | "md" | "lg";
-  radius?: "none" | "sm" | "md" | "lg" | "full";
+  radius?: Radius;
 }) => {
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -176,26 +201,21 @@ const ImagePreviewItem = ({
   const dropzoneSize = dropzoneSizeConfigs[size] || dropzoneSizeConfigs.md;
   const dropzoneSizeVal = dropzoneSize.val;
 
-  const dropzoneRadiusConfigs = {
-    none: "rounded-none",
-    sm: "rounded-sm",
-    md: "rounded-md",
-    lg: "rounded-lg",
-    full: "rounded-full",
-  };
-  const dropzoneRadiusClass = dropzoneRadiusConfigs[radius] || "rounded-lg";
+  const dropzoneRadiusClass = getRadiusClass(radius);
 
   return (
     <div className="relative" style={{ width: `${dropzoneSizeVal}px`, height: `${dropzoneSizeVal}px` }}>
       <div
         {...(isPreviewOn && !disabled ? { onClick: handleCardClick } : {})}
         className={`border-2 relative w-full h-full overflow-hidden group ${isPreviewOn && !disabled ? "cursor-pointer" : ""
-          } ${isPdf ? "form-upload-pdf" : "form-upload-img"} ${disabled ? "cursor-not-allowed opacity-60" : ""
+          } ${isPdf ? "form-upload-pdf" : "form-upload-img"} ${disabled ? `cursor-not-allowed ${inputDisabledOpacityClass}` : ""
           } ${dropzoneRadiusClass}`}
       >
         <div className={`w-full h-full overflow-hidden ${dropzoneRadiusClass}`}>
           {isPdf ? (
-            <PdfPreview file={image.url} />
+            <Suspense fallback={<div className="w-full h-full bg-neutral-100 dark:bg-neutral-800 animate-pulse" />}>
+              <PdfPreview file={image.url} />
+            </Suspense>
           ) : isVideo ? (
             <video
               src={previewUrl}
@@ -283,13 +303,13 @@ const ImagePreviewItem = ({
                     src={previewUrl}
                     controls
                     autoPlay
-                    className="max-w-full max-h-full rounded-lg shadow-2xl object-contain bg-black"
+                    className={`max-w-full max-h-full ${getRadiusClass()} shadow-2xl object-contain bg-black`}
                   />
                 ) : isImage ? (
                   <img
                     src={previewUrl}
                     alt="Full Preview"
-                    className="max-w-full max-h-full rounded-lg shadow-2xl object-contain bg-neutral-900"
+                    className={`max-w-full max-h-full ${getRadiusClass()} shadow-2xl object-contain bg-neutral-900`}
                   />
                 ) : null}
               </motion.div>
@@ -329,12 +349,14 @@ const FileInput = ({
   // Styles
   variant = "bordered",
   size = "md",
-  radius = "md",
+  radius = DEFAULT_RADIUS,
   color = "primary",
-  labelPlacement = "outside",
+  labelPlacement = "outside-top",
   containerClassName = "",
+  wrapperClassName = "",
   labelClassName = "",
   errorClassName = "",
+  isRequired = false,
 
   // Formik props
   field,
@@ -547,88 +569,34 @@ const FileInput = ({
     },
   };
 
-  const flatColorClasses = {
-    default: "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus-within:bg-neutral-200 dark:focus-within:bg-neutral-700 text-foreground",
-    primary: "bg-primary-50 dark:bg-primary-950/20 hover:bg-primary-100 dark:hover:bg-primary-950/40 focus-within:bg-primary-100 dark:focus-within:bg-primary-950/40 text-primary",
-    secondary: "bg-secondary-50 dark:bg-secondary-950/20 hover:bg-secondary-100 dark:hover:bg-secondary-950/40 focus-within:bg-secondary-100 dark:focus-within:bg-secondary-950/40 text-secondary",
-    success: "bg-success-50 dark:bg-success-950/20 hover:bg-success-100 dark:hover:bg-success-950/40 focus-within:bg-success-100 dark:focus-within:bg-success-950/40 text-success",
-    warning: "bg-warning-50 dark:bg-warning-950/20 hover:bg-warning-100 dark:hover:bg-warning-950/40 focus-within:bg-warning-100 dark:focus-within:bg-warning-950/40 text-warning",
-    danger: "bg-danger-50 dark:bg-danger-950/20 hover:bg-danger-100 dark:hover:bg-danger-950/40 focus-within:bg-danger-100 dark:focus-within:bg-danger-950/40 text-danger",
-  };
-
-  const borderedColorClasses = {
-    default: "border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600 focus-within:border-neutral-500 dark:focus-within:border-neutral-500 text-foreground",
-    primary: "border-neutral-300 dark:border-neutral-700 hover:border-primary-300 dark:hover:border-primary-400 focus-within:border-primary text-primary",
-    secondary: "border-neutral-300 dark:border-neutral-700 hover:border-secondary-300 dark:hover:border-secondary-400 focus-within:border-secondary text-secondary",
-    success: "border-neutral-300 dark:border-neutral-700 hover:border-success-300 dark:hover:border-success-400 focus-within:border-success text-success",
-    warning: "border-neutral-300 dark:border-neutral-700 hover:border-warning-300 dark:hover:border-warning-400 focus-within:border-warning text-warning",
-    danger: "border-neutral-300 dark:border-neutral-700 hover:border-danger-300 dark:hover:border-danger-400 focus-within:border-danger text-danger",
-  };
-
-  const underlinedColorClasses = {
-    default: "border-b-neutral-200 focus-within:border-b-neutral-500 text-foreground",
-    primary: "border-b-primary-200 focus-within:border-b-primary text-primary",
-    secondary: "border-b-secondary-200 focus-within:border-b-secondary text-secondary",
-    success: "border-b-success-200 focus-within:border-b-success text-success",
-    warning: "border-b-warning-200 focus-within:border-b-warning text-warning",
-    danger: "border-b-danger-200 focus-within:border-b-danger text-danger",
-  };
-
-  const fadedColorClasses = {
-    default: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-neutral-400 text-foreground",
-    primary: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-primary text-primary",
-    secondary: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-secondary text-secondary",
-    success: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-success text-success",
-    warning: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-warning text-warning",
-    danger: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-danger text-danger",
-  };
-
-  const focusBorderColors = {
-    default: "border-neutral-500",
-    primary: "border-primary",
-    secondary: "border-secondary",
-    success: "border-success",
-    warning: "border-warning",
-    danger: "border-danger",
-  };
-
-  const focusTextColors = {
-    default: "text-foreground",
-    primary: "text-primary",
-    secondary: "text-secondary",
-    success: "text-success",
-    warning: "text-warning",
-    danger: "text-danger",
-  };
-
-  const underlineColors = {
-    default: "bg-neutral-500",
-    primary: "bg-primary",
-    secondary: "bg-secondary",
-    success: "bg-success",
-    warning: "bg-warning",
-    danger: "bg-danger",
-  };
-
   const variantConfigs = {
-    flat: `border-2 border-transparent ${flatColorClasses[color] || flatColorClasses.default}`,
-    bordered: `border-2 ${borderedColorClasses[color] || borderedColorClasses.default}`,
-    underlined: `border-b rounded-none relative ${underlinedColorClasses[color] || underlinedColorClasses.default}`,
-    faded: `border-2 ${fadedColorClasses[color] || fadedColorClasses.default}`,
+    flat: getInputVariantClasses("flat", color as FieldColor),
+    bordered: getInputVariantClasses("bordered", color as FieldColor),
+    underlined: getInputVariantClasses("underlined", color as FieldColor),
+    faded: getInputVariantClasses("faded", color as FieldColor),
   };
 
-  const radiusConfigs = {
-    none: "rounded-none",
-    sm: "rounded-sm",
-    md: "rounded-md",
-    lg: "rounded-lg",
-    full: "rounded-full",
-  };
+  const radiusClass = resolvedVariant === "underlined" ? "rounded-none" : getRadiusClass(radius);
 
   const isOutlined = labelPlacement === "outlined";
   const sz = sizeConfigs[size] || sizeConfigs.md;
   const variantClass = isOutlined ? "bg-transparent border-none" : (variantConfigs[resolvedVariant] || variantConfigs.bordered);
-  const radiusClass = resolvedVariant === "underlined" ? "rounded-none" : radiusConfigs[radius] || radiusConfigs.md;
+
+  const wrapperBaseClasses = getWrapperBaseClasses({
+    wrapperClassName,
+    variant: resolvedVariant,
+    isOutlined,
+    isActive: isFocused,
+    hasError,
+  });
+
+  const interactiveBorderClass = getInteractiveBorderClass({
+    variant: resolvedVariant,
+    isOutlined,
+    isActive: isFocused,
+    hasError,
+    color: color as FieldColor,
+  });
 
   const profileSizeConfigs = {
     sm: 96,
@@ -637,14 +605,7 @@ const FileInput = ({
   };
   const profileSizeVal = profileSizeConfigs[size] || 144;
 
-  const profileRadiusConfigs = {
-    none: "rounded-none",
-    sm: "rounded-sm",
-    md: "rounded-md",
-    lg: "rounded-lg",
-    full: "rounded-full",
-  };
-  const profileRadiusClass = radius ? (profileRadiusConfigs[radius] || "rounded-full") : "rounded-full";
+  const profileRadiusClass = radius ? getRadiusClass(radius) : "rounded-full";
 
   const dropzoneSizeConfigs = {
     sm: {
@@ -666,36 +627,24 @@ const FileInput = ({
   const dropzoneSize = dropzoneSizeConfigs[size] || dropzoneSizeConfigs.md;
   const dropzoneSizeVal = dropzoneSize.val;
 
-  const dropzoneRadiusConfigs = {
-    none: "rounded-none",
-    sm: "rounded-sm",
-    md: "rounded-md",
-    lg: "rounded-lg",
-    full: "rounded-full",
-  };
-  const dropzoneRadiusClass = radius ? (dropzoneRadiusConfigs[radius] || "rounded-lg") : "rounded-lg";
+  const dropzoneRadiusClass = getRadiusClass(radius);
 
   const isOutsideLeft = labelPlacement === "outside-left";
   const isFloating = labelPlacement === "inside" || labelPlacement === "outside";
   const hasValue = !!singleFile;
   const shouldFloat = isFocused || hasValue || (isFloating && !!placeholder) || (isOutlined && !!placeholder);
+  const showOutlinedFloated = getShowOutlinedFloated(isOutlined, label, shouldFloat, isFocused, hasValue);
   const resolvedPlaceholder = placeholder || (isFloating || isOutlined ? "" : "Select file");
 
   const renderOutsideLabel = () => {
     if (!label || isFloating || isOutlined || mode !== "normal") return null;
+
     return (
       <label
         htmlFor={fieldName}
-        className={`block font-medium select-none transition-colors duration-200 ${isOutsideLeft ? "shrink-0 mb-0" : "mb-1.5"
-          } ${sz.labelSize} ${labelClassName} ${
-            isFocused && color !== "default"
-              ? (focusTextColors[color] || "text-primary")
-              : isFocused
-                ? "text-neutral-800 dark:text-neutral-200"
-                : "text-neutral-700 dark:text-neutral-300"
-          }`}
+        className={`${labelClasses} ${isOutsideLeft ? "mb-0 shrink-0" : "mb-2"} ${labelClassName}`}
       >
-        {label}
+        <FieldLabelContent label={label} isRequired={isRequired} />
       </label>
     );
   };
@@ -710,7 +659,7 @@ const FileInput = ({
           {!previewUrl ? (
             <div {...getRootProps()} className="flex justify-center">
               <label
-                className={`flex flex-col items-center overflow-hidden bg-white dark:bg-neutral-800 tracking-wide uppercase border-2 ${profileRadiusClass} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-primary-400"
+                className={`flex flex-col items-center overflow-hidden bg-white dark:bg-neutral-800 tracking-wide uppercase border-2 ${profileRadiusClass} ${disabled ? `cursor-not-allowed ${inputDisabledOpacityClass}` : "cursor-pointer hover:border-primary-400"
                   } ${hasError ? "error-red-border border-danger" : ""}`}
                 style={{ width: `${profileSizeVal}px`, height: `${profileSizeVal}px` }}
               >
@@ -724,7 +673,7 @@ const FileInput = ({
                   {...(isPreviewOn && !disabled
                     ? { onClick: () => setIsModalOpen(true) }
                     : getRootProps())}
-                  className={`border-2 overflow-hidden form-upload-img w-full h-full ${profileRadiusClass} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+                  className={`border-2 overflow-hidden form-upload-img w-full h-full ${profileRadiusClass} ${disabled ? `cursor-not-allowed ${inputDisabledOpacityClass}` : "cursor-pointer"
                     }`}
                 >
                   <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
@@ -756,8 +705,8 @@ const FileInput = ({
           )}
           {label && (
             <div className="w-full text-center mt-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="label">
-                {label}
+              <label className={`${labelClasses} ${labelClassName}`} htmlFor={fieldName || "label"}>
+                <FieldLabelContent label={label} isRequired={isRequired} />
               </label>
             </div>
           )}
@@ -771,15 +720,15 @@ const FileInput = ({
       {mode === "dropzone" && (
         <div>
           {label && (
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" htmlFor="label">
-              {label}
+            <label className={`${labelClasses} mb-2 ${labelClassName}`} htmlFor={fieldName || "label"}>
+              <FieldLabelContent label={label} isRequired={isRequired} />
             </label>
           )}
           {!previewUrl || !isSupported ? (
             <div {...getRootProps()} className="relative mt-2" style={{ width: `${dropzoneSizeVal}px`, height: `${dropzoneSizeVal}px` }}>
               <label
                 className={`flex flex-col items-center justify-center p-4 bg-white dark:bg-neutral-800 tracking-wide uppercase border-2 w-full h-full ${dropzoneRadiusClass}
-                  ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-primary-400"} 
+                  ${disabled ? `cursor-not-allowed ${inputDisabledOpacityClass}` : "cursor-pointer hover:border-primary-400"} 
                   ${hasError ? "error-red-border border-danger" : ""}
                 `}
               >
@@ -792,11 +741,13 @@ const FileInput = ({
               <div
                 {...(isPreviewOn ? { onClick: handleSingleCardClick } : getRootProps())}
                 className={`border-2 relative w-full h-full group ${isPdf ? "form-upload-pdf" : "form-upload-img"
-                  } ${disabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"} ${dropzoneRadiusClass}`}
+                  } ${disabled ? `cursor-not-allowed ${inputDisabledOpacityClass}` : "cursor-pointer"} ${dropzoneRadiusClass}`}
               >
                 <div className={`w-full h-full overflow-hidden ${dropzoneRadiusClass}`}>
                   {isPdf ? (
-                    <PdfPreview file={singleFile} />
+                    <Suspense fallback={<div className="w-full h-full bg-neutral-100 dark:bg-neutral-800 animate-pulse" />}>
+                      <PdfPreview file={singleFile} />
+                    </Suspense>
                   ) : isVideo ? (
                     <video
                       src={previewUrl}
@@ -847,8 +798,8 @@ const FileInput = ({
       {mode === "multi" && (
         <div className="w-full">
           {label && (
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              {label}
+            <label className={`${labelClasses} mb-2 ${labelClassName}`} htmlFor={fieldName}>
+              <FieldLabelContent label={label} isRequired={isRequired} />
             </label>
           )}
           <div className="flex mt-2 gap-6 flex-wrap">
@@ -873,7 +824,7 @@ const FileInput = ({
             <div {...getRootProps()} className="relative">
               <input {...getInputProps()} />
               <label
-                className={`flex flex-col items-center justify-center px-4 bg-white dark:bg-neutral-800 tracking-wide uppercase border-2 ${dropzoneRadiusClass} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-primary-400"
+                className={`flex flex-col items-center justify-center px-4 bg-white dark:bg-neutral-800 tracking-wide uppercase border-2 ${dropzoneRadiusClass} ${disabled ? `cursor-not-allowed ${inputDisabledOpacityClass}` : "cursor-pointer hover:border-primary-400"
                   } ${hasError ? "error-red-border border-danger" : ""}`}
                 style={{ width: `${dropzoneSizeVal}px`, height: `${dropzoneSizeVal}px` }}
               >
@@ -898,85 +849,79 @@ const FileInput = ({
               relative flex items-center justify-between w-full transition-all duration-200 ease-in-out cursor-pointer select-none box-border group
               ${variantClass}
               ${radiusClass}
+              ${wrapperBaseClasses}
               ${sz.wrapperPadding}
               ${labelPlacement === "inside" ? sz.insideHeight : `${sz.outsideHeight} ${isFloating && label && !isOutlined ? "mt-6" : ""} ${isOutlined && label ? "mt-[10px]" : ""}`}
-              ${hasError && !isOutlined ? "!border-danger border-red-500" : ""}
-              ${disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}
+              ${interactiveBorderClass}
+              ${disabled ? inputDisabledWrapperClasses : ""}
             `}
           >
-            {/* ── Outlined Fieldset Border + Legend Notch ────────────────────── */}
             {isOutlined && (
-              <fieldset
-                className={`
-                  absolute inset-0 pointer-events-none transition-all duration-200 m-0 p-0
-                  ${radiusClass}
-                  ${hasError
+              <OutlinedFieldset
+                showFloated={showOutlinedFloated}
+                radiusClass={radiusClass}
+                borderClassName={
+                  hasError
                     ? "border-2 border-red-500 dark:border-red-500"
                     : isFocused
                       ? `border-2 ${focusBorderColors[color] || "border-primary"}`
-                      : "border-2 border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"
-                  }
-                `}
-              >
-                {label && (
-                  <legend
-                    className={`
-                      ml-2 font-medium transition-all duration-200 ease-out block whitespace-nowrap overflow-hidden invisible
-                      ${shouldFloat || isFocused || hasValue ? "max-w-full px-1" : "max-w-0 px-0"}
-                    `}
-                    style={{
-                      fontSize: `${size === "sm" ? 9 : size === "lg" ? 12 : 10.5}px`,
-                      height: 0,
-                    }}
-                  >
-                    <span>{label}</span>
-                  </legend>
-                )}
-              </fieldset>
+                      : `border-2 ${fieldsetBorderColors[color] || "border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"}`
+                }
+                label={label}
+                isRequired={isRequired}
+                size={size}
+              />
+            )}
+
+            {isOutlined && label && (
+              <OutlinedMotionLabel
+                htmlFor={fieldName}
+                label={label}
+                isRequired={isRequired}
+                size={size}
+                showFloated={showOutlinedFloated}
+                outlinedFloatY={sz.outlinedFloatY}
+                outlinedInitialY={sz.outlinedInitialY}
+                textSizeClass={sz.textSize}
+                labelClassName={labelClassName}
+                colorClassName={getFloatingLabelColorClass(resolvedVariant, color as FieldColor, showOutlinedFloated, isFocused, hasError)}
+              />
             )}
 
             {/* Floating Label for normal mode */}
-            {(isFloating || isOutlined) && label && (
+            {isFloating && !isOutlined && label && (
               <motion.label
                 htmlFor={fieldName}
                 initial={false}
                 animate={{
-                  y: shouldFloat || (isOutlined && (isFocused || hasValue))
-                    ? isOutlined
-                      ? sz.outlinedFloatY
-                      : labelPlacement === "inside"
-                        ? sz.floatY
-                        : sz.floatYOutside
-                    : isOutlined
-                      ? sz.outlinedInitialY
-                      : sz.initialY,
-                  x: shouldFloat || (isOutlined && (isFocused || hasValue))
-                    ? isOutlined
-                      ? 0
-                      : labelPlacement === "inside"
-                        ? sz.floatX
-                        : sz.floatXOutside
+                  y: shouldFloat
+                    ? labelPlacement === "inside"
+                      ? sz.floatY
+                      : sz.floatYOutside
+                    : sz.initialY,
+                  x: shouldFloat
+                    ? labelPlacement === "inside"
+                      ? sz.floatX
+                      : sz.floatXOutside
                     : 0,
-                  scale: shouldFloat || (isOutlined && (isFocused || hasValue))
-                    ? isOutlined ? 0.75 : sz.floatScale
-                    : 1,
+                  scale: shouldFloat ? sz.floatScale : 1,
                 }}
                 transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
                 className={`
-                  absolute left-3 top-1/2 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
+                  absolute left-3 top-1/2 z-10 ${labelFloatingClasses} transition-colors duration-200
                   ${sz.textSize} ${labelClassName} ${
                     isFocused && color !== "default"
                       ? (focusTextColors[color] || "text-primary")
-                      : (shouldFloat || (isOutlined && (isFocused || hasValue)))
+                      : shouldFloat
                         ? isFocused
                           ? "text-neutral-800 dark:text-neutral-200"
                           : "text-neutral-700 dark:text-neutral-300"
                         : "text-neutral-400 dark:text-neutral-500"
                   }
                 `}
-                style={{ transformOrigin: isOutlined ? "left" : "top left" }}
+                style={{ transformOrigin: "top left" }}
               >
-                {label}
+                <FieldLabelContent label={label} isRequired={isRequired} />
               </motion.label>
             )}
 
@@ -997,22 +942,22 @@ const FileInput = ({
               {labelPlacement === "inside" && !isFloating && label && (
                 <span
                   className={`
-                    block font-medium select-none mb-0.5 text-neutral-500
+                    ${labelFloatingClasses} mb-0.5 text-neutral-500
                     ${sz.labelSize} ${labelClassName}
                   `}
                 >
-                  {label}
+                  <FieldLabelContent label={label} isRequired={isRequired} />
                 </span>
               )}
 
               <div className="flex-1 min-w-0 truncate pr-2 flex items-center">
                 {!singleFile ? (
-                  <span className={`text-neutral-400 dark:text-neutral-500 truncate select-none ${sz.textSize}`}>
+                  <span className={`${fieldPlaceholderClasses} truncate select-none`}>
                     {!isFloating || shouldFloat ? resolvedPlaceholder : "\u200b"}
                   </span>
                 ) : (
                   <span
-                    className={`truncate select-none ${sz.textSize} text-neutral-800 dark:text-neutral-100`}
+                    className={`${fieldValueClasses} truncate select-none text-neutral-800 dark:text-neutral-100`}
                   >
                     {singleFile instanceof File
                       ? singleFile.name
@@ -1082,7 +1027,7 @@ const FileInput = ({
                 className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 p-2.5 rounded-full transition-colors text-white duration-200 focus:outline-none"
                 title="Close"
               >
-                <FaXmark className="w-6 h-6 text-white" aria-hidden />
+                <FaXmark className="w-6 h-6 text-neutral-700 dark:text-neutral-300" aria-hidden />
               </button>
 
               {/* Modal Content */}
@@ -1098,13 +1043,13 @@ const FileInput = ({
                     src={previewUrl}
                     controls
                     autoPlay
-                    className="max-w-full max-h-full rounded-lg shadow-2xl object-contain bg-black"
+                    className={`max-w-full max-h-full ${getRadiusClass()} shadow-2xl object-contain bg-black`}
                   />
                 ) : isImage ? (
                   <img
                     src={previewUrl}
                     alt="Full Preview"
-                    className="max-w-full max-h-full rounded-lg shadow-2xl object-contain bg-neutral-900"
+                    className={`max-w-full max-h-full ${getRadiusClass()} shadow-2xl object-contain bg-neutral-900`}
                   />
                 ) : null}
               </motion.div>
@@ -1121,7 +1066,7 @@ const FileInput = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className={`mt-1.5 text-sm text-red-500 ${mode === "profile" ? "flex justify-center text-center" : ""
+            className={`${errorClasses} ${mode === "profile" ? "flex justify-center text-center" : ""
               } ${errorClassName}`}
           >
             {resolvedError as string}

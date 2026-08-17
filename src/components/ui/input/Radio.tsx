@@ -1,6 +1,8 @@
 import React, { forwardRef, useId } from "react";
 import type { FieldInputProps, FormikErrors, FormikTouched } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
+import { errorClasses, inputDisabledWrapperClasses, labelClasses } from "../shared/fieldStyles";
+import { FieldLabelContent } from "../shared/FieldLabelContent";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -23,6 +25,7 @@ interface RadioProps
   containerClassName?: string;
   labelClassName?: string;
   errorClassName?: string;
+  isRequired?: boolean;
   orientation?: RadioOrientation;
   color?: RadioColor;
   size?: "sm" | "md" | "lg";
@@ -75,6 +78,7 @@ const Radio = forwardRef<HTMLDivElement, RadioProps>((props, ref) => {
     containerClassName = "",
     labelClassName = "",
     errorClassName = "",
+    isRequired = false,
     orientation = "vertical",
     color = "primary",
     size = "md",
@@ -108,12 +112,6 @@ const Radio = forwardRef<HTMLDivElement, RadioProps>((props, ref) => {
 
   const isHorizontal = orientation === "horizontal";
 
-  const labelSizeMap = {
-    sm: "text-[10px] mb-1.5",
-    md: "text-xs mb-1.5",
-    lg: "text-sm mb-1.5",
-  };
-
   const optionSizeMap = {
     sm: {
       circle: "w-4 h-4",
@@ -136,7 +134,6 @@ const Radio = forwardRef<HTMLDivElement, RadioProps>((props, ref) => {
   };
 
   const currentSize = optionSizeMap[size] || optionSizeMap.md;
-  const currentLabelSize = labelSizeMap[size] || labelSizeMap.md;
 
   const gapClass = isHorizontal
     ? size === "sm" ? "gap-x-4 gap-y-2" : size === "lg" ? "gap-x-8 gap-y-4" : "gap-x-6 gap-y-3"
@@ -147,14 +144,15 @@ const Radio = forwardRef<HTMLDivElement, RadioProps>((props, ref) => {
       {/* Group Label */}
       {label && (
         <p
-          className={`font-medium text-neutral-600 dark:text-neutral-400 select-none ${currentLabelSize} ${labelClassName}`}
+          className={`${labelClasses} mb-2 ${labelClassName}`}
         >
-          {label}
+          <FieldLabelContent label={label} isRequired={isRequired} />
         </p>
       )}
 
       {/* Radio Options */}
       <div
+        role="radiogroup"
         className={`flex ${isHorizontal ? "flex-row flex-wrap" : "flex-col"} ${gapClass}`}
       >
         {options.map((opt, i) => {
@@ -167,7 +165,7 @@ const Radio = forwardRef<HTMLDivElement, RadioProps>((props, ref) => {
               key={i}
               htmlFor={optId}
               className={`relative inline-flex items-start gap-2.5 cursor-pointer group select-none ${
-                isOptDisabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
+                isOptDisabled ? inputDisabledWrapperClasses : ""
               }`}
             >
               {/* Hidden native input */}
@@ -212,9 +210,7 @@ const Radio = forwardRef<HTMLDivElement, RadioProps>((props, ref) => {
 
               {/* Label Text (+ optional description) */}
               <span className="flex flex-col leading-tight mt-[1px]">
-                <span
-                  className={`font-medium text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors duration-150 ${currentSize.text}`}
-                >
+                <span className={`${labelClasses} ${labelClassName}`}>
                   {opt.label}
                 </span>
                 {opt.description && (
@@ -237,7 +233,7 @@ const Radio = forwardRef<HTMLDivElement, RadioProps>((props, ref) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className={`mt-1.5 text-sm text-red-500 ${errorClassName}`}
+            className={`${errorClasses} ${errorClassName}`}
           >
             {fieldError}
           </motion.p>

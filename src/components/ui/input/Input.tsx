@@ -1,9 +1,39 @@
 import type { FieldInputProps, FormikErrors, FormikTouched } from "formik";
+import { getIn } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { forwardRef, useState } from "react";
 import { FaXmark } from "react-icons/fa6";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import Button from "../button/Button";
+import Chip from "../chip/Chip";
+import { DEFAULT_RADIUS, getRadiusClass, type Radius } from "../shared/radius";
+import {
+  errorClasses,
+  fieldPlaceholderClasses,
+  fieldValueClasses,
+  focusBorderColors,
+  focusTextColors,
+  fieldsetBorderColors,
+  getFlatFloatingLabelClass,
+  getFloatingLabelColorClass,
+  getInputDisabledClasses,
+  getInputVariantClasses,
+  getInteractiveBorderClass,
+  getShowOutlinedFloated,
+  getWrapperBaseClasses,
+  labelClasses,
+  labelFloatingClasses,
+  underlineColors,
+  type FieldColor,
+} from "../shared/fieldStyles";
+import { FieldLabelContent } from "../shared/FieldLabelContent";
+import { OutlinedFieldset, OutlinedMotionLabel } from "../shared/OutlinedFieldLabel";
+import {
+  formatDurationWhileTyping,
+  getDurationPlaceholder,
+  normalizeDurationValue,
+  type DurationFormat,
+} from "../shared/durationInput";
 
 interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "form" | "size"> {
@@ -13,28 +43,76 @@ interface InputProps
   startContent?: React.ReactNode;
   endContent?: React.ReactNode;
   containerClassName?: string;
+  wrapperClassName?: string;
   inputClassName?: string;
   labelClassName?: string;
   errorClassName?: string;
+  isRequired?: boolean;
   isPasswordToggle?: boolean;
   numInputs?: number;
   isClearable?: boolean;
+  /** When true, value is string[]; press Enter to add a chip from typed text */
+  isChipInput?: boolean;
+  /** Palette used for chip background/text classes in chip input mode */
+  chipColorClasses?: string[];
+  /** Optional resolver for per-chip color classes */
+  getChipColorClass?: (label: string, index: number) => string;
+  /** When true, value is a duration string with masked entry */
+  isDurationInput?: boolean;
+  /**
+   * Format for duration input. Defaults to "HH:mm" (2-digit hours).
+   * Use "HHH:mm" to allow up to 3-digit hours (e.g. "000:00" → "999:59").
+   */
+  format?: DurationFormat;
 
   // Premium HeroUI Variants
   size?: "sm" | "md" | "lg";
   variant?: "flat" | "bordered" | "underlined" | "faded";
-  radius?: "none" | "sm" | "md" | "lg" | "full";
+  radius?: Radius;
   color?: "default" | "primary" | "secondary" | "success" | "warning" | "danger";
   labelPlacement?: "inside" | "outside" | "outside-left" | "outside-top" | "outlined";
 
   // Formik integration
-  field?: FieldInputProps<string>;
+  field?: FieldInputProps<string | string[]>;
   form?: {
     errors: FormikErrors<any>;
     touched: FormikTouched<any>;
     setFieldValue?: (field: string, value: any) => void;
   };
 }
+
+const DEFAULT_CHIP_COLOR_CLASSES = [
+  "bg-orange-50 text-orange-800",
+  "bg-purple-50 text-purple-800",
+  "bg-blue-50 text-blue-800",
+  "bg-green-50 text-green-800",
+  "bg-primary-50 text-primary-800",
+  "bg-yellow-50 text-yellow-800",
+];
+
+const resolveChipColorClass = (
+  label: string,
+  index: number,
+  palette: string[],
+  getChipColorClass?: (label: string, index: number) => string,
+  previousClass?: string,
+) => {
+  if (getChipColorClass) {
+    return getChipColorClass(label, index);
+  }
+
+  let hash = 0;
+  for (let i = 0; i < label.length; i++) {
+    hash = label.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let colorIndex = Math.abs(hash) % palette.length;
+  if (previousClass && palette[colorIndex] === previousClass) {
+    colorIndex = (colorIndex + 1) % palette.length;
+  }
+
+  return palette[colorIndex];
+};
 
 const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const {
@@ -44,17 +122,24 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     startContent,
     endContent,
     containerClassName = "",
+    wrapperClassName = "",
     inputClassName = "",
     labelClassName = "",
     errorClassName = "",
+    isRequired = false,
     isPasswordToggle = false,
     numInputs: _numInputs,
     isClearable = false,
+    isChipInput = false,
+    isDurationInput = false,
+    format = "HH:mm" as DurationFormat,
+    chipColorClasses = DEFAULT_CHIP_COLOR_CLASSES,
+    getChipColorClass,
     size = "md",
     variant = "bordered",
-    radius = "md",
+    radius = DEFAULT_RADIUS,
     color = "primary",
-    labelPlacement = "outside",
+    labelPlacement = "outside-top",
     type = "text",
     field,
     form,
@@ -72,29 +157,111 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [internalValue, setInternalValue] = useState("");
+  const [chipDraft, setChipDraft] = useState("");
+
+  const fieldName = field?.name || (props.name as string | undefined);
+
+  const getChipValues = (): string[] => {
+    const raw = value !== undefined ? value : field?.value;
+    return Array.isArray(raw) ? raw : [];
+  };
+
+  const chipValues = isChipInput ? getChipValues() : [];
+
+  const setChipValues = (next: string[]) => {
+    if (form?.setFieldValue && fieldName) {
+      form.setFieldValue(fieldName, next);
+      return;
+    }
+
+    if (field?.onChange) {
+      const syntheticEvent = {
+        target: {
+          name: fieldName || "",
+          value: next,
+        },
+      } as unknown as React.ChangeEvent<HTMLInputElement>;
+      field.onChange(syntheticEvent);
+    }
+  };
 
   // Determine if the component is controlled (either via value prop or Formik field)
   const isControlled = value !== undefined || field !== undefined;
 
   // Prioritize explicitly passed value prop, fallback to Formik field value, then internal state
-  const inputValue = isControlled
-    ? (value !== undefined ? value : (field?.value ?? ""))
-    : internalValue;
+  const inputValue = isChipInput
+    ? chipDraft
+    : isControlled
+      ? (value !== undefined ? value : (field?.value ?? ""))
+      : internalValue;
 
-  const hasValue = String(inputValue).length > 0;
+  const displayValue = isDurationInput
+    ? typeof inputValue === "number"
+      ? normalizeDurationValue(inputValue, format)
+      : String(inputValue ?? "")
+    : inputValue;
+
+  const hasValue = isChipInput
+    ? chipDraft.length > 0 || chipValues.length > 0
+    : String(inputValue).length > 0;
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     setIsFocused(true);
     if (onFocus) onFocus(e);
   };
 
+  const emitValue = (nextValue: string) => {
+    if (!isControlled) {
+      setInternalValue(nextValue);
+    }
+
+    const syntheticEvent = {
+      target: {
+        name: fieldName || props.name || "",
+        value: nextValue,
+      },
+    } as React.ChangeEvent<HTMLInputElement>;
+
+    if (form?.setFieldValue && fieldName) {
+      form.setFieldValue(fieldName, nextValue);
+      return;
+    }
+    if (onChange) onChange(syntheticEvent);
+    if (field?.onChange) field.onChange(syntheticEvent);
+  };
+
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     setIsFocused(false);
+
+    if (isDurationInput) {
+      const currentVal = String(displayValue ?? "").trim();
+      if (!currentVal) {
+        if (String(inputValue ?? "").trim()) {
+          emitValue("");
+        }
+      } else {
+        const normalized = normalizeDurationValue(currentVal, format);
+        if (normalized !== currentVal) {
+          emitValue(normalized);
+        }
+      }
+    }
+
     if (onBlur) onBlur(e);
     if (field?.onBlur) field.onBlur(e);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isChipInput) {
+      setChipDraft(e.target.value);
+      return;
+    }
+
+    if (isDurationInput) {
+      emitValue(formatDurationWhileTyping(e.target.value, format));
+      return;
+    }
+
     if (!isControlled) {
       setInternalValue(e.target.value);
     }
@@ -106,7 +273,53 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     }
   };
 
+  const addChip = (raw: string) => {
+    const nextChip = raw.trim();
+    if (!nextChip) return;
+
+    const exists = chipValues.some((chip) => chip.toLowerCase() === nextChip.toLowerCase());
+    if (exists) {
+      setChipDraft("");
+      return;
+    }
+
+    setChipValues([...chipValues, nextChip]);
+    setChipDraft("");
+  };
+
+  const removeChip = (index: number) => {
+    setChipValues(chipValues.filter((_, chipIndex) => chipIndex !== index));
+  };
+
+  const handleChipKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addChip(chipDraft);
+      return;
+    }
+
+    if (e.key === "Backspace" && chipDraft.length === 0 && chipValues.length > 0) {
+      e.preventDefault();
+      setChipValues(chipValues.slice(0, -1));
+    }
+
+    if (restProps.onKeyDown) {
+      restProps.onKeyDown(e);
+    }
+  };
+
   const handleClear = () => {
+    if (isChipInput) {
+      setChipDraft("");
+      setChipValues([]);
+      return;
+    }
+
+    if (isDurationInput) {
+      emitValue("");
+      return;
+    }
+
     if (form?.setFieldValue && field?.name) {
       form.setFieldValue(field.name, "");
     } else if (field?.onChange) {
@@ -129,21 +342,20 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     }
   };
 
-  // Extract field name for accessing error and touched state from form
-  const fieldName = field?.name || (props.name as string | undefined);
-
   // Determine error and touched state - prioritize Formik form data
-  const fieldError = fieldName && form?.errors?.[fieldName] ? (form.errors[fieldName] as string) : error;
-  const fieldTouched = fieldName && form?.touched?.[fieldName] ? true : touched;
+  const fieldError = fieldName && getIn(form?.errors, fieldName) ? (getIn(form?.errors, fieldName) as string) : error;
+  const fieldTouched = fieldName && getIn(form?.touched, fieldName) ? true : touched;
 
   const isPassword = type === "password";
 
   const inputType =
-    isPassword && isPasswordToggle
-      ? showPassword
-        ? "text"
-        : "password"
-      : type;
+    isDurationInput
+      ? "text"
+      : isPassword && isPasswordToggle
+        ? showPassword
+          ? "text"
+          : "password"
+        : type;
 
   // Size Configurations
   const sizeConfigs = {
@@ -198,95 +410,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     },
   };
 
-  // Color-specific configurations
-  const flatColorClasses = {
-    default: "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus-within:bg-neutral-200 dark:focus-within:bg-neutral-700 text-foreground",
-    primary: "bg-primary-50 dark:bg-primary-950/20 hover:bg-primary-100 dark:hover:bg-primary-950/40 focus-within:bg-primary-100 dark:focus-within:bg-primary-950/40 text-primary",
-    secondary: "bg-secondary-50 dark:bg-secondary-950/20 hover:bg-secondary-100 dark:hover:bg-secondary-950/40 focus-within:bg-secondary-100 dark:focus-within:bg-secondary-950/40 text-secondary",
-    success: "bg-success-50 dark:bg-success-950/20 hover:bg-success-100 dark:hover:bg-success-950/40 focus-within:bg-success-100 dark:focus-within:bg-success-950/40 text-success",
-    warning: "bg-warning-50 dark:bg-warning-950/20 hover:bg-warning-100 dark:hover:bg-warning-950/40 focus-within:bg-warning-100 dark:focus-within:bg-warning-950/40 text-warning",
-    danger: "bg-danger-50 dark:bg-danger-950/20 hover:bg-danger-100 dark:hover:bg-danger-950/40 focus-within:bg-danger-100 dark:focus-within:bg-danger-950/40 text-danger",
-  };
-
-  const borderedColorClasses = {
-    default: "border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600 focus-within:border-neutral-500 dark:focus-within:border-neutral-500 text-foreground",
-    primary: "border-neutral-300 dark:border-neutral-700 hover:border-primary-300 dark:hover:border-primary-400 focus-within:border-primary text-primary",
-    secondary: "border-neutral-300 dark:border-neutral-700 hover:border-secondary-300 dark:hover:border-secondary-400 focus-within:border-secondary text-secondary",
-    success: "border-neutral-300 dark:border-neutral-700 hover:border-success-300 dark:hover:border-success-400 focus-within:border-success text-success",
-    warning: "border-neutral-300 dark:border-neutral-700 hover:border-warning-300 dark:hover:border-warning-400 focus-within:border-warning text-warning",
-    danger: "border-neutral-300 dark:border-neutral-700 hover:border-danger-300 dark:hover:border-danger-400 focus-within:border-danger text-danger",
-  };
-
-  const underlinedColorClasses = {
-    default: "border-b-neutral-200 focus-within:border-b-neutral-500 text-foreground",
-    primary: "border-b-primary-200 focus-within:border-b-primary text-primary",
-    secondary: "border-b-secondary-200 focus-within:border-b-secondary text-secondary",
-    success: "border-b-success-200 focus-within:border-b-success text-success",
-    warning: "border-b-warning-200 focus-within:border-b-warning text-warning",
-    danger: "border-b-danger-200 focus-within:border-b-danger text-danger",
-  };
-
-  const fadedColorClasses = {
-    default: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-neutral-400 text-foreground",
-    primary: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-primary text-primary",
-    secondary: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-secondary text-secondary",
-    success: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-success text-success",
-    warning: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-warning text-warning",
-    danger: "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 focus-within:border-danger text-danger",
-  };
-
-  const focusTextColors = {
-    default: "text-foreground",
-    primary: "text-primary",
-    secondary: "text-secondary",
-    success: "text-success",
-    warning: "text-warning",
-    danger: "text-danger",
-  };
-
-  const underlineColors = {
-    default: "bg-neutral-500",
-    primary: "bg-primary",
-    secondary: "bg-secondary",
-    success: "bg-success",
-    warning: "bg-warning",
-    danger: "bg-danger",
-  };
-
-  const focusBorderColors = {
-    default: "border-neutral-500",
-    primary: "border-primary",
-    secondary: "border-secondary",
-    success: "border-success",
-    warning: "border-warning",
-    danger: "border-danger",
-  };
-
-  const fieldsetBorderColors = {
-    default: "border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500 focus-within:border-neutral-500",
-    primary: "border-neutral-300 dark:border-neutral-700 group-hover:border-primary-300 dark:group-hover:border-primary-800 focus-within:border-primary",
-    secondary: "border-neutral-300 dark:border-neutral-700 group-hover:border-secondary-300 dark:group-hover:border-secondary-800 focus-within:border-secondary",
-    success: "border-neutral-300 dark:border-neutral-700 group-hover:border-success-300 dark:group-hover:border-success-800 focus-within:border-success",
-    warning: "border-neutral-300 dark:border-neutral-700 group-hover:border-warning-300 dark:group-hover:border-warning-800 focus-within:border-warning",
-    danger: "border-neutral-300 dark:border-neutral-700 group-hover:border-danger-300 dark:group-hover:border-danger-800 focus-within:border-danger",
-  };
-
   // Variant Configurations
   const variantConfigs = {
-    flat: `border-2 border-transparent ${flatColorClasses[color] || flatColorClasses.default}`,
-    bordered: `border-2 ${borderedColorClasses[color] || borderedColorClasses.default}`,
-    underlined: `border-b rounded-none relative ${underlinedColorClasses[color] || underlinedColorClasses.default}`,
-    faded: `border-2 ${fadedColorClasses[color] || fadedColorClasses.default}`,
+    flat: getInputVariantClasses("flat", color as FieldColor),
+    bordered: getInputVariantClasses("bordered", color as FieldColor),
+    underlined: getInputVariantClasses("underlined", color as FieldColor),
+    faded: getInputVariantClasses("faded", color as FieldColor),
   };
 
-  // Radius Configurations
-  const radiusConfigs = {
-    none: "rounded-none",
-    sm: "rounded-sm",
-    md: "rounded-md",
-    lg: "rounded-lg",
-    full: "rounded-full",
-  };
+  // Radius
+  const currentRadiusClass = resolvedVariant === "underlined" ? "rounded-none" : getRadiusClass(radius);
 
   const currentSize = sizeConfigs[size] || sizeConfigs.md;
   // When labelPlacement="outlined" the fieldset draws the border; wrapper gets no border
@@ -294,7 +427,24 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const currentVariantClass = isOutlined
     ? "bg-transparent border-none"
     : (variantConfigs[resolvedVariant] || variantConfigs.flat);
-  const currentRadiusClass = resolvedVariant === "underlined" ? "rounded-none" : (radiusConfigs[radius] || radiusConfigs.md);
+
+  const hasError = !!(fieldTouched && fieldError);
+
+  const wrapperBaseClasses = getWrapperBaseClasses({
+    wrapperClassName,
+    variant: resolvedVariant,
+    isOutlined,
+    isActive: isFocused,
+    hasError,
+  });
+
+  const interactiveBorderClass = getInteractiveBorderClass({
+    variant: resolvedVariant,
+    isOutlined,
+    isActive: isFocused,
+    hasError,
+    color: color as FieldColor,
+  });
 
   // Fallback map for start/end content maintaining backwards compatibility
   const actualStartContent = startContent;
@@ -302,30 +452,28 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
   const isFloating = labelPlacement === "inside" || labelPlacement === "outside";
   const shouldFloat = isFocused || hasValue || (isFloating && !!placeholder) || (isOutlined && !!placeholder);
+  const showOutlinedFloated = getShowOutlinedFloated(isOutlined, label, shouldFloat, isFocused, hasValue);
+  const fieldId = field?.name || props.id || props.name;
 
   // Render Label Helper
   const renderExternalLabel = () => {
     if (!label || isFloating || isOutlined) return null;
+
     return (
       <label
         htmlFor={field?.name || props.id || props.name}
-        className={`block font-medium select-none transition-colors duration-200 ${labelPlacement === "outside-left" ? "mb-0 shrink-0" : "mb-1.5"
-          } ${currentSize.labelSize} ${labelClassName} ${
-            isFocused && color !== "default"
-              ? (focusTextColors[color] || "text-primary")
-              : isFocused
-                ? "text-neutral-800 dark:text-neutral-200"
-                : "text-neutral-700 dark:text-neutral-300"
-          }`}
+        className={`${labelClasses} ${labelPlacement === "outside-left" ? "mb-0 shrink-0" : "mb-2"} ${labelClassName}`}
       >
-        {label}
+        <FieldLabelContent label={label} isRequired={isRequired} />
       </label>
     );
   };
 
   const isOutsideLeft = labelPlacement === "outside-left";
 
-  const resolvedPlaceholder = placeholder || "";
+  const resolvedPlaceholder = isDurationInput
+    ? (placeholder || getDurationPlaceholder(format))
+    : (placeholder || "");
 
   return (
     <div className={`w-full flow-root ${containerClassName}`}>
@@ -341,78 +489,80 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
             ${currentVariantClass}
             ${currentRadiusClass}
             ${currentSize.wrapperPadding}
-            ${fieldTouched && fieldError && !isOutlined ? "!border-red-500 dark:!border-red-500" : ""}
-            ${labelPlacement === "inside" ? currentSize.insideHeight : `${currentSize.outsideHeight} ${isFloating && label && !isOutlined ? "mt-6" : ""} ${isOutlined && label ? "mt-[10px]" : ""}`}
-            ${disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}
+            ${wrapperBaseClasses}
+            ${interactiveBorderClass}
+            ${isChipInput
+              ? `min-h-12 h-auto py-2 ${isFloating && label && !isOutlined ? "mt-6" : ""} ${isOutlined && label ? "mt-[10px]" : ""}`
+              : labelPlacement === "inside"
+                ? currentSize.insideHeight
+                : `${currentSize.outsideHeight} ${isFloating && label && !isOutlined ? "mt-6" : ""} ${isOutlined && label ? "mt-[10px]" : ""}`}
+            ${disabled ? getInputDisabledClasses(resolvedVariant, color as FieldColor) : ""}
           `}
         >
           {/* Outlined Fieldset Border and Legend Cutout */}
           {isOutlined && (
-            <fieldset
-              className={`
-                absolute inset-0 pointer-events-none transition-all duration-200 m-0 p-0
-                ${currentRadiusClass}
-                ${fieldTouched && fieldError
+            <OutlinedFieldset
+              showFloated={showOutlinedFloated}
+              radiusClass={currentRadiusClass}
+              borderClassName={
+                hasError
                   ? "border-2 border-red-500 dark:border-red-500"
                   : isFocused
                     ? `border-2 ${focusBorderColors[color] || "border-primary"}`
                     : `border-2 ${fieldsetBorderColors[color] || "border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-500"}`
-                }
-              `}
-            >
-              {label && (
-                <legend
-                  className={`
-                    ml-2 font-medium transition-all duration-200 ease-out block whitespace-nowrap overflow-hidden invisible
-                    ${shouldFloat || isFocused || hasValue ? "max-w-full px-1" : "max-w-0 px-0"}
-                  `}
-                  style={{
-                    fontSize: `${size === "sm" ? 9 : size === "lg" ? 12 : 10.5}px`,
-                    height: 0,
-                  }}
-                >
-                  <span>{label}</span>
-                </legend>
-              )}
-            </fieldset>
+              }
+              label={label}
+              isRequired={isRequired}
+              size={size}
+            />
           )}
 
-          {/* Floating Label */}
-          {(isFloating || isOutlined) && label && (
+          {isOutlined && label && (
+            <OutlinedMotionLabel
+              htmlFor={fieldId}
+              label={label}
+              isRequired={isRequired}
+              size={size}
+              showFloated={showOutlinedFloated}
+              outlinedFloatY={currentSize.outlinedFloatY}
+              outlinedInitialY={currentSize.outlinedInitialY}
+              textSizeClass={currentSize.textSize}
+              labelClassName={labelClassName}
+              colorClassName={getFloatingLabelColorClass(resolvedVariant, color as FieldColor, showOutlinedFloated, isFocused, hasError)}
+            />
+          )}
+
+          {isFloating && !isOutlined && label && (
             <motion.label
-              htmlFor={field?.name || props.id || props.name}
+              htmlFor={fieldId}
               initial={false}
               animate={{
-                y: shouldFloat || (isOutlined && (isFocused || hasValue))
-                  ? (isOutlined
-                    ? currentSize.outlinedFloatY
-                    : (labelPlacement === "inside" ? currentSize.floatY : currentSize.floatYOutside))
-                  : (isOutlined ? currentSize.outlinedInitialY : currentSize.initialY),
-                x: shouldFloat || (isOutlined && (isFocused || hasValue))
-                  ? (isOutlined
-                    ? 0
-                    : (labelPlacement === "inside" ? currentSize.floatX : currentSize.floatXOutside))
+                y: shouldFloat
+                  ? (labelPlacement === "inside" ? currentSize.floatY : currentSize.floatYOutside)
+                  : currentSize.initialY,
+                x: shouldFloat
+                  ? (labelPlacement === "inside" ? currentSize.floatX : currentSize.floatXOutside)
                   : (actualStartContent ? 32 : 0),
-                scale: shouldFloat || (isOutlined && (isFocused || hasValue))
-                  ? (isOutlined ? 0.75 : currentSize.floatScale)
-                  : 1,
+                scale: shouldFloat ? currentSize.floatScale : 1,
               }}
               transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
               className={`
-                absolute left-3 top-1/2 z-10 font-medium pointer-events-none origin-left transition-colors duration-200
+                absolute left-3 top-1/2 z-10 ${labelFloatingClasses} transition-colors duration-200
                 ${currentSize.textSize}
                  ${labelClassName} ${
-                  isFocused && color !== "default"
-                    ? (focusTextColors[color] || "text-primary")
-                    : (shouldFloat || (isOutlined && (isFocused || hasValue)))
-                      ? isFocused
-                        ? "text-neutral-800 dark:text-neutral-200"
-                        : "text-neutral-700 dark:text-neutral-300"
-                      : "text-neutral-400 dark:text-neutral-500"
+                  resolvedVariant === "flat"
+                    ? getFlatFloatingLabelClass(color as FieldColor, shouldFloat, isFocused)
+                    : isFocused && color !== "default"
+                      ? (focusTextColors[color] || "text-primary")
+                      : shouldFloat
+                        ? isFocused
+                          ? "text-neutral-800 dark:text-neutral-200"
+                          : "text-neutral-700 dark:text-neutral-300"
+                        : "text-neutral-400 dark:text-neutral-500"
                 }
               `}
             >
-              {label}
+              <FieldLabelContent label={label} isRequired={isRequired} />
             </motion.label>
           )}
 
@@ -423,30 +573,67 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
             </div>
           )}
 
-          {/* Central Stack: Input */}
-          <div className="flex flex-col flex-1 min-w-0 justify-center">
+          {/* Central Stack: Input / Chip Input */}
+          <div className={`flex flex-1 min-w-0 ${isChipInput ? "flex-wrap items-center gap-1.5" : "flex-col justify-center"}`}>
+            {isChipInput &&
+              chipValues.map((chip, index) => {
+                const previousToneClass =
+                  index > 0
+                    ? resolveChipColorClass(
+                        chipValues[index - 1],
+                        index - 1,
+                        chipColorClasses,
+                        getChipColorClass,
+                      )
+                    : undefined;
+
+                return (
+                  <Chip
+                    key={`${chip}-${index}`}
+                    variant="flat"
+                    toneClassName={resolveChipColorClass(
+                      chip,
+                      index,
+                      chipColorClasses,
+                      getChipColorClass,
+                      previousToneClass,
+                    )}
+                    size={size}
+                    radius="lg"
+                    isDisabled={disabled}
+                    onClose={disabled ? undefined : () => removeChip(index)}
+                    className="max-w-[180px] font-semibold"
+                  >
+                    <span className="truncate">{chip}</span>
+                  </Chip>
+                );
+              })}
+
             <input
               {...restProps}
               id={field?.name || props.id || props.name}
-              name={field?.name || props.name}
-              value={inputValue}
+              name={isChipInput ? undefined : field?.name || props.name}
+              value={displayValue}
               onChange={handleChange}
               onFocus={handleFocus}
               onBlur={handleBlur}
+              onKeyDown={isChipInput ? handleChipKeyDown : restProps.onKeyDown}
               onWheel={(e) => {
                 if (type === "number") {
                   (e.target as HTMLInputElement).blur();
                 }
               }}
               ref={ref}
-              type={inputType}
+              type={isChipInput ? "text" : inputType}
+              inputMode={isDurationInput ? "numeric" : restProps.inputMode}
+              maxLength={isDurationInput ? (format === "HHHH:mm" ? 7 : format === "HHH:mm" ? 6 : 5) : restProps.maxLength}
               placeholder={(!isFloating && !isOutlined) || shouldFloat ? resolvedPlaceholder : ""}
               disabled={disabled}
               className={`
-                w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0 p-0
-                 text-neutral-800 dark:text-neutral-100 placeholder-neutral-400
-                ${currentSize.textSize}
-                ${labelPlacement === "inside" && isFloating && shouldFloat ? (size === "sm" ? "mt-3" : size === "lg" ? "mt-5" : "mt-4") : ""}
+                bg-transparent border-none outline-none focus:outline-none focus:ring-0 p-0
+                ${fieldValueClasses} ${fieldPlaceholderClasses}
+                ${isChipInput ? "flex-1 min-w-[120px]" : "w-full"}
+                ${labelPlacement === "inside" && isFloating && shouldFloat && !isChipInput ? (size === "sm" ? "mt-3" : size === "lg" ? "mt-5" : "mt-4") : ""}
                 ${inputClassName}
               `}
             />
@@ -518,7 +705,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className={`mt-1.5 text-sm text-red-500 ${errorClassName}`}
+            className={`${errorClasses} ${errorClassName}`}
           >
             {fieldError}
           </motion.p>
