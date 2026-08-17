@@ -551,14 +551,54 @@
     console.warn('unable to connect to top frame for connecting dev tools');
   }
 </script>
+<style>
+  /* Limit maximum height of Storybook "Show code" block and enable vertical scrollbar */
+  .docblock-source,
+  div[class*="docblock-source"],
+  pre[class*="prismjs"],
+  .prismjs,
+  [data-side="bottom"] pre,
+  .sb-story-code {
+    max-height: 380px !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+  }
 
-    <script type="module" crossorigin src="./assets/iframe-BzRfQavU.js"></script>
+  /* Custom thin scrollbar styling inside Storybook code blocks */
+  .docblock-source::-webkit-scrollbar,
+  div[class*="docblock-source"]::-webkit-scrollbar,
+  pre::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .docblock-source::-webkit-scrollbar-track,
+  div[class*="docblock-source"]::-webkit-scrollbar-track,
+  pre::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .docblock-source::-webkit-scrollbar-thumb,
+  div[class*="docblock-source"]::-webkit-scrollbar-thumb,
+  pre::-webkit-scrollbar-thumb {
+    background: rgba(156, 163, 175, 0.4);
+    border-radius: 9999px;
+  }
+
+  .docblock-source::-webkit-scrollbar-thumb:hover,
+  div[class*="docblock-source"]::-webkit-scrollbar-thumb:hover,
+  pre::-webkit-scrollbar-thumb:hover {
+    background: rgba(156, 163, 175, 0.7);
+  }
+</style>
+
+    <script type="module" crossorigin src="./assets/iframe-Ucf_MO8K.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/chunk-jRWAZmH_.js">
     <link rel="modulepreload" crossorigin href="./assets/preload-helper-Dowy-9fu.js">
     <link rel="modulepreload" crossorigin href="./assets/react-DDzTVtu_.js">
     <link rel="modulepreload" crossorigin href="./assets/chunk-A242L54C-DuhLLRyN.js">
     <link rel="modulepreload" crossorigin href="./assets/chunk-KJHJLCBK-CX4iZKWH.js">
-    <link rel="stylesheet" crossorigin href="./assets/iframe-DsbghSxe.css">
+    <link rel="stylesheet" crossorigin href="./assets/iframe-DVBYD1BQ.css">
   </head>
 
   <body>

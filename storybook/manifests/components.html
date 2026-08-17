@@ -588,13 +588,13 @@
 <header>
   <div class="wrap">
     <h1>Manifest Debugger</h1>
-    <div class="summary"><a class="filter-pill all" data-k="all" href="#filter-all">All</a><span class="filter-pill ok" aria-disabled="true">32 components ok</span><a class="filter-pill info" data-k="infos" href="#filter-infos">32/32 infos</a><span class="filter-pill ok" aria-disabled="true">278 stories ok</span><a class="filter-pill ok" data-k="docs" href="#filter-docs">1 doc ok</a></div>
+    <div class="summary"><a class="filter-pill all" data-k="all" href="#filter-all">All</a><span class="filter-pill ok" aria-disabled="true">32 components ok</span><a class="filter-pill info" data-k="infos" href="#filter-infos">32/32 infos</a><span class="filter-pill ok" aria-disabled="true">275 stories ok</span><a class="filter-pill ok" data-k="docs" href="#filter-docs">1 doc ok</a></div>
   </div>
 </header>
 <main>
   <div class="wrap">
     <div class="note info" style="margin-bottom: 16px;">
-            <strong>Tip:</strong> You are using <code>react-docgen</code> (the default). Generation took <strong>4.1s</strong>. For higher quality prop types, consider switching to <code>react-docgen-typescript</code> in your <code>main.ts</code>:
+            <strong>Tip:</strong> You are using <code>react-docgen</code> (the default). Generation took <strong>4.5s</strong>. For higher quality prop types, consider switching to <code>react-docgen-typescript</code> in your <code>main.ts</code>:
             <pre><code>typescript: {
   reactDocgen: 'react-docgen-typescript',
 }</code></pre>
@@ -994,7 +994,19 @@ isDisabled?: boolean
 
 name?: string
 
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot;
 
 showFallback?: boolean
 
@@ -1133,7 +1145,7 @@ import { FaCheck } from "react-icons/fa6";</code></pre>
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Badge</h2>
       <div class="badges">
-        <label for="c-2-components-badge-props" class="badge ok as-toggle">10 prop types</label>
+        <label for="c-2-components-badge-props" class="badge ok as-toggle">11 prop types</label>
         <label for="c-2-components-badge-info" class="badge info as-toggle">1 info</label>
         <label for="c-2-components-badge-stories" class="badge ok as-toggle">8 stories</label>
         
@@ -1169,7 +1181,7 @@ import { FaCheck } from "react-icons/fa6";</code></pre>
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">10 prop types</span>
+              <span class="badge ok">11 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/badge/Badge.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -1191,7 +1203,9 @@ showOutline?: boolean
 
 size?: &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot;
 
-variant?: &quot;solid&quot; | &quot;flat&quot; | &quot;faded&quot; | &quot;shadow&quot;</code></pre>
+variant?: &quot;solid&quot; | &quot;flat&quot; | &quot;faded&quot; | &quot;shadow&quot;
+
+wrapperClassName?: string</code></pre>
           </div>
         </div>
     
@@ -1214,7 +1228,13 @@ variant?: &quot;solid&quot; | &quot;flat&quot; | &quot;faded&quot; | &quot;shado
               </div>
               
               
-              <pre><code>const Default = () =&gt; &lt;Badge content=&quot;5&quot; color=&quot;danger&quot;&gt;{avatarBoxChild}&lt;/Badge&gt;;</code></pre>
+              <pre><code>const Default = () =&gt; &lt;Badge color=&quot;danger&quot; content=&quot;5&quot;&gt;
+    &lt;Avatar
+        size=&quot;md&quot;
+        radius=&quot;lg&quot;
+        name=&quot;Jane Doe&quot;
+        src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
+&lt;/Badge&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -1225,13 +1245,25 @@ variant?: &quot;solid&quot; | &quot;flat&quot; | &quot;faded&quot; | &quot;shado
               
               <pre><code>const Sizes = () =&gt; &lt;div className=&quot;flex gap-10 items-center&quot;&gt;
     &lt;Badge size=&quot;sm&quot; content=&quot;5&quot;&gt;
-        {avatarBoxChild}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Jane Doe&quot;
+            src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
     &lt;Badge size=&quot;md&quot; content=&quot;5&quot;&gt;
-        {avatarBoxChild}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Jane Doe&quot;
+            src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
     &lt;Badge size=&quot;lg&quot; content=&quot;5&quot;&gt;
-        {avatarBoxChild}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Jane Doe&quot;
+            src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
 &lt;/div&gt;;</code></pre>
             </div>
@@ -1244,22 +1276,46 @@ variant?: &quot;solid&quot; | &quot;flat&quot; | &quot;faded&quot; | &quot;shado
               
               <pre><code>const Colors = () =&gt; &lt;div className=&quot;flex gap-8&quot;&gt;
     &lt;Badge color=&quot;default&quot; content=&quot;1&quot;&gt;
-        {avatarBoxChild}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Jane Doe&quot;
+            src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
     &lt;Badge color=&quot;primary&quot; content=&quot;1&quot;&gt;
-        {avatarBoxChild}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Jane Doe&quot;
+            src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
     &lt;Badge color=&quot;secondary&quot; content=&quot;1&quot;&gt;
-        {avatarBoxChild}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Jane Doe&quot;
+            src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
     &lt;Badge color=&quot;success&quot; content=&quot;1&quot;&gt;
-        {avatarBoxChild}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Jane Doe&quot;
+            src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
     &lt;Badge color=&quot;warning&quot; content=&quot;1&quot;&gt;
-        {avatarBoxChild}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Jane Doe&quot;
+            src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
     &lt;Badge color=&quot;danger&quot; content=&quot;1&quot;&gt;
-        {avatarBoxChild}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Jane Doe&quot;
+            src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
 &lt;/div&gt;;</code></pre>
             </div>
@@ -1272,16 +1328,32 @@ variant?: &quot;solid&quot; | &quot;flat&quot; | &quot;faded&quot; | &quot;shado
               
               <pre><code>const Variants = () =&gt; &lt;div className=&quot;flex gap-8&quot;&gt;
     &lt;Badge variant=&quot;solid&quot; color=&quot;warning&quot; content=&quot;5&quot;&gt;
-        {avatarSolid}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Solid Variant&quot;
+            src=&quot;https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
     &lt;Badge variant=&quot;flat&quot; color=&quot;warning&quot; content=&quot;5&quot;&gt;
-        {avatarFlat}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Flat Variant&quot;
+            src=&quot;https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
     &lt;Badge variant=&quot;faded&quot; color=&quot;warning&quot; content=&quot;5&quot;&gt;
-        {avatarFaded}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Faded Variant&quot;
+            src=&quot;https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
     &lt;Badge variant=&quot;shadow&quot; color=&quot;warning&quot; content=&quot;5&quot;&gt;
-        {avatarShadow}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Shadow Variant&quot;
+            src=&quot;https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
 &lt;/div&gt;;</code></pre>
             </div>
@@ -1294,16 +1366,32 @@ variant?: &quot;solid&quot; | &quot;flat&quot; | &quot;faded&quot; | &quot;shado
               
               <pre><code>const Placements = () =&gt; &lt;div className=&quot;grid grid-cols-2 gap-10 p-4&quot;&gt;
     &lt;Badge placement=&quot;top-left&quot; content=&quot;New&quot;&gt;
-        {avatarBoxChild}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Jane Doe&quot;
+            src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
     &lt;Badge placement=&quot;top-right&quot; content=&quot;New&quot;&gt;
-        {avatarBoxChild}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Jane Doe&quot;
+            src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
     &lt;Badge placement=&quot;bottom-left&quot; content=&quot;New&quot;&gt;
-        {avatarBoxChild}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Jane Doe&quot;
+            src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
     &lt;Badge placement=&quot;bottom-right&quot; content=&quot;New&quot;&gt;
-        {avatarBoxChild}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Jane Doe&quot;
+            src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
 &lt;/div&gt;;</code></pre>
             </div>
@@ -1314,7 +1402,13 @@ variant?: &quot;solid&quot; | &quot;flat&quot; | &quot;faded&quot; | &quot;shado
               </div>
               
               
-              <pre><code>const Dot = () =&gt; &lt;Badge color=&quot;success&quot;&gt;{avatarBoxChild}&lt;/Badge&gt;;</code></pre>
+              <pre><code>const Dot = () =&gt; &lt;Badge color=&quot;success&quot;&gt;
+    &lt;Avatar
+        size=&quot;md&quot;
+        radius=&quot;lg&quot;
+        name=&quot;Jane Doe&quot;
+        src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
+&lt;/Badge&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -1326,11 +1420,18 @@ variant?: &quot;solid&quot; | &quot;flat&quot; | &quot;faded&quot; | &quot;shado
               <pre><code>const Shapes = () =&gt; &lt;div className=&quot;flex gap-12 p-4&quot;&gt;
     {/* Rectangle Shape */}
     &lt;Badge shape=&quot;rectangle&quot; color=&quot;danger&quot; content=&quot;5&quot;&gt;
-        {avatarBoxChild}
+        &lt;Avatar
+            size=&quot;md&quot;
+            radius=&quot;lg&quot;
+            name=&quot;Jane Doe&quot;
+            src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
-    {/* Circle Shape — offset sits diagonally aligned to the circle perimeter */}
+    {/* Circle Shape */}
     &lt;Badge shape=&quot;circle&quot; color=&quot;danger&quot; content=&quot;5&quot;&gt;
-        {avatarChild}
+        &lt;Avatar
+            size=&quot;md&quot;
+            name=&quot;Jane Doe&quot;
+            src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot; /&gt;
     &lt;/Badge&gt;
 &lt;/div&gt;;</code></pre>
             </div>
@@ -1346,7 +1447,12 @@ variant?: &quot;solid&quot; | &quot;flat&quot; | &quot;faded&quot; | &quot;shado
   return (
     &lt;div className=&quot;flex flex-col gap-4 items-center&quot;&gt;
       &lt;Badge content=&quot;4&quot; color=&quot;danger&quot; isInvisible={invisible}&gt;
-        {avatarBoxChild}
+        &lt;Avatar
+          size=&quot;md&quot;
+          radius=&quot;lg&quot;
+          name=&quot;Jane Doe&quot;
+          src=&quot;https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=128&amp;h=128&amp;q=80&quot;
+        /&gt;
       &lt;/Badge&gt;
       &lt;button
         onClick={() =&gt; setInvisible(!invisible)}
@@ -1375,9 +1481,9 @@ variant?: &quot;solid&quot; | &quot;flat&quot; | &quot;faded&quot; | &quot;shado
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Breadcrumbs</h2>
       <div class="badges">
-        <label for="c-3-components-breadcrumbs-props" class="badge ok as-toggle">10 prop types</label>
+        <label for="c-3-components-breadcrumbs-props" class="badge ok as-toggle">11 prop types</label>
         <label for="c-3-components-breadcrumbs-info" class="badge info as-toggle">1 info</label>
-        <label for="c-3-components-breadcrumbs-stories" class="badge ok as-toggle">10 stories</label>
+        <label for="c-3-components-breadcrumbs-stories" class="badge ok as-toggle">9 stories</label>
         
         
       </div>
@@ -1411,7 +1517,7 @@ variant?: &quot;solid&quot; | &quot;flat&quot; | &quot;faded&quot; | &quot;shado
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">10 prop types</span>
+              <span class="badge ok">11 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/breadcrumbs/Breadcrumbs.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -1441,7 +1547,19 @@ items?: BreadcrumbItem[]
  * The border radius of the breadcrumbs container (applicable to solid and bordered variants).
  * @default &quot;md&quot;
  */
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot; = &quot;md&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot; = &quot;lg&quot;
 
 /**
  * Custom separator between breadcrumbs.
@@ -1469,7 +1587,9 @@ underline?: &quot;none&quot; | &quot;hover&quot; | &quot;always&quot; | &quot;ac
  * The visual style variant of the breadcrumbs container.
  * @default &quot;light&quot;
  */
-variant?: &quot;solid&quot; | &quot;bordered&quot; | &quot;light&quot; = &quot;light&quot;</code></pre>
+variant?: &quot;solid&quot; | &quot;bordered&quot; | &quot;light&quot; = &quot;light&quot;
+
+wrapperClassName?: string = &quot;&quot;</code></pre>
           </div>
         </div>
     
@@ -1548,19 +1668,6 @@ import { FaCompactDisc, FaHouse, FaMusic, FaUser, FaVolumeHigh } from "react-ico
               
               <pre><code>const Colors = (args) =&gt; (
   &lt;div className=&quot;p-6 bg-background rounded-xl&quot;&gt;
-    {ColorMatrix(args)}
-  &lt;/div&gt;
-);</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">Dark Colors</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const DarkColors = (args) =&gt; (
-  &lt;div className=&quot;dark p-6 bg-background rounded-xl&quot;&gt;
     {ColorMatrix(args)}
   &lt;/div&gt;
 );</code></pre>
@@ -1661,13 +1768,7 @@ import { FaCompactDisc, FaHouse, FaMusic, FaUser, FaVolumeHigh } from "react-ico
               
               
               <pre><code>const Disabled = () =&gt; &lt;div className=&quot;flex flex-col gap-4 p-6 bg-background rounded-xl&quot;&gt;
-    &lt;Breadcrumbs color=&quot;primary&quot; variant=&quot;solid&quot; radius=&quot;full&quot; items={musicItems} /&gt;
-    &lt;Breadcrumbs
-        color=&quot;primary&quot;
-        variant=&quot;solid&quot;
-        radius=&quot;full&quot;
-        isDisabled
-        items={musicItems} /&gt;
+    &lt;Breadcrumbs color=&quot;primary&quot; variant=&quot;solid&quot; isDisabled items={musicItems} /&gt;
 &lt;/div&gt;;</code></pre>
             </div>
         </div>
@@ -1687,7 +1788,7 @@ import { FaCompactDisc, FaHouse, FaMusic, FaUser, FaVolumeHigh } from "react-ico
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Button</h2>
       <div class="badges">
-        <label for="c-4-components-button-props" class="badge ok as-toggle">14 prop types</label>
+        <label for="c-4-components-button-props" class="badge ok as-toggle">15 prop types</label>
         <label for="c-4-components-button-info" class="badge info as-toggle">1 info</label>
         <label for="c-4-components-button-stories" class="badge ok as-toggle">10 stories</label>
         
@@ -1723,7 +1824,7 @@ import { FaCompactDisc, FaHouse, FaMusic, FaUser, FaVolumeHigh } from "react-ico
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">14 prop types</span>
+              <span class="badge ok">15 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/button/Button.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -1743,9 +1844,26 @@ isIconOnly?: boolean = false
 
 isLoading?: boolean = false
 
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot; = &quot;md&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot; = &quot;lg&quot;
 
-size?: &quot;xs&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; = &quot;md&quot;
+size?: &quot;xs&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; = &quot;sm&quot;
+
+/**
+ * Semantic slot used by parent components (e.g. Table tree chevron)
+ */
+slot?: string
 
 spinner?: React.ReactNode
 
@@ -1993,7 +2111,19 @@ isPressable?: boolean = false
 
 onPress?: (e: any) =&gt; void
 
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot; = &quot;lg&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot; = &quot;2xl&quot;
 
 shadow?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; = &quot;md&quot;</code></pre>
           </div>
@@ -2234,7 +2364,7 @@ shadow?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; = &
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Checkbox</h2>
       <div class="badges">
-        <label for="c-6-components-checkbox-props" class="badge ok as-toggle">17 prop types</label>
+        <label for="c-6-components-checkbox-props" class="badge ok as-toggle">18 prop types</label>
         <label for="c-6-components-checkbox-info" class="badge info as-toggle">1 info</label>
         <label for="c-6-components-checkbox-stories" class="badge ok as-toggle">10 stories</label>
         
@@ -2270,7 +2400,7 @@ shadow?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; = &
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">17 prop types</span>
+              <span class="badge ok">18 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/input/Checkbox.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -2301,6 +2431,8 @@ indeterminate?: boolean
 
 isIndeterminate?: boolean
 
+isRequired?: boolean
+
 label?: string
 
 labelClassName?: string
@@ -2311,7 +2443,19 @@ onChange?: ((value: any) =&gt; void) | any
 
 options?: { label: string; value: string | number; description?: string }[]
 
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot;
 
 size?: &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot;
 
@@ -2593,7 +2737,7 @@ import { FaHeart, FaPlus } from "react-icons/fa6";</code></pre>
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> CheckboxGroup</h2>
       <div class="badges">
-        <label for="c-7-components-checkboxgroup-props" class="badge ok as-toggle">19 prop types</label>
+        <label for="c-7-components-checkboxgroup-props" class="badge ok as-toggle">20 prop types</label>
         <label for="c-7-components-checkboxgroup-info" class="badge info as-toggle">1 info</label>
         <label for="c-7-components-checkboxgroup-stories" class="badge ok as-toggle">8 stories</label>
         
@@ -2629,7 +2773,7 @@ import { FaHeart, FaPlus } from "react-icons/fa6";</code></pre>
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">19 prop types</span>
+              <span class="badge ok">20 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/input/CheckboxGroup.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -2660,6 +2804,8 @@ icon?: React.ReactNode
 
 isIndeterminate?: boolean
 
+isRequired?: boolean
+
 /**
  * Group heading label
  */
@@ -2678,7 +2824,19 @@ options?: CheckboxGroupOption[]
 
 orientation?: &quot;horizontal&quot; | &quot;vertical&quot;
 
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot;
 
 size?: &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot;
 
@@ -2980,7 +3138,7 @@ import { FaHeart } from "react-icons/fa6";</code></pre>
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Chip</h2>
       <div class="badges">
-        <label for="c-8-components-chip-props" class="badge ok as-toggle">9 prop types</label>
+        <label for="c-8-components-chip-props" class="badge ok as-toggle">10 prop types</label>
         <label for="c-8-components-chip-info" class="badge info as-toggle">1 info</label>
         <label for="c-8-components-chip-stories" class="badge ok as-toggle">8 stories</label>
         
@@ -3016,7 +3174,7 @@ import { FaHeart } from "react-icons/fa6";</code></pre>
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">9 prop types</span>
+              <span class="badge ok">10 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/chip/Chip.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -3030,11 +3188,28 @@ isDisabled?: boolean = false
 
 onClose?: () =&gt; void
 
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot; = &quot;full&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot; = &quot;lg&quot;
 
 size?: &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; = &quot;md&quot;
 
 startContent?: React.ReactNode
+
+/**
+ * Custom background/text classes; overrides variant color tokens when provided
+ */
+toneClassName?: string
 
 variant?: &quot;solid&quot; | &quot;bordered&quot; | &quot;light&quot; | &quot;flat&quot; | &quot;faded&quot; | &quot;shadow&quot; | &quot;dot&quot; = &quot;solid&quot;</code></pre>
           </div>
@@ -3170,486 +3345,14 @@ import { FaCamera, FaHeart } from "react-icons/fa6";</code></pre>
   no-story-error
   no-doc-error"
   role="listitem"
-  aria-label="CustomTable">
+  aria-label="DateInputComponent">
   <div class="head">
     <div class="title">
-      <h2><span class="status-dot dot-ok"></span> CustomTable</h2>
+      <h2><span class="status-dot dot-ok"></span> DateInputComponent</h2>
       <div class="badges">
-        <label for="c-9-components-table-props" class="badge ok as-toggle">31 prop types</label>
-        <label for="c-9-components-table-info" class="badge info as-toggle">1 info</label>
-        <label for="c-9-components-table-stories" class="badge ok as-toggle">14 stories</label>
-        
-        
-      </div>
-    </div>
-    <div class="meta" title="./src/stories/stories/Table.stories.tsx">components-table · ./src/stories/stories/Table.stories.tsx</div>
-    
-    
-    
-  </div>
-
-  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  
-  <input id="c-9-components-table-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-9-components-table-stories" class="tg tg-stories" type="checkbox" hidden />
-  
-  
-  <input id="c-9-components-table-props" class="tg tg-props" type="checkbox" hidden />
-
-  <div class="panels">
-    
-    
-        <div class="panel panel-info">
-          
-    <div class="note info">
-      <div class="note-title">Info</div>
-      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
-    </div>
-        </div>
-    
-        <div class="panel panel-props">
-          <div class="note ok">
-            <div class="row">
-              <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">31 prop types</span>
-            </div>
-            <pre><code>Component: src/components/ui/table/CustomTable.tsx::CustomTable</code></pre>
-            <pre><code>Props:</code></pre>
-            <pre><code>className?: string
-
-columns: ColumnDef&lt;T&gt;[]
-
-data: T[]
-
-defaultSortKey?: string
-
-defaultSortOrder?: &quot;asc&quot; | &quot;desc&quot; = &quot;desc&quot;
-
-enableCheckbox?: boolean = false
-
-enableExpanding?: boolean = false
-
-enableFiltering?: boolean = false
-
-enableInfiniteScroll?: boolean = false
-
-enablePagination?: boolean = false
-
-enableSorting?: boolean = false
-
-getSubRows?: (row: T) =&gt; any[] | undefined
-
-hasMore?: boolean
-
-hideHeader?: boolean = false
-
-infiniteScrollMaxHeight?: string = &quot;24rem&quot;
-
-infiniteScrollStep?: number
-
-infiniteScrollThreshold?: number = 100
-
-isStriped?: boolean = false
-
-loading?: boolean = false
-
-manualPagination?: boolean = true
-
-onPaginationChange?: (pagination: { page: number; limit: number }) =&gt; void
-
-onRowClick?: (row: T) =&gt; void
-
-pageSize?: number = 10
-
-pagination?: { page: number; limit: number }
-
-paginationColor?: &quot;primary&quot; | &quot;secondary&quot; | &quot;success&quot; | &quot;warning&quot; | &quot;danger&quot; | &quot;default&quot; = &quot;primary&quot;
-
-paginationSize?: &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; = &quot;md&quot;
-
-paginationVariant?: &quot;solid&quot; | &quot;bordered&quot; | &quot;light&quot; | &quot;flat&quot; = &quot;solid&quot;
-
-scrollBehavior?: &quot;inside&quot; | &quot;outside&quot; = &quot;inside&quot;
-
-showPaginationControls?: boolean = true
-
-title?: string
-
-totalCount?: number</code></pre>
-          </div>
-        </div>
-    
-        <div class="panel panel-stories">
-          
-          
-          
-          <div class="note ok">
-                <div class="row">
-                  <span class="ex-name">Imports</span>
-                </div>
-                <pre><code>import { Avatar, Chip, CustomTable } from "vite-ts-tailwind-template";</code></pre>
-              </div>
-          
-          
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">Default</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const Default = () =&gt; &lt;CustomTable
-    enablePagination={false}
-    enableSorting={false}
-    enableFiltering={false}
-    enableCheckbox={false}
-    enableExpanding={false}
-    hideHeader={false}
-    loading={false}
-    scrollBehavior=&quot;outside&quot;
-    data={users}
-    columns={userColumns} /&gt;;</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">With Pagination</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const WithPagination = () =&gt; {
-    const [pagination, setPagination] = useState({ page: 1, limit: 5 });
-
-    return (
-        &lt;CustomTable
-            paginationSize=&quot;md&quot;
-            paginationColor=&quot;primary&quot;
-            paginationVariant=&quot;solid&quot;
-            showPaginationControls
-            data={users}
-            columns={userColumns}
-            enablePagination
-            manualPagination={false}
-            pagination={pagination}
-            onPaginationChange={setPagination}
-            totalCount={users.length}
-            pageSize={5}
-            scrollBehavior=&quot;outside&quot; /&gt;
-    );
-};</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">With Sorting</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const WithSorting = () =&gt; &lt;div&gt;
-    &lt;p className=&quot;text-sm text-gray-500 mb-2&quot;&gt;Click on a column header to sort. Columns with sorting enabled: Name, Email, Role, Status, Joined, Salary.&lt;/p&gt;
-    &lt;CustomTable
-        defaultSortKey=&quot;name&quot;
-        defaultSortOrder=&quot;asc&quot;
-        data={users}
-        columns={userColumns}
-        enableSorting
-        scrollBehavior=&quot;outside&quot; /&gt;
-&lt;/div&gt;;</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">With Checkbox Selection</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const WithCheckboxSelection = () =&gt; &lt;CustomTable
-    data={users}
-    columns={userColumns}
-    enableCheckbox
-    scrollBehavior=&quot;outside&quot; /&gt;;</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">All Features Combined</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const AllFeatures = () =&gt; {
-    const [pagination, setPagination] = useState({ page: 1, limit: 5 });
-
-    return (
-        &lt;CustomTable
-            defaultSortKey=&quot;salary&quot;
-            defaultSortOrder=&quot;desc&quot;
-            data={users}
-            columns={userColumns}
-            enablePagination
-            enableSorting
-            enableCheckbox
-            manualPagination={false}
-            pagination={pagination}
-            onPaginationChange={setPagination}
-            totalCount={users.length}
-            pageSize={5}
-            scrollBehavior=&quot;outside&quot;
-            paginationColor=&quot;primary&quot;
-            paginationVariant=&quot;solid&quot; /&gt;
-    );
-};</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">With Expandable Rows</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const WithExpandableRows = () =&gt; &lt;div&gt;
-    &lt;p className=&quot;text-sm text-gray-500 mb-2&quot;&gt;Click the arrow icon on rows with sub-rows (ORD-001, ORD-004) to expand them.&lt;/p&gt;
-    &lt;CustomTable
-        data={orders}
-        columns={orderColumns}
-        enableExpanding
-        getSubRows={(row: Order) =&gt; row.subRows}
-        scrollBehavior=&quot;outside&quot; /&gt;
-&lt;/div&gt;;</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">Loading State</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const LoadingState = () =&gt; &lt;CustomTable data={[]} columns={userColumns} loading scrollBehavior=&quot;outside&quot; /&gt;;</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">Empty State</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const EmptyState = () =&gt; &lt;CustomTable data={[]} columns={userColumns} scrollBehavior=&quot;outside&quot; /&gt;;</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">Hidden Header</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const HiddenHeader = () =&gt; &lt;CustomTable
-    data={users.slice(0, 5)}
-    columns={userColumns}
-    hideHeader
-    scrollBehavior=&quot;outside&quot; /&gt;;</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">Pagination Color &amp; Variant</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const PaginationVariants = () =&gt; {
-  const [color, setColor] = useState&lt;&quot;primary&quot; | &quot;secondary&quot; | &quot;success&quot; | &quot;warning&quot; | &quot;danger&quot; | &quot;default&quot;&gt;(&quot;primary&quot;);
-  const [variant, setVariant] = useState&lt;&quot;solid&quot; | &quot;bordered&quot; | &quot;light&quot; | &quot;flat&quot;&gt;(&quot;solid&quot;);
-  const [pagination, setPagination] = useState({ page: 1, limit: 4 });
-
-  const colors = [&quot;primary&quot;, &quot;secondary&quot;, &quot;success&quot;, &quot;warning&quot;, &quot;danger&quot;, &quot;default&quot;] as const;
-  const variants = [&quot;solid&quot;, &quot;bordered&quot;, &quot;light&quot;, &quot;flat&quot;] as const;
-
-  return (
-    &lt;div className=&quot;flex flex-col gap-4&quot;&gt;
-      &lt;div className=&quot;flex flex-wrap gap-4&quot;&gt;
-        &lt;div className=&quot;flex flex-col gap-1&quot;&gt;
-          &lt;span className=&quot;text-xs font-semibold text-gray-500 uppercase tracking-wide&quot;&gt;Color&lt;/span&gt;
-          &lt;div className=&quot;flex flex-wrap gap-2&quot;&gt;
-            {colors.map((c) =&gt; (
-              &lt;button
-                key={c}
-                onClick={() =&gt; setColor(c)}
-                className={`px-3 py-1 text-sm rounded-lg border transition-all ${color === c ? &quot;bg-gray-800 text-white border-gray-800&quot; : &quot;border-gray-200 text-gray-600 hover:border-gray-400&quot;
-                  }`}
-              &gt;
-                {c}
-              &lt;/button&gt;
-            ))}
-          &lt;/div&gt;
-        &lt;/div&gt;
-        &lt;div className=&quot;flex flex-col gap-1&quot;&gt;
-          &lt;span className=&quot;text-xs font-semibold text-gray-500 uppercase tracking-wide&quot;&gt;Variant&lt;/span&gt;
-          &lt;div className=&quot;flex flex-wrap gap-2&quot;&gt;
-            {variants.map((v) =&gt; (
-              &lt;button
-                key={v}
-                onClick={() =&gt; setVariant(v)}
-                className={`px-3 py-1 text-sm rounded-lg border transition-all ${variant === v ? &quot;bg-gray-800 text-white border-gray-800&quot; : &quot;border-gray-200 text-gray-600 hover:border-gray-400&quot;
-                  }`}
-              &gt;
-                {v}
-              &lt;/button&gt;
-            ))}
-          &lt;/div&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
-      &lt;CustomTable
-        data={users}
-        columns={userColumns}
-        enablePagination
-        manualPagination={false}
-        pagination={pagination}
-        onPaginationChange={setPagination}
-        totalCount={users.length}
-        pageSize={4}
-        paginationColor={color}
-        paginationVariant={variant}
-        paginationSize=&quot;md&quot;
-        scrollBehavior=&quot;outside&quot;
-      /&gt;
-    &lt;/div&gt;
-  );
-};</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">Clickable Rows</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const ClickableRows = () =&gt; {
-    const [selected, setSelected] = useState&lt;User | null&gt;(null);
-
-    return (
-        &lt;div className=&quot;flex flex-col gap-4&quot;&gt;
-            &lt;p className=&quot;text-sm text-gray-500&quot;&gt;Click any row to select it.&lt;/p&gt;
-            {selected &amp;&amp; (
-              &lt;div className=&quot;p-4 bg-primary/5 border border-primary/20 rounded-xl text-sm&quot;&gt;
-                &lt;span className=&quot;font-semibold text-primary&quot;&gt;Selected:&lt;/span&gt;{&quot; &quot;}
-                {selected.name} — {selected.email} — {selected.role}
-              &lt;/div&gt;
-            )}
-            &lt;CustomTable
-                data={users}
-                columns={userColumns}
-                onRowClick={(row) =&gt; setSelected(row as User)}
-                scrollBehavior=&quot;outside&quot; /&gt;
-        &lt;/div&gt;
-    );
-};</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">Striped Rows</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const StripedRows = () =&gt; &lt;CustomTable
-    data={users.slice(0, 6)}
-    columns={userColumns}
-    isStriped
-    scrollBehavior=&quot;outside&quot; /&gt;;</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">Infinite Scroll</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const InfiniteScroll = () =&gt; {
-    const [pagination, setPagination] = useState({ page: 1, limit: 5 });
-    const [loading, setLoading] = useState(false);
-
-    const allUsers = Array.from({ length: 30 }, (_, i) =&gt; {
-      const base = users[i % users.length];
-      return { ...base, id: String(i + 1), name: `${base.name} #${i + 1}` };
-    });
-
-    const visibleData = allUsers.slice(0, pagination.limit);
-
-    const handlePaginationChange = (next: { page: number; limit: number }) =&gt; {
-      setLoading(true);
-      setTimeout(() =&gt; {
-        setPagination({ page: 1, limit: next.limit });
-        setLoading(false);
-      }, 600);
-    };
-
-    return (
-        &lt;div&gt;
-            &lt;p className=&quot;text-sm text-gray-500 mb-2&quot;&gt;Scroll inside the table to load more rows. Page stays at 1; limit increases by 5 each time.
-                        &lt;/p&gt;
-            &lt;CustomTable
-                data={visibleData}
-                columns={userColumns}
-                enablePagination
-                enableInfiniteScroll
-                manualPagination
-                pagination={pagination}
-                onPaginationChange={handlePaginationChange}
-                totalCount={allUsers.length}
-                infiniteScrollStep={5}
-                infiniteScrollMaxHeight=&quot;20rem&quot;
-                loading={loading}
-                isStriped /&gt;
-        &lt;/div&gt;
-    );
-};</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">Real-world: Orders</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const OrdersTable = () =&gt; {
-    const [pagination, setPagination] = useState({ page: 1, limit: 5 });
-
-    return (
-        &lt;CustomTable
-            data={orders}
-            columns={orderColumns}
-            enablePagination
-            enableSorting
-            enableCheckbox
-            manualPagination={false}
-            pagination={pagination}
-            onPaginationChange={setPagination}
-            totalCount={orders.length}
-            pageSize={5}
-            scrollBehavior=&quot;outside&quot;
-            paginationColor=&quot;primary&quot;
-            paginationVariant=&quot;solid&quot; /&gt;
-    );
-};</code></pre>
-            </div>
-        </div>
-    
-    
-  </div>
-</article>
-<article
-  class="card 
-  no-error 
-  has-info 
-  no-story-error
-  no-doc-error"
-  role="listitem"
-  aria-label="DateInput">
-  <div class="head">
-    <div class="title">
-      <h2><span class="status-dot dot-ok"></span> DateInput</h2>
-      <div class="badges">
-        <label for="c-10-components-dateinput-props" class="badge ok as-toggle">22 prop types</label>
-        <label for="c-10-components-dateinput-info" class="badge info as-toggle">1 info</label>
-        <label for="c-10-components-dateinput-stories" class="badge ok as-toggle">9 stories</label>
+        <label for="c-9-components-dateinput-props" class="badge ok as-toggle">26 prop types</label>
+        <label for="c-9-components-dateinput-info" class="badge info as-toggle">1 info</label>
+        <label for="c-9-components-dateinput-stories" class="badge ok as-toggle">9 stories</label>
         
         
       </div>
@@ -3662,11 +3365,11 @@ totalCount?: number</code></pre>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-10-components-dateinput-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-10-components-dateinput-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-9-components-dateinput-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-9-components-dateinput-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-10-components-dateinput-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-9-components-dateinput-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -3683,7 +3386,7 @@ totalCount?: number</code></pre>
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">22 prop types</span>
+              <span class="badge ok">26 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/input/dateInput/DateInput.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -3719,11 +3422,23 @@ form?: {
 
 isClearable?: boolean = false
 
+isRequired?: boolean = false
+
 label?: string
 
 labelClassName?: string = &quot;&quot;
 
-labelPlacement?: &quot;inside&quot; | &quot;outside&quot; | &quot;outside-left&quot; | &quot;outside-top&quot; | &quot;outlined&quot; = &quot;outside&quot;
+labelPlacement?: &quot;inside&quot; | &quot;outside&quot; | &quot;outside-left&quot; | &quot;outside-top&quot; | &quot;outlined&quot; = &quot;outside-top&quot;
+
+/**
+ * Latest selectable date (Date, ISO string, or null)
+ */
+maxDate?: Date | string | null
+
+/**
+ * Earliest selectable date (Date, ISO string, or null)
+ */
+minDate?: Date | string | null
 
 onChange?: ((dateOrRange: any) =&gt; void) | any
 
@@ -3731,7 +3446,19 @@ onRangeChange?: (startDate: Date | null, endDate: Date | null) =&gt; void
 
 placeholder?: string
 
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot; = &quot;md&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot; = &quot;lg&quot;
 
 selectsRange?: boolean = false
 
@@ -3741,7 +3468,9 @@ touched?: boolean
 
 value?: any
 
-variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot; = &quot;bordered&quot;</code></pre>
+variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot; = &quot;bordered&quot;
+
+wrapperClassName?: string = &quot;&quot;</code></pre>
           </div>
         </div>
     
@@ -3753,7 +3482,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
                 <div class="row">
                   <span class="ex-name">Imports</span>
                 </div>
-                <pre><code>import { DateInput } from "vite-ts-tailwind-template";</code></pre>
+                <pre><code>import { DateInput as DateInputComponent } from "vite-ts-tailwind-template";</code></pre>
               </div>
           
           
@@ -3764,7 +3493,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const Default = () =&gt; &lt;DatePickerWithState label=&quot;Select Date&quot; placeholder=&quot;Select Date&quot; isClearable /&gt;;</code></pre>
+              <pre><code>const Default = () =&gt; &lt;div className=&quot;w-[320px]&quot;&gt;
+    &lt;DateInput label=&quot;Select Date&quot; placeholder=&quot;Select Date&quot; isClearable /&gt;
+&lt;/div&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -3776,12 +3507,12 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               <pre><code>const Variants = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-8 w-[600px]&quot;&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;DatePickerWithState label=&quot;Flat&quot; variant=&quot;flat&quot; isClearable={true} /&gt;
-      &lt;DatePickerWithState label=&quot;Bordered&quot; variant=&quot;bordered&quot; isClearable={true} /&gt;
+      &lt;DateInput label=&quot;Flat&quot; variant=&quot;flat&quot; isClearable={true} /&gt;
+      &lt;DateInput label=&quot;Bordered&quot; variant=&quot;bordered&quot; isClearable={true} /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;DatePickerWithState label=&quot;Underlined&quot; variant=&quot;underlined&quot; isClearable={true} /&gt;
-      &lt;DatePickerWithState label=&quot;Faded&quot; variant=&quot;faded&quot; isClearable={true} /&gt;
+      &lt;DateInput label=&quot;Underlined&quot; variant=&quot;underlined&quot; isClearable={true} /&gt;
+      &lt;DateInput label=&quot;Faded&quot; variant=&quot;faded&quot; isClearable={true} /&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 );</code></pre>
@@ -3795,14 +3526,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               <pre><code>const Sizes = () =&gt; (
   &lt;div className=&quot;flex gap-6 w-[600px]&quot;&gt;
-    {([&quot;sm&quot;, &quot;md&quot;, &quot;lg&quot;] as const).map((size) =&gt; (
-      &lt;DatePickerWithState
-        key={size}
-        label={`Size ${size.toUpperCase()}`}
-        size={size}
-        isClearable={true}
-      /&gt;
-    ))}
+    &lt;DateInput label=&quot;Size SM&quot; size=&quot;sm&quot; isClearable={true} /&gt;
+    &lt;DateInput label=&quot;Size MD&quot; size=&quot;md&quot; isClearable={true} /&gt;
+    &lt;DateInput label=&quot;Size LG&quot; size=&quot;lg&quot; isClearable={true} /&gt;
   &lt;/div&gt;
 );</code></pre>
             </div>
@@ -3815,14 +3541,11 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               <pre><code>const Radiuses = () =&gt; (
   &lt;div className=&quot;flex gap-4 w-[800px]&quot;&gt;
-    {([&quot;none&quot;, &quot;sm&quot;, &quot;md&quot;, &quot;lg&quot;, &quot;full&quot;] as const).map((radius) =&gt; (
-      &lt;DatePickerWithState
-        key={radius}
-        label={`${radius.toUpperCase()}`}
-        radius={radius}
-        isClearable={true}
-      /&gt;
-    ))}
+    &lt;DateInput label=&quot;NONE&quot; radius=&quot;none&quot; isClearable={true} /&gt;
+    &lt;DateInput label=&quot;SM&quot; radius=&quot;sm&quot; isClearable={true} /&gt;
+    &lt;DateInput label=&quot;MD&quot; radius=&quot;md&quot; isClearable={true} /&gt;
+    &lt;DateInput label=&quot;LG&quot; radius=&quot;lg&quot; isClearable={true} /&gt;
+    &lt;DateInput label=&quot;FULL&quot; radius=&quot;full&quot; isClearable={true} /&gt;
   &lt;/div&gt;
 );</code></pre>
             </div>
@@ -3836,16 +3559,16 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               <pre><code>const Colors = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-8 w-[600px]&quot;&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;DatePickerWithState label=&quot;Default&quot; color=&quot;default&quot; isClearable={true} /&gt;
-      &lt;DatePickerWithState label=&quot;Primary&quot; color=&quot;primary&quot; isClearable={true} /&gt;
+      &lt;DateInput label=&quot;Default&quot; color=&quot;default&quot; isClearable={true} /&gt;
+      &lt;DateInput label=&quot;Primary&quot; color=&quot;primary&quot; isClearable={true} /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;DatePickerWithState label=&quot;Secondary&quot; color=&quot;secondary&quot; isClearable={true} /&gt;
-      &lt;DatePickerWithState label=&quot;Success&quot; color=&quot;success&quot; isClearable={true} /&gt;
+      &lt;DateInput label=&quot;Secondary&quot; color=&quot;secondary&quot; isClearable={true} /&gt;
+      &lt;DateInput label=&quot;Success&quot; color=&quot;success&quot; isClearable={true} /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;DatePickerWithState label=&quot;Warning&quot; color=&quot;warning&quot; isClearable={true} /&gt;
-      &lt;DatePickerWithState label=&quot;Danger&quot; color=&quot;danger&quot; isClearable={true} /&gt;
+      &lt;DateInput label=&quot;Warning&quot; color=&quot;warning&quot; isClearable={true} /&gt;
+      &lt;DateInput label=&quot;Danger&quot; color=&quot;danger&quot; isClearable={true} /&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 );</code></pre>
@@ -3860,20 +3583,20 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               <pre><code>const LabelPlacements = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-8 w-[600px]&quot;&gt;
     &lt;div className=&quot;flex gap-4 items-end&quot;&gt;
-      &lt;DatePickerWithState label=&quot;Inside (Floating)&quot; labelPlacement=&quot;inside&quot; isClearable={true} /&gt;
-      &lt;DatePickerWithState label=&quot;Inside (static with placeholder)&quot; labelPlacement=&quot;inside&quot; isClearable={true} placeholder=&quot;Select Date&quot; /&gt;
+      &lt;DateInput label=&quot;Inside (Floating)&quot; labelPlacement=&quot;inside&quot; isClearable={true} /&gt;
+      &lt;DateInput label=&quot;Inside (static with placeholder)&quot; labelPlacement=&quot;inside&quot; isClearable={true} placeholder=&quot;Select Date&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4 items-end&quot;&gt;
-      &lt;DatePickerWithState label=&quot;Outside (Floating)&quot; isClearable={true} /&gt;
-      &lt;DatePickerWithState label=&quot;Outside (static with placeholder)&quot; isClearable={true} placeholder=&quot;Select Date&quot; /&gt;
+      &lt;DateInput label=&quot;Outside (Floating)&quot; isClearable={true} /&gt;
+      &lt;DateInput label=&quot;Outside (static with placeholder)&quot; isClearable={true} placeholder=&quot;Select Date&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4 items-end&quot;&gt;
-      &lt;DatePickerWithState label=&quot;Outlined&quot; labelPlacement=&quot;outlined&quot; isClearable={true} /&gt;
-      &lt;DatePickerWithState label=&quot;Outlined (static with placeholder)&quot; labelPlacement=&quot;outlined&quot; isClearable={true} placeholder=&quot;Select Date&quot; /&gt;
+      &lt;DateInput label=&quot;Outlined&quot; labelPlacement=&quot;outlined&quot; isClearable={true} /&gt;
+      &lt;DateInput label=&quot;Outlined (static with placeholder)&quot; labelPlacement=&quot;outlined&quot; isClearable={true} placeholder=&quot;Select Date&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4 items-end&quot;&gt;
-      &lt;DatePickerWithState label=&quot;Outside Top&quot; labelPlacement=&quot;outside-top&quot; isClearable={true} /&gt;
-      &lt;DatePickerWithState label=&quot;Outside Left&quot; labelPlacement=&quot;outside-left&quot; isClearable={true} /&gt;
+      &lt;DateInput label=&quot;Outside Top&quot; labelPlacement=&quot;outside-top&quot; isClearable={true} /&gt;
+      &lt;DateInput label=&quot;Outside Left&quot; labelPlacement=&quot;outside-left&quot; isClearable={true} /&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 );</code></pre>
@@ -3885,7 +3608,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const RangePicker = () =&gt; &lt;DatePickerWithState label=&quot;Select Range&quot; selectsRange isClearable /&gt;;</code></pre>
+              <pre><code>const RangePicker = () =&gt; &lt;div className=&quot;w-[320px]&quot;&gt;
+    &lt;DateInput label=&quot;Select Range&quot; selectsRange isClearable /&gt;
+&lt;/div&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -3894,7 +3619,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const Disabled = () =&gt; &lt;DatePickerWithState label=&quot;Disabled Date Picker&quot; disabled value=&quot;2026-05-26&quot; /&gt;;</code></pre>
+              <pre><code>const Disabled = () =&gt; &lt;div className=&quot;w-[320px]&quot;&gt;
+    &lt;DateInput label=&quot;Disabled Date Picker&quot; disabled value=&quot;2026-05-26&quot; /&gt;
+&lt;/div&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -3903,7 +3630,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const ErrorState = () =&gt; &lt;DatePickerWithState label=&quot;Birth Date&quot; error=&quot;You must be at least 18 years old&quot; touched /&gt;;</code></pre>
+              <pre><code>const ErrorState = () =&gt; &lt;div className=&quot;w-[320px]&quot;&gt;
+    &lt;DateInput label=&quot;Birth Date&quot; error=&quot;You must be at least 18 years old&quot; touched /&gt;
+&lt;/div&gt;;</code></pre>
             </div>
         </div>
     
@@ -3917,14 +3646,14 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
   no-story-error
   no-doc-error"
   role="listitem"
-  aria-label="DateTimePicker">
+  aria-label="DateTimePickerComponent">
   <div class="head">
     <div class="title">
-      <h2><span class="status-dot dot-ok"></span> DateTimePicker</h2>
+      <h2><span class="status-dot dot-ok"></span> DateTimePickerComponent</h2>
       <div class="badges">
-        <label for="c-11-components-datetimepicker-props" class="badge ok as-toggle">19 prop types</label>
-        <label for="c-11-components-datetimepicker-info" class="badge info as-toggle">1 info</label>
-        <label for="c-11-components-datetimepicker-stories" class="badge ok as-toggle">9 stories</label>
+        <label for="c-10-components-datetimepicker-props" class="badge ok as-toggle">21 prop types</label>
+        <label for="c-10-components-datetimepicker-info" class="badge info as-toggle">1 info</label>
+        <label for="c-10-components-datetimepicker-stories" class="badge ok as-toggle">9 stories</label>
         
         
       </div>
@@ -3937,11 +3666,11 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-11-components-datetimepicker-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-11-components-datetimepicker-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-10-components-datetimepicker-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-10-components-datetimepicker-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-11-components-datetimepicker-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-10-components-datetimepicker-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -3958,7 +3687,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">19 prop types</span>
+              <span class="badge ok">21 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/input/dateTimePicker/DateTimePicker.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -3989,6 +3718,8 @@ form?: {
 
 isClearable?: boolean = false
 
+isRequired?: boolean = false
+
 label?: string
 
 labelClassName?: string = &quot;&quot;
@@ -3997,13 +3728,25 @@ labelPlacement?: | &quot;inside&quot;
 | &quot;outside&quot;
 | &quot;outside-left&quot;
 | &quot;outside-top&quot;
-| &quot;outlined&quot; = &quot;outside&quot;
+| &quot;outlined&quot; = &quot;outside-top&quot;
 
 onChange?: (value: Date | null) =&gt; void
 
-placeholder?: string = &quot;&quot;
+placeholder?: string = &quot;Select Date &amp; Time&quot;
 
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot; = &quot;md&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot; = &quot;lg&quot;
 
 size?: &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; = &quot;md&quot;
 
@@ -4016,7 +3759,9 @@ touched?: boolean
 
 value?: Date | string | null
 
-variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot; = &quot;bordered&quot;</code></pre>
+variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot; = &quot;bordered&quot;
+
+wrapperClassName?: string = &quot;&quot;</code></pre>
           </div>
         </div>
     
@@ -4028,7 +3773,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
                 <div class="row">
                   <span class="ex-name">Imports</span>
                 </div>
-                <pre><code>import { DateTimePicker } from "vite-ts-tailwind-template";</code></pre>
+                <pre><code>import { DateTimePicker as DateTimePickerComponent } from "vite-ts-tailwind-template";</code></pre>
               </div>
           
           
@@ -4039,7 +3784,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const Default = () =&gt; &lt;DateTimePickerWithState label=&quot;Date &amp; Time&quot; placeholder=&quot;Select date &amp; time&quot; isClearable /&gt;;</code></pre>
+              <pre><code>const Default = () =&gt; &lt;div className=&quot;w-[380px]&quot;&gt;
+    &lt;DateTimePicker label=&quot;Date &amp; Time&quot; placeholder=&quot;Select date &amp; time&quot; isClearable /&gt;
+&lt;/div&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -4048,7 +3795,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const WithValue = () =&gt; &lt;DateTimePickerWithState label=&quot;Appointment&quot; isClearable value={new Date(2026, 0, 15, 10, 30)} /&gt;;</code></pre>
+              <pre><code>const WithValue = () =&gt; &lt;div className=&quot;w-[380px]&quot;&gt;
+    &lt;DateTimePicker label=&quot;Appointment&quot; isClearable value={new Date(2026, 0, 15, 10, 30)} /&gt;
+&lt;/div&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -4059,10 +3808,10 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               <pre><code>const Variants = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-8 w-[380px]&quot;&gt;
-    &lt;DateTimePickerWithState label=&quot;Flat&quot; variant=&quot;flat&quot; isClearable /&gt;
-    &lt;DateTimePickerWithState label=&quot;Bordered&quot; variant=&quot;bordered&quot; isClearable /&gt;
-    &lt;DateTimePickerWithState label=&quot;Underlined&quot; variant=&quot;underlined&quot; isClearable /&gt;
-    &lt;DateTimePickerWithState label=&quot;Faded&quot; variant=&quot;faded&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Flat&quot; variant=&quot;flat&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Bordered&quot; variant=&quot;bordered&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Underlined&quot; variant=&quot;underlined&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Faded&quot; variant=&quot;faded&quot; isClearable /&gt;
   &lt;/div&gt;
 );</code></pre>
             </div>
@@ -4075,14 +3824,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               <pre><code>const Sizes = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-8 w-[380px]&quot;&gt;
-    {([&quot;sm&quot;, &quot;md&quot;, &quot;lg&quot;] as const).map((size) =&gt; (
-      &lt;DateTimePickerWithState
-        key={size}
-        label={`Size ${size.toUpperCase()}`}
-        size={size}
-        isClearable
-      /&gt;
-    ))}
+    &lt;DateTimePicker label=&quot;Size SM&quot; size=&quot;sm&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Size MD&quot; size=&quot;md&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Size LG&quot; size=&quot;lg&quot; isClearable /&gt;
   &lt;/div&gt;
 );</code></pre>
             </div>
@@ -4095,14 +3839,12 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               <pre><code>const Colors = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-8 w-[380px]&quot;&gt;
-    {([&quot;default&quot;, &quot;primary&quot;, &quot;secondary&quot;, &quot;success&quot;, &quot;warning&quot;, &quot;danger&quot;] as const).map((color) =&gt; (
-      &lt;DateTimePickerWithState
-        key={color}
-        label={color.charAt(0).toUpperCase() + color.slice(1)}
-        color={color}
-        isClearable
-      /&gt;
-    ))}
+    &lt;DateTimePicker label=&quot;Default&quot; color=&quot;default&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Primary&quot; color=&quot;primary&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Secondary&quot; color=&quot;secondary&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Success&quot; color=&quot;success&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Warning&quot; color=&quot;warning&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Danger&quot; color=&quot;danger&quot; isClearable /&gt;
   &lt;/div&gt;
 );</code></pre>
             </div>
@@ -4115,17 +3857,17 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               <pre><code>const LabelPlacements = () =&gt; (
   &lt;div className=&quot;grid grid-cols-2 gap-x-10 items-end gap-y-6 w-[800px]&quot;&gt;
-    &lt;DateTimePickerWithState label=&quot;Inside (Floating)&quot; labelPlacement=&quot;inside&quot; isClearable /&gt;
-    &lt;DateTimePickerWithState label=&quot;Inside (static with placeholder)&quot; labelPlacement=&quot;inside&quot; placeholder=&quot;Select Time&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Inside (Floating)&quot; labelPlacement=&quot;inside&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Inside (static with placeholder)&quot; labelPlacement=&quot;inside&quot; placeholder=&quot;Select Time&quot; isClearable /&gt;
 
-    &lt;DateTimePickerWithState label=&quot;Outside (Floating)&quot; labelPlacement=&quot;outside&quot; isClearable /&gt;
-    &lt;DateTimePickerWithState label=&quot;Outside (static with placeholder)&quot; labelPlacement=&quot;outside&quot; placeholder=&quot;Select Time&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Outside (Floating)&quot; labelPlacement=&quot;outside&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Outside (static with placeholder)&quot; labelPlacement=&quot;outside&quot; placeholder=&quot;Select Time&quot; isClearable /&gt;
 
-    &lt;DateTimePickerWithState label=&quot;Outlined&quot; labelPlacement=&quot;outlined&quot; isClearable /&gt;
-    &lt;DateTimePickerWithState label=&quot;Outlined (static with placeholder)&quot; labelPlacement=&quot;outlined&quot; placeholder=&quot;Select Time&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Outlined&quot; labelPlacement=&quot;outlined&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Outlined (static with placeholder)&quot; labelPlacement=&quot;outlined&quot; placeholder=&quot;Select Time&quot; isClearable /&gt;
 
-    &lt;DateTimePickerWithState label=&quot;Outside Top&quot; labelPlacement=&quot;outside-top&quot; placeholder=&quot;Select Time&quot; isClearable /&gt;
-    &lt;DateTimePickerWithState label=&quot;Outside Left&quot; labelPlacement=&quot;outside-left&quot; placeholder=&quot;Select Time&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Outside Top&quot; labelPlacement=&quot;outside-top&quot; placeholder=&quot;Select Time&quot; isClearable /&gt;
+    &lt;DateTimePicker label=&quot;Outside Left&quot; labelPlacement=&quot;outside-left&quot; placeholder=&quot;Select Time&quot; isClearable /&gt;
   &lt;/div&gt;
 );</code></pre>
             </div>
@@ -4136,7 +3878,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const ClockMode = () =&gt; &lt;DateTimePickerWithState label=&quot;Date &amp; Time (Clock)&quot; timeMode=&quot;clock&quot; isClearable /&gt;;</code></pre>
+              <pre><code>const ClockMode = () =&gt; &lt;div className=&quot;w-[380px]&quot;&gt;
+    &lt;DateTimePicker label=&quot;Date &amp; Time (Clock)&quot; timeMode=&quot;clock&quot; isClearable /&gt;
+&lt;/div&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -4145,10 +3889,12 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const Disabled = () =&gt; &lt;DateTimePickerWithState
-    label=&quot;Disabled Date &amp; Time&quot;
-    disabled
-    value={new Date(2026, 0, 15, 14, 0)} /&gt;;</code></pre>
+              <pre><code>const Disabled = () =&gt; &lt;div className=&quot;w-[380px]&quot;&gt;
+    &lt;DateTimePicker
+        label=&quot;Disabled Date &amp; Time&quot;
+        disabled
+        value={new Date(2026, 0, 15, 14, 0)} /&gt;
+&lt;/div&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -4157,11 +3903,13 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const ErrorState = () =&gt; &lt;DateTimePickerWithState
-    label=&quot;Appointment&quot;
-    error=&quot;Please select a valid date and time&quot;
-    touched
-    isClearable /&gt;;</code></pre>
+              <pre><code>const ErrorState = () =&gt; &lt;div className=&quot;w-[380px]&quot;&gt;
+    &lt;DateTimePicker
+        label=&quot;Appointment&quot;
+        error=&quot;Please select a valid date and time&quot;
+        touched
+        isClearable /&gt;
+&lt;/div&gt;;</code></pre>
             </div>
         </div>
     
@@ -4175,14 +3923,14 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
   no-story-error
   no-doc-error"
   role="listitem"
-  aria-label="Drawer">
+  aria-label="DrawerComponent">
   <div class="head">
     <div class="title">
-      <h2><span class="status-dot dot-ok"></span> Drawer</h2>
+      <h2><span class="status-dot dot-ok"></span> DrawerComponent</h2>
       <div class="badges">
-        <label for="c-12-components-drawer-props" class="badge ok as-toggle">15 prop types</label>
-        <label for="c-12-components-drawer-info" class="badge info as-toggle">1 info</label>
-        <label for="c-12-components-drawer-stories" class="badge ok as-toggle">11 stories</label>
+        <label for="c-11-components-drawer-props" class="badge ok as-toggle">15 prop types</label>
+        <label for="c-11-components-drawer-info" class="badge info as-toggle">1 info</label>
+        <label for="c-11-components-drawer-stories" class="badge ok as-toggle">11 stories</label>
         
         
       </div>
@@ -4195,11 +3943,11 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-12-components-drawer-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-12-components-drawer-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-11-components-drawer-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-11-components-drawer-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-12-components-drawer-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-11-components-drawer-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -4240,9 +3988,21 @@ onClose: () =&gt; void
 
 onOpenChange?: (open: boolean) =&gt; void
 
-placement?: &quot;top&quot; | &quot;right&quot; | &quot;bottom&quot; | &quot;left&quot; = &quot;right&quot;
+placement?: &quot;left&quot; | &quot;right&quot; | &quot;top&quot; | &quot;bottom&quot; = &quot;right&quot;
 
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; = &quot;lg&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot; = &quot;lg&quot;
 
 scrollBehavior?: &quot;inside&quot; | &quot;outside&quot; = &quot;inside&quot;
 
@@ -4260,7 +4020,14 @@ size?: &quot;xs&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot
                 <div class="row">
                   <span class="ex-name">Imports</span>
                 </div>
-                <pre><code>import { Button, Drawer, DrawerBody, DrawerContent, DrawerFooter, DrawerHeader } from "vite-ts-tailwind-template";</code></pre>
+                <pre><code>import {
+    Button,
+    DrawerBody,
+    Drawer as DrawerComponent,
+    DrawerContent,
+    DrawerFooter,
+    DrawerHeader,
+} from "vite-ts-tailwind-template";</code></pre>
               </div>
           
           
@@ -4271,7 +4038,7 @@ size?: &quot;xs&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot
               </div>
               
               
-              <pre><code>const Default = () =&gt; &lt;DrawerWithTrigger
+              <pre><code>const Default = () =&gt; &lt;Drawer
     placement=&quot;right&quot;
     size=&quot;md&quot;
     backdrop=&quot;opaque&quot;
@@ -4343,8 +4110,6 @@ size?: &quot;xs&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot
       onOpen();
     };
 
-    const sizes = [&quot;xs&quot;, &quot;sm&quot;, &quot;md&quot;, &quot;lg&quot;, &quot;xl&quot;, &quot;2xl&quot;, &quot;3xl&quot;, &quot;4xl&quot;, &quot;5xl&quot;, &quot;full&quot;] as const;
-
     return (
         &lt;div className=&quot;p-10 flex flex-col gap-8&quot;&gt;
             &lt;div&gt;
@@ -4352,11 +4117,16 @@ size?: &quot;xs&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot
                     className=&quot;text-lg font-semibold mb-4 text-neutral-800 dark:text-neutral-200&quot;&gt;Horizontal Sizes (sliding left/right)
                               &lt;/h3&gt;
                 &lt;div className=&quot;flex flex-wrap gap-3&quot;&gt;
-                    {sizes.map((sz) =&gt; (
-                      &lt;Button key={sz} variant=&quot;bordered&quot; onClick={() =&gt; openSize(sz, &quot;right&quot;)}&gt;
-                        Size {sz.toUpperCase()}
-                      &lt;/Button&gt;
-                    ))}
+                    &lt;Button variant=&quot;bordered&quot; onClick={() =&gt; openSize(&quot;xs&quot;, &quot;right&quot;)}&gt;Size XS&lt;/Button&gt;
+                    &lt;Button variant=&quot;bordered&quot; onClick={() =&gt; openSize(&quot;sm&quot;, &quot;right&quot;)}&gt;Size SM&lt;/Button&gt;
+                    &lt;Button variant=&quot;bordered&quot; onClick={() =&gt; openSize(&quot;md&quot;, &quot;right&quot;)}&gt;Size MD&lt;/Button&gt;
+                    &lt;Button variant=&quot;bordered&quot; onClick={() =&gt; openSize(&quot;lg&quot;, &quot;right&quot;)}&gt;Size LG&lt;/Button&gt;
+                    &lt;Button variant=&quot;bordered&quot; onClick={() =&gt; openSize(&quot;xl&quot;, &quot;right&quot;)}&gt;Size XL&lt;/Button&gt;
+                    &lt;Button variant=&quot;bordered&quot; onClick={() =&gt; openSize(&quot;2xl&quot;, &quot;right&quot;)}&gt;Size 2XL&lt;/Button&gt;
+                    &lt;Button variant=&quot;bordered&quot; onClick={() =&gt; openSize(&quot;3xl&quot;, &quot;right&quot;)}&gt;Size 3XL&lt;/Button&gt;
+                    &lt;Button variant=&quot;bordered&quot; onClick={() =&gt; openSize(&quot;4xl&quot;, &quot;right&quot;)}&gt;Size 4XL&lt;/Button&gt;
+                    &lt;Button variant=&quot;bordered&quot; onClick={() =&gt; openSize(&quot;5xl&quot;, &quot;right&quot;)}&gt;Size 5XL&lt;/Button&gt;
+                    &lt;Button variant=&quot;bordered&quot; onClick={() =&gt; openSize(&quot;full&quot;, &quot;right&quot;)}&gt;Size FULL&lt;/Button&gt;
                 &lt;/div&gt;
             &lt;/div&gt;
             &lt;div&gt;
@@ -4364,16 +4134,15 @@ size?: &quot;xs&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot
                     className=&quot;text-lg font-semibold mb-4 text-neutral-800 dark:text-neutral-200&quot;&gt;Vertical Sizes (sliding top/bottom)
                               &lt;/h3&gt;
                 &lt;div className=&quot;flex flex-wrap gap-3&quot;&gt;
-                    {sizes.slice(0, 5).map((sz) =&gt; (
-                      &lt;Button key={sz} variant=&quot;flat&quot; color=&quot;secondary&quot; onClick={() =&gt; openSize(sz, &quot;bottom&quot;)}&gt;
-                        Size {sz.toUpperCase()} (Bottom)
-                      &lt;/Button&gt;
-                    ))}
+                    &lt;Button variant=&quot;flat&quot; color=&quot;secondary&quot; onClick={() =&gt; openSize(&quot;xs&quot;, &quot;bottom&quot;)}&gt;Size XS (Bottom)&lt;/Button&gt;
+                    &lt;Button variant=&quot;flat&quot; color=&quot;secondary&quot; onClick={() =&gt; openSize(&quot;sm&quot;, &quot;bottom&quot;)}&gt;Size SM (Bottom)&lt;/Button&gt;
+                    &lt;Button variant=&quot;flat&quot; color=&quot;secondary&quot; onClick={() =&gt; openSize(&quot;md&quot;, &quot;bottom&quot;)}&gt;Size MD (Bottom)&lt;/Button&gt;
+                    &lt;Button variant=&quot;flat&quot; color=&quot;secondary&quot; onClick={() =&gt; openSize(&quot;lg&quot;, &quot;bottom&quot;)}&gt;Size LG (Bottom)&lt;/Button&gt;
+                    &lt;Button variant=&quot;flat&quot; color=&quot;secondary&quot; onClick={() =&gt; openSize(&quot;xl&quot;, &quot;bottom&quot;)}&gt;Size XL (Bottom)&lt;/Button&gt;
                     &lt;Button
                         variant=&quot;flat&quot;
                         color=&quot;secondary&quot;
-                        onClick={() =&gt; openSize(&quot;full&quot;, &quot;bottom&quot;)}&gt;Size FULL (Bottom)
-                                    &lt;/Button&gt;
+                        onClick={() =&gt; openSize(&quot;full&quot;, &quot;bottom&quot;)}&gt;Size FULL (Bottom)&lt;/Button&gt;
                 &lt;/div&gt;
             &lt;/div&gt;
             &lt;Drawer
@@ -4870,9 +4639,9 @@ size?: &quot;xs&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Dropdown</h2>
       <div class="badges">
-        <label for="c-13-components-dropdown-props" class="badge ok as-toggle">7 prop types</label>
-        <label for="c-13-components-dropdown-info" class="badge info as-toggle">1 info</label>
-        <label for="c-13-components-dropdown-stories" class="badge ok as-toggle">9 stories</label>
+        <label for="c-12-components-dropdown-props" class="badge ok as-toggle">7 prop types</label>
+        <label for="c-12-components-dropdown-info" class="badge info as-toggle">1 info</label>
+        <label for="c-12-components-dropdown-stories" class="badge ok as-toggle">9 stories</label>
         
         
       </div>
@@ -4885,11 +4654,11 @@ size?: &quot;xs&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-13-components-dropdown-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-13-components-dropdown-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-12-components-dropdown-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-12-components-dropdown-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-13-components-dropdown-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-12-components-dropdown-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -5308,9 +5077,9 @@ import { FaArrowRightFromBracket, FaCopy, FaGear, FaPen, FaShare, FaTrash, FaUse
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> FileInput</h2>
       <div class="badges">
-        <label for="c-14-components-fileinput-props" class="badge ok as-toggle">28 prop types</label>
-        <label for="c-14-components-fileinput-info" class="badge info as-toggle">1 info</label>
-        <label for="c-14-components-fileinput-stories" class="badge ok as-toggle">13 stories</label>
+        <label for="c-13-components-fileinput-props" class="badge ok as-toggle">30 prop types</label>
+        <label for="c-13-components-fileinput-info" class="badge info as-toggle">1 info</label>
+        <label for="c-13-components-fileinput-stories" class="badge ok as-toggle">13 stories</label>
         
         
       </div>
@@ -5323,11 +5092,11 @@ import { FaArrowRightFromBracket, FaCopy, FaGear, FaPen, FaShare, FaTrash, FaUse
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-14-components-fileinput-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-14-components-fileinput-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-13-components-fileinput-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-13-components-fileinput-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-14-components-fileinput-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-13-components-fileinput-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -5344,7 +5113,7 @@ import { FaArrowRightFromBracket, FaCopy, FaGear, FaPen, FaShare, FaTrash, FaUse
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">28 prop types</span>
+              <span class="badge ok">30 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/input/fileInput/FileInput.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -5384,11 +5153,13 @@ isClearable?: boolean = true
 
 isPreviewOn?: boolean = true
 
+isRequired?: boolean = false
+
 label?: string
 
 labelClassName?: string = &quot;&quot;
 
-labelPlacement?: &quot;inside&quot; | &quot;outside&quot; | &quot;outside-left&quot; | &quot;outside-top&quot; | &quot;outlined&quot; = &quot;outside&quot;
+labelPlacement?: &quot;inside&quot; | &quot;outside&quot; | &quot;outside-left&quot; | &quot;outside-top&quot; | &quot;outlined&quot; = &quot;outside-top&quot;
 
 mode?: &quot;profile&quot; | &quot;dropzone&quot; | &quot;multi&quot; | &quot;normal&quot; = &quot;normal&quot;
 
@@ -5396,7 +5167,19 @@ onChange?: (value: File | null) =&gt; void
 
 placeholder?: string
 
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot; = &quot;md&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot; = &quot;lg&quot;
 
 setDeleteImages?: (deleteImages: Image[]) =&gt; void
 
@@ -5408,7 +5191,9 @@ touched?: boolean
 
 value?: string | File | null
 
-variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot; = &quot;bordered&quot;</code></pre>
+variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot; = &quot;bordered&quot;
+
+wrapperClassName?: string = &quot;&quot;</code></pre>
           </div>
         </div>
     
@@ -5670,9 +5455,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Input</h2>
       <div class="badges">
-        <label for="c-15-components-input-props" class="badge ok as-toggle">19 prop types</label>
-        <label for="c-15-components-input-info" class="badge info as-toggle">1 info</label>
-        <label for="c-15-components-input-stories" class="badge ok as-toggle">10 stories</label>
+        <label for="c-14-components-input-props" class="badge ok as-toggle">26 prop types</label>
+        <label for="c-14-components-input-info" class="badge info as-toggle">1 info</label>
+        <label for="c-14-components-input-stories" class="badge ok as-toggle">10 stories</label>
         
         
       </div>
@@ -5685,11 +5470,11 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-15-components-input-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-15-components-input-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-14-components-input-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-14-components-input-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-15-components-input-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-14-components-input-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -5706,11 +5491,16 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">19 prop types</span>
+              <span class="badge ok">26 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/input/Input.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
-            <pre><code>color?: &quot;default&quot; | &quot;primary&quot; | &quot;secondary&quot; | &quot;success&quot; | &quot;warning&quot; | &quot;danger&quot;
+            <pre><code>/**
+ * Palette used for chip background/text classes in chip input mode
+ */
+chipColorClasses?: string[]
+
+color?: &quot;default&quot; | &quot;primary&quot; | &quot;secondary&quot; | &quot;success&quot; | &quot;warning&quot; | &quot;danger&quot;
 
 containerClassName?: string
 
@@ -5720,7 +5510,7 @@ error?: string
 
 errorClassName?: string
 
-field?: FieldInputProps&lt;string&gt;
+field?: FieldInputProps&lt;string | string[]&gt;
 
 form?: {
   errors: FormikErrors&lt;any&gt;;
@@ -5728,11 +5518,34 @@ form?: {
   setFieldValue?: (field: string, value: any) =&gt; void;
 }
 
+/**
+ * Format for duration input. Defaults to &quot;HH:mm&quot; (2-digit hours).
+ * Use &quot;HHH:mm&quot; to allow up to 3-digit hours (e.g. &quot;000:00&quot; → &quot;999:59&quot;).
+ */
+format?: &quot;HH:mm&quot; | &quot;HHH:mm&quot; | &quot;HHHH:mm&quot;
+
+/**
+ * Optional resolver for per-chip color classes
+ */
+getChipColorClass?: (label: string, index: number) =&gt; string
+
 inputClassName?: string
+
+/**
+ * When true, value is string[]; press Enter to add a chip from typed text
+ */
+isChipInput?: boolean
 
 isClearable?: boolean
 
+/**
+ * When true, value is a duration string with masked entry
+ */
+isDurationInput?: boolean
+
 isPasswordToggle?: boolean
+
+isRequired?: boolean
 
 label?: string
 
@@ -5742,7 +5555,19 @@ labelPlacement?: &quot;inside&quot; | &quot;outside&quot; | &quot;outside-left&q
 
 numInputs?: number
 
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot;
 
 size?: &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot;
 
@@ -5750,7 +5575,9 @@ startContent?: React.ReactNode
 
 touched?: boolean
 
-variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot;</code></pre>
+variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot;
+
+wrapperClassName?: string</code></pre>
           </div>
         </div>
     
@@ -5988,9 +5815,9 @@ import { Input } from "vite-ts-tailwind-template";</code></pre>
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Modal</h2>
       <div class="badges">
-        <label for="c-16-components-modal-props" class="badge ok as-toggle">10 prop types</label>
-        <label for="c-16-components-modal-info" class="badge info as-toggle">1 info</label>
-        <label for="c-16-components-modal-stories" class="badge ok as-toggle">9 stories</label>
+        <label for="c-15-components-modal-props" class="badge ok as-toggle">10 prop types</label>
+        <label for="c-15-components-modal-info" class="badge info as-toggle">1 info</label>
+        <label for="c-15-components-modal-stories" class="badge ok as-toggle">9 stories</label>
         
         
       </div>
@@ -6003,11 +5830,11 @@ import { Input } from "vite-ts-tailwind-template";</code></pre>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-16-components-modal-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-16-components-modal-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-15-components-modal-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-15-components-modal-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-16-components-modal-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-15-components-modal-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -6355,9 +6182,9 @@ variant?: &quot;light&quot; | &quot;shadow&quot; | &quot;bordered&quot; | &quot;
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> OTPInput</h2>
       <div class="badges">
-        <label for="c-17-components-otpinput-props" class="badge ok as-toggle">12 prop types</label>
-        <label for="c-17-components-otpinput-info" class="badge info as-toggle">1 info</label>
-        <label for="c-17-components-otpinput-stories" class="badge ok as-toggle">4 stories</label>
+        <label for="c-16-components-otpinput-props" class="badge ok as-toggle">13 prop types</label>
+        <label for="c-16-components-otpinput-info" class="badge info as-toggle">1 info</label>
+        <label for="c-16-components-otpinput-stories" class="badge ok as-toggle">4 stories</label>
         
         
       </div>
@@ -6370,11 +6197,11 @@ variant?: &quot;light&quot; | &quot;shadow&quot; | &quot;bordered&quot; | &quot;
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-17-components-otpinput-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-17-components-otpinput-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-16-components-otpinput-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-16-components-otpinput-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-17-components-otpinput-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-16-components-otpinput-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -6391,7 +6218,7 @@ variant?: &quot;light&quot; | &quot;shadow&quot; | &quot;bordered&quot; | &quot;
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">12 prop types</span>
+              <span class="badge ok">13 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/input/OTPInput.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -6410,6 +6237,8 @@ form?: {
 }
 
 inputClassName?: string
+
+isRequired?: boolean
 
 label?: string
 
@@ -6552,19 +6381,19 @@ touched?: boolean</code></pre>
   no-story-error
   no-doc-error"
   role="listitem"
-  aria-label="PhoneNumberInput">
+  aria-label="PhoneInput">
   <div class="head">
     <div class="title">
-      <h2><span class="status-dot dot-ok"></span> PhoneNumberInput</h2>
+      <h2><span class="status-dot dot-ok"></span> PhoneInput</h2>
       <div class="badges">
-        <label for="c-18-components-phonenumberinput-props" class="badge ok as-toggle">47 prop types</label>
-        <label for="c-18-components-phonenumberinput-info" class="badge info as-toggle">1 info</label>
-        <label for="c-18-components-phonenumberinput-stories" class="badge ok as-toggle">14 stories</label>
+        <label for="c-17-components-phoneinput-props" class="badge ok as-toggle">32 prop types</label>
+        <label for="c-17-components-phoneinput-info" class="badge info as-toggle">1 info</label>
+        <label for="c-17-components-phoneinput-stories" class="badge ok as-toggle">13 stories</label>
         
         
       </div>
     </div>
-    <div class="meta" title="./src/stories/stories/PhoneNumberInput.stories.tsx">components-phonenumberinput · ./src/stories/stories/PhoneNumberInput.stories.tsx</div>
+    <div class="meta" title="./src/stories/stories/PhoneInput.stories.tsx">components-phoneinput · ./src/stories/stories/PhoneInput.stories.tsx</div>
     
     
     
@@ -6572,11 +6401,11 @@ touched?: boolean</code></pre>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-18-components-phonenumberinput-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-18-components-phonenumberinput-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-17-components-phoneinput-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-17-components-phoneinput-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-18-components-phonenumberinput-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-17-components-phoneinput-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -6593,63 +6422,43 @@ touched?: boolean</code></pre>
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">47 prop types</span>
+              <span class="badge ok">32 prop types</span>
             </div>
-            <pre><code>Component: src/components/ui/input/phoneInput/PhoneNumberInput.tsx::default</code></pre>
+            <pre><code>Component: src/components/ui/input/phone-input/PhoneInput.tsx::PhoneInput</code></pre>
             <pre><code>Props:</code></pre>
-            <pre><code>alwaysDefaultMask?: boolean
-
-autocompleteSearch?: boolean
+            <pre><code>/**
+ * When true, allows international input (+…) so the country can be inferred while typing.
+ * Default false keeps national-only input for the selected/default country.
+ */
+autoDetectCountry?: boolean
 
 buttonClassName?: string
+
+className?: string
 
 color?: &quot;default&quot; | &quot;primary&quot; | &quot;secondary&quot; | &quot;success&quot; | &quot;warning&quot; | &quot;danger&quot;
 
 containerClassName?: string
 
-copyNumbersOnly?: boolean
-
 countryCodeEditable?: boolean
 
-defaultErrorMessage?: string
-
-defaultMask?: string
-
-disableCountryCode?: boolean
-
-disableCountryGuess?: boolean
+defaultCountry?: Country
 
 disabled?: boolean
 
-disableDropdown?: boolean
-
-disableInitialCountryGuess?: boolean
-
-disableSearchIcon?: boolean
+dropdownIcon?: boolean
 
 dropdownPosition?: &quot;top&quot; | &quot;bottom&quot;
 
-enableAreaCodes?: boolean
-
-enableClickOutside?: boolean
-
-enableLongNumbers?: boolean | number
-
 enableSearch?: boolean
-
-enableTerritories?: boolean
 
 error?: string
 
 errorClassName?: string
 
-excludeCountries?: string[]
-
 inputClassName?: string
 
-inputProps?: object
-
-jumpCursorToEnd?: boolean
+isRequired?: boolean
 
 label?: string
 
@@ -6657,39 +6466,48 @@ labelClassName?: string
 
 labelPlacement?: &quot;inside&quot; | &quot;outside&quot; | &quot;outside-left&quot; | &quot;outside-top&quot; | &quot;outlined&quot;
 
-onChange?: (value: any, country?: any, e?: any, formattedValue?: string) =&gt; void
+limitMaxLength?: boolean
 
-onlyCountries?: string[]
+/**
+ * First arg: E.164 phone value (e.g. +12025551234). Second arg: dial code (e.g. +1).
+ */
+onChange?: (value: string | undefined, countryCode?: string) =&gt; void
+
+phoneErrorMessage?: string
 
 placeholder?: string
 
-preferredCountries?: string[]
-
-prefix?: string
-
-priority?: object
-
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot;
-
-renderStringAsFlag?: string
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot;
 
 searchNotFound?: string
 
 searchPlaceholder?: string
 
-showDropdown?: boolean
-
-singleBorder?: boolean
-
 size?: &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot;
-
-specialLabel?: string
 
 touched?: boolean
 
-value?: any
+validatePhone?: boolean
 
-variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot;</code></pre>
+validationType?: &quot;possible&quot; | &quot;valid&quot;
+
+value?: string
+
+variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot;
+
+wrapperClassName?: string</code></pre>
           </div>
         </div>
     
@@ -6701,7 +6519,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
                 <div class="row">
                   <span class="ex-name">Imports</span>
                 </div>
-                <pre><code>import { PhoneNumberInput } from "vite-ts-tailwind-template";</code></pre>
+                <pre><code>import { PhoneInput } from "vite-ts-tailwind-template";</code></pre>
               </div>
           
           
@@ -6712,7 +6530,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const Default = () =&gt; &lt;PhoneInputWithState label=&quot;Phone Number&quot; country=&quot;in&quot; placeholder=&quot;Enter Phone Number&quot; /&gt;;</code></pre>
+              <pre><code>const Default = () =&gt; &lt;PhoneInputWithState label=&quot;Phone Number&quot; defaultCountry=&quot;IN&quot; placeholder=&quot;Enter Phone Number&quot; /&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -6724,12 +6542,12 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               <pre><code>const Variants = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-8 w-[600px]&quot;&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;PhoneInputWithState label=&quot;Flat&quot; variant=&quot;flat&quot; country=&quot;in&quot; /&gt;
-      &lt;PhoneInputWithState label=&quot;Bordered&quot; variant=&quot;bordered&quot; country=&quot;in&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Flat&quot; variant=&quot;flat&quot; defaultCountry=&quot;IN&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Bordered&quot; variant=&quot;bordered&quot; defaultCountry=&quot;IN&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;PhoneInputWithState label=&quot;Underlined&quot; variant=&quot;underlined&quot; country=&quot;in&quot; /&gt;
-      &lt;PhoneInputWithState label=&quot;Faded&quot; variant=&quot;faded&quot; country=&quot;in&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Underlined&quot; variant=&quot;underlined&quot; defaultCountry=&quot;IN&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Faded&quot; variant=&quot;faded&quot; defaultCountry=&quot;IN&quot; /&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 );</code></pre>
@@ -6744,11 +6562,11 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               <pre><code>const Sizes = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-8 w-[600px]&quot;&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;PhoneInputWithState label=&quot;Size sm&quot; size=&quot;sm&quot; country=&quot;in&quot; /&gt;
-      &lt;PhoneInputWithState label=&quot;Size md&quot; size=&quot;md&quot; country=&quot;in&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Size sm&quot; size=&quot;sm&quot; defaultCountry=&quot;IN&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Size md&quot; size=&quot;md&quot; defaultCountry=&quot;IN&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;PhoneInputWithState label=&quot;Size lg&quot; size=&quot;lg&quot; country=&quot;in&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Size lg&quot; size=&quot;lg&quot; defaultCountry=&quot;IN&quot; /&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 );</code></pre>
@@ -6765,21 +6583,21 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
     {/* Left side: Full Border */}
     &lt;div className=&quot;flex flex-col gap-8 flex-1&quot;&gt;
       &lt;h4 className=&quot;text-sm font-bold text-neutral-400&quot;&gt;Separate Border&lt;/h4&gt;
-      &lt;PhoneInputWithState label=&quot;Radius none&quot; radius=&quot;none&quot; country=&quot;in&quot; variant=&quot;bordered&quot; singleBorder={false} /&gt;
-      &lt;PhoneInputWithState label=&quot;Radius sm&quot; radius=&quot;sm&quot; country=&quot;in&quot; variant=&quot;bordered&quot; singleBorder={false} /&gt;
-      &lt;PhoneInputWithState label=&quot;Radius md&quot; radius=&quot;md&quot; country=&quot;in&quot; variant=&quot;bordered&quot; singleBorder={false} /&gt;
-      &lt;PhoneInputWithState label=&quot;Radius lg&quot; radius=&quot;lg&quot; country=&quot;in&quot; variant=&quot;bordered&quot; singleBorder={false} /&gt;
-      &lt;PhoneInputWithState label=&quot;Radius full&quot; radius=&quot;full&quot; country=&quot;in&quot; variant=&quot;bordered&quot; singleBorder={false} /&gt;
+      &lt;PhoneInputWithState label=&quot;Radius none&quot; radius=&quot;none&quot; defaultCountry=&quot;IN&quot; variant=&quot;bordered&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Radius sm&quot; radius=&quot;sm&quot; defaultCountry=&quot;IN&quot; variant=&quot;bordered&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Radius md&quot; radius=&quot;md&quot; defaultCountry=&quot;IN&quot; variant=&quot;bordered&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Radius lg&quot; radius=&quot;lg&quot; defaultCountry=&quot;IN&quot; variant=&quot;bordered&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Radius full&quot; radius=&quot;full&quot; defaultCountry=&quot;IN&quot; variant=&quot;bordered&quot; /&gt;
     &lt;/div&gt;
 
     {/* Right side: Single Border */}
     &lt;div className=&quot;flex flex-col gap-8 flex-1&quot;&gt;
       &lt;h4 className=&quot;text-sm font-bold text-neutral-400&quot;&gt;Single Border&lt;/h4&gt;
-      &lt;PhoneInputWithState label=&quot;Radius none&quot; radius=&quot;none&quot; country=&quot;in&quot; variant=&quot;bordered&quot; singleBorder={true} /&gt;
-      &lt;PhoneInputWithState label=&quot;Radius sm&quot; radius=&quot;sm&quot; country=&quot;in&quot; variant=&quot;bordered&quot; singleBorder={true} /&gt;
-      &lt;PhoneInputWithState label=&quot;Radius md&quot; radius=&quot;md&quot; country=&quot;in&quot; variant=&quot;bordered&quot; singleBorder={true} /&gt;
-      &lt;PhoneInputWithState label=&quot;Radius lg&quot; radius=&quot;lg&quot; country=&quot;in&quot; variant=&quot;bordered&quot; singleBorder={true} /&gt;
-      &lt;PhoneInputWithState label=&quot;Radius full&quot; radius=&quot;full&quot; country=&quot;in&quot; variant=&quot;bordered&quot; singleBorder={true} /&gt;
+      &lt;PhoneInputWithState label=&quot;Radius none&quot; radius=&quot;none&quot; defaultCountry=&quot;IN&quot; variant=&quot;bordered&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Radius sm&quot; radius=&quot;sm&quot; defaultCountry=&quot;IN&quot; variant=&quot;bordered&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Radius md&quot; radius=&quot;md&quot; defaultCountry=&quot;IN&quot; variant=&quot;bordered&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Radius lg&quot; radius=&quot;lg&quot; defaultCountry=&quot;IN&quot; variant=&quot;bordered&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Radius full&quot; radius=&quot;full&quot; defaultCountry=&quot;IN&quot; variant=&quot;bordered&quot; /&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 );</code></pre>
@@ -6797,54 +6615,52 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
             variant=&quot;bordered&quot;
             labelPlacement=&quot;inside&quot;
             label=&quot;Inside (Floating)&quot;
-            country=&quot;in&quot; /&gt;
+            defaultCountry=&quot;IN&quot; /&gt;
         &lt;PhoneInputWithState
             variant=&quot;bordered&quot;
             labelPlacement=&quot;inside&quot;
             label=&quot;Inside (static with placeholder)&quot;
             placeholder=&quot;Enter Phone Number&quot;
-            country=&quot;in&quot; /&gt;
+            defaultCountry=&quot;IN&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4 items-end&quot;&gt;
         &lt;PhoneInputWithState
             variant=&quot;bordered&quot;
             labelPlacement=&quot;outside&quot;
             label=&quot;Outside (Floating)&quot;
-            country=&quot;in&quot; /&gt;
+            defaultCountry=&quot;IN&quot; /&gt;
         &lt;PhoneInputWithState
             variant=&quot;bordered&quot;
             labelPlacement=&quot;outside&quot;
             label=&quot;Outside (static with placeholder)&quot;
             placeholder=&quot;Enter Phone Number&quot;
-            country=&quot;in&quot; /&gt;
+            defaultCountry=&quot;IN&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4 items-end&quot;&gt;
         &lt;PhoneInputWithState
             variant=&quot;bordered&quot;
             labelPlacement=&quot;outlined&quot;
             label=&quot;Outlined&quot;
-            country=&quot;in&quot; /&gt;
+            defaultCountry=&quot;IN&quot; /&gt;
         &lt;PhoneInputWithState
             variant=&quot;bordered&quot;
             labelPlacement=&quot;outlined&quot;
             label=&quot;Outlined (static with placeholder)&quot;
             placeholder=&quot;Enter Phone Number&quot;
-            country=&quot;in&quot; /&gt;
+            defaultCountry=&quot;IN&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4 items-end&quot;&gt;
         &lt;PhoneInputWithState
             variant=&quot;bordered&quot;
-            singleBorder={true}
             labelPlacement=&quot;outlined&quot;
             label=&quot;Single Border&quot;
-            country=&quot;in&quot; /&gt;
+            defaultCountry=&quot;IN&quot; /&gt;
         &lt;PhoneInputWithState
             variant=&quot;bordered&quot;
-            singleBorder={true}
             labelPlacement=&quot;outlined&quot;
             label=&quot;Single Border (static with placeholder)&quot;
             placeholder=&quot;Enter Phone Number&quot;
-            country=&quot;in&quot; /&gt;
+            defaultCountry=&quot;IN&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4 items-end&quot;&gt;
         &lt;PhoneInputWithState
@@ -6852,13 +6668,13 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
             labelPlacement=&quot;outside-top&quot;
             label=&quot;Outside Top&quot;
             placeholder=&quot;Enter Phone Number&quot;
-            country=&quot;in&quot; /&gt;
+            defaultCountry=&quot;IN&quot; /&gt;
         &lt;PhoneInputWithState
             variant=&quot;bordered&quot;
             labelPlacement=&quot;outside-left&quot;
             label=&quot;Outside Left&quot;
             placeholder=&quot;Enter Phone Number&quot;
-            country=&quot;in&quot; /&gt;
+            defaultCountry=&quot;IN&quot; /&gt;
     &lt;/div&gt;
 &lt;/div&gt;;</code></pre>
             </div>
@@ -6872,12 +6688,12 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               <pre><code>const SingleBorderVariants = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-8 w-[600px]&quot;&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;PhoneInputWithState label=&quot;Flat&quot; variant=&quot;flat&quot; singleBorder={true} country=&quot;in&quot; /&gt;
-      &lt;PhoneInputWithState label=&quot;Bordered&quot; variant=&quot;bordered&quot; singleBorder={true} country=&quot;in&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Flat&quot; variant=&quot;flat&quot; defaultCountry=&quot;IN&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Bordered&quot; variant=&quot;bordered&quot; defaultCountry=&quot;IN&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;PhoneInputWithState label=&quot;Underlined&quot; variant=&quot;underlined&quot; singleBorder={true} country=&quot;in&quot; /&gt;
-      &lt;PhoneInputWithState label=&quot;Faded&quot; variant=&quot;faded&quot; singleBorder={true} country=&quot;in&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Underlined&quot; variant=&quot;underlined&quot; defaultCountry=&quot;IN&quot; /&gt;
+      &lt;PhoneInputWithState label=&quot;Faded&quot; variant=&quot;faded&quot; defaultCountry=&quot;IN&quot; /&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 );</code></pre>
@@ -6889,7 +6705,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const CountryCodeEditable = () =&gt; &lt;PhoneInputWithState label=&quot;Editable Country Code&quot; country=&quot;us&quot; countryCodeEditable /&gt;;</code></pre>
+              <pre><code>const CountryCodeEditable = () =&gt; &lt;PhoneInputWithState label=&quot;Editable Country Code&quot; defaultCountry=&quot;US&quot; countryCodeEditable /&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -6898,7 +6714,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const DisableDropdownOnly = () =&gt; &lt;PhoneInputWithState label=&quot;Flag Dropdown Disabled&quot; country=&quot;in&quot; disableDropdown /&gt;;</code></pre>
+              <pre><code>const DisableDropdownOnly = () =&gt; &lt;PhoneInputWithState label=&quot;Flag Dropdown Disabled&quot; defaultCountry=&quot;IN&quot; disabled /&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -6907,34 +6723,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const WithDropdownSearch = () =&gt; &lt;PhoneInputWithState label=&quot;Search Enabled in Dropdown&quot; country=&quot;in&quot; enableSearch /&gt;;</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">Custom Country List</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const CustomCountryList = () =&gt; (
-  &lt;div className=&quot;flex flex-col gap-6 w-[320px]&quot;&gt;
-    &lt;PhoneInputWithState
-      label=&quot;Only US, CA, GB&quot;
-      country=&quot;us&quot;
-      onlyCountries={[&quot;us&quot;, &quot;ca&quot;, &quot;gb&quot;]}
-    /&gt;
-    &lt;PhoneInputWithState
-      label=&quot;Preferred IN and US at top&quot;
-      country=&quot;in&quot;
-      preferredCountries={[&quot;in&quot;, &quot;us&quot;]}
-    /&gt;
-    &lt;PhoneInputWithState
-      label=&quot;Exclude IN&quot;
-      country=&quot;us&quot;
-      excludeCountries={[&quot;in&quot;]}
-    /&gt;
-  &lt;/div&gt;
-);</code></pre>
+              <pre><code>const WithDropdownSearch = () =&gt; &lt;PhoneInputWithState label=&quot;Search Enabled in Dropdown&quot; defaultCountry=&quot;IN&quot; enableSearch /&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -6945,9 +6734,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               <pre><code>const DynamicPlaceholder = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-6 w-[320px]&quot;&gt;
-    &lt;PhoneInputWithState label=&quot;India (Dynamic Placeholder)&quot; country=&quot;in&quot; /&gt;
-    &lt;PhoneInputWithState label=&quot;United States (Dynamic Placeholder)&quot; country=&quot;us&quot; /&gt;
-    &lt;PhoneInputWithState label=&quot;France (Dynamic Placeholder)&quot; country=&quot;fr&quot; /&gt;
+    &lt;PhoneInputWithState label=&quot;India (Dynamic Placeholder)&quot; defaultCountry=&quot;IN&quot; /&gt;
+    &lt;PhoneInputWithState label=&quot;United States (Dynamic Placeholder)&quot; defaultCountry=&quot;US&quot; /&gt;
+    &lt;PhoneInputWithState label=&quot;France (Dynamic Placeholder)&quot; defaultCountry=&quot;FR&quot; /&gt;
   &lt;/div&gt;
 );</code></pre>
             </div>
@@ -6960,8 +6749,8 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               <pre><code>const DropdownPosition = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-6 w-[320px]&quot;&gt;
-    &lt;PhoneInputWithState label=&quot;Dropdown Bottom&quot; dropdownPosition=&quot;bottom&quot; country=&quot;in&quot; /&gt;
-    &lt;PhoneInputWithState label=&quot;Dropdown Top&quot; dropdownPosition=&quot;top&quot; country=&quot;in&quot; /&gt;
+    &lt;PhoneInputWithState label=&quot;Dropdown Bottom&quot; dropdownPosition=&quot;bottom&quot; defaultCountry=&quot;IN&quot; /&gt;
+    &lt;PhoneInputWithState label=&quot;Dropdown Top&quot; dropdownPosition=&quot;top&quot; defaultCountry=&quot;IN&quot; /&gt;
   &lt;/div&gt;
 );</code></pre>
             </div>
@@ -6972,7 +6761,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const Disabled = () =&gt; &lt;PhoneInputWithState label=&quot;Phone Number&quot; country=&quot;in&quot; value=&quot;919724582730&quot; disabled /&gt;;</code></pre>
+              <pre><code>const Disabled = () =&gt; &lt;PhoneInputWithState label=&quot;Phone Number&quot; defaultCountry=&quot;IN&quot; value=&quot;+919724582730&quot; disabled /&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -6983,7 +6772,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               <pre><code>const ErrorState = () =&gt; &lt;PhoneInputWithState
     label=&quot;Phone Number&quot;
-    country=&quot;in&quot;
+    defaultCountry=&quot;IN&quot;
     value=&quot;123&quot;
     error=&quot;Please enter a valid phone number&quot;
     touched /&gt;;</code></pre>
@@ -7005,9 +6794,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Popover</h2>
       <div class="badges">
-        <label for="c-19-components-popover-props" class="badge ok as-toggle">20 prop types</label>
-        <label for="c-19-components-popover-info" class="badge info as-toggle">1 info</label>
-        <label for="c-19-components-popover-stories" class="badge ok as-toggle">9 stories</label>
+        <label for="c-18-components-popover-props" class="badge ok as-toggle">20 prop types</label>
+        <label for="c-18-components-popover-info" class="badge info as-toggle">1 info</label>
+        <label for="c-18-components-popover-stories" class="badge ok as-toggle">9 stories</label>
         
         
       </div>
@@ -7020,11 +6809,11 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-19-components-popover-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-19-components-popover-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-18-components-popover-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-18-components-popover-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-19-components-popover-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-18-components-popover-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -7112,7 +6901,19 @@ placement?: | &quot;top&quot; | &quot;top-start&quot; | &quot;top-end&quot;
 /**
  * Border radius of the popover panel
  */
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot; = &quot;lg&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot; = &quot;lg&quot;
 
 /**
  * Dependencies that should trigger a repositioning calculation
@@ -7375,9 +7176,9 @@ triggerMode?: &quot;click&quot; | &quot;hover&quot; = &quot;click&quot;</code></
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Radio</h2>
       <div class="badges">
-        <label for="c-20-components-radio-props" class="badge ok as-toggle">12 prop types</label>
-        <label for="c-20-components-radio-info" class="badge info as-toggle">1 info</label>
-        <label for="c-20-components-radio-stories" class="badge ok as-toggle">6 stories</label>
+        <label for="c-19-components-radio-props" class="badge ok as-toggle">13 prop types</label>
+        <label for="c-19-components-radio-info" class="badge info as-toggle">1 info</label>
+        <label for="c-19-components-radio-stories" class="badge ok as-toggle">6 stories</label>
         
         
       </div>
@@ -7390,11 +7191,11 @@ triggerMode?: &quot;click&quot; | &quot;hover&quot; = &quot;click&quot;</code></
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-20-components-radio-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-20-components-radio-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-19-components-radio-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-19-components-radio-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-20-components-radio-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-19-components-radio-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -7411,7 +7212,7 @@ triggerMode?: &quot;click&quot; | &quot;hover&quot; = &quot;click&quot;</code></
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">12 prop types</span>
+              <span class="badge ok">13 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/input/Radio.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -7435,6 +7236,8 @@ form?: {
   touched: FormikTouched&lt;any&gt;;
   setFieldValue?: (field: string, value: any) =&gt; void;
 }
+
+isRequired?: boolean
 
 label?: string
 
@@ -7661,9 +7464,9 @@ touched?: boolean</code></pre>
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Rating</h2>
       <div class="badges">
-        <label for="c-21-components-rating-props" class="badge ok as-toggle">13 prop types</label>
-        <label for="c-21-components-rating-info" class="badge info as-toggle">1 info</label>
-        <label for="c-21-components-rating-stories" class="badge ok as-toggle">8 stories</label>
+        <label for="c-20-components-rating-props" class="badge ok as-toggle">15 prop types</label>
+        <label for="c-20-components-rating-info" class="badge info as-toggle">1 info</label>
+        <label for="c-20-components-rating-stories" class="badge ok as-toggle">8 stories</label>
         
         
       </div>
@@ -7676,11 +7479,11 @@ touched?: boolean</code></pre>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-21-components-rating-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-21-components-rating-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-20-components-rating-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-20-components-rating-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-21-components-rating-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-20-components-rating-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -7697,7 +7500,7 @@ touched?: boolean</code></pre>
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">13 prop types</span>
+              <span class="badge ok">15 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/rating/Rating.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -7718,6 +7521,10 @@ icon?: React.ReactNode
 isDisabled?: boolean = false
 
 isReadOnly?: boolean = false
+
+label?: React.ReactNode
+
+labelClassName?: string
 
 name?: string
 
@@ -7901,9 +7708,9 @@ import { Rating } from "vite-ts-tailwind-template";</code></pre>
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> SelectDropdown</h2>
       <div class="badges">
-        <label for="c-22-components-selectdropdown-props" class="badge ok as-toggle">22 prop types</label>
-        <label for="c-22-components-selectdropdown-info" class="badge info as-toggle">1 info</label>
-        <label for="c-22-components-selectdropdown-stories" class="badge ok as-toggle">12 stories</label>
+        <label for="c-21-components-selectdropdown-props" class="badge ok as-toggle">32 prop types</label>
+        <label for="c-21-components-selectdropdown-info" class="badge info as-toggle">1 info</label>
+        <label for="c-21-components-selectdropdown-stories" class="badge ok as-toggle">12 stories</label>
         
         
       </div>
@@ -7916,11 +7723,11 @@ import { Rating } from "vite-ts-tailwind-template";</code></pre>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-22-components-selectdropdown-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-22-components-selectdropdown-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-21-components-selectdropdown-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-21-components-selectdropdown-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-22-components-selectdropdown-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-21-components-selectdropdown-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -7937,7 +7744,7 @@ import { Rating } from "vite-ts-tailwind-template";</code></pre>
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">22 prop types</span>
+              <span class="badge ok">32 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/input/SelectDropdown.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -7952,7 +7759,14 @@ color?: | &quot;default&quot;
 
 containerClassName?: string = &quot;&quot;
 
+/**
+ * Customize the empty-state hint shown when search has no matches
+ */
+createOptionMessage?: (inputValue: string) =&gt; string
+
 errorClassName?: string = &quot;&quot;
+
+hideSelectedOptions?: boolean = false
 
 isApiSearch?: boolean = false
 
@@ -7964,13 +7778,20 @@ isLoading?: boolean = false
 
 isMulti?: boolean = false
 
+isRequired?: boolean = false
+
 isSearchable?: boolean = false
+
+/**
+ * Allow creating a new option from search text when it is not in the list
+ */
+isSearchWithCreate?: boolean = false
 
 label?: string
 
 labelClassName?: string = &quot;&quot;
 
-labelPlacement?: &quot;inside&quot; | &quot;outside&quot; | &quot;outside-left&quot; | &quot;outside-top&quot; | &quot;outlined&quot; = &quot;outside&quot;
+labelPlacement?: &quot;inside&quot; | &quot;outside&quot; | &quot;outside-left&quot; | &quot;outside-top&quot; | &quot;outlined&quot; = &quot;outside-top&quot;
 
 /**
  * Max chips shown before showing &quot;+N more&quot; badge (default: 3)
@@ -7979,19 +7800,50 @@ maxVisibleChips?: number
 
 meta?: any
 
+/**
+ * Optional consumer callback fired after Formik value updates.
+ * Useful when you need to update other fields based on selection.
+ */
+onChange?: (value: any) =&gt; void
+
+/**
+ * Fired when a new option is created from search input
+ */
+onCreateOption?: (option: SelectOption) =&gt; void
+
 onInputChange?: (value: string) =&gt; void
+
+onMenuClose?: () =&gt; void
+
+onMenuOpen?: () =&gt; void
+
+onMenuScrollToBottom?: (event: WheelEvent | TouchEvent) =&gt; void
 
 options: SelectOption[]
 
 placeholder?: string = &quot;&quot;
 
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot; = &quot;md&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot; = &quot;lg&quot;
 
 showCheckbox?: boolean = false
 
 size?: &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; = &quot;md&quot;
 
-variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot; = &quot;bordered&quot;</code></pre>
+variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot; = &quot;bordered&quot;
+
+wrapperClassName?: string = &quot;&quot;</code></pre>
           </div>
         </div>
     
@@ -8321,9 +8173,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Skeleton</h2>
       <div class="badges">
-        <label for="c-23-components-skeleton-props" class="badge ok as-toggle">5 prop types</label>
-        <label for="c-23-components-skeleton-info" class="badge info as-toggle">1 info</label>
-        <label for="c-23-components-skeleton-stories" class="badge ok as-toggle">4 stories</label>
+        <label for="c-22-components-skeleton-props" class="badge ok as-toggle">5 prop types</label>
+        <label for="c-22-components-skeleton-info" class="badge info as-toggle">1 info</label>
+        <label for="c-22-components-skeleton-stories" class="badge ok as-toggle">4 stories</label>
         
         
       </div>
@@ -8336,11 +8188,11 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-23-components-skeleton-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-23-components-skeleton-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-22-components-skeleton-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-22-components-skeleton-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-23-components-skeleton-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-22-components-skeleton-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -8514,9 +8366,9 @@ isLoaded?: boolean = false</code></pre>
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Slider</h2>
       <div class="badges">
-        <label for="c-24-components-slider-props" class="badge ok as-toggle">29 prop types</label>
-        <label for="c-24-components-slider-info" class="badge info as-toggle">1 info</label>
-        <label for="c-24-components-slider-stories" class="badge ok as-toggle">9 stories</label>
+        <label for="c-23-components-slider-props" class="badge ok as-toggle">30 prop types</label>
+        <label for="c-23-components-slider-info" class="badge info as-toggle">1 info</label>
+        <label for="c-23-components-slider-stories" class="badge ok as-toggle">9 stories</label>
         
         
       </div>
@@ -8529,11 +8381,11 @@ isLoaded?: boolean = false</code></pre>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-24-components-slider-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-24-components-slider-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-23-components-slider-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-23-components-slider-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-24-components-slider-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-23-components-slider-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -8550,7 +8402,7 @@ isLoaded?: boolean = false</code></pre>
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">29 prop types</span>
+              <span class="badge ok">30 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/slider/Slider.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -8580,6 +8432,8 @@ isDisabled?: boolean = false
 
 label?: React.ReactNode
 
+labelClassName?: string
+
 marks?: { value: number; label: string }[] = []
 
 maxValue?: number = 100
@@ -8594,7 +8448,19 @@ onChangeEnd?: (value: number | number[]) =&gt; void
 
 orientation?: &quot;horizontal&quot; | &quot;vertical&quot; = &quot;horizontal&quot;
 
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot; = &quot;full&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot; = &quot;full&quot;
 
 showOutline?: boolean = false
 
@@ -8814,9 +8680,9 @@ import { Slider } from "vite-ts-tailwind-template";</code></pre>
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Spinner</h2>
       <div class="badges">
-        <label for="c-25-components-spinner-props" class="badge ok as-toggle">6 prop types</label>
-        <label for="c-25-components-spinner-info" class="badge info as-toggle">1 info</label>
-        <label for="c-25-components-spinner-stories" class="badge ok as-toggle">6 stories</label>
+        <label for="c-24-components-spinner-props" class="badge ok as-toggle">6 prop types</label>
+        <label for="c-24-components-spinner-info" class="badge info as-toggle">1 info</label>
+        <label for="c-24-components-spinner-stories" class="badge ok as-toggle">6 stories</label>
         
         
       </div>
@@ -8829,11 +8695,11 @@ import { Slider } from "vite-ts-tailwind-template";</code></pre>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-25-components-spinner-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-25-components-spinner-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-24-components-spinner-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-24-components-spinner-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-25-components-spinner-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-24-components-spinner-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -9016,9 +8882,9 @@ variant?: &quot;default&quot; | &quot;simple&quot; | &quot;gradient&quot; | &quo
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Switch</h2>
       <div class="badges">
-        <label for="c-26-components-switch-props" class="badge ok as-toggle">21 prop types</label>
-        <label for="c-26-components-switch-info" class="badge info as-toggle">1 info</label>
-        <label for="c-26-components-switch-stories" class="badge ok as-toggle">9 stories</label>
+        <label for="c-25-components-switch-props" class="badge ok as-toggle">22 prop types</label>
+        <label for="c-25-components-switch-info" class="badge info as-toggle">1 info</label>
+        <label for="c-25-components-switch-stories" class="badge ok as-toggle">9 stories</label>
         
         
       </div>
@@ -9031,11 +8897,11 @@ variant?: &quot;default&quot; | &quot;simple&quot; | &quot;gradient&quot; | &quo
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-26-components-switch-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-26-components-switch-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-25-components-switch-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-25-components-switch-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-26-components-switch-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-25-components-switch-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -9052,7 +8918,7 @@ variant?: &quot;default&quot; | &quot;simple&quot; | &quot;gradient&quot; | &quo
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">21 prop types</span>
+              <span class="badge ok">22 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/input/Switch.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -9079,6 +8945,8 @@ form?: {
 }
 
 inactiveLabel?: string
+
+isRequired?: boolean
 
 label?: string
 
@@ -9248,6 +9116,795 @@ import { Switch } from "vite-ts-tailwind-template";</code></pre>
   no-story-error
   no-doc-error"
   role="listitem"
+  aria-label="Table">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-ok"></span> Table</h2>
+      <div class="badges">
+        <label for="c-26-components-table-props" class="badge ok as-toggle">46 prop types</label>
+        <label for="c-26-components-table-info" class="badge info as-toggle">1 info</label>
+        <label for="c-26-components-table-stories" class="badge ok as-toggle">13 stories</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/stories/Table.stories.tsx">components-table · ./src/stories/stories/Table.stories.tsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  
+  <input id="c-26-components-table-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-26-components-table-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  <input id="c-26-components-table-props" class="tg tg-props" type="checkbox" hidden />
+
+  <div class="panels">
+    
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+        <div class="panel panel-props">
+          <div class="note ok">
+            <div class="row">
+              <span class="ex-name">Prop types <small>(react-docgen)</small></span>
+              <span class="badge ok">46 prop types</span>
+            </div>
+            <pre><code>Component: src/components/ui/table/Table.tsx::Table</code></pre>
+            <pre><code>Props:</code></pre>
+            <pre><code>allowDuplicateSelectionEvents?: boolean
+
+BaseComponent?: React.ComponentType&lt;any&gt; | string = &quot;div&quot;
+
+bottomContent?: ReactNode
+
+bottomContentPlacement?: &quot;inside&quot; | &quot;outside&quot; = &quot;inside&quot;
+
+checkboxesProps?: any = {}
+
+children?: ReactNode | ReactNode[]
+
+/**
+ * Property on each item that holds nested child rows
+ */
+childrenKey?: string = &quot;children&quot;
+
+classNames?: Partial&lt;Record&lt;
+  | &quot;base&quot;
+  | &quot;table&quot;
+  | &quot;thead&quot;
+  | &quot;tbody&quot;
+  | &quot;tfoot&quot;
+  | &quot;emptyWrapper&quot;
+  | &quot;loadingWrapper&quot;
+  | &quot;wrapper&quot;
+  | &quot;tr&quot;
+  | &quot;th&quot;
+  | &quot;td&quot;
+  | &quot;sortIcon&quot;,
+  string
+&gt;&gt; = {}
+
+color?: &quot;default&quot; | &quot;primary&quot; | &quot;secondary&quot; | &quot;success&quot; | &quot;warning&quot; | &quot;danger&quot; = &quot;primary&quot;
+
+/**
+ * Default expanded row keys (uncontrolled)
+ */
+defaultExpandedKeys?: &quot;all&quot; | Set&lt;React.Key&gt; | React.Key[]
+
+defaultSelectedKeys?: &quot;all&quot; | Set&lt;React.Key&gt; | React.Key[]
+
+disableAnimation?: boolean
+
+disabledBehavior?: &quot;selection&quot; | &quot;all&quot; = &quot;selection&quot;
+
+disabledKeys?: &quot;all&quot; | Set&lt;React.Key&gt; | React.Key[]
+
+disallowEmptySelection?: boolean = false
+
+/**
+ * Controlled expanded row keys
+ */
+expandedKeys?: &quot;all&quot; | Set&lt;React.Key&gt; | React.Key[]
+
+/**
+ * Optional footer rendered inside the table
+ */
+footerContent?: React.ReactNode
+
+fullWidth?: boolean = true
+
+/**
+ * Resolve a stable key for each row when flattening the tree
+ */
+getRowKey?: (item: any, index: number) =&gt; React.Key = (item: any, index: number): React.Key =&gt;
+item?.id ?? item?._id ?? index
+
+hideHeader?: boolean = false
+
+isCompact?: boolean = false
+
+isHeaderSticky?: boolean = false
+
+isKeyboardNavigationDisabled?: boolean
+
+/**
+ * Apply standalone 20px rounded corners (for tables without tabs/pagination wrapper)
+ */
+isRounded?: boolean = false
+
+isStriped?: boolean = false
+
+isVirtualized?: boolean
+
+layout?: &quot;auto&quot; | &quot;fixed&quot; = &quot;auto&quot;
+
+maxTableHeight?: number | string
+
+onCellAction?: (key: React.Key) =&gt; void
+
+onExpandedChange?: (keys: Selection) =&gt; void
+
+onRowAction?: (key: React.Key) =&gt; void
+
+onSelectionChange?: (keys: Selection) =&gt; any
+
+onSortChange?: (descriptor: SortDescriptor) =&gt; any
+
+radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot;
+
+removeWrapper?: boolean = false
+
+/**
+ * Renders a full-width panel below a row when it is expanded
+ */
+renderExpandedContent?: (item: any) =&gt; React.ReactNode
+
+rowHeight?: number | string
+
+selectedKeys?: &quot;all&quot; | Set&lt;React.Key&gt; | React.Key[]
+
+selectionBehavior?: &quot;toggle&quot; | &quot;replace&quot; = &quot;toggle&quot;
+
+selectionMode?: &quot;single&quot; | &quot;multiple&quot; | &quot;none&quot; = &quot;none&quot;
+
+shadow?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; = &quot;sm&quot;
+
+showSelectionCheckboxes?: boolean
+
+sortDescriptor?: {
+  column: React.Key;
+  direction: &quot;ascending&quot; | &quot;descending&quot;;
+}
+
+topContent?: ReactNode
+
+topContentPlacement?: &quot;inside&quot; | &quot;outside&quot; = &quot;inside&quot;
+
+/**
+ * Column key that renders the tree hierarchy (indent + chevron)
+ */
+treeColumn?: React.Key</code></pre>
+          </div>
+        </div>
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import {
+    Avatar,
+    Chip,
+    Pagination,
+    Table,
+    TableBody,
+    TableCell,
+    TableColumn,
+    TableHeader,
+    TableRow,
+} from "vite-ts-tailwind-template";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Default</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Default = () =&gt; &lt;Table aria-label=&quot;Users table&quot;&gt;
+    &lt;TableHeader&gt;
+        &lt;TableColumn&gt;NAME&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;EMAIL&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;ROLE&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;STATUS&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;JOINED&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;SALARY&lt;/TableColumn&gt;
+    &lt;/TableHeader&gt;
+    &lt;TableBody&gt;
+        {users.map((user) =&gt; (
+          &lt;TableRow key={user.id}&gt;
+            &lt;TableCell&gt;
+              &lt;div className=&quot;flex items-center gap-3&quot;&gt;
+                &lt;Avatar name={user.name} size=&quot;sm&quot; color=&quot;primary&quot; /&gt;
+                &lt;span className=&quot;font-semibold text-neutral-800 dark:text-neutral-200&quot;&gt;{user.name}&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/TableCell&gt;
+            &lt;TableCell&gt;{user.email}&lt;/TableCell&gt;
+            &lt;TableCell&gt;{user.role}&lt;/TableCell&gt;
+            &lt;TableCell&gt;{statusBadge(user.status)}&lt;/TableCell&gt;
+            &lt;TableCell&gt;{user.joined}&lt;/TableCell&gt;
+            &lt;TableCell&gt;${user.salary.toLocaleString()}&lt;/TableCell&gt;
+          &lt;/TableRow&gt;
+        ))}
+    &lt;/TableBody&gt;
+&lt;/Table&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">With Pagination</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const WithPagination = () =&gt; {
+    const [page, setPage] = useState(1);
+    const rowsPerPage = 4;
+    const pages = Math.ceil(users.length / rowsPerPage);
+
+    const items = useMemo(() =&gt; {
+      const start = (page - 1) * rowsPerPage;
+      return users.slice(start, start + rowsPerPage);
+    }, [page]);
+
+    return (
+        &lt;Table
+            aria-label=&quot;Table with pagination&quot;
+            bottomContent={
+              &lt;div className=&quot;flex w-full justify-center p-2&quot;&gt;
+                &lt;Pagination
+                  isCompact
+                  showControls
+                  showShadow
+                  color=&quot;primary&quot;
+                  page={page}
+                  total={pages}
+                  onChange={(p) =&gt; setPage(p)}
+                /&gt;
+              &lt;/div&gt;
+            }
+            bottomContentPlacement=&quot;outside&quot;&gt;
+            &lt;TableHeader&gt;
+                &lt;TableColumn&gt;NAME&lt;/TableColumn&gt;
+                &lt;TableColumn&gt;EMAIL&lt;/TableColumn&gt;
+                &lt;TableColumn&gt;ROLE&lt;/TableColumn&gt;
+                &lt;TableColumn&gt;STATUS&lt;/TableColumn&gt;
+            &lt;/TableHeader&gt;
+            &lt;TableBody&gt;
+                {items.map((user) =&gt; (
+                  &lt;TableRow key={user.id}&gt;
+                    &lt;TableCell&gt;
+                      &lt;div className=&quot;flex items-center gap-3&quot;&gt;
+                        &lt;Avatar name={user.name} size=&quot;sm&quot; color=&quot;primary&quot; /&gt;
+                        &lt;span className=&quot;font-semibold text-neutral-800 dark:text-neutral-200&quot;&gt;{user.name}&lt;/span&gt;
+                      &lt;/div&gt;
+                    &lt;/TableCell&gt;
+                    &lt;TableCell&gt;{user.email}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;{user.role}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;{statusBadge(user.status)}&lt;/TableCell&gt;
+                  &lt;/TableRow&gt;
+                ))}
+            &lt;/TableBody&gt;
+        &lt;/Table&gt;
+    );
+};</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">With Sorting</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const WithSorting = () =&gt; {
+    const [sortDescriptor, setSortDescriptor] = useState&lt;SortDescriptor&gt;({
+      column: &quot;name&quot;,
+      direction: &quot;ascending&quot;,
+    });
+
+    const sortedItems = useMemo(() =&gt; {
+      return [...users].sort((a, b) =&gt; {
+        const col = sortDescriptor.column as keyof User;
+        const first = a[col];
+        const second = b[col];
+        let cmp = first &lt; second ? -1 : first &gt; second ? 1 : 0;
+        if (sortDescriptor.direction === &quot;descending&quot;) cmp *= -1;
+        return cmp;
+      });
+    }, [sortDescriptor]);
+
+    return (
+        &lt;Table
+            aria-label=&quot;Table with sorting&quot;
+            sortDescriptor={sortDescriptor}
+            onSortChange={setSortDescriptor}&gt;
+            &lt;TableHeader&gt;
+                &lt;TableColumn key=&quot;name&quot; allowsSorting&gt;NAME&lt;/TableColumn&gt;
+                &lt;TableColumn key=&quot;email&quot; allowsSorting&gt;EMAIL&lt;/TableColumn&gt;
+                &lt;TableColumn key=&quot;role&quot; allowsSorting&gt;ROLE&lt;/TableColumn&gt;
+                &lt;TableColumn key=&quot;status&quot; allowsSorting&gt;STATUS&lt;/TableColumn&gt;
+                &lt;TableColumn key=&quot;salary&quot; allowsSorting&gt;SALARY&lt;/TableColumn&gt;
+            &lt;/TableHeader&gt;
+            &lt;TableBody&gt;
+                {sortedItems.map((user) =&gt; (
+                  &lt;TableRow key={user.id}&gt;
+                    &lt;TableCell&gt;{user.name}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;{user.email}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;{user.role}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;{statusBadge(user.status)}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;${user.salary.toLocaleString()}&lt;/TableCell&gt;
+                  &lt;/TableRow&gt;
+                ))}
+            &lt;/TableBody&gt;
+        &lt;/Table&gt;
+    );
+};</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">With Checkbox Selection</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const WithCheckboxSelection = () =&gt; &lt;Table
+    aria-label=&quot;Table with selection&quot;
+    selectionMode=&quot;multiple&quot;
+    defaultSelectedKeys={new Set([&quot;1&quot;, &quot;3&quot;])}&gt;
+    &lt;TableHeader&gt;
+        &lt;TableColumn&gt;NAME&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;EMAIL&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;ROLE&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;STATUS&lt;/TableColumn&gt;
+    &lt;/TableHeader&gt;
+    &lt;TableBody&gt;
+        {users.slice(0, 6).map((user) =&gt; (
+          &lt;TableRow key={user.id}&gt;
+            &lt;TableCell&gt;
+              &lt;div className=&quot;flex items-center gap-3&quot;&gt;
+                &lt;Avatar name={user.name} size=&quot;sm&quot; color=&quot;primary&quot; /&gt;
+                &lt;span className=&quot;font-semibold text-neutral-800 dark:text-neutral-200&quot;&gt;{user.name}&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/TableCell&gt;
+            &lt;TableCell&gt;{user.email}&lt;/TableCell&gt;
+            &lt;TableCell&gt;{user.role}&lt;/TableCell&gt;
+            &lt;TableCell&gt;{statusBadge(user.status)}&lt;/TableCell&gt;
+          &lt;/TableRow&gt;
+        ))}
+    &lt;/TableBody&gt;
+&lt;/Table&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">All Features Combined</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const AllFeatures = () =&gt; {
+    const [page, setPage] = useState(1);
+    const [sortDescriptor, setSortDescriptor] = useState&lt;SortDescriptor&gt;({
+      column: &quot;name&quot;,
+      direction: &quot;ascending&quot;,
+    });
+    const rowsPerPage = 4;
+
+    const sortedItems = useMemo(() =&gt; {
+      return [...users].sort((a, b) =&gt; {
+        const col = sortDescriptor.column as keyof User;
+        const first = a[col];
+        const second = b[col];
+        let cmp = first &lt; second ? -1 : first &gt; second ? 1 : 0;
+        if (sortDescriptor.direction === &quot;descending&quot;) cmp *= -1;
+        return cmp;
+      });
+    }, [sortDescriptor]);
+
+    const items = useMemo(() =&gt; {
+      const start = (page - 1) * rowsPerPage;
+      return sortedItems.slice(start, start + rowsPerPage);
+    }, [page, sortedItems]);
+
+    return (
+        &lt;Table
+            aria-label=&quot;Table with all features&quot;
+            selectionMode=&quot;multiple&quot;
+            sortDescriptor={sortDescriptor}
+            onSortChange={setSortDescriptor}
+            bottomContent={
+              &lt;div className=&quot;flex w-full justify-center p-2&quot;&gt;
+                &lt;Pagination
+                  isCompact
+                  showControls
+                  showShadow
+                  color=&quot;primary&quot;
+                  page={page}
+                  total={Math.ceil(users.length / rowsPerPage)}
+                  onChange={(p) =&gt; setPage(p)}
+                /&gt;
+              &lt;/div&gt;
+            }
+            bottomContentPlacement=&quot;outside&quot;&gt;
+            &lt;TableHeader&gt;
+                &lt;TableColumn key=&quot;name&quot; allowsSorting&gt;NAME&lt;/TableColumn&gt;
+                &lt;TableColumn key=&quot;email&quot; allowsSorting&gt;EMAIL&lt;/TableColumn&gt;
+                &lt;TableColumn key=&quot;role&quot; allowsSorting&gt;ROLE&lt;/TableColumn&gt;
+                &lt;TableColumn key=&quot;status&quot; allowsSorting&gt;STATUS&lt;/TableColumn&gt;
+                &lt;TableColumn key=&quot;salary&quot; allowsSorting&gt;SALARY&lt;/TableColumn&gt;
+            &lt;/TableHeader&gt;
+            &lt;TableBody&gt;
+                {items.map((user) =&gt; (
+                  &lt;TableRow key={user.id}&gt;
+                    &lt;TableCell&gt;{user.name}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;{user.email}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;{user.role}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;{statusBadge(user.status)}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;${user.salary.toLocaleString()}&lt;/TableCell&gt;
+                  &lt;/TableRow&gt;
+                ))}
+            &lt;/TableBody&gt;
+        &lt;/Table&gt;
+    );
+};</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">With Expandable Rows</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const WithExpandableRows = () =&gt; &lt;Table
+    aria-label=&quot;Expandable rows table&quot;
+    renderExpandedContent={(item: Order) =&gt; (
+      &lt;div className=&quot;p-4 bg-neutral-50 dark:bg-neutral-800/40 rounded-lg space-y-2&quot;&gt;
+        &lt;p className=&quot;text-xs font-semibold text-neutral-500 uppercase tracking-wider&quot;&gt;Sub Items for {item.id}&lt;/p&gt;
+        {item.subRows &amp;&amp; item.subRows.length &gt; 0 ? (
+          item.subRows.map((sub) =&gt; (
+            &lt;div key={sub.id} className=&quot;flex items-center gap-6 text-sm text-neutral-700 dark:text-neutral-300&quot;&gt;
+              &lt;span className=&quot;font-mono text-primary font-medium&quot;&gt;{sub.id}&lt;/span&gt;
+              &lt;span&gt;{sub.product}&lt;/span&gt;
+              &lt;span&gt;${sub.amount}&lt;/span&gt;
+              &lt;span&gt;{orderStatusBadge(sub.status)}&lt;/span&gt;
+            &lt;/div&gt;
+          ))
+        ) : (
+          &lt;p className=&quot;text-xs text-neutral-400&quot;&gt;No sub-items available&lt;/p&gt;
+        )}
+      &lt;/div&gt;
+    )}&gt;
+    &lt;TableHeader&gt;
+        &lt;TableColumn&gt;ORDER ID&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;PRODUCT&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;CUSTOMER&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;AMOUNT&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;STATUS&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;DATE&lt;/TableColumn&gt;
+    &lt;/TableHeader&gt;
+    &lt;TableBody items={orders}&gt;
+        {(order) =&gt; (
+          &lt;TableRow key={order.id}&gt;
+            &lt;TableCell&gt;&lt;span className=&quot;font-mono text-xs text-primary font-semibold&quot;&gt;{order.id}&lt;/span&gt;&lt;/TableCell&gt;
+            &lt;TableCell&gt;{order.product}&lt;/TableCell&gt;
+            &lt;TableCell&gt;{order.customer}&lt;/TableCell&gt;
+            &lt;TableCell&gt;${order.amount}&lt;/TableCell&gt;
+            &lt;TableCell&gt;{orderStatusBadge(order.status)}&lt;/TableCell&gt;
+            &lt;TableCell&gt;{order.date}&lt;/TableCell&gt;
+          &lt;/TableRow&gt;
+        )}
+    &lt;/TableBody&gt;
+&lt;/Table&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Loading State</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const LoadingState = () =&gt; &lt;Table aria-label=&quot;Loading state table&quot;&gt;
+    &lt;TableHeader&gt;
+        &lt;TableColumn&gt;NAME&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;EMAIL&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;ROLE&lt;/TableColumn&gt;
+    &lt;/TableHeader&gt;
+    &lt;TableBody isLoading loadingState=&quot;loading&quot; emptyContent=&quot;Loading data...&quot;&gt;
+        {[]}
+    &lt;/TableBody&gt;
+&lt;/Table&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Empty State</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const EmptyState = () =&gt; &lt;Table aria-label=&quot;Empty state table&quot;&gt;
+    &lt;TableHeader&gt;
+        &lt;TableColumn&gt;NAME&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;EMAIL&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;ROLE&lt;/TableColumn&gt;
+    &lt;/TableHeader&gt;
+    &lt;TableBody emptyContent=&quot;No rows available.&quot;&gt;
+        {[]}
+    &lt;/TableBody&gt;
+&lt;/Table&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Hidden Header</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const HiddenHeader = () =&gt; &lt;Table aria-label=&quot;Hidden header table&quot; hideHeader&gt;
+    &lt;TableHeader&gt;
+        &lt;TableColumn&gt;NAME&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;EMAIL&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;ROLE&lt;/TableColumn&gt;
+    &lt;/TableHeader&gt;
+    &lt;TableBody&gt;
+        {users.slice(0, 4).map((user) =&gt; (
+          &lt;TableRow key={user.id}&gt;
+            &lt;TableCell&gt;{user.name}&lt;/TableCell&gt;
+            &lt;TableCell&gt;{user.email}&lt;/TableCell&gt;
+            &lt;TableCell&gt;{user.role}&lt;/TableCell&gt;
+          &lt;/TableRow&gt;
+        ))}
+    &lt;/TableBody&gt;
+&lt;/Table&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Pagination Color &amp; Variant</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const PaginationVariants = () =&gt; {
+  const [color, setColor] = useState&lt;&quot;primary&quot; | &quot;secondary&quot; | &quot;success&quot; | &quot;warning&quot; | &quot;danger&quot; | &quot;default&quot;&gt;(&quot;primary&quot;);
+  const [variant, setVariant] = useState&lt;&quot;flat&quot; | &quot;bordered&quot; | &quot;light&quot; | &quot;faded&quot;&gt;(&quot;flat&quot;);
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 3;
+  const pages = Math.ceil(users.length / rowsPerPage);
+
+  const items = useMemo(() =&gt; {
+    const start = (page - 1) * rowsPerPage;
+    return users.slice(start, start + rowsPerPage);
+  }, [page]);
+
+  const colors = [&quot;primary&quot;, &quot;secondary&quot;, &quot;success&quot;, &quot;warning&quot;, &quot;danger&quot;, &quot;default&quot;] as const;
+  const variants = [&quot;flat&quot;, &quot;bordered&quot;, &quot;light&quot;, &quot;faded&quot;] as const;
+
+  return (
+    &lt;div className=&quot;flex flex-col gap-4&quot;&gt;
+      &lt;div className=&quot;flex flex-wrap gap-4&quot;&gt;
+        &lt;div className=&quot;flex flex-col gap-1&quot;&gt;
+          &lt;span className=&quot;text-xs font-semibold text-neutral-500 uppercase tracking-wide&quot;&gt;Color&lt;/span&gt;
+          &lt;div className=&quot;flex flex-wrap gap-2&quot;&gt;
+            {colors.map((c) =&gt; (
+              &lt;button
+                key={c}
+                onClick={() =&gt; setColor(c)}
+                className={`px-3 py-1 text-sm rounded-lg border transition-all ${color === c ? &quot;bg-neutral-800 text-white border-neutral-800&quot; : &quot;border-neutral-200 text-neutral-600 hover:border-neutral-400&quot;}`}
+              &gt;
+                {c}
+              &lt;/button&gt;
+            ))}
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div className=&quot;flex flex-col gap-1&quot;&gt;
+          &lt;span className=&quot;text-xs font-semibold text-neutral-500 uppercase tracking-wide&quot;&gt;Variant&lt;/span&gt;
+          &lt;div className=&quot;flex flex-wrap gap-2&quot;&gt;
+            {variants.map((v) =&gt; (
+              &lt;button
+                key={v}
+                onClick={() =&gt; setVariant(v)}
+                className={`px-3 py-1 text-sm rounded-lg border transition-all ${variant === v ? &quot;bg-neutral-800 text-white border-neutral-800&quot; : &quot;border-neutral-200 text-neutral-600 hover:border-neutral-400&quot;}`}
+              &gt;
+                {v}
+              &lt;/button&gt;
+            ))}
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;Table
+        aria-label=&quot;Table with pagination options&quot;
+        bottomContent={
+          &lt;div className=&quot;flex w-full justify-center p-2&quot;&gt;
+            &lt;Pagination
+              showControls
+              color={color}
+              variant={variant}
+              page={page}
+              total={pages}
+              onChange={(p) =&gt; setPage(p)}
+            /&gt;
+          &lt;/div&gt;
+        }
+        bottomContentPlacement=&quot;outside&quot;
+      &gt;
+        &lt;TableHeader&gt;
+          &lt;TableColumn&gt;NAME&lt;/TableColumn&gt;
+          &lt;TableColumn&gt;EMAIL&lt;/TableColumn&gt;
+          &lt;TableColumn&gt;ROLE&lt;/TableColumn&gt;
+        &lt;/TableHeader&gt;
+        &lt;TableBody&gt;
+          {items.map((user) =&gt; (
+            &lt;TableRow key={user.id}&gt;
+              &lt;TableCell&gt;{user.name}&lt;/TableCell&gt;
+              &lt;TableCell&gt;{user.email}&lt;/TableCell&gt;
+              &lt;TableCell&gt;{user.role}&lt;/TableCell&gt;
+            &lt;/TableRow&gt;
+          ))}
+        &lt;/TableBody&gt;
+      &lt;/Table&gt;
+    &lt;/div&gt;
+  );
+};</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Clickable Rows</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const ClickableRows = () =&gt; {
+    const [selected, setSelected] = useState&lt;User | null&gt;(null);
+
+    return (
+        &lt;div className=&quot;flex flex-col gap-4&quot;&gt;
+            &lt;p className=&quot;text-sm text-neutral-500&quot;&gt;Click any row to trigger action.&lt;/p&gt;
+            {selected &amp;&amp; (
+              &lt;div className=&quot;p-4 bg-primary/10 border border-primary/20 rounded-xl text-sm&quot;&gt;
+                &lt;span className=&quot;font-semibold text-primary&quot;&gt;Selected:&lt;/span&gt;{&quot; &quot;}
+                {selected.name} — {selected.email} — {selected.role}
+              &lt;/div&gt;
+            )}
+            &lt;Table
+                aria-label=&quot;Clickable rows table&quot;
+                onRowAction={(key) =&gt; {
+                  const u = users.find((x) =&gt; x.id === key);
+                  if (u) setSelected(u);
+                }}&gt;
+                &lt;TableHeader&gt;
+                    &lt;TableColumn&gt;NAME&lt;/TableColumn&gt;
+                    &lt;TableColumn&gt;EMAIL&lt;/TableColumn&gt;
+                    &lt;TableColumn&gt;ROLE&lt;/TableColumn&gt;
+                &lt;/TableHeader&gt;
+                &lt;TableBody&gt;
+                    {users.slice(0, 5).map((user) =&gt; (
+                      &lt;TableRow key={user.id}&gt;
+                        &lt;TableCell&gt;{user.name}&lt;/TableCell&gt;
+                        &lt;TableCell&gt;{user.email}&lt;/TableCell&gt;
+                        &lt;TableCell&gt;{user.role}&lt;/TableCell&gt;
+                      &lt;/TableRow&gt;
+                    ))}
+                &lt;/TableBody&gt;
+            &lt;/Table&gt;
+        &lt;/div&gt;
+    );
+};</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Striped Rows</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const StripedRows = () =&gt; &lt;Table aria-label=&quot;Striped table&quot; isStriped&gt;
+    &lt;TableHeader&gt;
+        &lt;TableColumn&gt;NAME&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;EMAIL&lt;/TableColumn&gt;
+        &lt;TableColumn&gt;ROLE&lt;/TableColumn&gt;
+    &lt;/TableHeader&gt;
+    &lt;TableBody&gt;
+        {users.slice(0, 6).map((user) =&gt; (
+          &lt;TableRow key={user.id}&gt;
+            &lt;TableCell&gt;{user.name}&lt;/TableCell&gt;
+            &lt;TableCell&gt;{user.email}&lt;/TableCell&gt;
+            &lt;TableCell&gt;{user.role}&lt;/TableCell&gt;
+          &lt;/TableRow&gt;
+        ))}
+    &lt;/TableBody&gt;
+&lt;/Table&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Real-world: Orders</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const OrdersTable = () =&gt; {
+    const [page, setPage] = useState(1);
+    const rowsPerPage = 4;
+    const pages = Math.ceil(orders.length / rowsPerPage);
+
+    const items = useMemo(() =&gt; {
+      const start = (page - 1) * rowsPerPage;
+      return orders.slice(start, start + rowsPerPage);
+    }, [page]);
+
+    return (
+        &lt;Table
+            aria-label=&quot;Orders table&quot;
+            selectionMode=&quot;multiple&quot;
+            bottomContent={
+              &lt;div className=&quot;flex w-full justify-center p-2&quot;&gt;
+                &lt;Pagination
+                  showControls
+                  color=&quot;primary&quot;
+                  page={page}
+                  total={pages}
+                  onChange={(p) =&gt; setPage(p)}
+                /&gt;
+              &lt;/div&gt;
+            }
+            bottomContentPlacement=&quot;outside&quot;&gt;
+            &lt;TableHeader&gt;
+                &lt;TableColumn&gt;ORDER ID&lt;/TableColumn&gt;
+                &lt;TableColumn&gt;PRODUCT&lt;/TableColumn&gt;
+                &lt;TableColumn&gt;CUSTOMER&lt;/TableColumn&gt;
+                &lt;TableColumn&gt;AMOUNT&lt;/TableColumn&gt;
+                &lt;TableColumn&gt;STATUS&lt;/TableColumn&gt;
+                &lt;TableColumn&gt;DATE&lt;/TableColumn&gt;
+            &lt;/TableHeader&gt;
+            &lt;TableBody&gt;
+                {items.map((order) =&gt; (
+                  &lt;TableRow key={order.id}&gt;
+                    &lt;TableCell&gt;&lt;span className=&quot;font-mono text-xs text-primary font-semibold&quot;&gt;{order.id}&lt;/span&gt;&lt;/TableCell&gt;
+                    &lt;TableCell&gt;{order.product}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;{order.customer}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;${order.amount}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;{orderStatusBadge(order.status)}&lt;/TableCell&gt;
+                    &lt;TableCell&gt;{order.date}&lt;/TableCell&gt;
+                  &lt;/TableRow&gt;
+                ))}
+            &lt;/TableBody&gt;
+        &lt;/Table&gt;
+    );
+};</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  no-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
   aria-label="Tabs">
   <div class="head">
     <div class="title">
@@ -9368,7 +10025,19 @@ placement?: &quot;top&quot; | &quot;bottom&quot; | &quot;start&quot; | &quot;end
  * The border radius of the tab buttons container/items.
  * @default &quot;md&quot;
  */
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot; = &quot;md&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot; = &quot;lg&quot;
 
 /**
  * Controlled key of selected tab.
@@ -9588,12 +10257,12 @@ import { Tab, Tabs } from "vite-ts-tailwind-template";</code></pre>
   no-story-error
   no-doc-error"
   role="listitem"
-  aria-label="Textarea">
+  aria-label="TextareaComponent">
   <div class="head">
     <div class="title">
-      <h2><span class="status-dot dot-ok"></span> Textarea</h2>
+      <h2><span class="status-dot dot-ok"></span> TextareaComponent</h2>
       <div class="badges">
-        <label for="c-28-components-textarea-props" class="badge ok as-toggle">18 prop types</label>
+        <label for="c-28-components-textarea-props" class="badge ok as-toggle">20 prop types</label>
         <label for="c-28-components-textarea-info" class="badge info as-toggle">1 info</label>
         <label for="c-28-components-textarea-stories" class="badge ok as-toggle">9 stories</label>
         
@@ -9629,7 +10298,7 @@ import { Tab, Tabs } from "vite-ts-tailwind-template";</code></pre>
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">18 prop types</span>
+              <span class="badge ok">20 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/input/Textarea.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -9655,6 +10324,8 @@ inputClassName?: string
 
 isClearable?: boolean
 
+isRequired?: boolean
+
 label?: string
 
 labelClassName?: string
@@ -9665,13 +10336,27 @@ maxRows?: number
 
 minRows?: number
 
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot;
 
 size?: &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot;
 
 touched?: boolean
 
-variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot;</code></pre>
+variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot;
+
+wrapperClassName?: string</code></pre>
           </div>
         </div>
     
@@ -9683,7 +10368,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
                 <div class="row">
                   <span class="ex-name">Imports</span>
                 </div>
-                <pre><code>import { Textarea } from "vite-ts-tailwind-template";</code></pre>
+                <pre><code>import { Textarea as TextareaComponent } from "vite-ts-tailwind-template";</code></pre>
               </div>
           
           
@@ -9695,7 +10380,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               
               <pre><code>const Default = () =&gt; &lt;div className=&quot;w-[600px]&quot;&gt;
-    &lt;TextareaWithState label=&quot;Description&quot; placeholder=&quot;Enter your description&quot; /&gt;
+    &lt;Textarea label=&quot;Description&quot; placeholder=&quot;Enter your description&quot; /&gt;
 &lt;/div&gt;;</code></pre>
             </div>
             <div class="note ok">
@@ -9707,15 +10392,15 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               <pre><code>const Variants = () =&gt; &lt;div className=&quot;flex flex-col gap-8 w-[800px]&quot;&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-        &lt;TextareaWithState placeholder=&quot;Enter your description&quot; variant=&quot;flat&quot; label=&quot;Flat&quot; /&gt;
-        &lt;TextareaWithState placeholder=&quot;Enter your description&quot; variant=&quot;bordered&quot; label=&quot;Bordered&quot; /&gt;
+        &lt;Textarea placeholder=&quot;Enter your description&quot; variant=&quot;flat&quot; label=&quot;Flat&quot; /&gt;
+        &lt;Textarea placeholder=&quot;Enter your description&quot; variant=&quot;bordered&quot; label=&quot;Bordered&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-        &lt;TextareaWithState
+        &lt;Textarea
             placeholder=&quot;Enter your description&quot;
             variant=&quot;underlined&quot;
             label=&quot;Underlined&quot; /&gt;
-        &lt;TextareaWithState placeholder=&quot;Enter your description&quot; variant=&quot;faded&quot; label=&quot;Faded&quot; /&gt;
+        &lt;Textarea placeholder=&quot;Enter your description&quot; variant=&quot;faded&quot; label=&quot;Faded&quot; /&gt;
     &lt;/div&gt;
 &lt;/div&gt;;</code></pre>
             </div>
@@ -9727,9 +10412,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               
               <pre><code>const Sizes = () =&gt; &lt;div className=&quot;flex gap-4 w-[800px]&quot;&gt;
-    &lt;TextareaWithState size=&quot;sm&quot; label=&quot;Small&quot; placeholder=&quot;Small size&quot; /&gt;
-    &lt;TextareaWithState size=&quot;md&quot; label=&quot;Medium&quot; placeholder=&quot;Medium size&quot; /&gt;
-    &lt;TextareaWithState size=&quot;lg&quot; label=&quot;Large&quot; placeholder=&quot;Large size&quot; /&gt;
+    &lt;Textarea size=&quot;sm&quot; label=&quot;Small&quot; placeholder=&quot;Small size&quot; /&gt;
+    &lt;Textarea size=&quot;md&quot; label=&quot;Medium&quot; placeholder=&quot;Medium size&quot; /&gt;
+    &lt;Textarea size=&quot;lg&quot; label=&quot;Large&quot; placeholder=&quot;Large size&quot; /&gt;
 &lt;/div&gt;;</code></pre>
             </div>
             <div class="note ok">
@@ -9740,27 +10425,27 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               
               <pre><code>const Radiuses = () =&gt; &lt;div className=&quot;flex gap-4 w-[800px]&quot;&gt;
-    &lt;TextareaWithState
+    &lt;Textarea
         variant=&quot;bordered&quot;
         radius=&quot;none&quot;
         label=&quot;Radius None&quot;
         placeholder=&quot;No radius&quot; /&gt;
-    &lt;TextareaWithState
+    &lt;Textarea
         variant=&quot;bordered&quot;
         radius=&quot;sm&quot;
         label=&quot;Radius Small&quot;
         placeholder=&quot;Small radius&quot; /&gt;
-    &lt;TextareaWithState
+    &lt;Textarea
         variant=&quot;bordered&quot;
         radius=&quot;md&quot;
         label=&quot;Radius Medium&quot;
         placeholder=&quot;Medium radius&quot; /&gt;
-    &lt;TextareaWithState
+    &lt;Textarea
         variant=&quot;bordered&quot;
         radius=&quot;lg&quot;
         label=&quot;Radius Large&quot;
         placeholder=&quot;Large radius&quot; /&gt;
-    &lt;TextareaWithState
+    &lt;Textarea
         variant=&quot;bordered&quot;
         radius=&quot;full&quot;
         label=&quot;Radius Full&quot;
@@ -9776,35 +10461,35 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               <pre><code>const LabelPlacements = () =&gt; &lt;div className=&quot;flex flex-col gap-8 w-[800px]&quot;&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-        &lt;TextareaWithState variant=&quot;bordered&quot; labelPlacement=&quot;inside&quot; label=&quot;Inside (Floating)&quot; /&gt;
-        &lt;TextareaWithState
+        &lt;Textarea variant=&quot;bordered&quot; labelPlacement=&quot;inside&quot; label=&quot;Inside (Floating)&quot; /&gt;
+        &lt;Textarea
             variant=&quot;bordered&quot;
             labelPlacement=&quot;inside&quot;
             label=&quot;Inside (Static with Placeholder)&quot;
             placeholder=&quot;Enter text&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-        &lt;TextareaWithState variant=&quot;bordered&quot; labelPlacement=&quot;outside&quot; label=&quot;Outside (Floating)&quot; /&gt;
-        &lt;TextareaWithState
+        &lt;Textarea variant=&quot;bordered&quot; labelPlacement=&quot;outside&quot; label=&quot;Outside (Floating)&quot; /&gt;
+        &lt;Textarea
             variant=&quot;bordered&quot;
             labelPlacement=&quot;outside&quot;
             label=&quot;Outside (Static with Placeholder)&quot;
             placeholder=&quot;Enter text&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-        &lt;TextareaWithState variant=&quot;bordered&quot; labelPlacement=&quot;outlined&quot; label=&quot;Outlined (Floating)&quot; /&gt;
-        &lt;TextareaWithState
+        &lt;Textarea variant=&quot;bordered&quot; labelPlacement=&quot;outlined&quot; label=&quot;Outlined (Floating)&quot; /&gt;
+        &lt;Textarea
             variant=&quot;bordered&quot;
             labelPlacement=&quot;outlined&quot;
             label=&quot;Outlined (Static with Placeholder)&quot;
             placeholder=&quot;Enter text&quot; /&gt;
     &lt;/div&gt;
-    &lt;TextareaWithState
+    &lt;Textarea
         variant=&quot;bordered&quot;
         labelPlacement=&quot;outside-top&quot;
         label=&quot;Outside Top (Static)&quot;
         placeholder=&quot;Enter text&quot; /&gt;
-    &lt;TextareaWithState
+    &lt;Textarea
         variant=&quot;bordered&quot;
         labelPlacement=&quot;outside-left&quot;
         label=&quot;Outside Left (Static)&quot;
@@ -9819,7 +10504,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               
               <pre><code>const Clearable = () =&gt; &lt;div className=&quot;w-[600px]&quot;&gt;
-    &lt;TextareaWithState label=&quot;Message&quot; placeholder=&quot;Type a message...&quot; isClearable /&gt;
+    &lt;Textarea label=&quot;Message&quot; placeholder=&quot;Type a message...&quot; isClearable /&gt;
 &lt;/div&gt;;</code></pre>
             </div>
             <div class="note ok">
@@ -9830,12 +10515,12 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               
               <pre><code>const Autosize = () =&gt; &lt;div className=&quot;flex gap-4 w-[800px]&quot;&gt;
-    &lt;TextareaWithState
+    &lt;Textarea
         placeholder=&quot;Type text here...&quot;
         minRows={3}
         maxRows={6}
         label=&quot;Autosizing Textarea&quot; /&gt;
-    &lt;TextareaWithState
+    &lt;Textarea
         placeholder=&quot;Type text here...&quot;
         minRows={3}
         maxRows={6}
@@ -9851,7 +10536,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               
               <pre><code>const Disabled = () =&gt; &lt;div className=&quot;w-[600px]&quot;&gt;
-    &lt;TextareaWithState label=&quot;Description&quot; placeholder=&quot;Enter description&quot; disabled /&gt;
+    &lt;Textarea label=&quot;Description&quot; placeholder=&quot;Enter description&quot; disabled /&gt;
 &lt;/div&gt;;</code></pre>
             </div>
             <div class="note ok">
@@ -9862,7 +10547,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               
               <pre><code>const ErrorState = () =&gt; &lt;div className=&quot;w-[600px]&quot;&gt;
-    &lt;TextareaWithState
+    &lt;Textarea
         label=&quot;Description&quot;
         placeholder=&quot;Enter description&quot;
         error=&quot;Description is required&quot;
@@ -9881,12 +10566,12 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
   no-story-error
   no-doc-error"
   role="listitem"
-  aria-label="TimePicker">
+  aria-label="TimePickerComponent">
   <div class="head">
     <div class="title">
-      <h2><span class="status-dot dot-ok"></span> TimePicker</h2>
+      <h2><span class="status-dot dot-ok"></span> TimePickerComponent</h2>
       <div class="badges">
-        <label for="c-29-components-timepicker-props" class="badge ok as-toggle">19 prop types</label>
+        <label for="c-29-components-timepicker-props" class="badge ok as-toggle">23 prop types</label>
         <label for="c-29-components-timepicker-info" class="badge info as-toggle">1 info</label>
         <label for="c-29-components-timepicker-stories" class="badge ok as-toggle">9 stories</label>
         
@@ -9922,7 +10607,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
           <div class="note ok">
             <div class="row">
               <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">19 prop types</span>
+              <span class="badge ok">23 prop types</span>
             </div>
             <pre><code>Component: src/components/ui/input/timePicker/TimePicker.tsx::default</code></pre>
             <pre><code>Props:</code></pre>
@@ -9951,21 +10636,39 @@ form?: {
   setFieldTouched?: (field: string, isTouched?: boolean, shouldValidate?: boolean) =&gt; void;
 }
 
+is24Format?: boolean = false
+
 isClearable?: boolean = false
+
+isInputable?: boolean = false
+
+isRequired?: boolean = false
 
 label?: string
 
 labelClassName?: string = &quot;&quot;
 
-labelPlacement?: &quot;inside&quot; | &quot;outside&quot; | &quot;outside-left&quot; | &quot;outside-top&quot; | &quot;outlined&quot; = &quot;outside&quot;
+labelPlacement?: &quot;inside&quot; | &quot;outside&quot; | &quot;outside-left&quot; | &quot;outside-top&quot; | &quot;outlined&quot; = &quot;outside-top&quot;
 
-mode?: &quot;normal&quot; | &quot;clock&quot;
+mode?: &quot;normal&quot; | &quot;clock&quot; = &quot;normal&quot;
 
 onChange?: (time: string) =&gt; void
 
 placeholder?: string
 
-radius?: &quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; | &quot;full&quot; = &quot;md&quot;
+radius?: | &quot;none&quot;
+| &quot;sm&quot;
+| &quot;md&quot;
+| &quot;lg&quot;
+| &quot;xl&quot;
+| &quot;2xl&quot;
+| &quot;3xl&quot;
+| &quot;4xl&quot;
+| &quot;5xl&quot;
+| &quot;6xl&quot;
+| &quot;7xl&quot;
+| &quot;8xl&quot;
+| &quot;full&quot; = &quot;lg&quot;
 
 size?: &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot; = &quot;md&quot;
 
@@ -9973,7 +10676,9 @@ touched?: boolean
 
 value?: string
 
-variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot; = &quot;bordered&quot;</code></pre>
+variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &quot;faded&quot; = &quot;bordered&quot;
+
+wrapperClassName?: string = &quot;&quot;</code></pre>
           </div>
         </div>
     
@@ -9985,7 +10690,7 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
                 <div class="row">
                   <span class="ex-name">Imports</span>
                 </div>
-                <pre><code>import { TimePicker } from "vite-ts-tailwind-template";</code></pre>
+                <pre><code>import { TimePicker as TimePickerComponent } from "vite-ts-tailwind-template";</code></pre>
               </div>
           
           
@@ -9996,7 +10701,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const Default = () =&gt; &lt;TimePickerWithState label=&quot;Select Time&quot; placeholder=&quot;Select Time&quot; isClearable /&gt;;</code></pre>
+              <pre><code>const Default = () =&gt; &lt;div className=&quot;w-[320px]&quot;&gt;
+    &lt;TimePicker label=&quot;Select Time&quot; placeholder=&quot;Select Time&quot; isClearable /&gt;
+&lt;/div&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -10009,11 +10716,11 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
   &lt;div className=&quot;flex gap-8 w-[600px]&quot;&gt;
     &lt;div className=&quot;flex flex-col gap-2 flex-1&quot;&gt;
       &lt;span className=&quot;text-xs font-bold text-neutral-500 uppercase tracking-wider&quot;&gt;Mode: Normal (Scroll Lists)&lt;/span&gt;
-      &lt;TimePickerWithState label=&quot;Normal Scroll Picker&quot; mode=&quot;normal&quot; isClearable={true} value=&quot;03:30 PM&quot; /&gt;
+      &lt;TimePicker label=&quot;Normal Scroll Picker&quot; mode=&quot;normal&quot; isClearable={true} value=&quot;03:30 PM&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex flex-col gap-2 flex-1&quot;&gt;
       &lt;span className=&quot;text-xs font-bold text-neutral-500 uppercase tracking-wider&quot;&gt;Mode: Clock (Dial Selector)&lt;/span&gt;
-      &lt;TimePickerWithState label=&quot;Clock Dial Picker&quot; mode=&quot;clock&quot; isClearable={true} value=&quot;03:30 PM&quot; /&gt;
+      &lt;TimePicker label=&quot;Clock Dial Picker&quot; mode=&quot;clock&quot; isClearable={true} value=&quot;03:30 PM&quot; /&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 );</code></pre>
@@ -10028,12 +10735,12 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               <pre><code>const Variants = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-8 w-[600px]&quot;&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;TimePickerWithState label=&quot;Flat&quot; variant=&quot;flat&quot; isClearable={true} /&gt;
-      &lt;TimePickerWithState label=&quot;Bordered&quot; variant=&quot;bordered&quot; isClearable={true} /&gt;
+      &lt;TimePicker label=&quot;Flat&quot; variant=&quot;flat&quot; isClearable={true} /&gt;
+      &lt;TimePicker label=&quot;Bordered&quot; variant=&quot;bordered&quot; isClearable={true} /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;TimePickerWithState label=&quot;Underlined&quot; variant=&quot;underlined&quot; isClearable={true} /&gt;
-      &lt;TimePickerWithState label=&quot;Faded&quot; variant=&quot;faded&quot; isClearable={true} /&gt;
+      &lt;TimePicker label=&quot;Underlined&quot; variant=&quot;underlined&quot; isClearable={true} /&gt;
+      &lt;TimePicker label=&quot;Faded&quot; variant=&quot;faded&quot; isClearable={true} /&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 );</code></pre>
@@ -10047,14 +10754,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               <pre><code>const Sizes = () =&gt; (
   &lt;div className=&quot;flex gap-6 w-[600px]&quot;&gt;
-    {([&quot;sm&quot;, &quot;md&quot;, &quot;lg&quot;] as const).map((size) =&gt; (
-      &lt;TimePickerWithState
-        key={size}
-        label={`Size ${size.toUpperCase()}`}
-        size={size}
-        isClearable={true}
-      /&gt;
-    ))}
+    &lt;TimePicker label=&quot;Size SM&quot; size=&quot;sm&quot; isClearable={true} /&gt;
+    &lt;TimePicker label=&quot;Size MD&quot; size=&quot;md&quot; isClearable={true} /&gt;
+    &lt;TimePicker label=&quot;Size LG&quot; size=&quot;lg&quot; isClearable={true} /&gt;
   &lt;/div&gt;
 );</code></pre>
             </div>
@@ -10067,14 +10769,11 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               
               <pre><code>const Radiuses = () =&gt; (
   &lt;div className=&quot;flex gap-4 w-[800px]&quot;&gt;
-    {([&quot;none&quot;, &quot;sm&quot;, &quot;md&quot;, &quot;lg&quot;, &quot;full&quot;] as const).map((radius) =&gt; (
-      &lt;TimePickerWithState
-        key={radius}
-        label={`${radius.toUpperCase()}`}
-        radius={radius}
-        isClearable={true}
-      /&gt;
-    ))}
+    &lt;TimePicker label=&quot;NONE&quot; radius=&quot;none&quot; isClearable={true} /&gt;
+    &lt;TimePicker label=&quot;SM&quot; radius=&quot;sm&quot; isClearable={true} /&gt;
+    &lt;TimePicker label=&quot;MD&quot; radius=&quot;md&quot; isClearable={true} /&gt;
+    &lt;TimePicker label=&quot;LG&quot; radius=&quot;lg&quot; isClearable={true} /&gt;
+    &lt;TimePicker label=&quot;FULL&quot; radius=&quot;full&quot; isClearable={true} /&gt;
   &lt;/div&gt;
 );</code></pre>
             </div>
@@ -10088,16 +10787,16 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               <pre><code>const Colors = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-8 w-[600px]&quot;&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;TimePickerWithState label=&quot;Default&quot; color=&quot;default&quot; isClearable={true} /&gt;
-      &lt;TimePickerWithState label=&quot;Primary&quot; color=&quot;primary&quot; isClearable={true} /&gt;
+      &lt;TimePicker label=&quot;Default&quot; color=&quot;default&quot; isClearable={true} /&gt;
+      &lt;TimePicker label=&quot;Primary&quot; color=&quot;primary&quot; isClearable={true} /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;TimePickerWithState label=&quot;Secondary&quot; color=&quot;secondary&quot; isClearable={true} /&gt;
-      &lt;TimePickerWithState label=&quot;Success&quot; color=&quot;success&quot; isClearable={true} /&gt;
+      &lt;TimePicker label=&quot;Secondary&quot; color=&quot;secondary&quot; isClearable={true} /&gt;
+      &lt;TimePicker label=&quot;Success&quot; color=&quot;success&quot; isClearable={true} /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4&quot;&gt;
-      &lt;TimePickerWithState label=&quot;Warning&quot; color=&quot;warning&quot; isClearable={true} /&gt;
-      &lt;TimePickerWithState label=&quot;Danger&quot; color=&quot;danger&quot; isClearable={true} /&gt;
+      &lt;TimePicker label=&quot;Warning&quot; color=&quot;warning&quot; isClearable={true} /&gt;
+      &lt;TimePicker label=&quot;Danger&quot; color=&quot;danger&quot; isClearable={true} /&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 );</code></pre>
@@ -10112,20 +10811,20 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               <pre><code>const LabelPlacements = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-8 w-[600px]&quot;&gt;
     &lt;div className=&quot;flex gap-4 items-end&quot;&gt;
-      &lt;TimePickerWithState label=&quot;Inside (Floating)&quot; labelPlacement=&quot;inside&quot; isClearable={true} /&gt;
-      &lt;TimePickerWithState label=&quot;Inside (static with placeholder)&quot; labelPlacement=&quot;inside&quot; isClearable={true} placeholder=&quot;Select Time&quot; /&gt;
+      &lt;TimePicker label=&quot;Inside (Floating)&quot; labelPlacement=&quot;inside&quot; isClearable={true} /&gt;
+      &lt;TimePicker label=&quot;Inside (static with placeholder)&quot; labelPlacement=&quot;inside&quot; isClearable={true} placeholder=&quot;Select Time&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4 items-end&quot;&gt;
-      &lt;TimePickerWithState label=&quot;Outside (Floating)&quot; isClearable={true} /&gt;
-      &lt;TimePickerWithState label=&quot;Outside (static with placeholder)&quot; isClearable={true} placeholder=&quot;Select Time&quot; /&gt;
+      &lt;TimePicker label=&quot;Outside (Floating)&quot; isClearable={true} /&gt;
+      &lt;TimePicker label=&quot;Outside (static with placeholder)&quot; isClearable={true} placeholder=&quot;Select Time&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4 items-end&quot;&gt;
-      &lt;TimePickerWithState label=&quot;Outlined&quot; labelPlacement=&quot;outlined&quot; isClearable={true} /&gt;
-      &lt;TimePickerWithState label=&quot;Outlined (static with placeholder)&quot; labelPlacement=&quot;outlined&quot; isClearable={true} placeholder=&quot;Select Time&quot; /&gt;
+      &lt;TimePicker label=&quot;Outlined&quot; labelPlacement=&quot;outlined&quot; isClearable={true} /&gt;
+      &lt;TimePicker label=&quot;Outlined (static with placeholder)&quot; labelPlacement=&quot;outlined&quot; isClearable={true} placeholder=&quot;Select Time&quot; /&gt;
     &lt;/div&gt;
     &lt;div className=&quot;flex gap-4 items-end&quot;&gt;
-      &lt;TimePickerWithState label=&quot;Outside Top&quot; labelPlacement=&quot;outside-top&quot; isClearable={true} /&gt;
-      &lt;TimePickerWithState label=&quot;Outside Left&quot; labelPlacement=&quot;outside-left&quot; isClearable={true} /&gt;
+      &lt;TimePicker label=&quot;Outside Top&quot; labelPlacement=&quot;outside-top&quot; isClearable={true} /&gt;
+      &lt;TimePicker label=&quot;Outside Left&quot; labelPlacement=&quot;outside-left&quot; isClearable={true} /&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 );</code></pre>
@@ -10137,7 +10836,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const Disabled = () =&gt; &lt;TimePickerWithState label=&quot;Disabled Time Picker&quot; disabled value=&quot;03:30 PM&quot; /&gt;;</code></pre>
+              <pre><code>const Disabled = () =&gt; &lt;div className=&quot;w-[320px]&quot;&gt;
+    &lt;TimePicker label=&quot;Disabled Time Picker&quot; disabled value=&quot;03:30 PM&quot; /&gt;
+&lt;/div&gt;;</code></pre>
             </div>
             <div class="note ok">
               <div class="row">
@@ -10146,7 +10847,9 @@ variant?: &quot;flat&quot; | &quot;bordered&quot; | &quot;underlined&quot; | &qu
               </div>
               
               
-              <pre><code>const ErrorState = () =&gt; &lt;TimePickerWithState label=&quot;Meeting Time&quot; error=&quot;Time is outside office hours&quot; touched /&gt;;</code></pre>
+              <pre><code>const ErrorState = () =&gt; &lt;div className=&quot;w-[320px]&quot;&gt;
+    &lt;TimePicker label=&quot;Meeting Time&quot; error=&quot;Time is outside office hours&quot; touched /&gt;
+&lt;/div&gt;;</code></pre>
             </div>
         </div>
     
@@ -10503,7 +11206,7 @@ offset?: any = 8
 
 placement?: any = &quot;top&quot;
 
-radius?: any = &quot;md&quot;
+radius?: any = &quot;lg&quot;
 
 shadow?: any = &quot;md&quot;
 
