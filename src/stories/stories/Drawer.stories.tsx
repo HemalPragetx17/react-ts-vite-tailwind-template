@@ -177,8 +177,6 @@ export const Sizes: Story = {
       onOpen();
     };
 
-    const sizes = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "full"] as const;
-
     return (
       <div className="p-10 flex flex-col gap-8">
         <div>
