@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { TimePicker as TimePickerComponent } from "../../components/ui";
+import { TimePicker } from "../../components/ui";
 
-const meta: Meta<typeof TimePickerComponent> = {
+const meta: Meta<typeof TimePicker> = {
   title: "Components/TimePicker",
-  component: TimePickerComponent,
+  component: TimePicker,
   parameters: {
     layout: "centered",
   },
@@ -44,19 +44,19 @@ const meta: Meta<typeof TimePickerComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof TimePickerComponent>;
+type Story = StoryObj<typeof TimePicker>;
 
-const TimePicker = (args: any) => {
-  const [value, setValue] = useState<any>(args.value ?? "");
+const TimePickerWithState = (props: any) => {
+  const [value, setValue] = useState<any>(props.value ?? "");
 
   return (
     <div className="w-[320px]">
-      <TimePickerComponent
-        {...args}
+      <TimePicker
+        {...props}
         value={value}
         onChange={(val: any) => {
           setValue(val);
-          args.onChange?.(val);
+          props.onChange?.(val);
         }}
       />
     </div>
@@ -64,16 +64,13 @@ const TimePicker = (args: any) => {
 };
 
 export const Default: Story = {
-  render: (args) => (
-    <div className="w-[320px]">
-      <TimePicker {...args} />
-    </div>
+  render: () => (
+    <TimePickerWithState
+      label="Select Time"
+      placeholder="Select Time"
+      isClearable
+    />
   ),
-  args: {
-    label: "Select Time",
-    placeholder: "Select Time",
-    isClearable: true,
-  },
 };
 
 export const Modes: Story = {
@@ -81,11 +78,11 @@ export const Modes: Story = {
     <div className="flex gap-8 w-[600px]">
       <div className="flex flex-col gap-2 flex-1">
         <span className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Mode: Normal (Scroll Lists)</span>
-        <TimePicker label="Normal Scroll Picker" mode="normal" isClearable={true} value="03:30 PM" />
+        <TimePickerWithState label="Normal Scroll Picker" mode="normal" isClearable value="03:30 PM" />
       </div>
       <div className="flex flex-col gap-2 flex-1">
         <span className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Mode: Clock (Dial Selector)</span>
-        <TimePicker label="Clock Dial Picker" mode="clock" isClearable={true} value="03:30 PM" />
+        <TimePickerWithState label="Clock Dial Picker" mode="clock" isClearable value="03:30 PM" />
       </div>
     </div>
   ),
@@ -95,12 +92,12 @@ export const Variants: Story = {
   render: () => (
     <div className="flex flex-col gap-8 w-[600px]">
       <div className="flex gap-4">
-        <TimePicker label="Flat" variant="flat" isClearable={true} />
-        <TimePicker label="Bordered" variant="bordered" isClearable={true} />
+        <TimePickerWithState label="Flat" variant="flat" isClearable />
+        <TimePickerWithState label="Bordered" variant="bordered" isClearable />
       </div>
       <div className="flex gap-4">
-        <TimePicker label="Underlined" variant="underlined" isClearable={true} />
-        <TimePicker label="Faded" variant="faded" isClearable={true} />
+        <TimePickerWithState label="Underlined" variant="underlined" isClearable />
+        <TimePickerWithState label="Faded" variant="faded" isClearable />
       </div>
     </div>
   ),
@@ -109,9 +106,9 @@ export const Variants: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="flex gap-6 w-[600px]">
-      <TimePicker label="Size SM" size="sm" isClearable={true} />
-      <TimePicker label="Size MD" size="md" isClearable={true} />
-      <TimePicker label="Size LG" size="lg" isClearable={true} />
+      <TimePickerWithState label="Size SM" size="sm" isClearable />
+      <TimePickerWithState label="Size MD" size="md" isClearable />
+      <TimePickerWithState label="Size LG" size="lg" isClearable />
     </div>
   ),
 };
@@ -119,11 +116,11 @@ export const Sizes: Story = {
 export const Radiuses: Story = {
   render: () => (
     <div className="flex gap-4 w-[800px]">
-      <TimePicker label="NONE" radius="none" isClearable={true} />
-      <TimePicker label="SM" radius="sm" isClearable={true} />
-      <TimePicker label="MD" radius="md" isClearable={true} />
-      <TimePicker label="LG" radius="lg" isClearable={true} />
-      <TimePicker label="FULL" radius="full" isClearable={true} />
+      <TimePickerWithState label="NONE" radius="none" isClearable />
+      <TimePickerWithState label="SM" radius="sm" isClearable />
+      <TimePickerWithState label="MD" radius="md" isClearable />
+      <TimePickerWithState label="LG" radius="lg" isClearable />
+      <TimePickerWithState label="FULL" radius="full" isClearable />
     </div>
   ),
 };
@@ -132,16 +129,16 @@ export const Colors: Story = {
   render: () => (
     <div className="flex flex-col gap-8 w-[600px]">
       <div className="flex gap-4">
-        <TimePicker label="Default" color="default" isClearable={true} />
-        <TimePicker label="Primary" color="primary" isClearable={true} />
+        <TimePickerWithState label="Default" color="default" isClearable />
+        <TimePickerWithState label="Primary" color="primary" isClearable />
       </div>
       <div className="flex gap-4">
-        <TimePicker label="Secondary" color="secondary" isClearable={true} />
-        <TimePicker label="Success" color="success" isClearable={true} />
+        <TimePickerWithState label="Secondary" color="secondary" isClearable />
+        <TimePickerWithState label="Success" color="success" isClearable />
       </div>
       <div className="flex gap-4">
-        <TimePicker label="Warning" color="warning" isClearable={true} />
-        <TimePicker label="Danger" color="danger" isClearable={true} />
+        <TimePickerWithState label="Warning" color="warning" isClearable />
+        <TimePickerWithState label="Danger" color="danger" isClearable />
       </div>
     </div>
   ),
@@ -151,47 +148,41 @@ export const LabelPlacements: Story = {
   render: () => (
     <div className="flex flex-col gap-8 w-[600px]">
       <div className="flex gap-4 items-end">
-        <TimePicker label="Inside (Floating)" labelPlacement="inside" isClearable={true} />
-        <TimePicker label="Inside (static with placeholder)" labelPlacement="inside" isClearable={true} placeholder="Select Time" />
+        <TimePickerWithState label="Inside (Floating)" labelPlacement="inside" isClearable />
+        <TimePickerWithState label="Inside (static with placeholder)" labelPlacement="inside" isClearable placeholder="Select Time" />
       </div>
       <div className="flex gap-4 items-end">
-        <TimePicker label="Outside (Floating)" isClearable={true} />
-        <TimePicker label="Outside (static with placeholder)" isClearable={true} placeholder="Select Time" />
+        <TimePickerWithState label="Outside (Floating)" isClearable />
+        <TimePickerWithState label="Outside (static with placeholder)" isClearable placeholder="Select Time" />
       </div>
       <div className="flex gap-4 items-end">
-        <TimePicker label="Outlined" labelPlacement="outlined" isClearable={true} />
-        <TimePicker label="Outlined (static with placeholder)" labelPlacement="outlined" isClearable={true} placeholder="Select Time" />
+        <TimePickerWithState label="Outlined" labelPlacement="outlined" isClearable />
+        <TimePickerWithState label="Outlined (static with placeholder)" labelPlacement="outlined" isClearable placeholder="Select Time" />
       </div>
       <div className="flex gap-4 items-end">
-        <TimePicker label="Outside Top" labelPlacement="outside-top" isClearable={true} />
-        <TimePicker label="Outside Left" labelPlacement="outside-left" isClearable={true} />
+        <TimePickerWithState label="Outside Top" labelPlacement="outside-top" isClearable />
+        <TimePickerWithState label="Outside Left" labelPlacement="outside-left" isClearable />
       </div>
     </div>
   ),
 };
 
 export const Disabled: Story = {
-  render: (args) => (
-    <div className="w-[320px]">
-      <TimePicker {...args} />
-    </div>
+  render: () => (
+    <TimePickerWithState
+      label="Disabled Time Picker"
+      disabled
+      value="03:30 PM"
+    />
   ),
-  args: {
-    label: "Disabled Time Picker",
-    disabled: true,
-    value: "03:30 PM",
-  },
 };
 
 export const ErrorState: Story = {
-  render: (args) => (
-    <div className="w-[320px]">
-      <TimePicker {...args} />
-    </div>
+  render: () => (
+    <TimePickerWithState
+      label="Meeting Time"
+      error="Time is outside office hours"
+      touched
+    />
   ),
-  args: {
-    label: "Meeting Time",
-    error: "Time is outside office hours",
-    touched: true,
-  },
 };

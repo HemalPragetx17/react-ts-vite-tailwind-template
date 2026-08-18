@@ -256,7 +256,7 @@ export const VariantsAndColors: Story = {
         <div className="flex flex-wrap gap-4 items-center">
           <div className="flex flex-col gap-1">
             <span className="text-xs text-neutral-400 font-medium">Select Variant:</span>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {variants.map((v) => (
                 <Button key={v} size="sm" variant={variant === v ? "solid" : "bordered"} color="default" onClick={() => setVariant(v)}>
                   {v}
@@ -266,7 +266,7 @@ export const VariantsAndColors: Story = {
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-xs text-neutral-400 font-medium">Select Color:</span>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {colors.map((c) => (
                 <Button key={c} size="sm" variant={color === c ? "solid" : "bordered"} color={c} onClick={() => setColor(c)}>
                   {c}

@@ -54,53 +54,72 @@ const meta: Meta<typeof Popover> = {
 export default meta;
 type Story = StoryObj<typeof Popover>;
 
-const PopoverContent = () => (
-  <div className="px-4 py-3 min-w-[200px]">
-    <div className="text-sm font-bold mb-1">Popover Title</div>
-    <div className="text-xs opacity-75">
-      This is a custom popover content with some descriptive text.
-    </div>
-  </div>
-);
-
 export const Default: Story = {
-  args: {
-    trigger: <Button>Open Popover</Button>,
-    children: <PopoverContent />,
-    placement: "bottom",
-    showArrow: true,
-  },
+  render: () => (
+    <Popover trigger={<Button>Open Popover</Button>} placement="bottom" showArrow>
+      <div className="px-4 py-3 min-w-[200px]">
+        <div className="text-sm font-bold mb-1">Popover Title</div>
+        <div className="text-xs opacity-75">
+          This is a custom popover content with some descriptive text.
+        </div>
+      </div>
+    </Popover>
+  ),
 };
 
 export const Placements: Story = {
   render: () => (
     <div className="grid grid-cols-3 gap-8 p-20">
       <Popover placement="top-start" trigger={<Button variant="flat" fullWidth>Top Start</Button>} showArrow>
-        <PopoverContent />
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
       </Popover>
       <Popover placement="top" trigger={<Button variant="flat" fullWidth>Top</Button>} showArrow>
-        <PopoverContent />
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
       </Popover>
       <Popover placement="top-end" trigger={<Button variant="flat" fullWidth>Top End</Button>} showArrow>
-        <PopoverContent />
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
       </Popover>
 
       <Popover placement="left" trigger={<Button variant="flat" fullWidth>Left</Button>} showArrow>
-        <PopoverContent />
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
       </Popover>
       <div />
       <Popover placement="right" trigger={<Button variant="flat" fullWidth>Right</Button>} showArrow>
-        <PopoverContent />
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
       </Popover>
 
       <Popover placement="bottom-start" trigger={<Button variant="flat" fullWidth>Bottom Start</Button>} showArrow>
-        <PopoverContent />
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
       </Popover>
       <Popover placement="bottom" trigger={<Button variant="flat" fullWidth>Bottom</Button>} showArrow>
-        <PopoverContent />
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
       </Popover>
       <Popover placement="bottom-end" trigger={<Button variant="flat" fullWidth>Bottom End</Button>} showArrow>
-        <PopoverContent />
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
       </Popover>
     </div>
   ),
@@ -109,18 +128,48 @@ export const Placements: Story = {
 export const Colors: Story = {
   render: () => (
     <div className="flex flex-wrap gap-4">
-      {(["default", "primary", "secondary", "success", "warning", "danger", "foreground"] as const).map((color) => {
-        // Button only supports these specific colors
-        const buttonColor = (["default", "primary", "secondary", "success", "warning", "danger"].includes(color)
-          ? color
-          : "default") as any;
-
-        return (
-          <Popover key={color} color={color} trigger={<Button color={buttonColor} variant="solid">{color}</Button>} showArrow>
-            <PopoverContent />
-          </Popover>
-        );
-      })}
+      <Popover color="default" trigger={<Button color="default" variant="solid">default</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
+      <Popover color="primary" trigger={<Button color="primary" variant="solid">primary</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
+      <Popover color="secondary" trigger={<Button color="secondary" variant="solid">secondary</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
+      <Popover color="success" trigger={<Button color="success" variant="solid">success</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
+      <Popover color="warning" trigger={<Button color="warning" variant="solid">warning</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
+      <Popover color="danger" trigger={<Button color="danger" variant="solid">danger</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
+      <Popover color="foreground" trigger={<Button color="default" variant="solid">foreground</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
     </div>
   ),
 };
@@ -128,11 +177,24 @@ export const Colors: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="flex gap-4">
-      {(["sm", "md", "lg"] as const).map((size) => (
-        <Popover key={size} size={size} trigger={<Button variant="flat">{size}</Button>} showArrow>
-          <PopoverContent />
-        </Popover>
-      ))}
+      <Popover size="sm" trigger={<Button variant="flat">sm</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
+      <Popover size="md" trigger={<Button variant="flat">md</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
+      <Popover size="lg" trigger={<Button variant="flat">lg</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
     </div>
   ),
 };
@@ -140,11 +202,36 @@ export const Sizes: Story = {
 export const Radiuses: Story = {
   render: () => (
     <div className="flex gap-4">
-      {(["none", "sm", "md", "lg", "full"] as const).map((radius) => (
-        <Popover key={radius} radius={radius} trigger={<Button variant="flat">{radius}</Button>} showArrow>
-          <PopoverContent />
-        </Popover>
-      ))}
+      <Popover radius="none" trigger={<Button variant="flat">none</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
+      <Popover radius="sm" trigger={<Button variant="flat">sm</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
+      <Popover radius="md" trigger={<Button variant="flat">md</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
+      <Popover radius="lg" trigger={<Button variant="flat">lg</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
+      <Popover radius="full" trigger={<Button variant="flat">full</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
     </div>
   ),
 };
@@ -152,11 +239,30 @@ export const Radiuses: Story = {
 export const Shadows: Story = {
   render: () => (
     <div className="flex gap-4">
-      {(["none", "sm", "md", "lg"] as const).map((shadow) => (
-        <Popover key={shadow} shadow={shadow} trigger={<Button variant="flat">{shadow}</Button>} showArrow>
-          <PopoverContent />
-        </Popover>
-      ))}
+      <Popover shadow="none" trigger={<Button variant="flat">none</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
+      <Popover shadow="sm" trigger={<Button variant="flat">sm</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
+      <Popover shadow="md" trigger={<Button variant="flat">md</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
+      <Popover shadow="lg" trigger={<Button variant="flat">lg</Button>} showArrow>
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
+      </Popover>
     </div>
   ),
 };
@@ -165,13 +271,22 @@ export const Backdrops: Story = {
   render: () => (
     <div className="flex gap-4">
       <Popover backdrop="transparent" trigger={<Button variant="bordered">Transparent</Button>}>
-        <PopoverContent />
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
       </Popover>
       <Popover backdrop="opaque" trigger={<Button variant="bordered">Opaque</Button>}>
-        <PopoverContent />
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
       </Popover>
       <Popover backdrop="blur" trigger={<Button variant="bordered">Blur</Button>}>
-        <PopoverContent />
+        <div className="px-4 py-3 min-w-[200px]">
+          <div className="text-sm font-bold mb-1">Popover Title</div>
+          <div className="text-xs opacity-75">This is a custom popover content with some descriptive text.</div>
+        </div>
       </Popover>
     </div>
   ),
@@ -191,18 +306,19 @@ export const TriggerModes: Story = {
 };
 
 export const CustomContent: Story = {
-  args: {
-    trigger: (
-      <Avatar
-        size="md"
-        name="John Doe"
-        color="primary"
-        isBordered
-        className="cursor-pointer hover:opacity-90 transition-opacity"
-      />
-    ),
-    showArrow: true,
-    children: (
+  render: () => (
+    <Popover
+      trigger={
+        <Avatar
+          size="md"
+          name="John Doe"
+          color="primary"
+          isBordered
+          className="cursor-pointer hover:opacity-90 transition-opacity"
+        />
+      }
+      showArrow
+    >
       <div className="p-2 w-64">
         <div className="flex items-center gap-3 p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg cursor-pointer transition-colors">
           <Avatar name="John Doe" color="primary" size="md" />
@@ -218,6 +334,6 @@ export const CustomContent: Story = {
           <div className="px-3 py-2 text-sm text-danger hover:bg-danger/10 rounded-md cursor-pointer transition-colors font-medium">Log Out</div>
         </div>
       </div>
-    ),
-  },
+    </Popover>
+  ),
 };

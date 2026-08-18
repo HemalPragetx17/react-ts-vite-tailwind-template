@@ -45,57 +45,57 @@ const meta: Meta<typeof Modal> = {
 export default meta;
 type Story = StoryObj<typeof Modal>;
 
-const ModalWithTrigger = (args: any) => {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <div className="p-10">
-      <Button onClick={() => setIsOpen(true)}>Open Modal</Button>
-      <Modal
-        {...args}
-        openDialog={isOpen}
-        handleDialogClose={() => setIsOpen(false)}
-      >
-        <div className="py-4">
-          <p>This is the modal content. You can put anything here!</p>
-          <p className="mt-2 text-neutral-500">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar risus non risus hendrerit venenatis.
-          </p>
-        </div>
-      </Modal>
-    </div>
-  );
-};
-
 export const Default: Story = {
-  render: (args) => <ModalWithTrigger {...args} />,
-  args: {
-    title: "Modal Title",
-    primaryActionText: "Confirm",
-    secondaryActionText: "Cancel",
+  render: () => {
+    const [isOpen, setIsOpen] = useState(false);
+    return (
+      <div className="p-10">
+        <Button onClick={() => setIsOpen(true)}>Open Modal</Button>
+        <Modal
+          title="Modal Title"
+          primaryActionText="Confirm"
+          secondaryActionText="Cancel"
+          openDialog={isOpen}
+          handleDialogClose={() => setIsOpen(false)}
+        >
+          <div className="py-4">
+            <p>This is the modal content. You can put anything here!</p>
+            <p className="mt-2 text-neutral-500">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar risus non risus hendrerit venenatis.
+            </p>
+          </div>
+        </Modal>
+      </div>
+    );
   },
 };
 
 export const Sizes: Story = {
-  render: (args) => {
-    const [openSize, setOpenSize] = useState<any>(null);
-    const sizes = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "full"] as const;
+  render: () => {
+    const [openSize, setOpenSize] = useState<"xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "full" | null>(null);
 
     return (
       <div className="p-10 flex flex-wrap gap-4">
-        {sizes.map((size) => (
-          <Button key={size} onClick={() => setOpenSize(size)}>
-            Open {size}
-          </Button>
-        ))}
+        <Button onClick={() => setOpenSize("xs")}>Open XS</Button>
+        <Button onClick={() => setOpenSize("sm")}>Open SM</Button>
+        <Button onClick={() => setOpenSize("md")}>Open MD</Button>
+        <Button onClick={() => setOpenSize("lg")}>Open LG</Button>
+        <Button onClick={() => setOpenSize("xl")}>Open XL</Button>
+        <Button onClick={() => setOpenSize("2xl")}>Open 2XL</Button>
+        <Button onClick={() => setOpenSize("3xl")}>Open 3XL</Button>
+        <Button onClick={() => setOpenSize("4xl")}>Open 4XL</Button>
+        <Button onClick={() => setOpenSize("5xl")}>Open 5XL</Button>
+        <Button onClick={() => setOpenSize("full")}>Open Full</Button>
 
         <Modal
-          {...args}
+          title={`Modal Size: ${openSize}`}
+          primaryActionText="Confirm"
+          secondaryActionText="Cancel"
           size={openSize || "md"}
           openDialog={openSize !== null}
           handleDialogClose={() => setOpenSize(null)}
           onPrimaryAction={() => setOpenSize(null)}
           onSecondaryAction={() => setOpenSize(null)}
-          title={`Modal Size: ${openSize}`}
         >
           <div className="py-4">
             <p>This is a modal of size <strong>{openSize}</strong>.</p>
@@ -107,33 +107,26 @@ export const Sizes: Story = {
       </div>
     );
   },
-  args: {
-    primaryActionText: "Confirm",
-    secondaryActionText: "Cancel",
-  },
 };
 
 export const Backdrops: Story = {
-  render: (args) => {
-    const [openBackdrop, setOpenBackdrop] = useState<any>(null);
-    const backdrops = ["transparent", "opaque", "blur"] as const;
+  render: () => {
+    const [openBackdrop, setOpenBackdrop] = useState<"transparent" | "opaque" | "blur" | null>(null);
 
     return (
       <div className="p-10 flex flex-wrap gap-4">
-        {backdrops.map((backdrop) => (
-          <Button key={backdrop} onClick={() => setOpenBackdrop(backdrop)}>
-            {backdrop} Backdrop
-          </Button>
-        ))}
+        <Button onClick={() => setOpenBackdrop("transparent")}>Transparent Backdrop</Button>
+        <Button onClick={() => setOpenBackdrop("opaque")}>Opaque Backdrop</Button>
+        <Button onClick={() => setOpenBackdrop("blur")}>Blur Backdrop</Button>
 
         <Modal
-          {...args}
+          title={`${openBackdrop?.toUpperCase()} Backdrop`}
+          primaryActionText="Got it"
           backdrop={openBackdrop || "opaque"}
           openDialog={openBackdrop !== null}
           handleDialogClose={() => setOpenBackdrop(null)}
           onPrimaryAction={() => setOpenBackdrop(null)}
           onSecondaryAction={() => setOpenBackdrop(null)}
-          title={`${openBackdrop?.toUpperCase()} Backdrop`}
         >
           <div className="py-4">
             <p>This modal is showing the <strong>{openBackdrop}</strong> backdrop style.</p>
@@ -142,64 +135,74 @@ export const Backdrops: Story = {
       </div>
     );
   },
-  args: {
-    primaryActionText: "Got it",
-  },
 };
 
 export const ScrollBehaviors: Story = {
-  render: (args) => {
-    const [openBehavior, setOpenBehavior] = useState<any>(null);
-    const behaviors = ["inside", "outside"] as const;
+  render: () => {
+    const [openBehavior, setOpenBehavior] = useState<"inside" | "outside" | null>(null);
 
     return (
       <div className="p-10 flex flex-wrap gap-4">
-        {behaviors.map((behavior) => (
-          <Button key={behavior} onClick={() => setOpenBehavior(behavior)}>
-            Scroll {behavior}
-          </Button>
-        ))}
+        <Button onClick={() => setOpenBehavior("inside")}>Scroll Inside</Button>
+        <Button onClick={() => setOpenBehavior("outside")}>Scroll Outside</Button>
 
         <Modal
-          {...args}
+          title={`Scroll Behavior: ${openBehavior}`}
+          primaryActionText="Close"
           scrollBehavior={openBehavior || "inside"}
           openDialog={openBehavior !== null}
           handleDialogClose={() => setOpenBehavior(null)}
           onPrimaryAction={() => setOpenBehavior(null)}
           onSecondaryAction={() => setOpenBehavior(null)}
-          title={`Scroll Behavior: ${openBehavior}`}
         >
           <div className="py-4">
             <p className="mb-4 font-semibold text-primary">
               Scroll behavior is set to "{openBehavior}".
             </p>
-            {Array.from({ length: 15 }).map((_, i) => (
-              <p key={i} className="mb-4 text-neutral-500">
-                Paragraph {i + 1}: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Donec vel magna id eros dictum vulputate vel in nibh.
-              </p>
-            ))}
+            <p className="mb-4 text-neutral-500">
+              Paragraph 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Donec vel magna id eros dictum vulputate vel in nibh.
+            </p>
+            <p className="mb-4 text-neutral-500">
+              Paragraph 2: Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+            <p className="mb-4 text-neutral-500">
+              Paragraph 3: Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+            </p>
+            <p className="mb-4 text-neutral-500">
+              Paragraph 4: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.
+            </p>
           </div>
         </Modal>
       </div>
     );
   },
-  args: {
-    primaryActionText: "Close",
-  },
 };
 
 export const Draggable: Story = {
-  render: (args) => <ModalWithTrigger {...args} />,
-  args: {
-    title: "Draggable Modal",
-    isDraggable: true,
-    primaryActionText: "Confirm",
+  render: () => {
+    const [isOpen, setIsOpen] = useState(false);
+    return (
+      <div className="p-10">
+        <Button onClick={() => setIsOpen(true)}>Open Draggable Modal</Button>
+        <Modal
+          title="Draggable Modal"
+          isDraggable={true}
+          primaryActionText="Confirm"
+          openDialog={isOpen}
+          handleDialogClose={() => setIsOpen(false)}
+        >
+          <div className="py-4">
+            <p>This is a draggable modal content. You can drag the header to move the modal around.</p>
+          </div>
+        </Modal>
+      </div>
+    );
   },
 };
 
 export const Dismissable: Story = {
-  render: (args) => {
+  render: () => {
     const [openMode, setOpenMode] = useState<"dismissable" | "non-dismissable" | null>(null);
 
     return (
@@ -212,14 +215,14 @@ export const Dismissable: Story = {
         </Button>
 
         <Modal
-          {...args}
+          title={openMode === "dismissable" ? "Dismissable Modal" : "Non-Dismissable Modal"}
+          primaryActionText="Got it"
           openDialog={openMode !== null}
           isDismissable={openMode === "dismissable"}
           isKeyboardDismissDisabled={openMode !== "dismissable"}
           handleDialogClose={() => setOpenMode(null)}
           onPrimaryAction={() => setOpenMode(null)}
           onSecondaryAction={() => setOpenMode(null)}
-          title={openMode === "dismissable" ? "Dismissable Modal" : "Non-Dismissable Modal"}
         >
           <div className="py-4">
             {openMode === "dismissable" ? (
@@ -232,13 +235,10 @@ export const Dismissable: Story = {
       </div>
     );
   },
-  args: {
-    primaryActionText: "Got it",
-  },
 };
 
 export const CloseButtonVariant: Story = {
-  render: (args) => {
+  render: () => {
     const [openMode, setOpenMode] = useState<"with-btn" | "without-btn" | null>(null);
 
     return (
@@ -251,13 +251,13 @@ export const CloseButtonVariant: Story = {
         </Button>
 
         <Modal
-          {...args}
+          title={openMode === "with-btn" ? "Modal with Close Button" : "Modal without Close Button"}
+          primaryActionText="Close"
           openDialog={openMode !== null}
           closeButton={openMode === "with-btn"}
           handleDialogClose={() => setOpenMode(null)}
           onPrimaryAction={() => setOpenMode(null)}
           onSecondaryAction={() => setOpenMode(null)}
-          title={openMode === "with-btn" ? "Modal with Close Button" : "Modal without Close Button"}
         >
           <div className="py-4">
             {openMode === "with-btn" ? (
@@ -270,32 +270,28 @@ export const CloseButtonVariant: Story = {
       </div>
     );
   },
-  args: {
-    primaryActionText: "Close",
-  },
 };
 
 export const Radiuses: Story = {
-  render: (args) => {
-    const [openRadius, setOpenRadius] = useState<any>(null);
-    const radiuses = ["none", "sm", "md", "lg"] as const;
+  render: () => {
+    const [openRadius, setOpenRadius] = useState<"none" | "sm" | "md" | "lg" | null>(null);
 
     return (
       <div className="p-10 flex flex-wrap gap-4">
-        {radiuses.map((radius) => (
-          <Button key={radius} onClick={() => setOpenRadius(radius)}>
-            Radius {radius.toUpperCase()}
-          </Button>
-        ))}
+        <Button onClick={() => setOpenRadius("none")}>Radius NONE</Button>
+        <Button onClick={() => setOpenRadius("sm")}>Radius SM</Button>
+        <Button onClick={() => setOpenRadius("md")}>Radius MD</Button>
+        <Button onClick={() => setOpenRadius("lg")}>Radius LG</Button>
 
         <Modal
-          {...args}
+          title={`Modal Radius: ${openRadius}`}
+          primaryActionText="Confirm"
+          secondaryActionText="Cancel"
           radius={openRadius || "lg"}
           openDialog={openRadius !== null}
           handleDialogClose={() => setOpenRadius(null)}
           onPrimaryAction={() => setOpenRadius(null)}
           onSecondaryAction={() => setOpenRadius(null)}
-          title={`Modal Radius: ${openRadius}`}
         >
           <div className="py-4">
             <p>This modal is showing the <strong>{openRadius}</strong> border radius style.</p>
@@ -304,33 +300,28 @@ export const Radiuses: Story = {
       </div>
     );
   },
-  args: {
-    primaryActionText: "Confirm",
-    secondaryActionText: "Cancel",
-  },
 };
 
 export const Shadows: Story = {
-  render: (args) => {
-    const [openShadow, setOpenShadow] = useState<any>(null);
-    const shadows = ["none", "sm", "md", "lg"] as const;
+  render: () => {
+    const [openShadow, setOpenShadow] = useState<"none" | "sm" | "md" | "lg" | null>(null);
 
     return (
       <div className="p-10 flex flex-wrap gap-4">
-        {shadows.map((shadow) => (
-          <Button key={shadow} onClick={() => setOpenShadow(shadow)}>
-            Shadow {shadow.toUpperCase()}
-          </Button>
-        ))}
+        <Button onClick={() => setOpenShadow("none")}>Shadow NONE</Button>
+        <Button onClick={() => setOpenShadow("sm")}>Shadow SM</Button>
+        <Button onClick={() => setOpenShadow("md")}>Shadow MD</Button>
+        <Button onClick={() => setOpenShadow("lg")}>Shadow LG</Button>
 
         <Modal
-          {...args}
+          title={`Modal Shadow: ${openShadow}`}
+          primaryActionText="Confirm"
+          secondaryActionText="Cancel"
           shadow={openShadow || "lg"}
           openDialog={openShadow !== null}
           handleDialogClose={() => setOpenShadow(null)}
           onPrimaryAction={() => setOpenShadow(null)}
           onSecondaryAction={() => setOpenShadow(null)}
-          title={`Modal Shadow: ${openShadow}`}
         >
           <div className="py-4">
             <p>This modal is showing the <strong>{openShadow}</strong> shadow strength style.</p>
@@ -339,9 +330,4 @@ export const Shadows: Story = {
       </div>
     );
   },
-  args: {
-    primaryActionText: "Confirm",
-    secondaryActionText: "Cancel",
-  },
 };
-

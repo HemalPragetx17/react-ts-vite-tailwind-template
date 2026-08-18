@@ -49,76 +49,55 @@ export default meta;
 type Story = StoryObj<typeof Slider>;
 
 export const Default: Story = {
-  render: (args) => {
+  render: () => {
     const [val, setVal] = React.useState<number | number[]>(30);
     return (
       <div className="w-80 max-w-full">
-        <Slider {...args} value={val} onChange={setVal} />
+        <Slider label="Brightness" minValue={0} maxValue={100} step={1} value={val} onChange={setVal} />
       </div>
     );
-  },
-  args: {
-    label: "Brightness",
-    minValue: 0,
-    maxValue: 100,
-    step: 1,
   },
 };
 
 export const Colors: Story = {
-  render: (args) => (
+  render: () => (
     <div className="flex flex-col gap-6 w-80 max-w-full">
-      {["default", "primary", "secondary", "success", "warning", "danger", "foreground"].map((color) => (
-        <Slider
-          key={color}
-          {...args}
-          color={color as any}
-          label={color.charAt(0).toUpperCase() + color.slice(1)}
-          defaultValue={40}
-        />
-      ))}
+      <Slider color="default" label="Default" defaultValue={40} />
+      <Slider color="primary" label="Primary" defaultValue={40} />
+      <Slider color="secondary" label="Secondary" defaultValue={40} />
+      <Slider color="success" label="Success" defaultValue={40} />
+      <Slider color="warning" label="Warning" defaultValue={40} />
+      <Slider color="danger" label="Danger" defaultValue={40} />
+      <Slider color="foreground" label="Foreground" defaultValue={40} />
     </div>
   ),
 };
 
 export const Sizes: Story = {
-  render: (args) => (
+  render: () => (
     <div className="flex flex-col gap-6 w-80 max-w-full">
-      {["sm", "md", "lg"].map((size) => (
-        <Slider
-          key={size}
-          {...args}
-          size={size as any}
-          label={`${size.toUpperCase()} Size`}
-          defaultValue={50}
-        />
-      ))}
+      <Slider size="sm" label="SM Size" defaultValue={50} />
+      <Slider size="md" label="MD Size" defaultValue={50} />
+      <Slider size="lg" label="LG Size" defaultValue={50} />
     </div>
   ),
 };
 
 export const RangeSlider: Story = {
-  render: (args) => {
+  render: () => {
     const [val, setVal] = React.useState<number | number[]>([20, 80]);
     return (
       <div className="w-80 max-w-full">
-        <Slider {...args} value={val} onChange={setVal} />
+        <Slider label="Price Range" minValue={0} maxValue={100} step={1} value={val} onChange={setVal} />
       </div>
     );
-  },
-  args: {
-    label: "Price Range",
-    minValue: 0,
-    maxValue: 100,
-    step: 1,
   },
 };
 
 export const WithMarks: Story = {
-  render: (args) => (
+  render: () => (
     <div className="w-80 max-w-full py-4">
       <Slider
-        {...args}
         label="Temperature"
         minValue={0}
         maxValue={100}
@@ -134,10 +113,9 @@ export const WithMarks: Story = {
 };
 
 export const ShowSteps: Story = {
-  render: (args) => (
+  render: () => (
     <div className="w-80 max-w-full">
       <Slider
-        {...args}
         label="Steps"
         minValue={0}
         maxValue={10}
@@ -150,10 +128,9 @@ export const ShowSteps: Story = {
 };
 
 export const WithTooltip: Story = {
-  render: (args) => (
+  render: () => (
     <div className="w-80 max-w-full pt-8">
       <Slider
-        {...args}
         label="Volume"
         minValue={0}
         maxValue={100}
@@ -167,16 +144,14 @@ export const WithTooltip: Story = {
 };
 
 export const Vertical: Story = {
-  render: (args) => (
+  render: () => (
     <div className="flex h-64 gap-8 justify-center">
       <Slider
-        {...args}
         orientation="vertical"
         label="Volume"
         defaultValue={60}
       />
       <Slider
-        {...args}
         orientation="vertical"
         label="Bass"
         color="secondary"
@@ -187,10 +162,9 @@ export const Vertical: Story = {
 };
 
 export const Disabled: Story = {
-  render: (args) => (
+  render: () => (
     <div className="w-80 max-w-full">
       <Slider
-        {...args}
         label="Disabled Slider"
         isDisabled
         defaultValue={40}

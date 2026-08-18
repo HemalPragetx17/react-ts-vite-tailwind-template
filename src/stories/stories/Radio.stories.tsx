@@ -44,17 +44,13 @@ export const Default: Story = {
       <Radio
         {...args}
         value={value}
-        onChange={(e) => {
-          const val = e.target.value;
-          setValue(val);
-          args.onChange?.(e);
-        }}
+        onChange={(e) => setValue(e.target.value)}
       />
     );
   },
   args: {
-    label: "Select an option",
     options,
+    label: "Select an option",
     color: "primary",
     orientation: "vertical",
   },
@@ -67,11 +63,7 @@ export const Horizontal: Story = {
       <Radio
         {...args}
         value={value}
-        onChange={(e) => {
-          const val = e.target.value;
-          setValue(val);
-          args.onChange?.(e);
-        }}
+        onChange={(e) => setValue(e.target.value)}
       />
     );
   },
@@ -83,7 +75,7 @@ export const Horizontal: Story = {
 };
 
 export const Colors: Story = {
-  render: (args) => {
+  render: () => {
     const [defaultVal, setDefaultVal] = React.useState("");
     const [primaryVal, setPrimaryVal] = React.useState("");
     const [secondaryVal, setSecondaryVal] = React.useState("");
@@ -94,7 +86,6 @@ export const Colors: Story = {
       <div className="flex flex-col gap-12">
         <div className="flex gap-8">
           <Radio
-            {...args}
             name="default-radio"
             color="default"
             label="Default"
@@ -103,7 +94,6 @@ export const Colors: Story = {
             onChange={(e) => setDefaultVal(e.target.value)}
           />
           <Radio
-            {...args}
             name="primary-radio"
             color="primary"
             label="Primary"
@@ -114,7 +104,6 @@ export const Colors: Story = {
         </div>
         <div className="flex gap-8">
           <Radio
-            {...args}
             name="secondary-radio"
             color="secondary"
             label="Secondary"
@@ -123,7 +112,6 @@ export const Colors: Story = {
             onChange={(e) => setSecondaryVal(e.target.value)}
           />
           <Radio
-            {...args}
             name="success-radio"
             color="success"
             label="Success"
@@ -134,7 +122,6 @@ export const Colors: Story = {
         </div>
         <div className="flex gap-8">
           <Radio
-            {...args}
             name="warning-radio"
             color="warning"
             label="Warning"
@@ -143,7 +130,6 @@ export const Colors: Story = {
             onChange={(e) => setWarningVal(e.target.value)}
           />
           <Radio
-            {...args}
             name="danger-radio"
             color="danger"
             label="Danger"

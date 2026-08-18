@@ -24,33 +24,33 @@ export default meta;
 type Story = StoryObj<typeof Skeleton>;
 
 export const Default: Story = {
-  render: (args) => (
+  render: () => (
     <div className="w-[300px] flex flex-col gap-3">
-      <Skeleton {...args} className="h-24 w-full rounded-lg" />
+      <Skeleton className="h-24 w-full rounded-lg" />
       <div className="space-y-2">
-        <Skeleton {...args} className="h-3 w-3/5 rounded-lg" />
-        <Skeleton {...args} className="h-3 w-4/5 rounded-lg" />
+        <Skeleton className="h-3 w-3/5 rounded-lg" />
+        <Skeleton className="h-3 w-4/5 rounded-lg" />
       </div>
     </div>
   ),
 };
 
 export const StandaloneLayout: Story = {
-  render: (args) => (
-    <div className="max-w-[300px] w-full flex items-center gap-3">
+  render: () => (
+    <div className="w-[300px] flex items-center gap-3">
       <div>
-        <Skeleton {...args} className="flex rounded-full w-12 h-12" />
+        <Skeleton className="flex rounded-full w-12 h-12" />
       </div>
       <div className="w-full flex flex-col gap-2">
-        <Skeleton {...args} className="h-3 w-3/5 rounded-lg" />
-        <Skeleton {...args} className="h-3 w-4/5 rounded-lg" />
+        <Skeleton className="h-3 w-3/5 rounded-lg" />
+        <Skeleton className="h-3 w-4/5 rounded-lg" />
       </div>
     </div>
   ),
 };
 
 export const CardLoadingState: Story = {
-  render: (_args) => {
+  render: () => {
     const [isLoaded, setIsLoaded] = React.useState(false);
 
     return (
@@ -89,19 +89,19 @@ export const CardLoadingState: Story = {
 };
 
 export const Animations: Story = {
-  render: (args) => (
+  render: () => (
     <div className="flex flex-col gap-6 w-[350px]">
       <div className="space-y-2">
         <span className="text-xs text-neutral-400 font-semibold uppercase">Shimmer (Default)</span>
-        <Skeleton {...args} animation="shimmer" className="h-10 w-full rounded-lg" />
+        <Skeleton animation="shimmer" className="h-10 w-full rounded-lg" />
       </div>
       <div className="space-y-2">
         <span className="text-xs text-neutral-400 font-semibold uppercase">Pulse</span>
-        <Skeleton {...args} animation="pulse" className="h-10 w-full rounded-lg" />
+        <Skeleton animation="pulse" className="h-10 w-full rounded-lg" />
       </div>
       <div className="space-y-2">
         <span className="text-xs text-neutral-400 font-semibold uppercase">None (Static)</span>
-        <Skeleton {...args} animation="none" className="h-10 w-full rounded-lg" />
+        <Skeleton animation="none" className="h-10 w-full rounded-lg" />
       </div>
     </div>
   ),

@@ -140,8 +140,8 @@ type Story = StoryObj<typeof Table>;
 // ─── Default ─────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  render: (args) => (
-    <Table aria-label="Users table" {...args}>
+  render: () => (
+    <Table aria-label="Users table">
       <TableHeader>
         <TableColumn>NAME</TableColumn>
         <TableColumn>EMAIL</TableColumn>
@@ -174,7 +174,7 @@ export const Default: Story = {
 // ─── With Pagination ─────────────────────────────────────────────────────────
 
 export const WithPagination: Story = {
-  render: (args) => {
+  render: () => {
     const [page, setPage] = useState(1);
     const rowsPerPage = 4;
     const pages = Math.ceil(users.length / rowsPerPage);
@@ -187,7 +187,6 @@ export const WithPagination: Story = {
     return (
       <Table
         aria-label="Table with pagination"
-        {...args}
         bottomContent={
           <div className="flex w-full justify-center p-2">
             <Pagination
@@ -232,7 +231,7 @@ export const WithPagination: Story = {
 // ─── With Sorting ─────────────────────────────────────────────────────────────
 
 export const WithSorting: Story = {
-  render: (args) => {
+  render: () => {
     const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
       column: "name",
       direction: "ascending",
@@ -252,7 +251,6 @@ export const WithSorting: Story = {
     return (
       <Table
         aria-label="Table with sorting"
-        {...args}
         sortDescriptor={sortDescriptor}
         onSortChange={setSortDescriptor}
       >
@@ -282,12 +280,11 @@ export const WithSorting: Story = {
 // ─── With Checkbox Selection ─────────────────────────────────────────────────
 
 export const WithCheckboxSelection: Story = {
-  render: (args) => (
+  render: () => (
     <Table
       aria-label="Table with selection"
       selectionMode="multiple"
       defaultSelectedKeys={new Set(["1", "3"])}
-      {...args}
     >
       <TableHeader>
         <TableColumn>NAME</TableColumn>
@@ -318,7 +315,7 @@ export const WithCheckboxSelection: Story = {
 
 export const AllFeatures: Story = {
   name: "All Features Combined",
-  render: (args) => {
+  render: () => {
     const [page, setPage] = useState(1);
     const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
       column: "name",
@@ -348,7 +345,6 @@ export const AllFeatures: Story = {
         selectionMode="multiple"
         sortDescriptor={sortDescriptor}
         onSortChange={setSortDescriptor}
-        {...args}
         bottomContent={
           <div className="flex w-full justify-center p-2">
             <Pagination
@@ -390,57 +386,65 @@ export const AllFeatures: Story = {
 // ─── With Expandable Rows ─────────────────────────────────────────────────────
 
 export const WithExpandableRows: Story = {
-  render: (args) => (
-    <Table
-      aria-label="Expandable rows table"
-      {...args}
-      renderExpandedContent={(item: Order) => (
-        <div className="p-4 bg-neutral-50 dark:bg-neutral-800/40 rounded-lg space-y-2">
-          <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Sub Items for {item.id}</p>
-          {item.subRows && item.subRows.length > 0 ? (
-            item.subRows.map((sub) => (
-              <div key={sub.id} className="flex items-center gap-6 text-sm text-neutral-700 dark:text-neutral-300">
-                <span className="font-mono text-primary font-medium">{sub.id}</span>
-                <span>{sub.product}</span>
-                <span>${sub.amount}</span>
-                <span>{orderStatusBadge(sub.status)}</span>
-              </div>
-            ))
-          ) : (
-            <p className="text-xs text-neutral-400">No sub-items available</p>
-          )}
-        </div>
-      )}
-    >
-      <TableHeader>
-        <TableColumn>ORDER ID</TableColumn>
-        <TableColumn>PRODUCT</TableColumn>
-        <TableColumn>CUSTOMER</TableColumn>
-        <TableColumn>AMOUNT</TableColumn>
-        <TableColumn>STATUS</TableColumn>
-        <TableColumn>DATE</TableColumn>
-      </TableHeader>
-      <TableBody items={orders}>
-        {(order) => (
-          <TableRow key={order.id}>
-            <TableCell><span className="font-mono text-xs text-primary font-semibold">{order.id}</span></TableCell>
-            <TableCell>{order.product}</TableCell>
-            <TableCell>{order.customer}</TableCell>
-            <TableCell>${order.amount}</TableCell>
-            <TableCell>{orderStatusBadge(order.status)}</TableCell>
-            <TableCell>{order.date}</TableCell>
-          </TableRow>
+  render: () => {
+    const [expandedKeys, setExpandedKeys] = useState<any>(new Set(["ORD-001", "ORD-004"]));
+
+    return (
+      <Table
+        aria-label="Expandable rows table"
+        treeColumn="id"
+        expandedKeys={expandedKeys}
+        onExpandedChange={setExpandedKeys}
+        renderExpandedContent={(item: Order) => (
+          <div className="p-4 bg-neutral-50 dark:bg-neutral-800/40 rounded-lg space-y-2">
+            <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+              Sub Items for {item.id}
+            </p>
+            {item.subRows && item.subRows.length > 0 ? (
+              item.subRows.map((sub) => (
+                <div key={sub.id} className="flex items-center gap-6 text-sm text-neutral-700 dark:text-neutral-300">
+                  <span className="font-mono text-primary font-medium">{sub.id}</span>
+                  <span>{sub.product}</span>
+                  <span>${sub.amount}</span>
+                  <span>{orderStatusBadge(sub.status)}</span>
+                </div>
+              ))
+            ) : (
+              <p className="text-xs text-neutral-400">No sub-items available</p>
+            )}
+          </div>
         )}
-      </TableBody>
-    </Table>
-  ),
+      >
+        <TableHeader>
+          <TableColumn key="id">ORDER ID</TableColumn>
+          <TableColumn key="product">PRODUCT</TableColumn>
+          <TableColumn key="customer">CUSTOMER</TableColumn>
+          <TableColumn key="amount">AMOUNT</TableColumn>
+          <TableColumn key="status">STATUS</TableColumn>
+          <TableColumn key="date">DATE</TableColumn>
+        </TableHeader>
+        <TableBody items={orders}>
+          {(order) => (
+            <TableRow key={order.id}>
+              <TableCell><span className="font-mono text-xs text-primary font-semibold">{order.id}</span></TableCell>
+              <TableCell>{order.product}</TableCell>
+              <TableCell>{order.customer}</TableCell>
+              <TableCell>${order.amount}</TableCell>
+              <TableCell>{orderStatusBadge(order.status)}</TableCell>
+              <TableCell>{order.date}</TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    );
+  },
 };
 
 // ─── Loading State ────────────────────────────────────────────────────────────
 
 export const LoadingState: Story = {
-  render: (args) => (
-    <Table aria-label="Loading state table" {...args}>
+  render: () => (
+    <Table aria-label="Loading state table">
       <TableHeader>
         <TableColumn>NAME</TableColumn>
         <TableColumn>EMAIL</TableColumn>
@@ -456,8 +460,8 @@ export const LoadingState: Story = {
 // ─── Empty State ──────────────────────────────────────────────────────────────
 
 export const EmptyState: Story = {
-  render: (args) => (
-    <Table aria-label="Empty state table" {...args}>
+  render: () => (
+    <Table aria-label="Empty state table">
       <TableHeader>
         <TableColumn>NAME</TableColumn>
         <TableColumn>EMAIL</TableColumn>
@@ -473,8 +477,8 @@ export const EmptyState: Story = {
 // ─── Hidden Header ────────────────────────────────────────────────────────────
 
 export const HiddenHeader: Story = {
-  render: (args) => (
-    <Table aria-label="Hidden header table" hideHeader {...args}>
+  render: () => (
+    <Table aria-label="Hidden header table" hideHeader>
       <TableHeader>
         <TableColumn>NAME</TableColumn>
         <TableColumn>EMAIL</TableColumn>
@@ -583,7 +587,7 @@ export const PaginationVariants: Story = {
 // ─── Clickable Rows ───────────────────────────────────────────────────────────
 
 export const ClickableRows: Story = {
-  render: (args) => {
+  render: () => {
     const [selected, setSelected] = useState<User | null>(null);
     return (
       <div className="flex flex-col gap-4">
@@ -600,7 +604,6 @@ export const ClickableRows: Story = {
             const u = users.find((x) => x.id === key);
             if (u) setSelected(u);
           }}
-          {...args}
         >
           <TableHeader>
             <TableColumn>NAME</TableColumn>
@@ -625,8 +628,8 @@ export const ClickableRows: Story = {
 // ─── Striped Rows ─────────────────────────────────────────────────────────────
 
 export const StripedRows: Story = {
-  render: (args) => (
-    <Table aria-label="Striped table" isStriped {...args}>
+  render: () => (
+    <Table aria-label="Striped table" isStriped>
       <TableHeader>
         <TableColumn>NAME</TableColumn>
         <TableColumn>EMAIL</TableColumn>
@@ -649,7 +652,7 @@ export const StripedRows: Story = {
 
 export const OrdersTable: Story = {
   name: "Real-world: Orders",
-  render: (args) => {
+  render: () => {
     const [page, setPage] = useState(1);
     const rowsPerPage = 4;
     const pages = Math.ceil(orders.length / rowsPerPage);
@@ -663,7 +666,6 @@ export const OrdersTable: Story = {
       <Table
         aria-label="Orders table"
         selectionMode="multiple"
-        {...args}
         bottomContent={
           <div className="flex w-full justify-center p-2">
             <Pagination

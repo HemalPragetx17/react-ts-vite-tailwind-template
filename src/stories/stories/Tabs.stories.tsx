@@ -50,89 +50,119 @@ const meta: Meta<typeof Tabs> = {
 export default meta;
 type Story = StoryObj<typeof Tabs>;
 
-const defaultItems = [
-  { id: "photos", label: "Photos", content: <div className="p-4">Photos content here</div> },
-  { id: "music", label: "Music", content: <div className="p-4">Music content here</div> },
-  { id: "videos", label: "Videos", content: <div className="p-4">Videos content here</div> },
-];
-
 export const Default: Story = {
-  args: {
-    items: defaultItems,
+  render: () => {
+    const items = [
+      { id: "photos", label: "Photos", content: <div className="p-4">Photos content here</div> },
+      { id: "music", label: "Music", content: <div className="p-4">Music content here</div> },
+      { id: "videos", label: "Videos", content: <div className="p-4">Videos content here</div> },
+    ];
+    return <Tabs items={items} />;
   },
 };
 
 export const Variants: Story = {
-  render: (args) => (
-    <div className="flex flex-col gap-4 w-[600px]">
-      <div className="flex gap-4">
-        <Tabs {...args} variant="solid" items={defaultItems} />
-        <Tabs {...args} variant="bordered" items={defaultItems} />
+  render: () => {
+    const items = [
+      { id: "photos", label: "Photos", content: <div className="p-4">Photos content here</div> },
+      { id: "music", label: "Music", content: <div className="p-4">Music content here</div> },
+      { id: "videos", label: "Videos", content: <div className="p-4">Videos content here</div> },
+    ];
+    return (
+      <div className="flex flex-col gap-4 w-[600px]">
+        <div className="flex gap-4">
+          <Tabs variant="solid" items={items} />
+          <Tabs variant="bordered" items={items} />
+        </div>
+        <div className="flex gap-4">
+          <Tabs variant="light" items={items} />
+          <Tabs variant="underlined" items={items} />
+        </div>
       </div>
-      <div className="flex gap-4">
-        <Tabs {...args} variant="light" items={defaultItems} />
-        <Tabs {...args} variant="underlined" items={defaultItems} />
-      </div>
-    </div>
-  ),
+    );
+  },
 };
 
 export const Colors: Story = {
-  render: (args) => (
-    <div className="flex flex-col gap-4 w-[600px]">
-      <div className="flex gap-4">
-        <Tabs {...args} color="default" items={defaultItems} />
-        <Tabs {...args} color="primary" items={defaultItems} />
+  render: () => {
+    const items = [
+      { id: "photos", label: "Photos", content: <div className="p-4">Photos content here</div> },
+      { id: "music", label: "Music", content: <div className="p-4">Music content here</div> },
+      { id: "videos", label: "Videos", content: <div className="p-4">Videos content here</div> },
+    ];
+    return (
+      <div className="flex flex-col gap-4 w-[600px]">
+        <div className="flex gap-4">
+          <Tabs color="default" items={items} />
+          <Tabs color="primary" items={items} />
+        </div>
+        <div className="flex gap-4">
+          <Tabs color="secondary" items={items} />
+          <Tabs color="success" items={items} />
+        </div>
+        <div className="flex gap-4">
+          <Tabs color="warning" items={items} />
+          <Tabs color="danger" items={items} />
+        </div>
       </div>
-      <div className="flex gap-4">
-        <Tabs {...args} color="secondary" items={defaultItems} />
-        <Tabs {...args} color="success" items={defaultItems} />
-      </div>
-      <div className="flex gap-4">
-        <Tabs {...args} color="warning" items={defaultItems} />
-        <Tabs {...args} color="danger" items={defaultItems} />
-      </div>
-    </div>
-  ),
+    );
+  },
 };
 
 export const Sizes: Story = {
-  render: (args) => (
-    <div className="flex gap-4 w-[800px]">
-      <Tabs {...args} size="sm" items={defaultItems} />
-      <Tabs {...args} size="md" items={defaultItems} />
-      <Tabs {...args} size="lg" items={defaultItems} />
-    </div>
-  ),
+  render: () => {
+    const items = [
+      { id: "photos", label: "Photos", content: <div className="p-4">Photos content here</div> },
+      { id: "music", label: "Music", content: <div className="p-4">Music content here</div> },
+      { id: "videos", label: "Videos", content: <div className="p-4">Videos content here</div> },
+    ];
+    return (
+      <div className="flex gap-4 w-[800px]">
+        <Tabs size="sm" items={items} />
+        <Tabs size="md" items={items} />
+        <Tabs size="lg" items={items} />
+      </div>
+    );
+  },
 };
 
 export const Radiuses: Story = {
-  render: (args) => (
-    <div className="flex flex-col gap-4 w-[600px]">
-      <div className="flex gap-4">
-        <Tabs {...args} radius="none" items={defaultItems} />
-        <Tabs {...args} radius="sm" items={defaultItems} />
+  render: () => {
+    const items = [
+      { id: "photos", label: "Photos", content: <div className="p-4">Photos content here</div> },
+      { id: "music", label: "Music", content: <div className="p-4">Music content here</div> },
+      { id: "videos", label: "Videos", content: <div className="p-4">Videos content here</div> },
+    ];
+    return (
+      <div className="flex flex-col gap-4 w-[600px]">
+        <div className="flex gap-4">
+          <Tabs radius="none" items={items} />
+          <Tabs radius="sm" items={items} />
+        </div>
+        <div className="flex gap-4">
+          <Tabs radius="md" items={items} />
+          <Tabs radius="lg" items={items} />
+        </div>
+        <Tabs radius="full" items={items} />
       </div>
-      <div className="flex gap-4">
-        <Tabs {...args} radius="md" items={defaultItems} />
-        <Tabs {...args} radius="lg" items={defaultItems} />
-      </div>
-      <Tabs {...args} radius="full" items={defaultItems} />
-    </div>
-  ),
+    );
+  },
 };
 
 export const Vertical: Story = {
-  args: {
-    items: defaultItems,
-    isVertical: true,
-    variant: "solid",
+  render: () => {
+    const items = [
+      { id: "photos", label: "Photos", content: <div className="p-4">Photos content here</div> },
+      { id: "music", label: "Music", content: <div className="p-4">Music content here</div> },
+      { id: "videos", label: "Videos", content: <div className="p-4">Videos content here</div> },
+    ];
+    return <Tabs items={items} isVertical variant="solid" />;
   },
 };
 
 export const WithIcons: Story = {
-  args: {
-    items: [
+  render: () => {
+    const items = [
       {
         id: "photos",
         label: "Photos",
@@ -145,37 +175,47 @@ export const WithIcons: Story = {
         icon: <FaMusic className={tabIconClass} aria-hidden />,
         content: <div className="p-4">Music content</div>,
       },
-    ],
+    ];
+    return <Tabs items={items} />;
   },
 };
 
 export const WithCount: Story = {
-  args: {
-    items: [
+  render: () => {
+    const items = [
       { id: "all", label: "All", count: 24, content: <div className="p-4">All items</div> },
       { id: "active", label: "Active", count: 12, content: <div className="p-4">Active items</div> },
       { id: "archived", label: "Archived", count: 5, content: <div className="p-4">Archived items</div> },
-    ],
+    ];
+    return <Tabs items={items} />;
   },
 };
 
 export const Disabled: Story = {
-  args: {
-    items: defaultItems,
-    isDisabled: true,
+  render: () => {
+    const items = [
+      { id: "photos", label: "Photos", content: <div className="p-4">Photos content here</div> },
+      { id: "music", label: "Music", content: <div className="p-4">Music content here</div> },
+      { id: "videos", label: "Videos", content: <div className="p-4">Videos content here</div> },
+    ];
+    return <Tabs items={items} isDisabled />;
   },
 };
 
 export const DisabledKeys: Story = {
-  args: {
-    items: defaultItems,
-    disabledKeys: ["music"],
+  render: () => {
+    const items = [
+      { id: "photos", label: "Photos", content: <div className="p-4">Photos content here</div> },
+      { id: "music", label: "Music", content: <div className="p-4">Music content here</div> },
+      { id: "videos", label: "Videos", content: <div className="p-4">Videos content here</div> },
+    ];
+    return <Tabs items={items} disabledKeys={["music"]} />;
   },
 };
 
 export const Compound: Story = {
-  render: (args) => (
-    <Tabs {...args} defaultSelectedKey="music">
+  render: () => (
+    <Tabs defaultSelectedKey="music">
       <Tab
         key="photos"
         title="Photos"

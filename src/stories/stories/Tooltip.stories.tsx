@@ -47,12 +47,11 @@ export default meta;
 type Story = StoryObj<typeof Tooltip>;
 
 export const Default: Story = {
-  args: {
-    children: <Button>Hover Me</Button>,
-    content: "This is a tooltip content",
-    placement: "top",
-    showArrow: true,
-  },
+  render: () => (
+    <Tooltip content="This is a tooltip content" placement="top" showArrow>
+      <Button>Hover Me</Button>
+    </Tooltip>
+  ),
 };
 
 export const Placements: Story = {
@@ -92,17 +91,27 @@ export const Placements: Story = {
 export const Colors: Story = {
   render: () => (
     <div className="flex flex-wrap gap-4">
-      {(["default", "primary", "secondary", "success", "warning", "danger", "foreground"] as const).map((color) => {
-        const buttonColor = (["default", "primary", "secondary", "success", "warning", "danger"].includes(color)
-          ? color
-          : "default") as any;
-
-        return (
-          <Tooltip key={color} color={color} content={`Tooltip color: ${color}`} showArrow>
-            <Button color={buttonColor} variant="solid">{color}</Button>
-          </Tooltip>
-        );
-      })}
+      <Tooltip color="default" content="Tooltip color: default" showArrow>
+        <Button color="default" variant="solid">default</Button>
+      </Tooltip>
+      <Tooltip color="primary" content="Tooltip color: primary" showArrow>
+        <Button color="primary" variant="solid">primary</Button>
+      </Tooltip>
+      <Tooltip color="secondary" content="Tooltip color: secondary" showArrow>
+        <Button color="secondary" variant="solid">secondary</Button>
+      </Tooltip>
+      <Tooltip color="success" content="Tooltip color: success" showArrow>
+        <Button color="success" variant="solid">success</Button>
+      </Tooltip>
+      <Tooltip color="warning" content="Tooltip color: warning" showArrow>
+        <Button color="warning" variant="solid">warning</Button>
+      </Tooltip>
+      <Tooltip color="danger" content="Tooltip color: danger" showArrow>
+        <Button color="danger" variant="solid">danger</Button>
+      </Tooltip>
+      <Tooltip color="foreground" content="Tooltip color: foreground" showArrow>
+        <Button color="default" variant="solid">foreground</Button>
+      </Tooltip>
     </div>
   ),
 };
@@ -110,11 +119,15 @@ export const Colors: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="flex gap-4">
-      {(["sm", "md", "lg"] as const).map((size) => (
-        <Tooltip key={size} size={size} content={`Tooltip size: ${size}`} showArrow>
-          <Button variant="flat">{size}</Button>
-        </Tooltip>
-      ))}
+      <Tooltip size="sm" content="Tooltip size: sm" showArrow>
+        <Button variant="flat">sm</Button>
+      </Tooltip>
+      <Tooltip size="md" content="Tooltip size: md" showArrow>
+        <Button variant="flat">md</Button>
+      </Tooltip>
+      <Tooltip size="lg" content="Tooltip size: lg" showArrow>
+        <Button variant="flat">lg</Button>
+      </Tooltip>
     </div>
   ),
 };
@@ -122,11 +135,21 @@ export const Sizes: Story = {
 export const Radiuses: Story = {
   render: () => (
     <div className="flex gap-4">
-      {(["none", "sm", "md", "lg", "full"] as const).map((radius) => (
-        <Tooltip key={radius} radius={radius} content={`Tooltip radius: ${radius}`} showArrow>
-          <Button variant="flat">{radius}</Button>
-        </Tooltip>
-      ))}
+      <Tooltip radius="none" content="Tooltip radius: none" showArrow>
+        <Button variant="flat">none</Button>
+      </Tooltip>
+      <Tooltip radius="sm" content="Tooltip radius: sm" showArrow>
+        <Button variant="flat">sm</Button>
+      </Tooltip>
+      <Tooltip radius="md" content="Tooltip radius: md" showArrow>
+        <Button variant="flat">md</Button>
+      </Tooltip>
+      <Tooltip radius="lg" content="Tooltip radius: lg" showArrow>
+        <Button variant="flat">lg</Button>
+      </Tooltip>
+      <Tooltip radius="full" content="Tooltip radius: full" showArrow>
+        <Button variant="flat">full</Button>
+      </Tooltip>
     </div>
   ),
 };
@@ -134,11 +157,18 @@ export const Radiuses: Story = {
 export const Shadows: Story = {
   render: () => (
     <div className="flex gap-4">
-      {(["none", "sm", "md", "lg"] as const).map((shadow) => (
-        <Tooltip key={shadow} shadow={shadow} content={`Tooltip shadow: ${shadow}`} showArrow>
-          <Button variant="flat">{shadow}</Button>
-        </Tooltip>
-      ))}
+      <Tooltip shadow="none" content="Tooltip shadow: none" showArrow>
+        <Button variant="flat">none</Button>
+      </Tooltip>
+      <Tooltip shadow="sm" content="Tooltip shadow: sm" showArrow>
+        <Button variant="flat">sm</Button>
+      </Tooltip>
+      <Tooltip shadow="md" content="Tooltip shadow: md" showArrow>
+        <Button variant="flat">md</Button>
+      </Tooltip>
+      <Tooltip shadow="lg" content="Tooltip shadow: lg" showArrow>
+        <Button variant="flat">lg</Button>
+      </Tooltip>
     </div>
   ),
 };

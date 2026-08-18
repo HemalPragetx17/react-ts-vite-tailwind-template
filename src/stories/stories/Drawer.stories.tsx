@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import React, { useState } from "react";
 import {
   Button,
-  Drawer as DrawerComponent,
+  Drawer,
   DrawerBody,
   DrawerContent,
   DrawerFooter,
@@ -10,9 +10,9 @@ import {
   useDisclosure,
 } from "../../components/ui";
 
-const meta: Meta<typeof DrawerComponent> = {
+const meta: Meta<typeof Drawer> = {
   title: "Components/Drawer",
-  component: DrawerComponent,
+  component: Drawer,
   parameters: {
     layout: "fullscreen",
   },
@@ -55,29 +55,28 @@ const meta: Meta<typeof DrawerComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof DrawerComponent>;
+type Story = StoryObj<typeof Drawer>;
 
-// ─── Basic Story Helper ──────────────────────────────────────────────────────
+export const Default: Story = {
+  render: () => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
-const Drawer = (args: any) => {
-  const disclosure = useDisclosure();
-  const isOpen = args.isOpen !== undefined ? args.isOpen : disclosure.isOpen;
-  const onClose = args.onClose !== undefined ? args.onClose : disclosure.onClose;
-  const onOpen = disclosure.onOpen;
-
-  const hasChildren = React.Children.count(args.children) > 0;
-
-  return (
-    <>
-      {args.isOpen === undefined && (
-        <div className="p-10 flex flex-col items-center justify-center min-h-[300px]">
-          <Button onClick={onOpen}>Open Drawer</Button>
-        </div>
-      )}
-      <DrawerComponent {...args} isOpen={isOpen} onClose={onClose}>
-        {hasChildren ? (
-          args.children
-        ) : (
+    return (
+      <div className="p-10 flex flex-col items-center justify-center min-h-[300px]">
+        <Button onClick={onOpen}>Open Drawer</Button>
+        <Drawer
+          isOpen={isOpen}
+          onClose={onClose}
+          placement="right"
+          size="md"
+          backdrop="opaque"
+          radius="lg"
+          shadow="lg"
+          isDismissable
+          isKeyboardDismissDisabled={false}
+          closeButton
+          scrollBehavior="inside"
+        >
           <DrawerContent>
             <DrawerHeader>Basic Drawer</DrawerHeader>
             <DrawerBody>
@@ -97,31 +96,16 @@ const Drawer = (args: any) => {
               </Button>
             </DrawerFooter>
           </DrawerContent>
-        )}
-      </DrawerComponent>
-    </>
-  );
-};
-
-export const Default: Story = {
-  render: (args) => <Drawer {...args} />,
-  args: {
-    placement: "right",
-    size: "md",
-    backdrop: "opaque",
-    radius: "lg",
-    shadow: "lg",
-    isDismissable: true,
-    isKeyboardDismissDisabled: false,
-    closeButton: true,
-    scrollBehavior: "inside",
+        </Drawer>
+      </div>
+    );
   },
 };
 
 // ─── Placements Story ────────────────────────────────────────────────────────
 
 export const Placements: Story = {
-  render: (args) => {
+  render: () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [placement, setPlacement] = useState<any>("right");
 
@@ -142,7 +126,7 @@ export const Placements: Story = {
           <Button onClick={() => openPlacement("bottom")}>Bottom Drawer</Button>
         </div>
 
-        <Drawer {...args} isOpen={isOpen} onClose={onClose} placement={placement}>
+        <Drawer isOpen={isOpen} onClose={onClose} placement={placement} backdrop="opaque">
           <DrawerContent>
             <DrawerHeader>Drawer placement: {placement}</DrawerHeader>
             <DrawerBody>
@@ -158,15 +142,12 @@ export const Placements: Story = {
       </div>
     );
   },
-  args: {
-    backdrop: "opaque",
-  },
 };
 
 // ─── Sizes Story ─────────────────────────────────────────────────────────────
 
 export const Sizes: Story = {
-  render: (args) => {
+  render: () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [size, setSize] = useState<any>("md");
     const [placement, setPlacement] = useState<any>("right");
@@ -211,7 +192,7 @@ export const Sizes: Story = {
           </div>
         </div>
 
-        <Drawer {...args} isOpen={isOpen} onClose={onClose} size={size} placement={placement}>
+        <Drawer isOpen={isOpen} onClose={onClose} size={size} placement={placement} backdrop="opaque">
           <DrawerContent>
             <DrawerHeader>Size: {size?.toUpperCase()}</DrawerHeader>
             <DrawerBody>
@@ -227,15 +208,12 @@ export const Sizes: Story = {
       </div>
     );
   },
-  args: {
-    backdrop: "opaque",
-  },
 };
 
 // ─── Backdrops Story ─────────────────────────────────────────────────────────
 
 export const Backdrops: Story = {
-  render: (args) => {
+  render: () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [backdrop, setBackdrop] = useState<any>("opaque");
 
@@ -255,7 +233,7 @@ export const Backdrops: Story = {
           <Button onClick={() => openBackdrop("transparent")}>Transparent Backdrop</Button>
         </div>
 
-        <Drawer {...args} isOpen={isOpen} onClose={onClose} backdrop={backdrop}>
+        <Drawer isOpen={isOpen} onClose={onClose} backdrop={backdrop} placement="right">
           <DrawerContent>
             <DrawerHeader>{backdrop.toUpperCase()} Backdrop</DrawerHeader>
             <DrawerBody>
@@ -271,15 +249,12 @@ export const Backdrops: Story = {
       </div>
     );
   },
-  args: {
-    placement: "right",
-  },
 };
 
 // ─── Render Callback Story ───────────────────────────────────────────────────
 
 export const RenderCallback: Story = {
-  render: (args) => {
+  render: () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
@@ -294,7 +269,7 @@ export const RenderCallback: Story = {
           <Button onClick={onOpen}>Open Callback Drawer</Button>
         </div>
 
-        <Drawer {...args} isOpen={isOpen} onClose={onClose}>
+        <Drawer isOpen={isOpen} onClose={onClose} placement="right">
           <DrawerContent>
             {(onCloseInternal) => (
               <>
@@ -316,15 +291,12 @@ export const RenderCallback: Story = {
       </div>
     );
   },
-  args: {
-    placement: "right",
-  },
 };
 
 // ─── Form Submission Story ───────────────────────────────────────────────────
 
 export const FormInDrawer: Story = {
-  render: (args) => {
+  render: () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -339,7 +311,7 @@ export const FormInDrawer: Story = {
       <div className="p-10 flex flex-col items-center justify-center min-h-[300px]">
         <Button onClick={onOpen}>Open Contact Form</Button>
 
-        <Drawer {...args} isOpen={isOpen} onClose={onClose}>
+        <Drawer isOpen={isOpen} onClose={onClose} placement="right" size="md">
           <DrawerContent>
             <form onSubmit={handleSubmit} className="flex flex-col h-full">
               <DrawerHeader>Create Account</DrawerHeader>
@@ -390,16 +362,12 @@ export const FormInDrawer: Story = {
       </div>
     );
   },
-  args: {
-    placement: "right",
-    size: "md",
-  },
 };
 
 // ─── Radiuses Story ──────────────────────────────────────────────────────────
 
 export const Radiuses: Story = {
-  render: (args) => {
+  render: () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [radius, setRadius] = useState<any>("lg");
 
@@ -420,7 +388,7 @@ export const Radiuses: Story = {
           <Button onClick={() => openRadius("lg")}>Radius LG</Button>
         </div>
 
-        <Drawer {...args} isOpen={isOpen} onClose={onClose} radius={radius}>
+        <Drawer isOpen={isOpen} onClose={onClose} radius={radius} placement="right">
           <DrawerContent>
             <DrawerHeader>Radius: {radius.toUpperCase()}</DrawerHeader>
             <DrawerBody>
@@ -436,15 +404,12 @@ export const Radiuses: Story = {
       </div>
     );
   },
-  args: {
-    placement: "right",
-  },
 };
 
 // ─── Shadows Story ───────────────────────────────────────────────────────────
 
 export const Shadows: Story = {
-  render: (args) => {
+  render: () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [shadow, setShadow] = useState<any>("lg");
 
@@ -465,7 +430,7 @@ export const Shadows: Story = {
           <Button onClick={() => openShadow("lg")}>Shadow LG</Button>
         </div>
 
-        <Drawer {...args} isOpen={isOpen} onClose={onClose} shadow={shadow}>
+        <Drawer isOpen={isOpen} onClose={onClose} shadow={shadow} placement="right" backdrop="transparent">
           <DrawerContent>
             <DrawerHeader>Shadow: {shadow.toUpperCase()}</DrawerHeader>
             <DrawerBody>
@@ -481,16 +446,12 @@ export const Shadows: Story = {
       </div>
     );
   },
-  args: {
-    placement: "right",
-    backdrop: "transparent",
-  },
 };
 
 // ─── Dismissable Control Story ───────────────────────────────────────────────
 
 export const Dismissable: Story = {
-  render: (args) => {
+  render: () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [isDismissable, setIsDismissable] = useState(true);
 
@@ -511,7 +472,7 @@ export const Dismissable: Story = {
           </Button>
         </div>
 
-        <Drawer {...args} isOpen={isOpen} onClose={onClose} isDismissable={isDismissable}>
+        <Drawer isOpen={isOpen} onClose={onClose} isDismissable={isDismissable} placement="right">
           <DrawerContent>
             <DrawerHeader>{isDismissable ? "Dismissable" : "Non-Dismissable"} Drawer</DrawerHeader>
             <DrawerBody>
@@ -533,15 +494,12 @@ export const Dismissable: Story = {
       </div>
     );
   },
-  args: {
-    placement: "right",
-  },
 };
 
 // ─── Keyboard Dismiss Control Story ──────────────────────────────────────────
 
 export const KeyboardDismiss: Story = {
-  render: (args) => {
+  render: () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [isKeyboardDismissDisabled, setIsKeyboardDismissDisabled] = useState(false);
 
@@ -563,10 +521,10 @@ export const KeyboardDismiss: Story = {
         </div>
 
         <Drawer
-          {...args}
           isOpen={isOpen}
           onClose={onClose}
           isKeyboardDismissDisabled={isKeyboardDismissDisabled}
+          placement="right"
         >
           <DrawerContent>
             <DrawerHeader>
@@ -591,15 +549,12 @@ export const KeyboardDismiss: Story = {
       </div>
     );
   },
-  args: {
-    placement: "right",
-  },
 };
 
 // ─── Custom Motion Story ─────────────────────────────────────────────────────
 
 export const CustomMotion: Story = {
-  render: (args) => {
+  render: () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [motionType, setMotionType] = useState<"left-to-right" | "right-to-left" | "top-to-bottom" | "bottom-to-top">("left-to-right");
 
@@ -671,9 +626,9 @@ export const CustomMotion: Story = {
         </div>
 
         <Drawer
-          {...args}
           isOpen={isOpen}
           onClose={onClose}
+          size="md"
           placement={currentConfig.placement}
           motionProps={currentConfig.motionProps}
         >
@@ -697,9 +652,6 @@ export const CustomMotion: Story = {
         </Drawer>
       </div>
     );
-  },
-  args: {
-    size: "md",
   },
 };
 

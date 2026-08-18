@@ -100,22 +100,13 @@ export const Sizes: Story = {
 export const Radiuses: Story = {
   render: () => (
     <div className="flex gap-8 w-[800px]">
-      {/* Left side: Full Border */}
       <div className="flex flex-col gap-8 flex-1">
-        <h4 className="text-sm font-bold text-neutral-400">Separate Border</h4>
         <PhoneInputWithState label="Radius none" radius="none" defaultCountry="IN" variant="bordered" />
         <PhoneInputWithState label="Radius sm" radius="sm" defaultCountry="IN" variant="bordered" />
         <PhoneInputWithState label="Radius md" radius="md" defaultCountry="IN" variant="bordered" />
-        <PhoneInputWithState label="Radius lg" radius="lg" defaultCountry="IN" variant="bordered" />
-        <PhoneInputWithState label="Radius full" radius="full" defaultCountry="IN" variant="bordered" />
       </div>
 
-      {/* Right side: Single Border */}
       <div className="flex flex-col gap-8 flex-1">
-        <h4 className="text-sm font-bold text-neutral-400">Single Border</h4>
-        <PhoneInputWithState label="Radius none" radius="none" defaultCountry="IN" variant="bordered" />
-        <PhoneInputWithState label="Radius sm" radius="sm" defaultCountry="IN" variant="bordered" />
-        <PhoneInputWithState label="Radius md" radius="md" defaultCountry="IN" variant="bordered" />
         <PhoneInputWithState label="Radius lg" radius="lg" defaultCountry="IN" variant="bordered" />
         <PhoneInputWithState label="Radius full" radius="full" defaultCountry="IN" variant="bordered" />
       </div>
@@ -124,57 +115,40 @@ export const Radiuses: Story = {
 };
 
 export const LabelPlacements: Story = {
-  render: (args: any) => (
-    <div className="flex flex-col gap-8 w-[600px]">
-      <div className="flex gap-4 items-end">
-        <PhoneInputWithState {...args} labelPlacement="inside" label="Inside (Floating)" defaultCountry="IN" />
-        <PhoneInputWithState {...args} labelPlacement="inside" label="Inside (static with placeholder)" placeholder="Enter Phone Number" defaultCountry="IN" />
-      </div>
-      <div className="flex gap-4 items-end">
-        <PhoneInputWithState {...args} labelPlacement="outside" label="Outside (Floating)" defaultCountry="IN" />
-        <PhoneInputWithState {...args} labelPlacement="outside" label="Outside (static with placeholder)" placeholder="Enter Phone Number" defaultCountry="IN" />
-      </div>
-      <div className="flex gap-4 items-end">
-        <PhoneInputWithState {...args} labelPlacement="outlined" label="Outlined" defaultCountry="IN" />
-        <PhoneInputWithState {...args} labelPlacement="outlined" label="Outlined (static with placeholder)" placeholder="Enter Phone Number" defaultCountry="IN" />
-      </div>
-      <div className="flex gap-4 items-end">
-        <PhoneInputWithState {...args} labelPlacement="outlined" label="Single Border" defaultCountry="IN" />
-        <PhoneInputWithState {...args} labelPlacement="outlined" label="Single Border (static with placeholder)" placeholder="Enter Phone Number" defaultCountry="IN" />
-      </div>
-      <div className="flex gap-4 items-end">
-        <PhoneInputWithState {...args} labelPlacement="outside-top" label="Outside Top" placeholder="Enter Phone Number" defaultCountry="IN" />
-        <PhoneInputWithState {...args} labelPlacement="outside-left" label="Outside Left" placeholder="Enter Phone Number" defaultCountry="IN" />
-      </div>
-    </div>
-  ),
-  args: {
-    variant: "bordered",
-  },
-};
-
-export const SingleBorderVariants: Story = {
   render: () => (
     <div className="flex flex-col gap-8 w-[600px]">
-      <div className="flex gap-4">
-        <PhoneInputWithState label="Flat" variant="flat" defaultCountry="IN" />
-        <PhoneInputWithState label="Bordered" variant="bordered" defaultCountry="IN" />
+      <div className="flex gap-4 items-end">
+        <PhoneInputWithState labelPlacement="inside" label="Inside (Floating)" defaultCountry="IN" />
+        <PhoneInputWithState labelPlacement="inside" label="Inside (static with placeholder)" placeholder="Enter Phone Number" defaultCountry="IN" />
       </div>
-      <div className="flex gap-4">
-        <PhoneInputWithState label="Underlined" variant="underlined" defaultCountry="IN" />
-        <PhoneInputWithState label="Faded" variant="faded" defaultCountry="IN" />
+      <div className="flex gap-4 items-end">
+        <PhoneInputWithState labelPlacement="outside" label="Outside (Floating)" defaultCountry="IN" />
+        <PhoneInputWithState labelPlacement="outside" label="Outside (static with placeholder)" placeholder="Enter Phone Number" defaultCountry="IN" />
+      </div>
+      <div className="flex gap-4 items-end">
+        <PhoneInputWithState labelPlacement="outlined" label="Outlined" defaultCountry="IN" />
+        <PhoneInputWithState labelPlacement="outlined" label="Outlined (static with placeholder)" placeholder="Enter Phone Number" defaultCountry="IN" />
+      </div>
+      <div className="flex gap-4 items-end">
+        <PhoneInputWithState labelPlacement="outlined" label="Single Border" defaultCountry="IN" />
+        <PhoneInputWithState labelPlacement="outlined" label="Single Border (static with placeholder)" placeholder="Enter Phone Number" defaultCountry="IN" />
+      </div>
+      <div className="flex gap-4 items-end">
+        <PhoneInputWithState labelPlacement="outside-top" label="Outside Top" placeholder="Enter Phone Number" defaultCountry="IN" />
+        <PhoneInputWithState labelPlacement="outside-left" label="Outside Left" placeholder="Enter Phone Number" defaultCountry="IN" />
       </div>
     </div>
   ),
 };
 
 export const CountryCodeEditable: Story = {
-  render: (args: any) => <PhoneInputWithState {...args} />,
-  args: {
-    label: "Editable Country Code",
-    defaultCountry: "US",
-    countryCodeEditable: true,
-  },
+  render: () => (
+    <PhoneInputWithState
+      label="Editable Country Code"
+      defaultCountry="US"
+      countryCodeEditable={true}
+    />
+  ),
 };
 
 export const DisableDropdownOnly: Story = {
@@ -193,16 +167,6 @@ export const WithDropdownSearch: Story = {
     defaultCountry: "IN",
     enableSearch: true,
   },
-};
-
-export const DynamicPlaceholder: Story = {
-  render: () => (
-    <div className="flex flex-col gap-6 w-[320px]">
-      <PhoneInputWithState label="India (Dynamic Placeholder)" defaultCountry="IN" />
-      <PhoneInputWithState label="United States (Dynamic Placeholder)" defaultCountry="US" />
-      <PhoneInputWithState label="France (Dynamic Placeholder)" defaultCountry="FR" />
-    </div>
-  ),
 };
 
 export const DropdownPosition: Story = {

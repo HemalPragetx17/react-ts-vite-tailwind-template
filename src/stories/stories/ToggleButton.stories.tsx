@@ -47,11 +47,12 @@ export default meta;
 type Story = StoryObj<typeof ToggleButtonGroup>;
 
 export const ExclusiveSelection: Story = {
-  render: (args) => {
+  render: () => {
     const [alignment, setAlignment] = React.useState<string | null>("left");
     return (
       <ToggleButtonGroup
-        {...args}
+        color="primary"
+        size="md"
         value={alignment}
         exclusive
         onChange={(_e, val) => setAlignment(val)}
@@ -71,18 +72,15 @@ export const ExclusiveSelection: Story = {
       </ToggleButtonGroup>
     );
   },
-  args: {
-    color: "primary",
-    size: "md",
-  },
 };
 
 export const MultipleSelection: Story = {
-  render: (args) => {
+  render: () => {
     const [formats, setFormats] = React.useState<string[]>(["bold"]);
     return (
       <ToggleButtonGroup
-        {...args}
+        color="secondary"
+        size="md"
         value={formats}
         onChange={(_e, val) => setFormats(val)}
       >
@@ -98,70 +96,116 @@ export const MultipleSelection: Story = {
       </ToggleButtonGroup>
     );
   },
-  args: {
-    color: "secondary",
-    size: "md",
-  },
 };
 
 export const Colors: Story = {
-  render: (args) => {
-    const [val, setVal] = React.useState("center");
+  render: () => {
+    const [defaultVal, setDefaultVal] = React.useState("center");
+    const [primaryVal, setPrimaryVal] = React.useState("center");
+    const [secondaryVal, setSecondaryVal] = React.useState("center");
+    const [successVal, setSuccessVal] = React.useState("center");
+    const [warningVal, setWarningVal] = React.useState("center");
+    const [dangerVal, setDangerVal] = React.useState("center");
+
     return (
       <div className="flex flex-col gap-4">
-        {(["default", "primary", "secondary", "success", "warning", "danger"] as const).map((color) => (
-          <div key={color} className="flex items-center gap-4">
-            <span className="w-24 text-sm capitalize">{color}:</span>
-            <ToggleButtonGroup
-              {...args}
-              color={color}
-              value={val}
-              exclusive
-              onChange={(_e, v) => setVal(v)}
-            >
-              <ToggleButton value="left">Left</ToggleButton>
-              <ToggleButton value="center">Center</ToggleButton>
-              <ToggleButton value="right">Right</ToggleButton>
-            </ToggleButtonGroup>
-          </div>
-        ))}
+        <div className="flex items-center gap-4">
+          <span className="w-24 text-sm capitalize">default:</span>
+          <ToggleButtonGroup color="default" value={defaultVal} exclusive onChange={(_e, v) => setDefaultVal(v)}>
+            <ToggleButton value="left">Left</ToggleButton>
+            <ToggleButton value="center">Center</ToggleButton>
+            <ToggleButton value="right">Right</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="w-24 text-sm capitalize">primary:</span>
+          <ToggleButtonGroup color="primary" value={primaryVal} exclusive onChange={(_e, v) => setPrimaryVal(v)}>
+            <ToggleButton value="left">Left</ToggleButton>
+            <ToggleButton value="center">Center</ToggleButton>
+            <ToggleButton value="right">Right</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="w-24 text-sm capitalize">secondary:</span>
+          <ToggleButtonGroup color="secondary" value={secondaryVal} exclusive onChange={(_e, v) => setSecondaryVal(v)}>
+            <ToggleButton value="left">Left</ToggleButton>
+            <ToggleButton value="center">Center</ToggleButton>
+            <ToggleButton value="right">Right</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="w-24 text-sm capitalize">success:</span>
+          <ToggleButtonGroup color="success" value={successVal} exclusive onChange={(_e, v) => setSuccessVal(v)}>
+            <ToggleButton value="left">Left</ToggleButton>
+            <ToggleButton value="center">Center</ToggleButton>
+            <ToggleButton value="right">Right</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="w-24 text-sm capitalize">warning:</span>
+          <ToggleButtonGroup color="warning" value={warningVal} exclusive onChange={(_e, v) => setWarningVal(v)}>
+            <ToggleButton value="left">Left</ToggleButton>
+            <ToggleButton value="center">Center</ToggleButton>
+            <ToggleButton value="right">Right</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="w-24 text-sm capitalize">danger:</span>
+          <ToggleButtonGroup color="danger" value={dangerVal} exclusive onChange={(_e, v) => setDangerVal(v)}>
+            <ToggleButton value="left">Left</ToggleButton>
+            <ToggleButton value="center">Center</ToggleButton>
+            <ToggleButton value="right">Right</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
       </div>
     );
   },
 };
 
 export const Sizes: Story = {
-  render: (args) => {
-    const [val, setVal] = React.useState("left");
+  render: () => {
+    const [smVal, setSmVal] = React.useState("left");
+    const [mdVal, setMdVal] = React.useState("left");
+    const [lgVal, setLgVal] = React.useState("left");
+
     return (
       <div className="flex flex-col gap-4">
-        {(["sm", "md", "lg"] as const).map((size) => (
-          <div key={size} className="flex items-center gap-4">
-            <span className="w-24 text-sm capitalize">{size}:</span>
-            <ToggleButtonGroup
-              {...args}
-              size={size}
-              value={val}
-              exclusive
-              onChange={(_e, v) => setVal(v)}
-            >
-              <ToggleButton value="left">Left</ToggleButton>
-              <ToggleButton value="center">Center</ToggleButton>
-              <ToggleButton value="right">Right</ToggleButton>
-            </ToggleButtonGroup>
-          </div>
-        ))}
+        <div className="flex items-center gap-4">
+          <span className="w-24 text-sm capitalize">sm:</span>
+          <ToggleButtonGroup size="sm" value={smVal} exclusive onChange={(_e, v) => setSmVal(v)}>
+            <ToggleButton value="left">Left</ToggleButton>
+            <ToggleButton value="center">Center</ToggleButton>
+            <ToggleButton value="right">Right</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="w-24 text-sm capitalize">md:</span>
+          <ToggleButtonGroup size="md" value={mdVal} exclusive onChange={(_e, v) => setMdVal(v)}>
+            <ToggleButton value="left">Left</ToggleButton>
+            <ToggleButton value="center">Center</ToggleButton>
+            <ToggleButton value="right">Right</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="w-24 text-sm capitalize">lg:</span>
+          <ToggleButtonGroup size="lg" value={lgVal} exclusive onChange={(_e, v) => setLgVal(v)}>
+            <ToggleButton value="left">Left</ToggleButton>
+            <ToggleButton value="center">Center</ToggleButton>
+            <ToggleButton value="right">Right</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
       </div>
     );
   },
 };
 
 export const VerticalOrientation: Story = {
-  render: (args) => {
+  render: () => {
     const [alignment, setAlignment] = React.useState<string | null>("left");
     return (
       <ToggleButtonGroup
-        {...args}
+        color="primary"
+        size="md"
         value={alignment}
         exclusive
         orientation="vertical"
@@ -179,31 +223,24 @@ export const VerticalOrientation: Story = {
       </ToggleButtonGroup>
     );
   },
-  args: {
-    color: "primary",
-    size: "md",
-  },
 };
 
 export const Disabled: Story = {
-  render: (args) => {
-    return (
-      <ToggleButtonGroup
-        {...args}
-        value="bold"
-        isDisabled
-        onChange={() => {}}
-      >
-        <ToggleButton value="bold" aria-label="bold">
-          <FaBold className="w-4 h-4" />
-        </ToggleButton>
-        <ToggleButton value="italic" aria-label="italic">
-          <FaItalic className="w-4 h-4" />
-        </ToggleButton>
-        <ToggleButton value="underlined" aria-label="underlined">
-          <FaUnderline className="w-4 h-4" />
-        </ToggleButton>
-      </ToggleButtonGroup>
-    );
-  },
+  render: () => (
+    <ToggleButtonGroup
+      value="bold"
+      isDisabled
+      onChange={() => {}}
+    >
+      <ToggleButton value="bold" aria-label="bold">
+        <FaBold className="w-4 h-4" />
+      </ToggleButton>
+      <ToggleButton value="italic" aria-label="italic">
+        <FaItalic className="w-4 h-4" />
+      </ToggleButton>
+      <ToggleButton value="underlined" aria-label="underlined">
+        <FaUnderline className="w-4 h-4" />
+      </ToggleButton>
+    </ToggleButtonGroup>
+  ),
 };
